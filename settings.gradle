@@ -1,0 +1,4 @@
+// Custom gradle settings
+
+rootProject.name = 'fim'
+//group = 'pfa.alliance'
