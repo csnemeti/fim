@@ -1,5 +1,7 @@
 apply plugin: 'java'
 apply plugin: 'war' 
+//apply plugin: 'tomcat'
+apply plugin: 'jetty'
 apply plugin: 'eclipse'
 apply plugin: 'distribution'
 
@@ -11,6 +13,8 @@ buildscript {
   	dependencies {
 		// we need this to get git version info
     	classpath 'org.ajoberstar:gradle-git:0.9.0'
+    	// Tomcat with gradle
+    	//classpath 'org.gradle.api.plugins:gradle-tomcat-plugin:0.9.9'
   	}
 }
 
@@ -32,9 +36,20 @@ dependencies {
     //compile group: 'commons-collections', name: 'commons-collections', version: '3.2'
     compile 'org.slf4j:slf4j-api:1.7.7'
     compile 'ch.qos.logback:logback-core:1.1.2'
+    compile 'ch.qos.logback:logback-classic:1.1.2'
+    compile 'com.google.inject:guice:4.0-beta4'
+    compile 'com.google.inject.extensions:guice-servlet:4.0-beta4'
 
 	providedCompile 'javax.servlet:servlet-api:2.5'
     testCompile group: 'junit', name: 'junit', version: '4.+'
+    
+    // for running tomcat
+    def tomcatVersion = '7.0.47'
+    //tomcat "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}",
+    //       "org.apache.tomcat.embed:tomcat-embed-logging-juli:${tomcatVersion}"
+    //tomcat("org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}") {
+    //    exclude group: 'org.eclipse.jdt.core.compiler', module: 'ecj'
+    //}
 }
 
 // War customization

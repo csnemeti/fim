@@ -4,11 +4,11 @@
 		<!-- encoders are assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder 
 			by default -->
 		<encoder>
-			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n
+			<pattern>%d{HH:mm:ss.SSS} %-5level %logger{36} - %msg%n
 			</pattern>
 		</encoder>
 	</appender>
-	<appender name="FILE" class="ch.qos.logback.core.RollingFileAppender">
+	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<file>logs/fim.log</file>
 		
 		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
@@ -21,7 +21,7 @@
 		</triggeringPolicy>
 
 		<encoder>
-			<pattern>%date %-5level [%thread] %logger{36} [%file:%line] %msg%n
+			<pattern>%date %-5level [%thread{30}] %logger{36} [%file:%line] %msg%n
 			</pattern>
 		</encoder>
 	</appender>
