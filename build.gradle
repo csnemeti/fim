@@ -37,6 +37,14 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.+'
 }
 
+// War customization
+war {
+    from('.') {
+        include 'contributors.txt'
+        into('WEB-INF/classes')
+    }
+}
+
 // This is for creating the zip with distribution content
 distributions {
     main {
