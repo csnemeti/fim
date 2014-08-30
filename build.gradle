@@ -65,7 +65,9 @@ war {
         into('WEB-INF/classes')
     }
     manifest {
-        attributes 'FIM_CI': FIM_CI, 'FIM_BUILD_NUMBER': FIM_BUILD_NUMBER, 'FIM_GIT_COMMIT': FIM_GIT_COMMIT, 'FIM_GIT_BRANCH': FIM_GIT_BRANCH, 'Implementation-Title': 'Free Issue Manager (fim)', 'Implementation-Version': manifestVersion, 'Created-At' : getDate()
+        attributes 'FIM_CI': FIM_CI, 'FIM_BUILD_NUMBER': FIM_BUILD_NUMBER, 'FIM_GIT_COMMIT': FIM_GIT_COMMIT, 
+        			'FIM_GIT_BRANCH': FIM_GIT_BRANCH, 'Implementation-Title': 'Free Issue Manager (fim)', 
+        			'Implementation-Version': manifestVersion, 'Created-At' : getDate()
     } 
 }
 
