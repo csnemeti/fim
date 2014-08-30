@@ -1,4 +1,5 @@
 apply plugin: 'java'
+//apply plugin: 'jar' 
 apply plugin: 'war' 
 //apply plugin: 'tomcat'
 apply plugin: 'jetty'
@@ -17,16 +18,21 @@ buildscript {
     	//classpath 'org.gradle.api.plugins:gradle-tomcat-plugin:0.9.9'
   	}
 }
+// Initialize GIT information 
+import org.ajoberstar.grgit.*
+ext.repo = Grgit.open(project.file('.'))
 
 // Custom settings...
 sourceCompatibility = 1.8
 war.archiveName "fim.war"
-def currentVersion = '0.1'
-def buildNumber = System.getenv("BUILD_ID") ?: "unknown"
-// the version name include the GIT branch name too
-import org.ajoberstar.grgit.*
-ext.repo = Grgit.open(project.file('.'))
-version = "${currentVersion}-${repo.branch.getCurrent().getName()}"
+def currentVersion = "0.1"
+def FIM_CI = System.getenv("CI") ?: "false"
+def FIM_BUILD_NUMBER = System.getenv("BUILD_ID") ?: "unknown"
+def FIM_BUILD_NUMBER_FORMATED = System.getenv("BUILD_ID") ? "." + System.getenv("BUILD_ID") : ""
+def FIM_GIT_COMMIT = "${repo.head().abbreviatedId}"
+def FIM_GIT_BRANCH = "${repo.branch.getCurrent().getName()}"
+version = "${currentVersion}-${FIM_GIT_BRANCH}"
+def manifestVersion = "${currentVersion}${FIM_BUILD_NUMBER_FORMATED}-${FIM_GIT_BRANCH}"
 
 // This is for dependencies...
 repositories {
@@ -58,6 +64,9 @@ war {
         include 'contributors.txt'
         into('WEB-INF/classes')
     }
+    manifest {
+        attributes 'FIM_CI': FIM_CI, 'FIM_BUILD_NUMBER': FIM_BUILD_NUMBER, 'FIM_GIT_COMMIT': FIM_GIT_COMMIT, 'FIM_GIT_BRANCH': FIM_GIT_BRANCH, 'Implementation-Title': 'Free Issue Manager (fim)', 'Implementation-Version': manifestVersion, 'Created-At' : getDate()
+    } 
 }
 
 // This is for creating the zip with distribution content
@@ -80,7 +89,12 @@ task wrapper(type: Wrapper) {
     gradleVersion = '2.0'
 }
 
-
+// Function that returns date formated in YYYY-MM-DD HH:MM:SS.s
+def getDate() {
+    def date = new Date()
+    def formattedDate = date.format('yyyy-MM-dd HH:mm:ss.S')
+    return formattedDate
+}
 
 
 
