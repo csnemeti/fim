@@ -14,4 +14,15 @@
 		<filter-name>guiceFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
+	
+	
+	<filter>
+    	<filter-name>SetupVerifyFilter</filter-name>
+   		<filter-class>pfa.alliance.fim.filters.SetupVerifyFilter</filter-class>
+	</filter>
+
+	<filter-mapping>
+    	<filter-name>SetupVerifyFilter</filter-name>
+    	<url-pattern>/*</url-pattern>
+	</filter-mapping>
 </web-app>
