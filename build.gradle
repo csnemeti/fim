@@ -98,7 +98,41 @@ def getDate() {
     return formattedDate
 }
 
+// This is for uploading the distribution ZIP
+configurations {
+    ftpAntTask
+}
 
+dependencies {
+    ftpAntTask("org.apache.ant:ant-commons-net:1.9.3") {
+        module("commons-net:commons-net:1.4.1") {
+            dependencies "oro:oro:2.0.8:jar"
+        }
+    }
+}
+// FTP settings
+def FTP_SITE = "pfa-alliance.bugs3.com"
+def FTP_USER = "u901232532"
+def FTP_PASSWD = System.getenv("FIM_FTP_PASSWD") ?: "unknown"
+
+task ftp << {
+//	FIM_BUILD_NUMBER = "abc"
+	println "FIM_BUILD_NUMBER = ${FIM_BUILD_NUMBER}"
+	if (FIM_BUILD_NUMBER.equals("unknown")) {
+//		println 'Build number is missing, I cannot operate this way!'
+//	} else {
+		println 'Uploading...'
+		ant {
+			taskdef(name: 'ftp',
+					classname: 'org.apache.tools.ant.taskdefs.optional.net.FTP',
+					classpath: configurations.ftpAntTask.asPath)
+			ftp(server: FTP_SITE, userid: FTP_USER, password: FTP_PASSWD, action: "mkdir", remotedir: "test/fim/${FIM_BUILD_NUMBER}")
+			ftp(server: FTP_SITE, userid: FTP_USER, password: FTP_PASSWD, action: "send", remotedir: "test/fim/${FIM_BUILD_NUMBER}") {
+				fileset(dir: "build/distributions")
+			}
+		}
+	}
+}
 
 
 
