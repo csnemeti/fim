@@ -126,7 +126,7 @@ task ftp << {
 					classname: 'org.apache.tools.ant.taskdefs.optional.net.FTP',
 					classpath: configurations.ftpAntTask.asPath)
 			ftp(server: FTP_SITE, userid: FTP_USER, password: FTP_PASSWD, action: "mkdir", remotedir: "test/fim/${FIM_BUILD_NUMBER}")
-			ftp(server: FTP_SITE, userid: FTP_USER, password: FTP_PASSWD, action: "send", remotedir: "test/fim/${FIM_BUILD_NUMBER}") {
+			ftp(server: FTP_SITE, userid: FTP_USER, password: FTP_PASSWD, action: "send",  remotedir: "test/fim/${FIM_BUILD_NUMBER}", passive: "yes") {
 				fileset(dir: "build/distributions")
 			}
 		}
