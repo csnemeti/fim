@@ -111,8 +111,8 @@ dependencies {
     }
 }
 // FTP settings
-def FTP_SITE = "pfa-alliance.bugs3.com"
-def FTP_USER = "u901232532"
+def FTP_SITE = "pfaalliance.1gh.in"
+def FTP_USER = "u271309358"
 def FTP_PASSWD = System.getenv("FIM_FTP_PASSWD") ?: "unknown"
 
 task ftp << {
