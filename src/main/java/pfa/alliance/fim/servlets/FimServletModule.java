@@ -6,6 +6,11 @@ package pfa.alliance.fim.servlets;
 import javax.management.MBeanServer;
 import javax.management.MBeanServerFactory;
 
+import pfa.alliance.fim.filters.SetupVerifyFilter;
+import pfa.alliance.fim.service.Configuration;
+import pfa.alliance.fim.service.ConfigurationImpl;
+
+import com.google.inject.Scopes;
 import com.google.inject.servlet.ServletModule;
 
 /**
@@ -21,5 +26,10 @@ class FimServletModule extends ServletModule{
 		
 		// binding MBean Server if necessary in future
 		bind(MBeanServer.class).toInstance(MBeanServerFactory.createMBeanServer());
+		//bind configuration
+		bind(Configuration.class).to(ConfigurationImpl.class);
+		//bind configuration checker filter as singleton
+		bind(SetupVerifyFilter.class).in(Scopes.SINGLETON);
+		filter("/*").through(SetupVerifyFilter.class);
 	}
 }
