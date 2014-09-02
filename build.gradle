@@ -81,7 +81,7 @@ distributions {
         contents {
             from { 'LICENSE'}
             from { 'README.md'}
-            from { 'contributors.txt'}
+            //from { 'contributors.txt'}
             from { 'build/libs/'}
             
         }
@@ -101,7 +101,41 @@ def getDate() {
     return formattedDate
 }
 
+// This is for uploading the distribution ZIP
+configurations {
+    ftpAntTask
+}
 
+dependencies {
+    ftpAntTask("org.apache.ant:ant-commons-net:1.9.3") {
+        module("commons-net:commons-net:1.4.1") {
+            dependencies "oro:oro:2.0.8:jar"
+        }
+    }
+}
+// FTP settings
+def FTP_SITE = "pfaalliance.1gh.in"
+def FTP_USER = "u271309358"
+def FTP_PASSWD = System.getenv("FIM_FTP_PASSWD") ?: "unknown"
+
+task ftp << {
+	def FIM_UPLOAD_DIR = "fim/${FIM_GIT_BRANCH}/${FIM_BUILD_NUMBER}"
+	println "FIM_BUILD_NUMBER = ${FIM_BUILD_NUMBER}, FIM_UPLOAD_DIR = ${FIM_UPLOAD_DIR}"
+	if (FIM_BUILD_NUMBER.equals("unknown")) {
+		println 'Build number is missing, I cannot operate this way!'
+	} else {
+		println 'Uploading...'
+		ant {
+			taskdef(name: 'ftp',
+					classname: 'org.apache.tools.ant.taskdefs.optional.net.FTP',
+					classpath: configurations.ftpAntTask.asPath)
+			ftp(server: FTP_SITE, userid: FTP_USER, password: FTP_PASSWD, action: "mkdir", remotedir: "${FIM_UPLOAD_DIR}")
+			ftp(server: FTP_SITE, userid: FTP_USER, password: FTP_PASSWD, action: "send",  remotedir: "${FIM_UPLOAD_DIR}", passive: "yes") {
+				fileset(dir: "build/distributions")
+			}
+		}
+	}
+}
 
 
 
