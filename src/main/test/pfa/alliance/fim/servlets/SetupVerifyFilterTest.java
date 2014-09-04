@@ -1,4 +1,4 @@
-package pfa.alliance.fim.filters;
+package pfa.alliance.fim.servlets;
 
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.junit.Test;
 
 import pfa.alliance.fim.service.Configuration;
+import pfa.alliance.fim.servlets.SetupVerifyFilter;
 
 /**
  * Test if the {@link SetupVerifyFilter} is redirecting the request properly .

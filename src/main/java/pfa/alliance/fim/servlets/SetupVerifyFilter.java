@@ -1,4 +1,4 @@
-package pfa.alliance.fim.filters;
+package pfa.alliance.fim.servlets;
 
 import java.io.IOException;
 
@@ -9,7 +9,6 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
@@ -23,15 +22,14 @@ import pfa.alliance.fim.service.Configuration;
  * @author Balaceanu Sergiu-Denis
  *
  */
-@WebFilter("/SetupVerifyFilter")
 public class SetupVerifyFilter implements Filter {
   private static final Logger LOG = LoggerFactory.getLogger(SetupVerifyFilter.class);
   protected static final String WIZZARD_PATH = "/setup";
 
-  private Configuration configuration;
+  private final Configuration configuration;
 
   @Inject
-  public SetupVerifyFilter(Configuration configuration) {
+  SetupVerifyFilter(Configuration configuration) {
     this.configuration = configuration;
   }
   
@@ -45,13 +43,13 @@ public class SetupVerifyFilter implements Filter {
       throws IOException, ServletException {
     // if the application configuration is not completed , we redirect it to
     // the wizzard setup
-    if (!configuration.isConfigurationCompleted()) {
-      LOG.debug("Application is not configured !");
+    if (!configuration.isConfigurationCompleted() && response instanceof HttpServletResponse) {
+      LOG.info("Application is not configured !");
       HttpServletResponse httpResponse = (HttpServletResponse) response;
       httpResponse.sendRedirect(WIZZARD_PATH);
-      return;
+    }else{
+      chain.doFilter(request, response);
     }
-    LOG.debug("Application is properly configured !");
   }
 
   @Override

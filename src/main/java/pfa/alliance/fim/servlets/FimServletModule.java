@@ -6,7 +6,6 @@ package pfa.alliance.fim.servlets;
 import javax.management.MBeanServer;
 import javax.management.MBeanServerFactory;
 
-import pfa.alliance.fim.filters.SetupVerifyFilter;
 import pfa.alliance.fim.service.Configuration;
 import pfa.alliance.fim.service.ConfigurationImpl;
 
