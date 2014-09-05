@@ -5,6 +5,7 @@ apply plugin: 'war'
 apply plugin: 'jetty'
 apply plugin: 'eclipse'
 apply plugin: 'distribution'
+apply plugin: 'jacoco'
 
 buildscript {
 	repositories {
@@ -72,6 +73,10 @@ war {
         			'FIM_GIT_BRANCH': FIM_GIT_BRANCH, 'Implementation-Title': 'Free Issue Manager (fim)', 
         			'Implementation-Version': manifestVersion, 'Created-At' : getDate()
     } 
+}
+
+// "Cobertura task"
+task("cobertura", dependsOn: 'jacocoTestReport') << {
 }
 
 // This is for creating the zip with distribution content
