@@ -7,6 +7,7 @@
     	<link rel="stylesheet" href="plugins/metisMenu/css/metisMenu.min.css">
     	
     	<link rel="stylesheet" href="css/menu.css">
+    	<link rel="stylesheet" href="css/fim-styles.css">
     	
     	<!-- PLUGINS -->
     	<script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
@@ -174,7 +175,7 @@
             </ul>
 
 			<!-- LEFT SIDE MENU -->
-            <div class="navbar-default sidebar" role="navigation">
+            <div class="hidden-lg navbar-default sidebar" role="navigation">
                 <div class="sidebar-nav navbar-collapse in" style="">
                     <ul class="nav" id="side-menu">
                         <li class="sidebar-search">
@@ -206,6 +207,9 @@
             		If you can read this it means <span style="font-weight: bold">it works</span>!
         		</p>
         	</div>
+        </div>
+  		<div class="footer">
+            <p align="center">Copyright (c) 2014</p>
         </div>
    	</div>
     </body>
