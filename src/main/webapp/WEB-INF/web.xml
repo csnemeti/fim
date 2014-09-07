@@ -3,15 +3,40 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 	<listener>
-		<listener-class>pfa.alliance.fim.servlets.FimServletContextListener</listener-class>
+		<listener-class>com.silvermindsoftware.sg.context.GuiceContextListener</listener-class>
 	</listener>
+	<context-param>
+	    <param-name>GuiceInjectorFactory.Class</param-name>
+	    <param-value>pfa.alliance.fim.servlets.FimGuiceInjectorFactory</param-value>
+	</context-param>	
 	<filter>
-		<filter-name>guiceFilter</filter-name>
-		<filter-class>com.google.inject.servlet.GuiceFilter</filter-class>
+	    <display-name>Stripes Filter</display-name>
+	    <filter-name>StripesFilter</filter-name>
+	    <filter-class>net.sourceforge.stripes.controller.StripesFilter</filter-class>
+	    <init-param>
+	        <param-name>Configuration.Class</param-name>
+	        <param-value>com.silvermindsoftware.sg.config.GuiceRuntimeConfiguration</param-value>
+	    </init-param>
+	    <init-param>
+	        <param-name>ActionBeanContextFactory.Class</param-name>
+	        <param-value>com.silvermindsoftware.sg.controller.GuiceActionBeanContextFactory</param-value>
+	    </init-param>
+	    <init-param>
+	        <param-name>ActionResolver.Class</param-name>
+	        <param-value>com.silvermindsoftware.sg.controller.GuiceActionResolver</param-value>
+	    </init-param>
+	    <init-param>
+	        <param-name>Extension.Packages</param-name>
+	        <param-value>com.silvermindsoftware.sg.extension</param-value>
+	    </init-param>
+	    <init-param>
+	        <param-name>ActionResolver.Packages</param-name>
+	        <param-value>pfa.alliance.fim.stripes.action</param-value>
+	    </init-param>
 	</filter>
 
 	<filter-mapping>
-		<filter-name>guiceFilter</filter-name>
+		<filter-name>StripesFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 </web-app>
