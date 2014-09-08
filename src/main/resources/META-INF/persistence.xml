@@ -8,19 +8,16 @@
     <persistence-unit name="fimJpaUnit" transaction-type="RESOURCE_LOCAL">
         <provider>org.batoo.jpa.core.BatooPersistenceProvider</provider>
 
-        <!-- JPA entities must be registered here -->
-        <class>here.you.add.your.Entities</class>
-
+        <!-- JPA entities must be registered here 
+        <class>here.you.add.your.Entities</class> -->
+		<!--  We suppose to provide these values on-the-fly
     	<properties>
-                    <!-- here your driver-->
         	<property name="javax.persistence.jdbc.driver" value="org.h2.Driver" />
-                    <!-- here the URL of your database-->
         	<property name="javax.persistence.jdbc.url" value="jdbc:h2:tcp://localhost/~/test" />
-                    <!-- here your username-->
         	<property name="javax.persistence.jdbc.user" value="sa" />
-                    <!-- here your password-->
         	<property name="javax.persistence.jdbc.password" value="" />
     	</properties>
+    	 -->
     </persistence-unit>
 
 </persistence>

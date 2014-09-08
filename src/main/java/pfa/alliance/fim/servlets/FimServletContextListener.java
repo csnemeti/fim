@@ -8,6 +8,8 @@ import javax.servlet.ServletContextEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pfa.alliance.fim.service.impl.FimServiceModule;
+
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.persist.jpa.JpaPersistModule;
@@ -34,7 +36,8 @@ public class FimServletContextListener
     @Override
     protected Injector getInjector()
     {
-        return Guice.createInjector( new FimServletModule(), new JpaPersistModule( "fimJpaUnit" ) );
+        return Guice.createInjector( new FimServletModule(), new FimServiceModule(),
+                                     new JpaPersistModule( "fimJpaUnit" ) );
     }
 
     @Override

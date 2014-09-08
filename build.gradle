@@ -52,12 +52,23 @@ dependencies {
     compile 'ch.qos.logback:logback-core:1.1.2'
     compile 'ch.qos.logback:logback-classic:1.1.2'
     // google guice
-    compile 'com.google.inject:guice:4.0-beta4'
-    compile 'com.google.inject.extensions:guice-servlet:4.0-beta4'
+    compile 'com.google.guava:guava:14.0.1'    
+    compile ('com.google.inject:guice:4.0-beta4') {
+    	exclude module: 'guava'
+    }
+    compile ('com.google.inject.extensions:guice-servlet:4.0-beta4') {
+    	exclude module: 'guava'
+    }
 	// persistence
-	compile 'com.google.inject.extensions:guice-persist:4.0-beta4'
+	compile ('com.google.inject.extensions:guice-persist:4.0-beta4') {
+    	exclude module: 'guava'
+    }
 	compile 'org.batoo.jpa:batoo-jpa:2.0.1.2'
 	compile 'org.batoo.jpa:persistence-api:2.0'
+	compile 'javax.validation:validation-api:1.1.0.Final'
+	compile ('com.jolbox:bonecp:0.8.0.RELEASE') {
+    	exclude module: 'guava'
+    }
     // stripes
     compile ('net.sourceforge.stripes:stripes:1.5.8') {
         exclude module: 'log4j'
@@ -65,7 +76,7 @@ dependencies {
     //  db drivers
     compile 'org.postgresql:postgresql:9.3-1102-jdbc41'
     compile 'mysql:mysql-connector-java:5.1.32'
-    compile 'org.jumpmind.symmetric.jdbc:mariadb-java-client:1.1.1'
+    //compile 'org.jumpmind.symmetric.jdbc:mariadb-java-client:1.1.1'
     
     
 
