@@ -33,6 +33,10 @@
 	        <param-name>ActionResolver.Packages</param-name>
 	        <param-value>pfa.alliance.fim.stripes.action</param-value>
 	    </init-param>
+	    <init-param>
+    		<param-name>LocalePicker.Locales</param-name>
+    		<param-value>en:UTF-8</param-value>
+		</init-param>
 	</filter>
 
 	<filter-mapping>
