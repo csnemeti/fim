@@ -2,3 +2,7 @@
 	clear: both;
 	height: 80px;
 }
+
+.navbar-top-links label {
+	font-weight:normal;
+}
