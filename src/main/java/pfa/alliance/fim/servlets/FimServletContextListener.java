@@ -3,8 +3,11 @@
  */
 package pfa.alliance.fim.servlets;
 
+import java.util.Properties;
+
 import javax.servlet.ServletContextEvent;
 
+import org.batoo.jpa.JPASettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,8 +39,9 @@ public class FimServletContextListener
     @Override
     protected Injector getInjector()
     {
-        return Guice.createInjector( new FimServletModule(), new FimServiceModule(),
-                                     new JpaPersistModule( "fimJpaUnit" ) );
+        JpaPersistModule jpaPersistModule = new JpaPersistModule( "fimJpaUnit" );
+        jpaPersistModule.properties( buildJpaProperties() );
+        return Guice.createInjector( new FimServletModule(), new FimServiceModule(), jpaPersistModule );
     }
 
     @Override
@@ -45,5 +49,21 @@ public class FimServletContextListener
     {
         LOG.info( "Stopping Fim application..." );
         super.contextDestroyed( servletContextEvent );
+    }
+
+    /**
+     * Builds a map with the JPA properties.
+     * 
+     * @return the properties for JPA
+     */
+    private Properties buildJpaProperties()
+    {
+        Properties props = new Properties();
+        props.setProperty( JPASettings.JDBC_DRIVER , "org.postgresql.Driver" );
+        props.setProperty( JPASettings.JDBC_USER , "fim" );
+        props.setProperty( JPASettings.JDBC_PASSWORD , "fim" );
+        props.setProperty( JPASettings.JDBC_URL , "jdbc:postgresql://127.0.0.1:5432/fim" );
+        //props.setProperty( JPASettings.JDBC_DRIVER , "" );
+        return props;
     }
 }
