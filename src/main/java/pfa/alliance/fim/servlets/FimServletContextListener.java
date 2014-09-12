@@ -17,6 +17,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.persist.jpa.JpaPersistModule;
 import com.google.inject.servlet.GuiceServletContextListener;
+import com.google.inject.util.Modules;
 
 /**
  * This class is used for defining the {@link GuiceServletContextListener}
@@ -41,7 +42,8 @@ public class FimServletContextListener
     {
         JpaPersistModule jpaPersistModule = new JpaPersistModule( "fimJpaUnit" );
         jpaPersistModule.properties( buildJpaProperties() );
-        return Guice.createInjector( new FimServletModule(), new FimServiceModule(), jpaPersistModule );
+        //return Guice.createInjector( Modules.combine( jpaPersistModule, new FimServiceModule(),  new FimServletModule()) );
+        return Guice.createInjector( new FimServletModule());
     }
 
     @Override
@@ -59,11 +61,11 @@ public class FimServletContextListener
     private Properties buildJpaProperties()
     {
         Properties props = new Properties();
-        props.setProperty( JPASettings.JDBC_DRIVER , "org.postgresql.Driver" );
-        props.setProperty( JPASettings.JDBC_USER , "fim" );
-        props.setProperty( JPASettings.JDBC_PASSWORD , "fim" );
-        props.setProperty( JPASettings.JDBC_URL , "jdbc:postgresql://127.0.0.1:5432/fim" );
-        //props.setProperty( JPASettings.JDBC_DRIVER , "" );
+        props.setProperty( JPASettings.JDBC_DRIVER, "org.postgresql.Driver" );
+        props.setProperty( JPASettings.JDBC_USER, "fim" );
+        props.setProperty( JPASettings.JDBC_PASSWORD, "fim" );
+        props.setProperty( JPASettings.JDBC_URL, "jdbc:postgresql://127.0.0.1:5432/fim" );
+        // props.setProperty( JPASettings.JDBC_DRIVER , "" );
         return props;
     }
 }
