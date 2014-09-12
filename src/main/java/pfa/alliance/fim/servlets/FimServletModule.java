@@ -10,7 +10,6 @@ import pfa.alliance.fim.service.ConfigurationService;
 import pfa.alliance.fim.service.PersistenceService;
 import pfa.alliance.fim.service.impl.ConfigurationServiceImpl;
 import pfa.alliance.fim.service.impl.DummPersistenceService;
-import pfa.alliance.fim.service.impl.PersistenceServiceImpl;
 
 import com.google.inject.Scopes;
 import com.google.inject.servlet.ServletModule;
