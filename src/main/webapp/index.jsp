@@ -1,5 +1,5 @@
 <%@ taglib prefix="stripes" uri="http://stripes.sourceforge.net/stripes.tld" %>
-<stripes:layout-render name="/layout/default.jsp" pageTitle="FIM: Hello world">
+<stripes:layout-render name="/WEB-INF/pages/layout/default.jsp" pageTitle="FIM: Hello world">
     <stripes:layout-component name="content">
        <div class="col-md-6">
         		<h1>Hello F.I.M.</h1>

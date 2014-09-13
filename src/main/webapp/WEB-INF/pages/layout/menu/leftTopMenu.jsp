@@ -42,7 +42,8 @@
 					<stripes:label for="inviteUserItem" /></a></li>
 				<li><a href="#"><i class="fa fa-search fa-fw"></i>
 					<stripes:label for="searchUsersItem" /></a></li>
-			</ul></li>
+			</ul>
+		</li>
 	</ul>
 
 </stripes:layout-definition>

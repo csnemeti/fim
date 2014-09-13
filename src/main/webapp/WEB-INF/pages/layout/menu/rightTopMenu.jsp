@@ -5,6 +5,16 @@
 <stripes:layout-definition>
 
 	<ul class="nav navbar-top-links navbar-right">
+		
+		<!-- PROJECT -->
+		<li class="dropdown">
+			<div align="right" id="selectedProjectef">
+				<div>
+					<label class="label label-primary">Issue tracker</label>
+					<a id="removeFromSessioned" href="#"><i class="fa fa-times fa-fw"></i></a>
+				</div>
+			</div>
+		</li>
 		<!-- USER -->
 		<li class="dropdown"><a class="dropdown-toggle"
 			data-toggle="dropdown" href="#"> <i class="fa fa-user fa-fw"></i>
@@ -15,7 +25,19 @@
 				<li><a href="#"><i class="fa fa-gear fa-fw"></i><stripes:label for="userAccountSettings"/></a></li>
 				<li class="divider"></li>
 				<li><a href="login.html"><i class="fa fa-sign-out fa-fw"></i><stripes:label for="userLogout"/></a></li>
-			</ul></li>
+			</ul>
+		</li>
+		
+		<!-- LANGUAGES -->
+		<li class="dropdown"><a class="dropdown-toggle navbar-flag"
+			data-toggle="dropdown" href="#"> <i class="fa fa-flag fa-fw"></i>
+				<i class="fa fa-caret-down"></i>
+		</a>
+			<ul class="dropdown-menu dropdown-user">
+				<li><a>English</a></li>
+				<li><a>Romana</a></li>
+			</ul>
+		</li>
 	</ul>
 
 </stripes:layout-definition>

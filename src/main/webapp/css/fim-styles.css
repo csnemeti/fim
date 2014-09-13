@@ -1,8 +1,10 @@
+/* Footer style */
 .footer {
 	clear: both;
 	height: 80px;
 }
 
-.navbar-top-links label {
-	font-weight:normal;
+a {
+	color: #428bca;
+	text-decoration: none;
 }

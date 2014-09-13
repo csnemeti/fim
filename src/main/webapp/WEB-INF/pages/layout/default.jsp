@@ -25,14 +25,14 @@
         </head>
         <body>
         	<!-- MENU -->
-        	<stripes:layout-render name="/layout/menu/menu.jsp"/>
+        	<stripes:layout-render name="/WEB-INF/pages/layout/menu/menu.jsp"/>
 			
 			<div id="page-wrapper">
         		<stripes:layout-component name="content"/>
         	</div>
         	
         	<!-- FOOTER -->
-        	<stripes:layout-render name="/layout/footer.jsp"/>
+        	<stripes:layout-render name="/WEB-INF/pages/layout/footer.jsp"/>
 		
         </body>
     </html>
