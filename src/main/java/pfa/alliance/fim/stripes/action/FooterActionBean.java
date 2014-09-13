@@ -8,6 +8,7 @@ import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 
 /**
+ * ActionBean which is responsible for the footer data and links .
  * 
  * @author Balaceanu Sergiu-Denis
  *

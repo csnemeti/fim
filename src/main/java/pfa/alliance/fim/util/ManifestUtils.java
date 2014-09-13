@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * Utility class for the manifest attributes .
  * 
  * @author Balaceanu Sergiu-Denis
  *
