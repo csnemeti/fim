@@ -4,6 +4,8 @@
 <stripes:layout-definition>
     <html>
         <head>
+        	<link rel="shortcut icon" type="image/png" href="images/favicon.ico"/>
+        
             <!-- PLUGINS -->
     		<link rel="stylesheet" href="plugins/bootstrap/css/bootstrap.min.css">
     		<link rel="stylesheet" href="plugins/font-awesome/css/font-awesome.min.css">
