@@ -22,7 +22,8 @@ public class FimServiceModule
     {
         // bind services
         bind( ConfigurationService.class ).to( ConfigurationServiceImpl.class );
-        bind( PersistenceService.class ).to( DummPersistenceService.class );
+        //bind( PersistenceService.class ).to( DummPersistenceService.class );
+        bind( PersistenceService.class ).to( PersistenceServiceImpl.class );
     }
 
 }

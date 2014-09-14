@@ -37,8 +37,8 @@ public class FimGuiceInjectorFactory
         LOG.debug( "Init Injector..." );
         JpaPersistModule jpaPersistModule = new JpaPersistModule( "fimJpaUnit" );
         jpaPersistModule.properties( buildJpaProperties() );
-        //return Guice.createInjector( Modules.combine( jpaPersistModule, new FimServiceModule(),  new FimServletModule()) );
-        return Guice.createInjector(new FimServiceModule(),  new FimServletModule());
+        return Guice.createInjector( jpaPersistModule, new FimServiceModule(),  new FimServletModule() );
+        //return Guice.createInjector(new FimServiceModule(),  new FimServletModule());
     }
 
     /**
