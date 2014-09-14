@@ -3,6 +3,7 @@ package pfa.alliance.fim.servlets;
 import java.io.IOException;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -22,6 +23,7 @@ import pfa.alliance.fim.service.PersistenceService;
  * 
  * @author Balaceanu Sergiu-Denis
  */
+@Singleton
 public class SetupVerifyFilter
     implements Filter
 {
@@ -56,6 +58,7 @@ public class SetupVerifyFilter
     public void doFilter( ServletRequest request, ServletResponse response, FilterChain chain )
         throws IOException, ServletException
     {
+    	LOG.debug("Request received...");
         // if the application configuration is not completed , we redirect it to the wizard setup
         if ( !configurationService.isConfigurationCompleted() && response instanceof HttpServletResponse )
         {
@@ -66,6 +69,7 @@ public class SetupVerifyFilter
         else
         {
             // this will start Persistence IF service is NOT started
+        	LOG.debug("Starting persistence if necessary...");
             persistenceService.startPersistence();
             chain.doFilter( request, response );
         }

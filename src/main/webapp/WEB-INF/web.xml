@@ -2,6 +2,7 @@
 <web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+	
 	<listener>
 		<listener-class>com.silvermindsoftware.sg.context.GuiceContextListener</listener-class>
 	</listener>
@@ -9,6 +10,16 @@
 	    <param-name>GuiceInjectorFactory.Class</param-name>
 	    <param-value>pfa.alliance.fim.servlets.FimGuiceInjectorFactory</param-value>
 	</context-param>	
+
+	<filter>
+    	<filter-name>guiceFilter</filter-name>
+    	<filter-class>com.google.inject.servlet.GuiceFilter</filter-class>
+  	</filter>
+  	<filter-mapping>
+    	<filter-name>guiceFilter</filter-name>
+    	<url-pattern>/*</url-pattern>
+  	</filter-mapping>
+   	
 	<filter>
 	    <display-name>Stripes Filter</display-name>
 	    <filter-name>StripesFilter</filter-name>
@@ -38,9 +49,9 @@
     		<param-value>en:UTF-8</param-value>
 		</init-param>
 	</filter>
-
 	<filter-mapping>
 		<filter-name>StripesFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
+
 </web-app>
