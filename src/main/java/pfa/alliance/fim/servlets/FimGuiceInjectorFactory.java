@@ -65,7 +65,7 @@ public class FimGuiceInjectorFactory
         if ( host != null && host.length() > 0 )
         {
             properties.setProperty( JPASettings.JDBC_USER, "adminqru6wjz" );
-            properties.setProperty( JPASettings.JDBC_PASSWORD, "rdAMCMCF3p" );
+            properties.setProperty( JPASettings.JDBC_PASSWORD, "rdAMCMCF3p_3" );
             String port = System.getenv( "OPENSHIFT_POSTGRESQL_DB_PORT" );
             if ( port != null && port.length() > 0 )
             {
