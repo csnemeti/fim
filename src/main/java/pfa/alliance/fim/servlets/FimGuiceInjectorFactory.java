@@ -81,6 +81,7 @@ public class FimGuiceInjectorFactory
         {
             fillDefaultPropeties( properties );
         }
+        properties.setProperty( JPASettings.JDBC_DRIVER, "org.postgresql.Driver" );
         LOG.debug( "Read JPA configuration: {}", properties );
         return properties;
     }
