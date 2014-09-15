@@ -6,6 +6,8 @@ package pfa.alliance.fim.servlets;
 import javax.management.MBeanServer;
 import javax.management.MBeanServerFactory;
 
+import pfa.alliance.fim.service.PersistenceConfigurationService;
+
 import com.google.inject.servlet.ServletModule;
 
 /**
@@ -20,9 +22,10 @@ class FimServletModule
     protected void configureServlets()
     {
         super.configureServlets();
-        
+
         // binding MBean Server if necessary in future
         bind( MBeanServer.class ).toInstance( MBeanServerFactory.createMBeanServer() );
+        bind( PersistenceConfigurationService.class ).to( FimGuiceInjectorFactory.class );
         // bind configuration checker filter as singleton
         filter( "/*" ).through( SetupVerifyFilter.class );
     }

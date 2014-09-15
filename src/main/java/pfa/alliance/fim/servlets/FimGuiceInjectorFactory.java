@@ -5,6 +5,7 @@ package pfa.alliance.fim.servlets;
 
 import java.util.Properties;
 
+import javax.inject.Singleton;
 import javax.servlet.ServletContext;
 
 import org.batoo.jpa.JPASettings;
@@ -12,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 
+import pfa.alliance.fim.service.PersistenceConfigurationService;
 import pfa.alliance.fim.service.impl.FimServiceModule;
 
 import com.google.inject.Guice;
@@ -25,21 +27,27 @@ import com.silvermindsoftware.sg.guice.GuiceInjectorFactory;
  * 
  * @author Csaba
  */
+@Singleton
 public class FimGuiceInjectorFactory
-    implements GuiceInjectorFactory
+    implements GuiceInjectorFactory, PersistenceConfigurationService
 {
     /** The logger used in this class. */
     private static final Logger LOG = LoggerFactory.getLogger( FimGuiceInjectorFactory.class );
 
+    /** The JPA configuration properties. */
+    private final Properties JPA_PROPS = new Properties();
+
+    static {
+        // add SLF4JBridgeHandler to j.u.l's root logger, should be done once during
+        // the initialization phase of your application
+        SLF4JBridgeHandler.install();
+    }
     /**
      * Called when instance of this class is created
      */
     public FimGuiceInjectorFactory()
     {
         LOG.debug( "Initializing..." );
-        // add SLF4JBridgeHandler to j.u.l's root logger, should be done once during
-        // the initialization phase of your application
-        SLF4JBridgeHandler.install();
     }
 
     @Override
@@ -47,25 +55,17 @@ public class FimGuiceInjectorFactory
     {
         LOG.debug( "Init Injector..." );
         JpaPersistModule jpaPersistModule = new JpaPersistModule( "fimJpaUnit" );
-        jpaPersistModule.properties( buildJpaProperties() );
+        jpaPersistModule.properties( JPA_PROPS );
         return Guice.createInjector( jpaPersistModule, new FimServiceModule(), new FimServletModule() );
-        // return Guice.createInjector(new FimServiceModule(), new FimServletModule());
     }
 
-    /**
-     * Builds a map with the JPA properties.
-     * 
-     * @return the properties for JPA
-     */
-    private Properties buildJpaProperties()
+    @Override
+    public void setConfiguration( Properties properties )
     {
-        Properties props = new Properties();
-        props.setProperty( JPASettings.JDBC_DRIVER, "org.postgresql.Driver" );
-        props.setProperty( JPASettings.JDBC_USER, "fim" );
-        props.setProperty( JPASettings.JDBC_PASSWORD, "fim" );
-        props.setProperty( JPASettings.JDBC_URL, "jdbc:postgresql://127.0.0.1:5432/fim" );
-        // props.setProperty( JPASettings.JDBC_DRIVER , "" );
-        return props;
+        JPA_PROPS.clear();
+        
+        JPA_PROPS.putAll( properties );
+        JPA_PROPS.setProperty( JPASettings.JDBC_DRIVER, "org.postgresql.Driver" );
     }
 
 }
