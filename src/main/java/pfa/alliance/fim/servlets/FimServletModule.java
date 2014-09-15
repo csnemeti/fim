@@ -25,7 +25,6 @@ class FimServletModule
 
         // binding MBean Server if necessary in future
         bind( MBeanServer.class ).toInstance( MBeanServerFactory.createMBeanServer() );
-        bind( PersistenceConfigurationService.class ).to( FimGuiceInjectorFactory.class );
         // bind configuration checker filter as singleton
         filter( "/*" ).through( SetupVerifyFilter.class );
     }
