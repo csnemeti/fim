@@ -91,6 +91,7 @@ class PersistenceServiceImpl
     {
         Properties properties = new Properties();
         String host = System.getenv( "OPENSHIFT_POSTGRESQL_DB_HOST" );
+        LOG.debug( "OPENSHIFT_POSTGRESQL_DB_HOST = {}", host );
         if ( host != null && host.length() > 0 )
         {
             properties.setProperty( JPASettings.JDBC_USER, "adminqru6wjz" );
@@ -110,7 +111,7 @@ class PersistenceServiceImpl
         {
             fillDefaultPropeties( properties );
         }
-
+        LOG.debug( "Read JPA configuration: {}", properties );
         return properties;
     }
 
