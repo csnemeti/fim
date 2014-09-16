@@ -32,7 +32,7 @@ public class FooterActionBean implements ActionBean {
   
   @DefaultHandler
   public Resolution currentVersion(){
-    return new ForwardResolution("/index.jsp");
+    return new ForwardResolution(FimPageURLs.MAIN_PAGE.getURL());
   }
 
 }

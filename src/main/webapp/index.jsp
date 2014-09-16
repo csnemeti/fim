@@ -7,6 +7,5 @@
             		If you can read this it means <span style="font-weight: bold">it works</span>!
         		</p>
         </div>
-        	
     </stripes:layout-component>
 </stripes:layout-render>
