@@ -3,16 +3,14 @@
  */
 package pfa.alliance.fim.service.impl;
 
-import java.util.Properties;
-
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 
-import org.batoo.jpa.JPASettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pfa.alliance.fim.service.PersistenceConfigurationService;
+import pfa.alliance.fim.service.DatabaseMigrationService;
 import pfa.alliance.fim.service.PersistenceService;
 
 import com.google.inject.persist.PersistService;
@@ -31,16 +29,16 @@ class PersistenceServiceImpl
 
     private final PersistService service;
 
-    // private final PersistenceConfigurationService persistenceConfigurationService;
+    private final Provider<DatabaseMigrationService> databaseMigrationService;
 
     /** Flag to indicate the fact that {@link PersistService} is started or not. */
     private boolean running = false;
 
     @Inject
-    public PersistenceServiceImpl( PersistService service )
+    public PersistenceServiceImpl( PersistService service, Provider<DatabaseMigrationService> databaseMigrationService )
     {
         this.service = service;
-        // this.persistenceConfigurationService = persistenceConfigurationService;
+        this.databaseMigrationService = databaseMigrationService;
     }
 
     @Override
@@ -54,7 +52,8 @@ class PersistenceServiceImpl
         {
             synchronized ( this )
             {
-                LOG.debug( "Trying to start the service..." );
+                LOG.info( "Trying to start the service..." );
+                databaseMigrationService.get().upgradeDb();
                 service.start();
                 running = true;
             }

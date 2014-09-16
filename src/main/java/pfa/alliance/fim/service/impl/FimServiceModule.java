@@ -14,9 +14,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pfa.alliance.fim.service.ConfigurationService;
+import pfa.alliance.fim.service.DatabaseMigrationService;
 import pfa.alliance.fim.service.PersistenceService;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.Provides;
 
 /**
  * Guice module for Service level
@@ -38,10 +40,17 @@ public class FimServiceModule
         LOG.debug( "Configuring services..." );
         // bind services
         bind( ConfigurationService.class ).to( ConfigurationServiceImpl.class );
-        // bind( PersistenceService.class ).to( DummPersistenceService.class );
+        bind( DatabaseMigrationService.class ).to( DatabaseMigrationServiceImpl.class );
         bind( PersistenceService.class ).to( PersistenceServiceImpl.class );
     }
 
+    /**
+     * Gets the JPA configuration from environment file.
+     * 
+     * @return the JPA configuration
+     */
+    @Provides
+    @JpaConfiguration
     public Properties getJpaConfiguration()
     {
         LOG.debug( "Reading JPA configuration..." );
@@ -75,6 +84,12 @@ public class FimServiceModule
         return "/env/fim" + fimEnv + ".properties";
     }
 
+    /**
+     * Read the configuration from the given file or from default if this file is not found.
+     * 
+     * @param file the file to read
+     * @return the properties from the file
+     */
     private Properties readConfigurationFrom( final String file )
     {
         Properties props = new Properties();
@@ -114,8 +129,27 @@ public class FimServiceModule
         return is;
     }
 
+    /**
+     * Handles the property replacement. System variables are replaced here.
+     * 
+     * @param props the properties to be replaced
+     */
     private void handlePropertyReplacement( Properties props )
     {
+        LOG.debug( "Performing property replace on: {}", props );
         String url = props.getProperty( JPASettings.JDBC_URL, "" );
+        String host = System.getenv( "OPENSHIFT_POSTGRESQL_DB_HOST" );
+        if ( StringUtils.isNotBlank( host ) )
+        {
+            url = url.replace( "${OPENSHIFT_POSTGRESQL_DB_HOST}", host );
+        }
+        String port = System.getenv( "OPENSHIFT_POSTGRESQL_DB_PORT" );
+        if ( StringUtils.isBlank( port ) )
+        {
+            port = "5432";
+        }
+        url = url.replace( "${OPENSHIFT_POSTGRESQL_DB_PORT}", port );
+        props.setProperty( JPASettings.JDBC_URL, url );
+        LOG.debug( "Replaced properties: {}", props );
     }
 }

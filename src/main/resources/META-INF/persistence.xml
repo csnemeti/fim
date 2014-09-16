@@ -10,14 +10,16 @@
 
         <!-- JPA entities must be registered here 
         <class>here.you.add.your.Entities</class> -->
-		<!--  We suppose to provide these values on-the-fly
+		<!--  We suppose to provide these values on-the-fly -->
     	<properties>
+    	<!-- 
         	<property name="javax.persistence.jdbc.driver" value="org.h2.Driver" />
         	<property name="javax.persistence.jdbc.url" value="jdbc:h2:tcp://localhost/~/test" />
         	<property name="javax.persistence.jdbc.user" value="sa" />
         	<property name="javax.persistence.jdbc.password" value="" />
-    	</properties>
-    	 -->
+         -->
+         	<property name="org.batoo.jpa.ddl" value="NONE" />
+    	</properties>    	 
     </persistence-unit>
 
 </persistence>

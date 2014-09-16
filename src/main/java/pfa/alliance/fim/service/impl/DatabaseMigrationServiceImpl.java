@@ -7,7 +7,10 @@ import java.util.Properties;
 
 import javax.inject.Inject;
 
+import org.batoo.jpa.JPASettings;
 import org.flywaydb.core.Flyway;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pfa.alliance.fim.service.DatabaseMigrationService;
 
@@ -19,6 +22,9 @@ import pfa.alliance.fim.service.DatabaseMigrationService;
 public class DatabaseMigrationServiceImpl
     implements DatabaseMigrationService
 {
+    /** The logger used in this class. */
+    private static final Logger LOG = LoggerFactory.getLogger( DatabaseMigrationServiceImpl.class );
+
     private final Properties jpaConfiguration;
 
     /**
@@ -30,6 +36,7 @@ public class DatabaseMigrationServiceImpl
     DatabaseMigrationServiceImpl( @JpaConfiguration Properties jpaConfiguration )
     {
         this.jpaConfiguration = jpaConfiguration;
+        LOG.debug( "Instance created..." );
     }
 
     @Override
@@ -42,8 +49,16 @@ public class DatabaseMigrationServiceImpl
     @Override
     public boolean upgradeDb()
     {
+        LOG.info( "DB upgrade started" );
         Flyway flyway = new Flyway();
+        flyway.setSqlMigrationPrefix( "" );
+        flyway.setLocations( "classpath:/db/migration/postgres" );
+        flyway.setDataSource( jpaConfiguration.getProperty( JPASettings.JDBC_URL ),
+                              jpaConfiguration.getProperty( JPASettings.JDBC_USER ),
+                              jpaConfiguration.getProperty( JPASettings.JDBC_PASSWORD ), "" );
+        flyway.migrate();
 
+        LOG.info( "DB upgrade completed" );
         return false;
     }
 
