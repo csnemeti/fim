@@ -52,9 +52,10 @@ public class FimGuiceInjectorFactory
     public Injector getInjector( ServletContext aServletContext )
     {
         LOG.debug( "Init Injector..." );
+        FimServiceModule fimServiceModule = new FimServiceModule();
         JpaPersistModule jpaPersistModule = new JpaPersistModule( "fimJpaUnit" );
-        jpaPersistModule.properties( readConfiguration() );
-        return Guice.createInjector( jpaPersistModule, new FimServiceModule(), new FimServletModule() );
+        jpaPersistModule.properties( fimServiceModule.getJpaConfiguration() );
+        return Guice.createInjector( jpaPersistModule, fimServiceModule, new FimServletModule() );
     }
 
     private Properties readConfiguration()
