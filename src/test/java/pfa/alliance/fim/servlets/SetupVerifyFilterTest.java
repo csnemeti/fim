@@ -20,6 +20,7 @@ import org.mockito.verification.VerificationMode;
 
 import pfa.alliance.fim.service.ConfigurationService;
 import pfa.alliance.fim.service.PersistenceService;
+import pfa.alliance.fim.stripes.action.FimPageURLs;
 
 /**
  * Test if the {@link SetupVerifyFilter} is redirecting the request properly .
@@ -28,7 +29,7 @@ import pfa.alliance.fim.service.PersistenceService;
  */
 public class SetupVerifyFilterTest
 {
-
+  
     @Test
     public void testProperlyConfigured()
         throws IOException
@@ -70,7 +71,7 @@ public class SetupVerifyFilterTest
         setupVerifyFilter.destroy();
 
         // verify if the response was not redirected to the wizard
-        verify( httpServletResponse, never() ).sendRedirect( SetupVerifyFilter.WIZZARD_PATH );
+        verify( httpServletResponse, never() ).sendRedirect( FimPageURLs.WIZZARD_PAGE.getURL() );
         verify( configurationService ).isConfigurationCompleted();
         verify( persistenceService, Mockito.times( 1 ) ).startPersistence();
         Mockito.verifyNoMoreInteractions( configurationService, persistenceService );
@@ -117,7 +118,7 @@ public class SetupVerifyFilterTest
         setupVerifyFilter.destroy();
 
         // verify if the response was redirected to the wizard
-        verify( httpServletResponse ).sendRedirect( SetupVerifyFilter.WIZZARD_PATH );
+        verify( httpServletResponse ).sendRedirect( FimPageURLs.WIZZARD_PAGE.getURL() );
         verify( configurationService ).isConfigurationCompleted();
         Mockito.verifyNoMoreInteractions( configurationService, persistenceService );
     }
