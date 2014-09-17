@@ -10,7 +10,7 @@
 					<div class="navbar-header" style="height: 84px;">
 						<stripes:link class="navbar-brand" beanclass="pfa.alliance.fim.stripes.action.RedirectActionBean" event="goToDashboard">
 							<img class="fim-logo" src="images/fim-logo.png">
-							</stripes:link>
+						</stripes:link>
 					</div>
 				</li>
 

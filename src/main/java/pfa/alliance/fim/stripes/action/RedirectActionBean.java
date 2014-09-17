@@ -1,7 +1,6 @@
 package pfa.alliance.fim.stripes.action;
 
 import pfa.alliance.fim.common.FimPageURLs;
-import pfa.alliance.fim.util.ManifestUtils;
 import net.sourceforge.stripes.action.ActionBean;
 import net.sourceforge.stripes.action.ActionBeanContext;
 import net.sourceforge.stripes.action.DefaultHandler;
@@ -9,12 +8,12 @@ import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 
 /**
- * ActionBean which is responsible for the footer data and links .
+ * Action bean designed to redirect requests to specific pages.
  * 
  * @author Balaceanu Sergiu-Denis
  *
  */
-public class FooterActionBean implements ActionBean {
+public class RedirectActionBean implements ActionBean {
   private ActionBeanContext context;
 
   @Override
@@ -26,14 +25,15 @@ public class FooterActionBean implements ActionBean {
   public ActionBeanContext getContext() {
     return context;
   }
-  
-  public String getVersion(){
-    return ManifestUtils.getImplementationVersion();
-  }
-  
+
+  /**
+   * Event for redirecting a request to the Dashboard page.
+   * @return
+   */
   @DefaultHandler
-  public Resolution currentVersion(){
-    return new ForwardResolution(FimPageURLs.MAIN_PAGE.getURL());
+  public Resolution goToDashboard(){
+    return new ForwardResolution(FimPageURLs.DASBOARD_PAGE.getURL());
   }
+
 
 }
