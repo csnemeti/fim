@@ -46,3 +46,7 @@ a {
 .nav label {
 	font-weight: normal;
 }
+
+.medium {
+	font-size: 20px;
+}

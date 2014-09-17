@@ -1,4 +1,4 @@
-package pfa.alliance.fim.stripes.action;
+package pfa.alliance.fim.common;
 
 /**
  * Enumeration that defines the URL to all the FIM Application pages .
