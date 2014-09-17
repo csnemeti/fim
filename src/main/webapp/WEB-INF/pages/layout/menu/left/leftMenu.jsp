@@ -8,9 +8,9 @@
 			<ul id="side-menu" class="nav">
 				<li>
 					<div class="navbar-header" style="height: 84px;">
-						<stripes:link class="navbar-brand" beanclass="pfa.alliance.fim.stripes.action.RedirectActionBean" event="goToDashboard">
+						<a class="navbar-brand"
 							<img class="fim-logo" src="images/fim-logo.png">
-							</stripes:link>
+						</a>
 					</div>
 				</li>
 
