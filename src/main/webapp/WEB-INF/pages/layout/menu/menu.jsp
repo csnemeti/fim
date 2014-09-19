@@ -4,14 +4,21 @@
 <stripes:layout-definition>
 
 <nav class="navbar navbar-default navbar-static-top" role="navigation"style="margin-bottom: 0">
-	
+	<!-- MOBILE MENU COLLAPSE -->
+	<div class="navbar-header">
+    	<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        	<span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+           	<span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+       	</button>
+    </div>
 
 	<!-- TOP MENU SIDE -->	
 	<stripes:layout-render name="/WEB-INF/pages/layout/menu/top/topMenu.jsp"/>
 	
 	<!-- LEFT MENU -->
 	<stripes:layout-render name="/WEB-INF/pages/layout/menu/left/leftMenu.jsp"/>
-	
 </nav>
 
 </stripes:layout-definition>
