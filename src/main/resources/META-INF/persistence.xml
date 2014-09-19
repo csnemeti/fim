@@ -8,8 +8,9 @@
     <persistence-unit name="fimJpaUnit" transaction-type="RESOURCE_LOCAL">
         <provider>org.batoo.jpa.core.BatooPersistenceProvider</provider>
 
-        <!-- JPA entities must be registered here 
-        <class>here.you.add.your.Entities</class> -->
+        <!-- JPA entities must be registered here -->
+        <class>pfa.alliance.fim.model.user.User</class> 
+        <class>pfa.alliance.fim.model.user.UserLogin</class> 
 		<!--  We suppose to provide these values on-the-fly -->
     	<properties>
     	<!-- 
