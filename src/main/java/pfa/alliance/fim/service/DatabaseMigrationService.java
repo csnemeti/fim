@@ -4,7 +4,7 @@
 package pfa.alliance.fim.service;
 
 /**
- * This class defines the methods necessary for database versioning & migration.
+ * This class defines the methods necessary for database versioning and migration.
  * 
  * @author Nemeti
  */
