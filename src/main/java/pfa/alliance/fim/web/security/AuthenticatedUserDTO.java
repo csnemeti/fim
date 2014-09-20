@@ -118,6 +118,6 @@ public class AuthenticatedUserDTO
         tsb.append( "username", username );
         tsb.append( "email", email );
         tsb.append( "last login", lastLogin );
-        return super.toString();
+        return tsb.toString();
     }
 }
