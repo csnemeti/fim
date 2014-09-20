@@ -8,6 +8,7 @@ import java.sql.Timestamp;
 import org.junit.Test;
 
 import pfa.alliance.fim.EqualsHashCodeAndToStringTester;
+import pfa.alliance.fim.GetterAndSetterTester;
 
 /**
  * This class is used for testing {@link UserLogin}
@@ -17,6 +18,13 @@ import pfa.alliance.fim.EqualsHashCodeAndToStringTester;
  */
 public class UserLoginTest
 {
+    
+    @Test
+    public void testGettersAndSetters(){
+        GetterAndSetterTester tester = new GetterAndSetterTester();
+        tester.addDefaultInstance( User.class, new User() );
+        tester.testClass( UserLogin.class );
+    }
     
     @Test
     public void testEquals_hashCode_toString(){

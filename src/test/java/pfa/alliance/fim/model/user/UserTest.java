@@ -3,7 +3,6 @@
  */
 package pfa.alliance.fim.model.user;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import pfa.alliance.fim.EqualsHashCodeAndToStringTester;
@@ -19,7 +18,6 @@ public class UserTest
 {
     
     @Test
-    @Ignore
     public void testGettersAndSetters(){
         GetterAndSetterTester tester = new GetterAndSetterTester();
         tester.addDefaultInstance( UserStatus.class, UserStatus.ACTIVE );

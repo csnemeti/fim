@@ -11,9 +11,12 @@ package pfa.alliance.fim;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -23,6 +26,9 @@ import java.util.Map;
 import java.util.Set;
 
 import junit.framework.TestCase;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Class to test using JUnit the getters and setters of a class. The basic usage is to test the methods (matching beans
@@ -35,6 +41,7 @@ import junit.framework.TestCase;
  */
 public class GetterAndSetterTester
 {
+    private static final Logger LOG = LoggerFactory.getLogger( GetterAndSetterTester.class );
 
     // TODO add more default instances.
     /** Map with default instances for classes. */
@@ -58,11 +65,16 @@ public class GetterAndSetterTester
         defaultInstances.put( long.class, new Long( 0 ) );
         defaultInstances.put( float.class, new Float( 0f ) );
         defaultInstances.put( double.class, new Double( 0d ) );
+        defaultInstances.put( Date.class, new Date() );
+        defaultInstances.put( Timestamp.class, new Timestamp( System.currentTimeMillis() ) );
+        defaultInstances.put( Calendar.class, Calendar.getInstance() );
         defaultInstances.put( List.class, new ArrayList() );
         defaultInstances.put( Collection.class, new ArrayList() );
         defaultInstances.put( Set.class, new HashSet() );
 
         ignoredFields = new LinkedList<String>();
+        // JaCoCo add some fields for introspection. They should not be processed.
+        ignoredFields.add( "$jacocoData" );
     }
 
     /**
@@ -210,8 +222,16 @@ public class GetterAndSetterTester
      */
     private String nameWithCapital( final Field field )
     {
-        String result = field.getName();
-        return result.replaceFirst( "" + result.charAt( 0 ), "" + Character.toUpperCase( result.charAt( 0 ) ) );
+        try
+        {
+            String result = field.getName();
+            return result.replaceFirst( "" + result.charAt( 0 ), "" + Character.toUpperCase( result.charAt( 0 ) ) );
+        }
+        catch ( RuntimeException e )
+        {
+            LOG.error( "Error with field: {}", field, e );
+            throw e;
+        }
     }
 
     /**
