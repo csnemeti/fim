@@ -21,6 +21,8 @@ import javax.persistence.Version;
 public class GenericModel
     implements Serializable
 {
+    private static final long serialVersionUID = 553540917593216250L;
+
     @Column( name = "version" )
     @Version
     private int version;

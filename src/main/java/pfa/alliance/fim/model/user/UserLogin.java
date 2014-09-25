@@ -21,6 +21,8 @@ import javax.persistence.Version;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
+import pfa.alliance.fim.model.Identifiable;
+
 /**
  * This class keeps when the user logged in.
  * 
@@ -28,7 +30,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
  */
 @Entity( name = "user_login" )
 public class UserLogin
-    implements Serializable
+    implements Serializable, Identifiable<Long>
 {
     private static final long serialVersionUID = -3911814345921477177L;
 
@@ -52,11 +54,13 @@ public class UserLogin
     @Version
     private int version;
 
+    @Override
     public Long getId()
     {
         return id;
     }
 
+    @Override
     public void setId( Long id )
     {
         this.id = id;

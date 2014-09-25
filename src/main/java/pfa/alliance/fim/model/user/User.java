@@ -4,7 +4,6 @@
 package pfa.alliance.fim.model.user;
 
 import java.util.Set;
-import java.util.SortedSet;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -22,6 +21,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 import pfa.alliance.fim.model.GenericModel;
+import pfa.alliance.fim.model.Identifiable;
 
 /**
  * This class defines a user.
@@ -30,7 +30,7 @@ import pfa.alliance.fim.model.GenericModel;
  */
 @Entity(name="fim_user")
 public class User
-    extends GenericModel
+    extends GenericModel implements Identifiable<Integer>
 {
     private static final long serialVersionUID = -7478487015028567486L;
 
@@ -68,11 +68,13 @@ public class User
     @OrderBy( "id DESC" )
     private Set<UserLogin> logins;
 
+    @Override
     public Integer getId()
     {
         return id;
     }
 
+    @Override
     public void setId( Integer id )
     {
         this.id = id;

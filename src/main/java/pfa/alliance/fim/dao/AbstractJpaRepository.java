@@ -10,12 +10,14 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
+import pfa.alliance.fim.model.Identifiable;
+
 /**
  * This class serves as base class for repository classes.
  * 
  * @author Csaba
  */
-public abstract class AbstractJpaRepository<T, ID extends Serializable>
+public abstract class AbstractJpaRepository<T extends Identifiable<ID>, ID extends Serializable>
 {
     /** The entity manager used in the application. */
     private EntityManager entityManager;
@@ -47,7 +49,7 @@ public abstract class AbstractJpaRepository<T, ID extends Serializable>
      * 
      * @return the list of objects as result.
      */
-    public abstract List<T> findAll();
+    // public abstract List<T> findAll();
 
     // public abstract List<T> findAll(Sort sort);
     // public abstract List<T> findAll(Pageable pageable);
@@ -56,7 +58,7 @@ public abstract class AbstractJpaRepository<T, ID extends Serializable>
      * 
      * @return the total number of results
      */
-    public abstract long count();
+    // public abstract long count();
 
     /**
      * Save all the objects sent as parameters.
@@ -98,7 +100,14 @@ public abstract class AbstractJpaRepository<T, ID extends Serializable>
      * 
      * @param id the ID of the object to delete
      */
-    public abstract void delete( ID id );
+    public void delete( ID id )
+    {
+        T obj = findOne( id );
+        if ( obj != null )
+        {
+            delete( obj );
+        }
+    }
 
     /**
      * Deletes a given object.
@@ -115,7 +124,13 @@ public abstract class AbstractJpaRepository<T, ID extends Serializable>
      * 
      * @param entities the objects to be deleted
      */
-    public abstract void delete( Collection<? extends T> entities );
+    public void delete( Collection<? extends T> entities )
+    {
+        for ( T obj : entities )
+        {
+            delete( obj );
+        }
+    }
 
     /**
      * Gets the {@link Class} of the entity that this repository is managing.
@@ -124,5 +139,15 @@ public abstract class AbstractJpaRepository<T, ID extends Serializable>
      */
     protected abstract Class<T> getEntityClass();
 
-    protected abstract boolean isNewEntity( T obj );
+    /**
+     * Find if this object is new. In order to do that, it checks if object ID is null.
+     * 
+     * @param obj the object to check
+     * @return true if object is new
+     */
+    protected boolean isNewEntity( T obj )
+    {
+        ID id = obj.getId();
+        return id == null;
+    }
 }
