@@ -13,6 +13,7 @@ import org.batoo.jpa.JPASettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pfa.alliance.fim.dao.impl.FimDaoModule;
 import pfa.alliance.fim.service.ConfigurationService;
 import pfa.alliance.fim.service.DatabaseMigrationService;
 import pfa.alliance.fim.service.PersistenceService;
@@ -38,6 +39,7 @@ public class FimServiceModule
     protected void configure()
     {
         LOG.debug( "Configuring services..." );
+        install( new FimDaoModule() );
         // bind services
         bind( ConfigurationService.class ).to( ConfigurationServiceImpl.class );
         bind( DatabaseMigrationService.class ).to( DatabaseMigrationServiceImpl.class );

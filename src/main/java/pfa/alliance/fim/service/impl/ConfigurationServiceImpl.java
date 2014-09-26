@@ -13,7 +13,9 @@ import pfa.alliance.fim.service.ConfigurationService;
  *
  */
 @Singleton
-public class ConfigurationServiceImpl implements ConfigurationService {
+class ConfigurationServiceImpl
+    implements ConfigurationService
+{
     /** The logger used in this class. */
     private static final Logger LOG = LoggerFactory.getLogger( ConfigurationServiceImpl.class );
 

@@ -13,6 +13,8 @@ import pfa.alliance.fim.model.user.User;
 public interface UserRepository
     extends JpaRepository<User, Integer>
 {
+    /** The maximum number of login records to keep. */
+    int MAX_LOGIN_RECORDS = 20;
     /**
      * Search for a user that has the given username and the given password.
      * 
@@ -39,4 +41,11 @@ public interface UserRepository
      * @return the {@link User} with the given e-mail address or null if no such user is found
      */
     User findByEmail( String email );
+
+    /**
+     * Add a new User login record and keep the number of login records limited to a predefined value.
+     * 
+     * @param user the user object
+     */
+    void addNewLoginInfoAndLimitLogs( User user );
 }

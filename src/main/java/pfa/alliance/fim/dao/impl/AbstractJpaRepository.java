@@ -19,7 +19,8 @@ import pfa.alliance.fim.model.Identifiable;
  * 
  * @author Csaba
  */
-public abstract class AbstractJpaRepository<T extends Identifiable<ID>, ID extends Serializable> implements JpaRepository<T, ID>
+abstract class AbstractJpaRepository<T extends Identifiable<ID>, ID extends Serializable>
+    implements JpaRepository<T, ID>
 {
     /** The entity manager used in the application. */
     private EntityManager entityManager;

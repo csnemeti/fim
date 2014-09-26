@@ -25,7 +25,7 @@ import pfa.alliance.fim.model.user.User;
  * @author Csaba
  */
 @Singleton
-public class UserRepositoryImpl
+class UserRepositoryImpl
     extends AbstractJpaRepository<User, Integer>
     implements UserRepository
 {
@@ -40,6 +40,7 @@ public class UserRepositoryImpl
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<User> criteria = cb.createQuery( User.class );
         Root<User> root = criteria.from( User.class );
+        root.fetch( "logins" );
         criteria.where( cb.equal( root.get( "login" ), username ), cb.equal( root.get( "password" ), password ) );
 
         TypedQuery<User> query = em.createQuery( criteria );
@@ -97,6 +98,13 @@ public class UserRepositoryImpl
                 throw ex;
         }
         return result;
+    }
+
+    @Override
+    public void addNewLoginInfoAndLimitLogs( User user )
+    {
+        // TODO Auto-generated method stub
+
     }
 
     @Override
