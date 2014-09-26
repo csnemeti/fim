@@ -3,6 +3,7 @@
  */
 package pfa.alliance.fim.dao.impl;
 
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.HashMap;
@@ -18,6 +19,7 @@ import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
+import org.dbunit.operation.DatabaseOperation;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -42,10 +44,6 @@ public class AbstractJpaRepository_Read_Test
 
     private static EntityManager entityManager;
 
-    private static IDatabaseConnection connection;
-
-    private static IDataSet dataset;
-
     private static UserRepositoryImpl userRepositoryImpl;
 
     @BeforeClass
@@ -63,15 +61,18 @@ public class AbstractJpaRepository_Read_Test
             entityManager = entityManagerFactory.createEntityManager();
 
             Connection conn = DriverManager.getConnection( "jdbc:derby:memory:unit-testing-jpa" );
-            connection = new DatabaseConnection( conn );
+            IDatabaseConnection connection = new DatabaseConnection( conn );
 
             FlatXmlDataSetBuilder flatXmlDataSetBuilder = new FlatXmlDataSetBuilder();
             flatXmlDataSetBuilder.setColumnSensing( true );
-            dataset =
-                flatXmlDataSetBuilder.build( Thread.currentThread().getContextClassLoader().getResourceAsStream( "dbunit/user/users.xml" ) );
+            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+            InputStream is = classLoader.getResourceAsStream( "dbunit/user/users.xml" );
+            IDataSet dataSet = flatXmlDataSetBuilder.build( is );
 
             userRepositoryImpl = new UserRepositoryImpl();
             userRepositoryImpl.setEntityManager( entityManager );
+
+            DatabaseOperation.CLEAN_INSERT.execute( connection, dataSet );
         }
         catch ( Exception ex )
         {
