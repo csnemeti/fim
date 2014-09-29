@@ -8,7 +8,7 @@
 			<ul id="side-menu" class="nav">
 				<li>
 					<div class="navbar-header" style="height: 84px;">
-						<stripes:link class="navbar-brand" beanclass="pfa.alliance.fim.stripes.action.RedirectActionBean" event="goToDashboard">
+						<stripes:link class="navbar-brand" beanclass="pfa.alliance.fim.web.stripes.action.RedirectActionBean" event="goToDashboard">
 							<img class="fim-logo" src="images/fim-logo.png">
 						</stripes:link>
 					</div>

@@ -1,4 +1,4 @@
-package pfa.alliance.fim.stripes.action;
+package pfa.alliance.fim.web.stripes.action;
 
 import pfa.alliance.fim.util.ManifestUtils;
 

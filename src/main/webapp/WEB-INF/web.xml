@@ -42,7 +42,7 @@
 	    </init-param>
 	    <init-param>
 	        <param-name>ActionResolver.Packages</param-name>
-	        <param-value>pfa.alliance.fim.stripes.action</param-value>
+	        <param-value>pfa.alliance.fim.web.stripes.action</param-value>
 	    </init-param>
 	    <init-param>
     		<param-name>LocalePicker.Locales</param-name>
