@@ -1,8 +1,8 @@
 package pfa.alliance.fim.stripes.action;
 
-import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.UrlBinding;
 import pfa.alliance.fim.common.FimPageURLs;
 
 /**
@@ -11,12 +11,13 @@ import pfa.alliance.fim.common.FimPageURLs;
  * @author Balaceanu Sergiu-Denis
  *
  */
+@UrlBinding(value="/redirect")
 public class RedirectActionBean extends BaseActionBean {
+  
   /**
    * Event for redirecting a request to the Dashboard page.
    * @return
    */
-  @DefaultHandler
   public Resolution goToDashboard(){
     return new ForwardResolution(FimPageURLs.DASBOARD_PAGE.getURL());
   }
