@@ -70,7 +70,7 @@ public class SetupVerifyFilterTest
         setupVerifyFilter.destroy();
 
         // verify if the response was not redirected to the wizard
-        verify( httpServletResponse, never() ).sendRedirect( pfa.alliance.fim.common.FimPageURLs.WIZZARD_PAGE.getURL() );
+        verify( httpServletResponse, never() ).sendRedirect( pfa.alliance.fim.web.common.FimPageURLs.WIZZARD_PAGE.getURL() );
         verify( configurationService ).isConfigurationCompleted();
         verify( persistenceService, Mockito.times( 1 ) ).startPersistence();
         Mockito.verifyNoMoreInteractions( configurationService, persistenceService );
@@ -117,7 +117,7 @@ public class SetupVerifyFilterTest
         setupVerifyFilter.destroy();
 
         // verify if the response was redirected to the wizard
-        verify( httpServletResponse ).sendRedirect( pfa.alliance.fim.common.FimPageURLs.WIZZARD_PAGE.getURL() );
+        verify( httpServletResponse ).sendRedirect( pfa.alliance.fim.web.common.FimPageURLs.WIZZARD_PAGE.getURL() );
         verify( configurationService ).isConfigurationCompleted();
         Mockito.verifyNoMoreInteractions( configurationService, persistenceService );
     }

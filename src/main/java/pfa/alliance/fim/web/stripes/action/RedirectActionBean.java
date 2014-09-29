@@ -3,7 +3,7 @@ package pfa.alliance.fim.web.stripes.action;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.UrlBinding;
-import pfa.alliance.fim.common.FimPageURLs;
+import pfa.alliance.fim.web.common.FimPageURLs;
 
 /**
  * Action bean designed to redirect requests to specific pages.
