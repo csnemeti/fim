@@ -1,5 +1,4 @@
 <%@ taglib prefix="stripes" uri="http://stripes.sourceforge.net/stripes.tld" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <!-- TRY TO REDIRECT TO DASHBOARD PAGE -->
 <!--c:redirect url="http://localhost:8080/fim/user/dashboard"/-->
