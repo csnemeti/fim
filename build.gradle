@@ -76,7 +76,8 @@ dependencies {
     }    
     compile ('net.sourceforge.stripes:stripes:1.5.8') {
         exclude module: 'log4j'
-    }    
+    }  
+    compile 'taglibs:standard:1.1.2'  
     //  db drivers
     compile 'org.postgresql:postgresql:9.3-1102-jdbc41'
     compile 'mysql:mysql-connector-java:5.1.32'

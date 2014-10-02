@@ -7,9 +7,12 @@ package pfa.alliance.fim.web.common;
  */
 public enum FimPageURLs
 {
-    MAIN_PAGE( "/index.jsp" ), DASBOARD_PAGE( "/WEB-INF/pages/dashboard.jsp" ), WIZZARD_PAGE( "/setup" );
+    MAIN_PAGE( "/index.jsp" ),
+    DASBOARD_PAGE( "/WEB-INF/pages/dashboard.jsp" ),
+    WIZZARD_PAGE( "/setup" ),
+    USER_REGISTER_PAGE( "/WEB-INF/pages/user/user-register.jsp" );
 
-    FimPageURLs( String url )
+    private FimPageURLs( String url )
     {
         this.url = url;
     }
