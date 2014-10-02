@@ -2,6 +2,7 @@
 <%@ taglib prefix="stripes" uri="http://stripes.sourceforge.net/stripes.tld" %>
 
 <stripes:layout-definition>
+	<!DOCTYPE html>
     <html>
         <head>
         	<link rel="shortcut icon" type="image/png" href="images/favicon.ico"/>
