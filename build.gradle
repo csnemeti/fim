@@ -45,6 +45,8 @@ dependencies {
     //compile group: 'commons-collections', name: 'commons-collections', version: '3.2'
 	// misc
 	compile 'commons-io:commons-io:2.4'
+	compile 'commons-codec:commons-codec:1.9'
+	
     // logging
     compile 'org.slf4j:slf4j-api:1.7.7'
     compile 'org.slf4j:jcl-over-slf4j:1.7.7'    
@@ -88,7 +90,9 @@ dependencies {
     
 
     testCompile group: 'junit', name: 'junit', version: '4.+'
-    testCompile "org.mockito:mockito-all:1.9.5"
+    testCompile 'org.mockito:mockito-all:1.9.5'
+    testCompile 'org.apache.derby:derby:10.11.1.1'
+    testCompile 'org.dbunit:dbunit:2.5.0'
     
     // for running tomcat
     def tomcatVersion = '7.0.47'

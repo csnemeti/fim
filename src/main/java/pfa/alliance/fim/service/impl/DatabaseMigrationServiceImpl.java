@@ -6,6 +6,7 @@ package pfa.alliance.fim.service.impl;
 import java.util.Properties;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import org.batoo.jpa.JPASettings;
 import org.flywaydb.core.Flyway;
@@ -19,7 +20,8 @@ import pfa.alliance.fim.service.DatabaseMigrationService;
  * 
  * @author Nemeti
  */
-public class DatabaseMigrationServiceImpl
+@Singleton
+class DatabaseMigrationServiceImpl
     implements DatabaseMigrationService
 {
     /** The logger used in this class. */

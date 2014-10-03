@@ -8,6 +8,7 @@ import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.PrePersist;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
@@ -50,4 +51,16 @@ public class GenericModel
         return lastModified;
     }
 
+    /**
+     * Method called before object is persisted.
+     */
+    @PrePersist
+    protected void beforePersist()
+    {
+        lastModified = new Timestamp( System.currentTimeMillis() );
+        if ( createdAt == null )
+        {
+            createdAt = lastModified;
+        }
+    }
 }
