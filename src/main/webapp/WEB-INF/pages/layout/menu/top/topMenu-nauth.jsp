@@ -5,6 +5,10 @@
 <stripes:layout-definition>
 
 	<ul class="nav navbar-top-links navbar-right">
+<!-- 	
+		<a href="#">Login</</a>
+		<a href="#">Register</</a>
+ -->		
 		<!-- LANGUAGES -->
 		<li class="dropdown"><a class="dropdown-toggle navbar-flag"
 			data-toggle="dropdown" href="#"> <i class="fa fa-flag fa-fw"></i>

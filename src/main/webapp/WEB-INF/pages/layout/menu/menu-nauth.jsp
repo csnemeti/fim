@@ -15,7 +15,7 @@
     </div>
 
 	<!-- TOP MENU SIDE -->	
-	<stripes:layout-render name="/WEB-INF/pages/layout/menu/top/topMenu-minimal.jsp"/>
+	<stripes:layout-render name="/WEB-INF/pages/layout/menu/top/topMenu-nauth.jsp"/>
 	
 	<!-- LEFT MENU -->
 	<stripes:layout-render name="/WEB-INF/pages/layout/menu/left/leftMenu-minimal.jsp"/>
