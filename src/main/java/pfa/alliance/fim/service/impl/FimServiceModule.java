@@ -17,6 +17,7 @@ import pfa.alliance.fim.dao.impl.FimDaoModule;
 import pfa.alliance.fim.service.ConfigurationService;
 import pfa.alliance.fim.service.DatabaseMigrationService;
 import pfa.alliance.fim.service.PersistenceService;
+import pfa.alliance.fim.service.UserManagerService;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
@@ -44,6 +45,8 @@ public class FimServiceModule
         bind( ConfigurationService.class ).to( ConfigurationServiceImpl.class );
         bind( DatabaseMigrationService.class ).to( DatabaseMigrationServiceImpl.class );
         bind( PersistenceService.class ).to( PersistenceServiceImpl.class );
+
+        bind( UserManagerService.class ).to( UserManagetServiceImpl.class );
     }
 
     /**

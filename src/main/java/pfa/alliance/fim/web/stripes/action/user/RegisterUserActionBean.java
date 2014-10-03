@@ -3,6 +3,8 @@
  */
 package pfa.alliance.fim.web.stripes.action.user;
 
+import javax.inject.Inject;
+
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
@@ -11,6 +13,7 @@ import net.sourceforge.stripes.action.UrlBinding;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pfa.alliance.fim.service.UserManagerService;
 import pfa.alliance.fim.web.common.FimPageURLs;
 import pfa.alliance.fim.web.stripes.action.BasePageActionBean;
 
@@ -26,7 +29,7 @@ public class RegisterUserActionBean
     /** The logger used in this class. */
     private static final Logger LOG = LoggerFactory.getLogger( RegisterUserActionBean.class );
 
-    // private final
+    private final UserManagerService userManagerService;
 
     private String firstName;
 
@@ -38,6 +41,12 @@ public class RegisterUserActionBean
 
     private String password2;
 
+    @Inject
+    public RegisterUserActionBean( UserManagerService userManagerService )
+    {
+        this.userManagerService = userManagerService;
+        LOG.debug( "New instance created..." );
+    }
 
     @DefaultHandler
     public Resolution goToHomePage()
@@ -54,6 +63,7 @@ public class RegisterUserActionBean
     public Resolution tryRegister()
     {
         LOG.debug( "Trying to register user: firstName = {}, lastName = {}, email = {}", firstName, lastName, email );
+        userManagerService.registerUser( email, password, firstName, lastName );
         return new ForwardResolution( "/" );
     }
 

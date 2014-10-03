@@ -52,11 +52,11 @@ public class User
     private String email;
 
     /** The user login name. */
-    @Column( name = "login", length = 200, nullable = false, unique = true )
+    @Column( name = "login_name", length = 200, nullable = false, unique = true )
     private String login;
 
     /** The password of the user. */
-    @Column( name = "password", length = 250, nullable = false )
+    @Column( name = "user_password", length = 250, nullable = false )
     private String password;
 
     /** The user status. */
