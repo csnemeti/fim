@@ -1,15 +1,17 @@
 /**
  * 
  */
-package pfa.alliance.fim.dao;
+package pfa.alliance.fim.dao.impl;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
+import pfa.alliance.fim.dao.JpaRepository;
 import pfa.alliance.fim.model.Identifiable;
 
 /**
@@ -17,7 +19,8 @@ import pfa.alliance.fim.model.Identifiable;
  * 
  * @author Csaba
  */
-public abstract class AbstractJpaRepository<T extends Identifiable<ID>, ID extends Serializable>
+abstract class AbstractJpaRepository<T extends Identifiable<ID>, ID extends Serializable>
+    implements JpaRepository<T, ID>
 {
     /** The entity manager used in the application. */
     private EntityManager entityManager;
@@ -28,6 +31,7 @@ public abstract class AbstractJpaRepository<T extends Identifiable<ID>, ID exten
      * @param id the ID to check
      * @return true if the ID was found, false otherwise
      */
+    @Override
     public boolean exists( ID id )
     {
         return findOne( id ) != null;
@@ -39,26 +43,11 @@ public abstract class AbstractJpaRepository<T extends Identifiable<ID>, ID exten
      * @param id the primary key of the record
      * @return the corresponding object or null if object is not found
      */
+    @Override
     public T findOne( ID id )
     {
         return entityManager.find( getEntityClass(), id );
     }
-
-    /**
-     * Gets all the records form the given object. Pay attention to memory usage!
-     * 
-     * @return the list of objects as result.
-     */
-    // public abstract List<T> findAll();
-
-    // public abstract List<T> findAll(Sort sort);
-    // public abstract List<T> findAll(Pageable pageable);
-    /**
-     * Gets the number of total objects of this type from database.
-     * 
-     * @return the total number of results
-     */
-    // public abstract long count();
 
     /**
      * Save all the objects sent as parameters.
@@ -66,6 +55,7 @@ public abstract class AbstractJpaRepository<T extends Identifiable<ID>, ID exten
      * @param objects the objects to save
      * @return the saved objects
      */
+    @Override
     public List<T> save( Collection<T> objects )
     {
         List<T> saved = new ArrayList<T>();
@@ -82,6 +72,7 @@ public abstract class AbstractJpaRepository<T extends Identifiable<ID>, ID exten
      * @param obj the object to save
      * @return the saved object
      */
+    @Override
     public T save( T obj )
     {
         if ( isNewEntity( obj ) )
@@ -100,6 +91,7 @@ public abstract class AbstractJpaRepository<T extends Identifiable<ID>, ID exten
      * 
      * @param id the ID of the object to delete
      */
+    @Override
     public void delete( ID id )
     {
         T obj = findOne( id );
@@ -114,6 +106,7 @@ public abstract class AbstractJpaRepository<T extends Identifiable<ID>, ID exten
      * 
      * @param entity the object to delete
      */
+    @Override
     public void delete( T entity )
     {
         entityManager.remove( entity );
@@ -124,6 +117,7 @@ public abstract class AbstractJpaRepository<T extends Identifiable<ID>, ID exten
      * 
      * @param entities the objects to be deleted
      */
+    @Override
     public void delete( Collection<? extends T> entities )
     {
         for ( T obj : entities )
@@ -150,4 +144,26 @@ public abstract class AbstractJpaRepository<T extends Identifiable<ID>, ID exten
         ID id = obj.getId();
         return id == null;
     }
+
+    /**
+     * Sets (by Guice) the {@link EntityManager} for this repository.
+     * 
+     * @param entityManager the entity manager to use
+     */
+    @Inject
+    void setEntityManager( EntityManager entityManager )
+    {
+        this.entityManager = entityManager;
+    }
+
+    /**
+     * Gets the {@link EntityManager} instance set in this repository.
+     * 
+     * @return the entity manager to use
+     */
+    protected EntityManager getEntityManager()
+    {
+        return entityManager;
+    }
+
 }

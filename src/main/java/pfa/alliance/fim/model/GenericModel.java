@@ -27,13 +27,13 @@ public class GenericModel
     @Version
     private int version;
 
-    @Column( name = "created_at", nullable = false )
+    @Column( name = "created_at", insertable = false, updatable = false )
     @Temporal( TemporalType.TIMESTAMP )
-    public Timestamp createdAt;
+    private Timestamp createdAt;
 
-    @Column( name = "modified_at", nullable = false )
+    @Column( name = "modified_at", insertable = false, updatable = false )
     @Temporal( TemporalType.TIMESTAMP )
-    public Timestamp lastModified;
+    private Timestamp lastModified;
 
     public int getVersion()
     {
@@ -49,5 +49,4 @@ public class GenericModel
     {
         return lastModified;
     }
-
 }
