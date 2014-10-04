@@ -3,29 +3,15 @@
  */
 package pfa.alliance.fim.dao.impl;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
+import javax.persistence.EntityTransaction;
 
-import org.batoo.jpa.BJPASettings;
-import org.batoo.jpa.JPASettings;
-import org.dbunit.database.DatabaseConnection;
-import org.dbunit.database.IDatabaseConnection;
-import org.dbunit.dataset.IDataSet;
-import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
-import org.dbunit.operation.DatabaseOperation;
 import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,128 +19,65 @@ import org.slf4j.LoggerFactory;
 import pfa.alliance.fim.model.user.User;
 import pfa.alliance.fim.model.user.UserStatus;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.google.inject.persist.PersistService;
-import com.google.inject.persist.UnitOfWork;
-import com.google.inject.persist.jpa.JpaPersistModule;
-
 /**
  * This class is used for testing reader methods from {@link AbstractJpaRepository}.
  * 
  * @author Csaba
  */
-@Ignore
 public class AbstractJpaRepository_CUD_Test
+    extends BaseDbUnitTest
 {
 
     /** The logger used in this class. */
     private static final Logger LOG = LoggerFactory.getLogger( AbstractJpaRepository_CUD_Test.class );
 
-    private static EntityManagerFactory entityManagerFactory = null;
+    private EntityTransaction transaction;
 
-    private static EntityManager entityManager = null;
-
-    private static IDatabaseConnection connection = null;
-
-    private static IDataSet dataset = null;
-
-    private static UserRepositoryImpl userRepositoryImpl = null;
-
-    private static PersistService persistService = null;
-
-    private static UnitOfWork unitOfWork;
-
-    // @BeforeClass
-    public static void initEntityManager()
-        throws Exception
-    {
-        Map<String, Object> properties = new HashMap<String, Object>();
-        properties.put( JPASettings.JDBC_URL, "jdbc:derby:memory:unit-testing-jpa;create=true" );
-        properties.put( BJPASettings.DDL, "CREATE" );
-        try
-        {
-            LOG.info( "BuildingEntityManager for unit tests: {}", properties );
-
-            entityManagerFactory = Persistence.createEntityManagerFactory( "fimJpaUnit", properties );
-            entityManager = entityManagerFactory.createEntityManager();
-
-            Connection conn = DriverManager.getConnection( "jdbc:derby:memory:unit-testing-jpa" );
-            connection = new DatabaseConnection( conn );
-
-            FlatXmlDataSetBuilder flatXmlDataSetBuilder = new FlatXmlDataSetBuilder();
-            flatXmlDataSetBuilder.setColumnSensing( true );
-            dataset =
-                flatXmlDataSetBuilder.build( Thread.currentThread().getContextClassLoader().getResourceAsStream( "dbunit/user/users.xml" ) );
-
-            DatabaseOperation.CLEAN_INSERT.execute( connection, dataset );
-
-            userRepositoryImpl = new UserRepositoryImpl();
-            userRepositoryImpl.setEntityManager( entityManager );
-        }
-        catch ( Exception ex )
-        {
-            LOG.error( "Error while EntityManager init", ex );
-            throw ex;
-        }
-    }
+    private static UserRepositoryImpl userRepositoryImpl;
 
     @BeforeClass
-    public static void initDbAndManagers()
-        throws Exception
+    public static void init()
     {
-        Properties properties = new Properties();
-        properties.put( JPASettings.JDBC_URL, "jdbc:derby:memory:unit-testing-jpa;create=true" );
-        properties.put( BJPASettings.DDL, "CREATE" );
-
-        JpaPersistModule jpaPersistModule = new JpaPersistModule( "fimJpaUnit" );
-        jpaPersistModule.properties( properties );
-
-        final Injector injector = Guice.createInjector( jpaPersistModule );
-        persistService = injector.getInstance( PersistService.class );
-        persistService.start();
-
-        Connection conn = DriverManager.getConnection( "jdbc:derby:memory:unit-testing-jpa" );
-        connection = new DatabaseConnection( conn );
-
-        FlatXmlDataSetBuilder flatXmlDataSetBuilder = new FlatXmlDataSetBuilder();
-        flatXmlDataSetBuilder.setColumnSensing( true );
-        dataset =
-            flatXmlDataSetBuilder.build( Thread.currentThread().getContextClassLoader().getResourceAsStream( "dbunit/user/users.xml" ) );
-
-        // DatabaseOperation.CLEAN_INSERT.execute( connection, dataset );
-
         userRepositoryImpl = new UserRepositoryImpl();
-        injector.injectMembers( userRepositoryImpl );
-        unitOfWork = injector.getInstance( UnitOfWork.class );
+        getInjector().injectMembers( userRepositoryImpl );
     }
 
     @Before
     public void dbSetup()
         throws Exception
     {
-        DatabaseOperation.CLEAN_INSERT.execute( connection, dataset );
-        // unitOfWork.begin();
+        transaction = getEntityManager().getTransaction();
+        transaction.begin();
     }
 
-    // @Test
-    // public void test_deleteId_noUser()
-    // {
-    // userRepositoryImpl.delete( 1000 );
-    // }
+    @Test
+    public void test_deleteId_noUser()
+    {
+        userRepositoryImpl.delete( 100000 );
+    }
 
     @Test
-    @Ignore
     public void test_deleteId_validUser()
     {
-        User user = userRepositoryImpl.findByUsername( "user1" );
-        userRepositoryImpl.delete( user );
-        // entityManager.flush();
-        Assert.assertFalse( "User should not be found", userRepositoryImpl.exists( user.getId() ) );
+        User user = userRepositoryImpl.findByUsername( "user2" );
+        userRepositoryImpl.delete( user.getId() );
+        // TODO test this somehow
     }
 
     @Test
-    public void test_save_newObject(){
+    public void test_delete_validUser()
+    {
+        User user = userRepositoryImpl.findByUsername( "user1" );
+        LOG.debug( "User: {}, version = {}, created = {}", user, user.getVersion(), user.getCreatedAt() );
+        userRepositoryImpl.delete( user );
+        getEntityManager().flush();
+        // TODO test this somehow
+        // Assert.assertFalse( "User should not be found", userRepositoryImpl.exists( user.getId() ) );
+    }
+
+    @Test
+    public void test_save_newObject()
+    {
         User user = new User();
         user.setEmail( "csaba@csaba.ro" );
         user.setLogin( "csaba@csaba.ro" );
@@ -164,32 +87,65 @@ public class AbstractJpaRepository_CUD_Test
         userRepositoryImpl.save( user );
     }
 
+    @Test
+    public void test_save_existingObject()
+    {
+        User user = userRepositoryImpl.findByUsername( "user3" );
+        user.setEmail( "csaba@nemeti.ro" );
+        user.setLogin( "csaba@nemeti.ro" );
+        user.setPassword( "abc" );
+        user.setStatus( UserStatus.ACTIVE );
+
+        userRepositoryImpl.save( user );
+    }
+
+    @Test
+    public void test_delete_emptyCollection()
+    {
+        userRepositoryImpl.delete( new ArrayList<User>() );
+    }
+
+    @Test
+    public void test_delete_withCollection()
+    {
+        List<User> toDelete = new ArrayList<User>();
+        toDelete.add( userRepositoryImpl.findByUsername( "user5" ) );
+        userRepositoryImpl.delete( toDelete );
+    }
+
+    @Test
+    public void test_save_emptyCollection()
+    {
+        userRepositoryImpl.save( new ArrayList<User>() );
+    }
+
+    @Test
+    public void test_save_withCollection()
+    {
+        List<User> toSave = new ArrayList<User>();
+        User user4 = userRepositoryImpl.findByUsername( "user4" );
+        user4.setStatus( UserStatus.ACTIVE );
+        toSave.add( user4 );
+        User user26 = new User();
+        user26.setEmail( "user26@company.com" );
+        user26.setLogin( "user26" );
+        userRepositoryImpl.save( toSave );
+    }
+
     @After
     public void finishTest()
     {
-        // unitOfWork.end();
+        if ( transaction != null )
+        {
+            transaction.rollback();
+        }
     }
 
     @AfterClass
-    public static void closeEntityManager()
+    public static void destroy()
+        throws Exception
     {
-        if ( persistService != null )
-        {
-            persistService.stop();
-            persistService = null;
-            entityManager = null;
-        }
-        if ( entityManager != null )
-        {
-            entityManager.close();
-            entityManager = null;
-        }
-        if ( entityManagerFactory != null )
-        {
-            entityManagerFactory.close();
-            entityManagerFactory = null;
-        }
+        userRepositoryImpl = null;
+        reloadDataFromScratch();
     }
-
-
 }

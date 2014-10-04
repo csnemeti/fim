@@ -3,23 +3,6 @@
  */
 package pfa.alliance.fim.dao.impl;
 
-import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-
-import org.batoo.jpa.BJPASettings;
-import org.batoo.jpa.JPASettings;
-import org.dbunit.database.DatabaseConnection;
-import org.dbunit.database.IDatabaseConnection;
-import org.dbunit.dataset.IDataSet;
-import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
-import org.dbunit.operation.DatabaseOperation;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -35,50 +18,19 @@ import pfa.alliance.fim.model.user.User;
  * @author Csaba
  */
 public class AbstractJpaRepository_Read_Test
+    extends BaseDbUnitTest
 {
 
     /** The logger used in this class. */
     private static final Logger LOG = LoggerFactory.getLogger( AbstractJpaRepository_Read_Test.class );
 
-    private static EntityManagerFactory entityManagerFactory;
-
-    private static EntityManager entityManager;
-
     private static UserRepositoryImpl userRepositoryImpl;
 
     @BeforeClass
-    public static void initEntityManager()
-        throws Exception
+    public static void init()
     {
-        Map<String, Object> properties = new HashMap<String, Object>();
-        properties.put( JPASettings.JDBC_URL, "jdbc:derby:memory:unit-testing-jpa;create=true" );
-        properties.put( BJPASettings.DDL, "CREATE" );
-        try
-        {
-            LOG.info( "BuildingEntityManager for unit tests: {}", properties );
-
-            entityManagerFactory = Persistence.createEntityManagerFactory( "fimJpaUnit", properties );
-            entityManager = entityManagerFactory.createEntityManager();
-
-            Connection conn = DriverManager.getConnection( "jdbc:derby:memory:unit-testing-jpa" );
-            IDatabaseConnection connection = new DatabaseConnection( conn );
-
-            FlatXmlDataSetBuilder flatXmlDataSetBuilder = new FlatXmlDataSetBuilder();
-            flatXmlDataSetBuilder.setColumnSensing( true );
-            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-            InputStream is = classLoader.getResourceAsStream( "dbunit/user/users.xml" );
-            IDataSet dataSet = flatXmlDataSetBuilder.build( is );
-
-            userRepositoryImpl = new UserRepositoryImpl();
-            userRepositoryImpl.setEntityManager( entityManager );
-
-            DatabaseOperation.CLEAN_INSERT.execute( connection, dataSet );
-        }
-        catch ( Exception ex )
-        {
-            LOG.error( "Error while EntityManager init", ex );
-            throw ex;
-        }
+        userRepositoryImpl = new UserRepositoryImpl();
+        getInjector().injectMembers( userRepositoryImpl );
     }
 
     @Test
@@ -110,9 +62,8 @@ public class AbstractJpaRepository_Read_Test
     }
 
     @AfterClass
-    public static void closeEntityManager()
+    public static void destroy()
     {
-        entityManager.close();
-        entityManagerFactory.close();
+        userRepositoryImpl = null;
     }
 }
