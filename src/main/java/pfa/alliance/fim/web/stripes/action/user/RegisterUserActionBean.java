@@ -52,7 +52,7 @@ public class RegisterUserActionBean
     public Resolution goToHomePage()
     {
         LOG.debug( "Show page..." );
-        return new ForwardResolution( FimPageURLs.USER_REGISTER_PAGE.getURL() );
+        return new ForwardResolution( FimPageURLs.USER_REGISTER_JSP.getURL() );
     }
 
     /**

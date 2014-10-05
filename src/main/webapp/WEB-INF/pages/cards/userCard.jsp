@@ -8,8 +8,8 @@
             	<div class="panel-heading">
                 	<div style="margin-left: 3px ; margin-right: 3px;"class="row">
                     	<div style="float:left;width: 60%">
-                        	<div class="row"><b><stripes:label for="usercard-Username"/></b>${actionBean.username} </div>
-                        	<div class="row"><b><stripes:label for="usercard-Email"/></b>${actionBean.userEmail}</div>
+                        	<div class="row"><b><stripes:label for="usercard-Username"/></b> ${actionBean.username} </div>
+                        	<div class="row"><b><stripes:label for="usercard-Email"/></b> ${actionBean.userEmail}</div>
                         </div>
                         <div style="float: right;width: 40%"class="text-right">
                         	<div class="medium">${actionBean.lastLoginTime}</div>

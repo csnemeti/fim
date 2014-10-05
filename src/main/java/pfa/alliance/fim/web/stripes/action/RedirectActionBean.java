@@ -19,7 +19,7 @@ public class RedirectActionBean extends BaseActionBean {
    * @return
    */
   public Resolution goToDashboard(){
-    return new ForwardResolution(FimPageURLs.DASBOARD_PAGE.getURL());
+    return new ForwardResolution(FimPageURLs.USER_DASBOARD_JSP.getURL());
   }
 
 

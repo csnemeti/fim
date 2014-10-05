@@ -33,11 +33,11 @@ public class HomePageActionBean
         if ( getLoggedUser() != null )
         {
             LOG.debug( "Show page..." );
-            return new ForwardResolution( FimPageURLs.DASBOARD_PAGE.getURL() );
+            return new ForwardResolution( FimPageURLs.USER_DASBOARD_JSP.getURL() );
         }
         else
         {
-            return new ForwardResolution( FimPageURLs.LOGIN_PAGE.getURL() );
+            return new ForwardResolution( FimPageURLs.USER_LOGIN_JSP.getURL() );
         }
     }
 
