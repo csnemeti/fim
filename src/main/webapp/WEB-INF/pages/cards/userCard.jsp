@@ -8,18 +8,18 @@
             	<div class="panel-heading">
                 	<div style="margin-left: 3px ; margin-right: 3px;"class="row">
                     	<div style="float:left;width: 60%">
-                        	<div class="row"><b>User:</b>  the_connected_user </div>
-                        	<div class="row"><b>Email:</b> the_connected_user@email.com </div>
+                        	<div class="row"><b><stripes:label for="usercard-Username"/></b>${actionBean.username} </div>
+                        	<div class="row"><b><stripes:label for="usercard-Email"/></b>${actionBean.userEmail}</div>
                         </div>
                         <div style="float: right;width: 40%"class="text-right">
-                        	<div class="medium">12 hours ago</div>
-                           	<div>14 Sep 2014</div>
+                        	<div class="medium">${actionBean.lastLoginTime}</div>
+                           	<div>${actionBean.sessionAge}</div>
                         </div>
                  	</div>
               	</div>
                 <a href="#">
                 	<div class="panel-footer">
-                    	<span class="pull-left">View Details</span>
+                    	<span class="pull-left"><stripes:label for="usercard-ViewDetails"/></span>
                         	<span class="pull-right">
                         	<i class="fa fa-arrow-circle-right"></i>
                         </span>
