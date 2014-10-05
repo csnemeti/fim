@@ -5,6 +5,7 @@ package pfa.alliance.fim.service.impl;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.persistence.PersistenceException;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
@@ -45,10 +46,49 @@ class UserManagetServiceImpl
     @Transactional
     public User registerUser( String email, String cleanPassword, String firstName, String lastName )
     {
+        LOG.debug( "Trying to create new user: email = {}, first name = {}, last name = {}", email, firstName, lastName );
         User user = createNewUser( email, cleanPassword, firstName, lastName );
-        User savedUser = userRepository.save( user );
-        // TODO send e-mail
-        return savedUser;
+        try
+        {
+            User savedUser = userRepository.save( user );
+            // TODO send e-mail
+            return savedUser;
+        }
+        catch ( PersistenceException e )
+        {
+            LOG.error( "Could not create the user: {}", user, e );
+            if ( isDuplicateUserInfoRelatedException( e ) )
+            {
+                throw new DuplicateUserDataException( "Duplicate user data", e );
+            }
+            else
+            {
+                throw e;
+            }
+        }
+    }
+
+    /**
+     * Checks if the user data that is provided is duplicate or not.
+     * 
+     * @param e the exception we received
+     * @return true if information about duplicate e-mail or username was found
+     */
+    private boolean isDuplicateUserInfoRelatedException( PersistenceException e )
+    {
+        Throwable t = e;
+        boolean found = false;
+        do
+        {
+            String message = t.getMessage();
+            if ( message.contains( "violates unique constraint" ) )
+            {
+                found = true;
+            }
+            t = t.getCause();
+        }
+        while ( t != null && !found );
+        return found;
     }
 
     /**
@@ -100,6 +140,7 @@ class UserManagetServiceImpl
             // TODO throw exception
         }
     }
+
     /**
      * Encrypt a clear text representing a password.
      * 
