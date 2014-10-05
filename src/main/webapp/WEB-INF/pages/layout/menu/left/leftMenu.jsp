@@ -9,7 +9,7 @@
 				<li>
 					<div class="navbar-header" style="height: 84px;">
 						<stripes:link class="navbar-brand" beanclass="pfa.alliance.fim.web.stripes.action.RedirectActionBean" event="goToDashboard">
-							<img class="fim-logo" src="images/fim-logo.png">
+							<img class="fim-logo" src="${pageContext.request.contextPath}/images/fim-logo.png">
 						</stripes:link>
 					</div>
 				</li>
