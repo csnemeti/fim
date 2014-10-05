@@ -9,7 +9,9 @@ import net.sourceforge.stripes.action.ActionBeanContext;
  * @author Balaceanu Sergiu-Denis
  *
  */
-public class BaseActionBean implements ActionBean {
+public abstract class BaseActionBean
+    implements ActionBean
+{
 	private ActionBeanContext context;
 
 	@Override

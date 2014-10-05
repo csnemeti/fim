@@ -2,7 +2,6 @@
 <%@ taglib prefix="stripes"
 	uri="http://stripes.sourceforge.net/stripes.tld"%>
 <%@ taglib  prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-	
 
 <stripes:layout-definition>
 	<div role="navigation" class="navbar-default sidebar">
@@ -15,21 +14,6 @@
 						</stripes:link>
 					</div>
 				</li>
-
-				<!-- SEARCH -->
-				<stripes:layout-render name="/WEB-INF/pages/layout/menu/left/searchItem.jsp"/>
-				
-				<!-- ISSUES -->
-				<stripes:layout-render name="/WEB-INF/pages/layout/menu/left/issuesItem.jsp"/>
-				
-				<!-- AGILE -->
-				<stripes:layout-render name="/WEB-INF/pages/layout/menu/left/agileItem.jsp"/>
-				
-				<!-- PROJECT -->
-				<stripes:layout-render name="/WEB-INF/pages/layout/menu/left/projectItem.jsp"/>
-				
-				<!-- ADMIN -->
-				<stripes:layout-render name="/WEB-INF/pages/layout/menu/left/adminItem.jsp"/>
 			</ul>
 			
 		</div>

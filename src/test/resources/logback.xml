@@ -19,7 +19,7 @@
 
 	<logger name="pfa.alliance" level="DEBUG" />
 	<logger name="org.batoo.jpa.core.SQL" level="DEBUG" />
-	<logger name="net.sourceforge" level="TRACE"></logger>
+	<logger name="net.sourceforge" level="INFO" />
 	<!-- <logger name="net.sourceforge.stripes" level="DEBUG"/>
 	<logger name="com.silvermindsoftware" level="DEBUG"/>
 	-->
