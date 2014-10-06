@@ -26,6 +26,8 @@
         	<meta name="viewport" content="width=device-width, initial-scale=1">
         	
         	<title>${pageTitle}</title>
+        	
+        	<stripes:layout-component name="header"/>
         </head>
         <body>
         	<!-- MENU -->

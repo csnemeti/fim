@@ -50,3 +50,16 @@ a {
 .medium {
 	font-size: 20px;
 }
+
+.error {
+	color: red;
+}
+input.error {
+    border: 1px dotted red;
+}
+label.error {
+	display: inline;
+    margin-left: 10px;
+    width: auto;
+    font-style: italic;
+}

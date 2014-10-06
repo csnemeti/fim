@@ -9,6 +9,8 @@ import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.UrlBinding;
+import net.sourceforge.stripes.validation.EmailTypeConverter;
+import net.sourceforge.stripes.validation.Validate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,14 +33,19 @@ public class RegisterUserActionBean
 
     private final UserManagerService userManagerService;
 
+    @Validate( required = true, trim = true, on = "tryRegister" )
     private String firstName;
 
+    @Validate( required = true, trim = true, on = "tryRegister" )
     private String lastName;
 
+    @Validate( required = true, trim = true, converter = EmailTypeConverter.class, on = "tryRegister" )
     private String email;
 
+    @Validate( required = true, trim = true, minlength = 6, on = "tryRegister" )
     private String password;
 
+    @Validate( required = true, trim = true, minlength = 6, expression = "this eq password", on = "tryRegister" )
     private String password2;
 
     @Inject
