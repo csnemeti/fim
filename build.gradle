@@ -124,6 +124,17 @@ war {
 task("cobertura", dependsOn: 'jacocoTestReport') << {
 }
 
+// Additional war files
+task createJavadocWar(type: Zip, dependsOn: javadoc) {
+    from('build/docs/javadoc/'){
+    } 
+    from('etc/web-xmls/javadoc/'){
+    	include 'web.xml'
+        into('WEB-INF/')
+    } 
+    archiveName('fim-javadoc.war')
+}
+
 // This is for creating the zip with distribution content
 distributions {
     main {

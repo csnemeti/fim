@@ -17,118 +17,126 @@ import org.slf4j.LoggerFactory;
  * This class contains methods for formating dates.
  * 
  * @author Balaceanu Sergiu-Denis
- *
  */
-public class DateUtils {
+public class DateUtils
+{
 
-	private static final Logger LOG = LoggerFactory.getLogger(DateUtils.class);
+    private static final Logger LOG = LoggerFactory.getLogger( DateUtils.class );
 
-	public static final String DATE_FORMAT_DAY_FIRST = "dd/MM/yyyy";
-	public static final String DATE_FORMAT_YEAR_FIRST = "yyyy-MM-dd";
-	public static final String DATE_FORMAT_MONTH_FIRST = "MM/dd/yyyy";
-	public static final String TIME_FORMAT_HOUR_MINUTE = "HH:mm";
-	public static final int EQUAL_DATE = 0;
+    public static final String DATE_FORMAT_DAY_FIRST = "dd/MM/yyyy";
 
-	/**
-	 * Converts a string representation in java.util.Date
-	 * 
-	 * @param date
-	 *            string representation of the date
-	 * @return a java.util.Date object
-	 */
-	public static Date formatDate(String date) {
-		java.util.Date formatDate = new java.util.Date();
-		DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_DAY_FIRST);
+    public static final String DATE_FORMAT_YEAR_FIRST = "yyyy-MM-dd";
 
-		try {
-			formatDate = dateFormat.parse(date);
-		} catch (ParseException e) {
-			LOG.debug("Error {}",e);
-		}
+    public static final String DATE_FORMAT_MONTH_FIRST = "MM/dd/yyyy";
 
-		return formatDate;
-	}
+    public static final String TIME_FORMAT_HOUR_MINUTE = "HH:mm";
 
-	public static Date formatDate(String date, String format) {
-		java.util.Date formatDate = new java.util.Date();
-		DateFormat dateFormat = new SimpleDateFormat(format);
+    public static final int EQUAL_DATE = 0;
 
-		try {
-			formatDate = dateFormat.parse(date);
-		} catch (ParseException e) {
-			LOG.debug("{}" , e);
-		}
+    /**
+     * Converts a string representation in java.util.Date
+     * 
+     * @param date string representation of the date
+     * @return a java.util.Date object
+     */
+    public static Date formatDate( String date )
+    {
+        java.util.Date formatDate = new java.util.Date();
+        DateFormat dateFormat = new SimpleDateFormat( DATE_FORMAT_DAY_FIRST );
 
-		return formatDate;
-	}
+        try
+        {
+            formatDate = dateFormat.parse( date );
+        }
+        catch ( ParseException e )
+        {
+            LOG.debug( "Error {}", e );
+        }
 
-	/**
-	 * Converts the Date object representation to a String.
-	 * 
-	 * @param date
-	 *            the date to be converted
-	 * @return the String representing the date in question
-	 */
-	public static String formatDate(Date date) {
-		String str;
+        return formatDate;
+    }
 
-		DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_DAY_FIRST);
+    public static Date formatDate( String date, String format )
+    {
+        java.util.Date formatDate = new java.util.Date();
+        DateFormat dateFormat = new SimpleDateFormat( format );
 
-		str = dateFormat.format(date);
+        try
+        {
+            formatDate = dateFormat.parse( date );
+        }
+        catch ( ParseException e )
+        {
+            LOG.debug( "{}", e );
+        }
 
-		return str;
-	}
+        return formatDate;
+    }
 
-	public static String formatDate(Date date, String format) {
-		String str;
+    /**
+     * Converts the Date object representation to a String.
+     * 
+     * @param date the date to be converted
+     * @return the String representing the date in question
+     */
+    public static String formatDate( Date date )
+    {
+        String str;
 
-		DateFormat dateFormat = new SimpleDateFormat(format);
+        DateFormat dateFormat = new SimpleDateFormat( DATE_FORMAT_DAY_FIRST );
 
-		str = dateFormat.format(date);
+        str = dateFormat.format( date );
 
-		return str;
-	}
+        return str;
+    }
 
-	public static final Date getCurrentDate() {
-		return Calendar.getInstance().getTime();
-	}
+    public static String formatDate( Date date, String format )
+    {
+        String str;
 
-	/**
-	 * Checks if the first argument is before the second argument
-	 * 
-	 * @param beforeDate
-	 *            the first argument
-	 * @param currentDate
-	 *            the second argument
-	 * @return returns true the first argument is before the second argument.
-	 */
-	public static final Boolean beforeOrEqualDate(Date beforeDate,
-			Date afterDate) {
-		return beforeDate.compareTo(afterDate) <= EQUAL_DATE;
+        DateFormat dateFormat = new SimpleDateFormat( format );
 
-	}
-	
-	/**
-	 * 
-	 * @param from
-	 * @param to
-	 * @return
-	 */
-	public static String getTimeInterval(Date from , Date to){
-	  if(from == null || to == null){
-	    throw new IllegalArgumentException();
-	  }
-	  
-	  Interval interval = new Interval(from.getTime(), to.getTime());
-	  Period toPeriod = interval.toPeriod();
+        str = dateFormat.format( date );
 
-      PeriodFormatter dateFormat = new PeriodFormatterBuilder()
-                      .printZeroAlways().minimumPrintedDigits(2)
-          .appendHours().minimumPrintedDigits(2)
-          .appendSeparator(":")
-          .appendMinutes().minimumPrintedDigits(2)
-          .toFormatter();        
-      
-      return toPeriod.toString(dateFormat);
-	}
+        return str;
+    }
+
+    public static final Date getCurrentDate()
+    {
+        return Calendar.getInstance().getTime();
+    }
+
+    /**
+     * Checks if the first argument is before the second argument
+     * 
+     * @param beforeDate the first argument
+     * @param afterDate the second argument
+     * @return returns true the first argument is before the second argument.
+     */
+    public static final Boolean beforeOrEqualDate( Date beforeDate, Date afterDate )
+    {
+        return beforeDate.compareTo( afterDate ) <= EQUAL_DATE;
+
+    }
+
+    /**
+     * @param from
+     * @param to
+     * @return
+     */
+    public static String getTimeInterval( Date from, Date to )
+    {
+        if ( from == null || to == null )
+        {
+            throw new IllegalArgumentException();
+        }
+
+        Interval interval = new Interval( from.getTime(), to.getTime() );
+        Period toPeriod = interval.toPeriod();
+
+        PeriodFormatter dateFormat =
+            new PeriodFormatterBuilder().printZeroAlways().minimumPrintedDigits( 2 ).appendHours().minimumPrintedDigits( 2 ).appendSeparator( ":" ).appendMinutes().minimumPrintedDigits( 2 ).toFormatter();
+
+        return toPeriod.toString( dateFormat );
+    }
 }
