@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pfa.alliance.fim.service.UserManagerService;
+import pfa.alliance.fim.service.impl.DuplicateUserDataException;
 import pfa.alliance.fim.web.common.FimPageURLs;
 import pfa.alliance.fim.web.stripes.action.BasePageActionBean;
 
@@ -48,6 +49,13 @@ public class RegisterUserActionBean
     @Validate( required = true, trim = true, minlength = 6, expression = "this eq password", on = "tryRegister" )
     private String password2;
 
+    /** Message key regarding Database operation */
+    private String dbOperationResult;
+
+    private final static String USER_CREATED_RESPONSE = "userRegistration.userCreated";
+
+    private final static String DUPLICATE_USER_RESPONSE = "userRegistration.duplicateUser";
+
     @Inject
     public RegisterUserActionBean( UserManagerService userManagerService )
     {
@@ -70,8 +78,16 @@ public class RegisterUserActionBean
     public Resolution tryRegister()
     {
         LOG.debug( "Trying to register user: firstName = {}, lastName = {}, email = {}", firstName, lastName, email );
-        userManagerService.registerUser( email, password, firstName, lastName );
-        return new ForwardResolution( "/" );
+        try
+        {
+            userManagerService.registerUser( email, password, firstName, lastName );
+            dbOperationResult = USER_CREATED_RESPONSE;
+        }
+        catch ( DuplicateUserDataException e )
+        {
+            dbOperationResult = DUPLICATE_USER_RESPONSE;
+        }
+        return new ForwardResolution( FimPageURLs.USER_REGISTER_JSP.getURL() );
     }
 
     public String getFirstName()
@@ -122,6 +138,17 @@ public class RegisterUserActionBean
     public void setPassword2( String password2 )
     {
         this.password2 = password2;
+    }
+
+    public String getDbOperationResult()
+    {
+        String result = null;
+
+        if ( dbOperationResult != null )
+        {
+            result = getMessage( dbOperationResult );
+        }
+        return result;
     }
 
 }

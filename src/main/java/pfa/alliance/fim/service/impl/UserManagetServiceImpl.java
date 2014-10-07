@@ -56,13 +56,14 @@ class UserManagetServiceImpl
         }
         catch ( PersistenceException e )
         {
-            LOG.error( "Could not create the user: {}", user, e );
             if ( isDuplicateUserInfoRelatedException( e ) )
             {
+                LOG.warn( "Duplicate data for user: {}", user, e );
                 throw new DuplicateUserDataException( "Duplicate user data", e );
             }
             else
             {
+                LOG.error( "Could not create the user: {}", user, e );
                 throw e;
             }
         }
