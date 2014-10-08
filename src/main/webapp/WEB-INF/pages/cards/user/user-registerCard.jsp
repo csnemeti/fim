@@ -3,51 +3,38 @@
 
 <stripes:layout-definition>
 <stripes:form beanclass="pfa.alliance.fim.web.stripes.action.user.RegisterUserActionBean" focus="firstName" id="regForm">  
-	<table>  
-		<tr>  
-        	<td><stripes:label for="userRegistration.firstName"/></td>  
-        	<td>
-        		<stripes:text name="firstName" id="firstName"></stripes:text>
-        	</td>  
-     	</tr>
-		<tr>  
-        	<td><stripes:label for="userRegistration.lastName"/></td>  
-        	<td>
-        		<stripes:text name="lastName" id="lastName"></stripes:text>
-        	</td>  
-     	</tr>
-		<tr>  
-        	<td><stripes:label for="userRegistration.email"/></td>  
-        	<td>
-        		<stripes:text name="email" id="email"></stripes:text>
-        	</td>  
-     	</tr>
-		<tr>  
-        	<td><stripes:label for="userRegistration.password"/></td>  
-        	<td>
-        		<stripes:password name="password" id="password"></stripes:password>
-        	</td>  
-     	</tr>
-		<tr>  
-        	<td><stripes:label for="userRegistration.confirmPassword"/></td>  
-        	<td>
-        		<stripes:password name="password2" id="password2"></stripes:password>
-        	</td>  
-     	</tr>
-     	<tr>
-     		<td colspan="2" class="error">
-     			<stripes:errors></stripes:errors>
-     		</td>
-     	</tr>
-     	<tr>
-     		<td colspan="2">
+	<div align="center">
+		<div style="padding-top:15px">
+			<div class="form-group">
+				<stripes:label for="userRegistration.firstName"/>
+     			<stripes:text class="form-control" name="firstName" id="firstName"></stripes:text>
+     		</div>
+			<div class="form-group">
+				<stripes:label for="userRegistration.lastName"/> 
+				<stripes:text class="form-control" name="lastName" id="lastName"></stripes:text>
+			</div>
+			<div class="form-group">
+				<stripes:label for="userRegistration.email"/> 
+				<stripes:text class="form-control" name="email" id="email"></stripes:text>
+			</div>
+			<div class="form-group">
+				<stripes:label for="userRegistration.password"/>  
+				<stripes:password class="form-control" name="password" id="password"></stripes:password>
+			</div>
+			<div class="form-group">
+				<stripes:label for="userRegistration.confirmPassword"/>  
+				<stripes:password class="form-control" name="password2" id="password2"></stripes:password>
+			</div>
+			<div class="form-group">
+ 				<stripes:errors></stripes:errors>
+			</div>
+     		<div class="form-group">
      			${actionBean.dbOperationResult}
-     		</td>
-     	</tr>
-		<tr>  
-        	<td><stripes:submit name="tryRegister" value="Send..."></stripes:submit></td>  
-        	<td><input type="button" name="reset" value="Clear" onclick="clearFormContent(this.form)"/></td>  
-     	</tr>
-	</table>
+     		</div>
+
+			<stripes:submit  class="btn btn-default" name="tryRegister" value="Send..."></stripes:submit>
+			<input  class="btn btn-default" type="button" name="reset" value="Clear" onclick="clearFormContent(this.form)"/>  
+		</div>
+	</div>
 </stripes:form>       
 </stripes:layout-definition>
