@@ -2,7 +2,7 @@
 <%@ taglib prefix="stripes" uri="http://stripes.sourceforge.net/stripes.tld"%>
 
 <stripes:layout-definition>
-<stripes:form beanclass="pfa.alliance.fim.web.stripes.action.user.LoginUserActionBean" focus="email" role="form">  
+<stripes:form beanclass="pfa.alliance.fim.web.stripes.action.user.LoginUserActionBean">  
 	<div class="form-group">
 		 <label for="inputEmail">E-mail address</label>  
         	 <stripes:text name="username" type="email" class="form-control" id="inputEmail" placeholder="Enter email"></stripes:text>  
