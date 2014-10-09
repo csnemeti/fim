@@ -124,7 +124,6 @@ class UserManagetServiceImpl
         {
             checkUserStatusForLogin( user );
         }
-        // TODO remember a new last login record
         return user;
     }
 
@@ -135,10 +134,17 @@ class UserManagetServiceImpl
      */
     private void checkUserStatusForLogin( User user )
     {
-        if ( !( UserStatus.ACTIVE.equals( user.getStatus() ) ) )
+        switch ( user.getStatus() )
         {
-            LOG.info( "User is not ACTIVE: {}", user );
-            // TODO throw exception
+            case ACTIVE:
+                userRepository.addNewLoginInfoAndLimitLogs( user );
+                break;
+            case NEW:
+                sendRegistrationEmail( user );
+                break;
+            default:
+                LOG.info( "User status has invalid status for login: {}", user );
+                break;
         }
     }
 
@@ -151,5 +157,12 @@ class UserManagetServiceImpl
     private String encryptPassword( String cleanPassword )
     {
         return DigestUtils.sha512Hex( PREFIX + cleanPassword + SUFIX );
+    }
+
+    @Override
+    public void sendRegistrationEmail( User user )
+    {
+        // TODO implement this
+
     }
 }

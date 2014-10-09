@@ -32,4 +32,10 @@ public interface UserManagerService
      */
     User login( String username, String cleanPassword );
 
+    /**
+     * Sends the user registration e-mail.
+     * 
+     * @param user the {@link User} to whom the e-mail should be sent
+     */
+    void sendRegistrationEmail( User user );
 }
