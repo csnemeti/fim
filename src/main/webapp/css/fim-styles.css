@@ -1,0 +1,65 @@
+/* Footer style */
+.footer {
+	clear: both;
+	height: 80px;
+}
+
+a {
+	color: #428bca;
+	text-decoration: none;
+}
+
+#sidebar-footer {
+	position: absolute;
+	bottom: 5px;
+}
+
+.navbar {
+	min-height: 30px !important;
+	height: 30px !important;
+}
+
+.nav>li>a {
+	position: relative;
+	display: block;
+	padding: 5px 5px !important;
+}
+
+.navbar-top-links li a {
+	padding: 15px;
+	min-height: 10px;
+}
+
+.nav-second-level{
+	margin-left: 15px;
+}
+
+.fim-logo {
+	width: 150px;
+	height: 80px;
+	margin-left: 25px;
+	margin-top: -13px;
+	/* position: fixed;
+	bottom: 15px; */
+}
+
+.nav label {
+	font-weight: normal;
+}
+
+.medium {
+	font-size: 20px;
+}
+
+.error {
+	color: red;
+}
+input.error {
+    border: 1px dotted red;
+}
+label.error {
+	display: inline;
+    margin-left: 10px;
+    width: auto;
+    font-style: italic;
+}

@@ -5,6 +5,7 @@ apply plugin: 'war'
 apply plugin: 'jetty'
 apply plugin: 'eclipse'
 apply plugin: 'distribution'
+apply plugin: 'jacoco'
 
 buildscript {
 	repositories {
@@ -38,19 +39,64 @@ def manifestVersion = "${currentVersion}${FIM_BUILD_NUMBER_FORMATED}-${FIM_GIT_B
 repositories {
     mavenCentral()
 }
-
 dependencies {
-	providedCompile "javax.servlet:javax.servlet-api:3.+"
+	providedCompile 'javax.servlet:servlet-api:2.5'
+	//providedCompile "javax.servlet:javax.servlet-api:3.+"
     //compile group: 'commons-collections', name: 'commons-collections', version: '3.2'
+	// misc
+	compile 'commons-io:commons-io:2.4'
+	compile 'commons-codec:commons-codec:1.9'
+	
+    // logging
     compile 'org.slf4j:slf4j-api:1.7.7'
+    compile 'org.slf4j:jcl-over-slf4j:1.7.7'    
+    compile 'org.slf4j:jul-to-slf4j:1.7.7'    
     compile 'ch.qos.logback:logback-core:1.1.2'
     compile 'ch.qos.logback:logback-classic:1.1.2'
-    compile 'com.google.inject:guice:4.0-beta4'
-    compile 'com.google.inject.extensions:guice-servlet:4.0-beta4'
+    // google guice
+    compile 'com.google.guava:guava:14.0.1'    
+    compile ('com.google.inject:guice:4.0-beta4') {
+    	exclude module: 'guava'
+    }
+    compile ('com.google.inject.extensions:guice-servlet:4.0-beta4') {
+    	exclude module: 'guava'
+    }
+	// persistence
+	compile ('com.google.inject.extensions:guice-persist:4.0-beta4') {
+    	exclude module: 'guava'
+    }
+	compile 'org.batoo.jpa:batoo-jpa:2.0.1.2'
+	compile 'org.batoo.jpa:persistence-api:2.0'
+	compile 'javax.validation:validation-api:1.1.0.Final'
+	compile ('com.jolbox:bonecp:0.8.0.RELEASE') {
+    	exclude module: 'guava'
+    }
+    // stripes
+    compile ('com.silvermindsoftware.stripes:stripes-guice:3.3') {
+        exclude module: 'log4j'
+		exclude module: 'guava'
+    }    
+    compile ('net.sourceforge.stripes:stripes:1.5.8') {
+        exclude module: 'log4j'
+    }  
+    compile 'taglibs:standard:1.1.2'  
+    // w-mail sending
+    compile 'javax.mail:mail:1.4.7'
+    //  db drivers
+    compile 'org.postgresql:postgresql:9.3-1102-jdbc41'
+    compile 'mysql:mysql-connector-java:5.1.32'
+    //compile 'org.jumpmind.symmetric.jdbc:mariadb-java-client:1.1.1'
+    
+    // db migration
+    compile 'org.flywaydb:flyway-core:3.0'
+    
+	//joda time
+	compile 'joda-time:joda-time:2.1'
 
-	//providedCompile 'javax.servlet:servlet-api:2.5'
     testCompile group: 'junit', name: 'junit', version: '4.+'
-    testCompile "org.mockito:mockito-all:1.9.5"
+    testCompile 'org.mockito:mockito-all:1.9.5'
+    testCompile 'org.apache.derby:derby:10.11.1.1'
+    testCompile 'org.dbunit:dbunit:2.5.0'
     
     // for running tomcat
     def tomcatVersion = '7.0.47'
@@ -72,6 +118,21 @@ war {
         			'FIM_GIT_BRANCH': FIM_GIT_BRANCH, 'Implementation-Title': 'Free Issue Manager (fim)', 
         			'Implementation-Version': manifestVersion, 'Created-At' : getDate()
     } 
+}
+
+// "Cobertura task"
+task("cobertura", dependsOn: 'jacocoTestReport') << {
+}
+
+// Additional war files
+task createJavadocWar(type: Zip, dependsOn: javadoc) {
+    from('build/docs/javadoc/'){
+    } 
+    from('etc/web-xmls/javadoc/'){
+    	include 'web.xml'
+        into('WEB-INF/')
+    } 
+    archiveName('fim-javadoc.war')
 }
 
 // This is for creating the zip with distribution content
