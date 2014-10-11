@@ -12,8 +12,8 @@
                         	<div class="row"><b><stripes:label for="usercard-Email"/></b> ${actionBean.userEmail}</div>
                         </div>
                         <div style="float: right;width: 40%"class="text-right">
-                        	<div class="medium">${actionBean.lastLoginTime}</div>
-                           	<div>${actionBean.sessionAge}</div>
+                        	<div class="medium" title="[localize] last login">${actionBean.lastLoginTime}</div>
+                           	<div title="[localize]session age">${actionBean.sessionAge}</div>
                         </div>
                  	</div>
               	</div>

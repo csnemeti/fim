@@ -100,7 +100,6 @@ public class UserLogin
     public int hashCode()
     {
         HashCodeBuilder hcb = new HashCodeBuilder();
-        hcb.append( user.getId() );
         hcb.append( createdAt );
         return hcb.toHashCode();
     }
@@ -114,7 +113,6 @@ public class UserLogin
         }
         UserLogin userLogin = (UserLogin) obj;
         EqualsBuilder eb = new EqualsBuilder();
-        eb.append( user.getId(), userLogin.user.getId() );
         eb.append( createdAt, userLogin.createdAt );
         return eb.isEquals();
     }

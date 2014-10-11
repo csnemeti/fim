@@ -25,6 +25,8 @@ public class DateUtils
 
     public static final String DATE_FORMAT_DAY_FIRST = "dd/MM/yyyy";
 
+    public static final String DATETIME_FORMAT_DAY_FIRST = "dd/MM/yyyy HH:mm:ss";
+
     public static final String DATE_FORMAT_YEAR_FIRST = "yyyy-MM-dd";
 
     public static final String DATE_FORMAT_MONTH_FIRST = "MM/dd/yyyy";

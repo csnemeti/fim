@@ -158,7 +158,7 @@ public class User
         hcb.append( email );
         hcb.append( login );
         hcb.append( status );
-        return hcb.hashCode();
+        return hcb.toHashCode();
     }
 
     @Override

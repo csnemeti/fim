@@ -3,6 +3,9 @@
  */
 package pfa.alliance.fim.web.stripes.action.user;
 
+import java.sql.Timestamp;
+import java.util.Set;
+
 import javax.inject.Inject;
 
 import net.sourceforge.stripes.action.DefaultHandler;
@@ -16,8 +19,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pfa.alliance.fim.model.user.User;
+import pfa.alliance.fim.model.user.UserLogin;
 import pfa.alliance.fim.service.UserManagerService;
 import pfa.alliance.fim.web.common.FimPageURLs;
+import pfa.alliance.fim.web.security.AuthenticatedUserDTO;
+import pfa.alliance.fim.web.security.SecurityUtil;
 import pfa.alliance.fim.web.stripes.action.BasePageActionBean;
 
 /**
@@ -72,17 +78,15 @@ public class LoginUserActionBean
     {
         LOG.debug( "Trying to login..., username = {}", username );
         User user = userManagerService.login( username, password );
-        FimPageURLs page = null;
         processUserResultAndResultForwardToDashboard( user );
         if ( dbOperationResult == null )
         {
-            page = FimPageURLs.USER_DASBOARD_PAGE;
+            return new RedirectResolution( FimPageURLs.USER_DASBOARD_PAGE.getURL() );
         }
         else
         {
-            page = FimPageURLs.USER_LOGIN_JSP;
+            return new ForwardResolution( FimPageURLs.USER_LOGIN_JSP.getURL() );
         }
-        return new RedirectResolution( page.getURL() );
     }
 
     /**
@@ -108,11 +112,55 @@ public class LoginUserActionBean
                     dbOperationResult = DB_OPERATION_USER_DISABLED;
                     break;
                 case ACTIVE:
-                    // TODO set user on session
+                    setUserOnSession( user );
                     break;
             }
 
         }
+    }
+
+    /**
+     * Sets the user on the session.
+     * 
+     * @param user the user to set on session
+     */
+    private void setUserOnSession( User user )
+    {
+        Timestamp lastLogin = getUserLastLogin( user.getLogins() );
+        AuthenticatedUserDTO userDTO =
+            new AuthenticatedUserDTO( user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(),
+                                      user.getLogin(), lastLogin );
+        SecurityUtil.putUserIntoSession( userDTO, getContext().getRequest().getSession( true ) );
+    }
+
+    /**
+     * Gets the last login information from a given set.
+     * 
+     * @param logins the list of last logins
+     * @return the last login or the current time if list is empty
+     */
+    private static Timestamp getUserLastLogin( Set<UserLogin> logins )
+    {
+        Timestamp lastLogin = null;
+        for ( UserLogin login : logins )
+        {
+            if ( lastLogin == null )
+            {
+                lastLogin = login.getCreatedAt();
+            }
+            else
+            {
+                if ( lastLogin.before( login.getCreatedAt() ) )
+                {
+                    lastLogin = login.getCreatedAt();
+                }
+            }
+        }
+        if ( lastLogin == null )
+        {
+            lastLogin = new Timestamp( System.currentTimeMillis() );
+        }
+        return lastLogin;
     }
 
     public String getUsername()

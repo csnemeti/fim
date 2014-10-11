@@ -3,7 +3,12 @@
  */
 package pfa.alliance.fim.dao.impl;
 
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Singleton;
 import javax.persistence.EntityManager;
@@ -18,6 +23,8 @@ import org.slf4j.LoggerFactory;
 
 import pfa.alliance.fim.dao.UserRepository;
 import pfa.alliance.fim.model.user.User;
+import pfa.alliance.fim.model.user.UserLogin;
+import pfa.alliance.fim.model.user.UserStatus;
 
 /**
  * This class is used for managing {@link User}.
@@ -32,6 +39,9 @@ class UserRepositoryImpl
     /** The logger used in this class. */
     private static final Logger LOG = LoggerFactory.getLogger( UserRepositoryImpl.class );
 
+    /** The number of total user logins we remember. */
+    private static final int TOTAL_LOGIN_RECORDS = 10;
+
     @Override
     public User findBy( String username, String password )
     {
@@ -40,13 +50,19 @@ class UserRepositoryImpl
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<User> criteria = cb.createQuery( User.class );
         Root<User> root = criteria.from( User.class );
-        root.fetch( "logins" );
+        // root.fetch( "logins" ); - didn't returned 1 user with logins set but as many users as user_logins
         criteria.where( cb.equal( root.get( "login" ), username ), cb.equal( root.get( "password" ), password ) );
 
         TypedQuery<User> query = em.createQuery( criteria );
         List<User> results = query.getResultList();
         LOG.debug( "Returned results: {}", results );
-        return uniqueResult( results );
+        User user = uniqueResult( results );
+        // we get the logins only if there's a chance to log in the user
+        if ( user != null && user.getStatus() == UserStatus.ACTIVE )
+        {
+            user.getLogins().size();
+        }
+        return user;
     }
 
     @Override
@@ -103,13 +119,54 @@ class UserRepositoryImpl
     @Override
     public void addNewLoginInfoAndLimitLogs( User user )
     {
-        // TODO Auto-generated method stub
+        // create the new record & save it
+        UserLogin userLogin = new UserLogin();
+        userLogin.setUser( user );
+        userLogin.setCreatedAt( new Timestamp( System.currentTimeMillis() ) );
+        getEntityManager().persist( userLogin );
+        // add it to our user object
+        Set<UserLogin> logins = user.getLogins();
+        logins.add( userLogin );
+        // delete records that are more than 10
+        if ( logins.size() > TOTAL_LOGIN_RECORDS )
+        {
+            deleteOlderLoginsExceptFirstOne( logins );
+        }
+    }
 
+    /**
+     * Deletes the oldest user logins but keeps the first one.
+     * 
+     * @param logins the logins to delete
+     */
+    private void deleteOlderLoginsExceptFirstOne( Set<UserLogin> logins )
+    {
+        List<UserLogin> sortedUserLogins = new ArrayList<UserLogin>( logins );
+        Collections.sort( sortedUserLogins, new UserLoginComparator() );
+        final int lastValid = sortedUserLogins.size() - TOTAL_LOGIN_RECORDS;
+        for ( int i = 1; i <= lastValid; i++ )
+        {
+            UserLogin login = sortedUserLogins.get( i );
+            logins.remove( login );
+            getEntityManager().remove( login );
+        }
     }
 
     @Override
     protected Class<User> getEntityClass()
     {
         return User.class;
+    }
+
+    private static class UserLoginComparator
+        implements Comparator<UserLogin>
+    {
+
+        @Override
+        public int compare( UserLogin o1, UserLogin o2 )
+        {
+            return o1.getCreatedAt().compareTo( o2.getCreatedAt() );
+        }
+
     }
 }

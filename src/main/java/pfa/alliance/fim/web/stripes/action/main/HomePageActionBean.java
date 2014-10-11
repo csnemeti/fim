@@ -5,6 +5,8 @@ import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.UrlBinding;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.DurationFormatUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,13 +44,19 @@ public class HomePageActionBean
     }
 
     /**
-     * Returns the current logged user username .
+     * Returns the current logged user name or username (if name is missing).
      * 
      * @return
      */
     public String getUsername()
     {
-        return getLoggedUser().getUsername();
+        AuthenticatedUserDTO userDTO = getLoggedUser();
+        String name = StringUtils.join( new String[] { userDTO.getFirstName(), userDTO.getLastName() }, " " );
+        if ( StringUtils.isBlank( name ) )
+        {
+            name = userDTO.getEmail();
+        }
+        return name;
     }
 
     /**
@@ -68,17 +76,19 @@ public class HomePageActionBean
      */
     public String getLastLoginTime()
     {
-        return DateUtils.formatDate( getLoggedUser().getLastLogin(), DateUtils.DATE_FORMAT_DAY_FIRST );
+        return DateUtils.formatDate( getLoggedUser().getLastLogin(), DateUtils.DATETIME_FORMAT_DAY_FIRST );
     }
 
     /**
-     * TODO:Remove mocked value !!
+     * Gets the age of the session
      * 
-     * @return
+     * @return the session age
      */
     public String getSessionAge()
     {
-        return "2 days";
+        long durationInMillis =
+            System.currentTimeMillis() - getContext().getRequest().getSession( true ).getCreationTime();
+        return DurationFormatUtils.formatDuration( durationInMillis, "H:mm:ss", true );
     }
 
     private AuthenticatedUserDTO getLoggedUser()
