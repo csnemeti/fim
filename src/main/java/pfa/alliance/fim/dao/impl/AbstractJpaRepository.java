@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.persistence.EntityManager;
 
 import pfa.alliance.fim.dao.JpaRepository;
@@ -23,7 +24,7 @@ abstract class AbstractJpaRepository<T extends Identifiable<ID>, ID extends Seri
     implements JpaRepository<T, ID>
 {
     /** The entity manager used in the application. */
-    private EntityManager entityManager;
+    private Provider<EntityManager> entityManager;
 
     /**
      * Check if a record with the given ID exists in database.
@@ -46,7 +47,7 @@ abstract class AbstractJpaRepository<T extends Identifiable<ID>, ID extends Seri
     @Override
     public T findOne( ID id )
     {
-        return entityManager.find( getEntityClass(), id );
+        return entityManager.get().find( getEntityClass(), id );
     }
 
     /**
@@ -77,12 +78,12 @@ abstract class AbstractJpaRepository<T extends Identifiable<ID>, ID extends Seri
     {
         if ( isNewEntity( obj ) )
         {
-            entityManager.persist( obj );
+            entityManager.get().persist( obj );
             return obj;
         }
         else
         {
-            return entityManager.merge( obj );
+            return entityManager.get().merge( obj );
         }
     }
 
@@ -109,7 +110,7 @@ abstract class AbstractJpaRepository<T extends Identifiable<ID>, ID extends Seri
     @Override
     public void delete( T entity )
     {
-        entityManager.remove( entity );
+        entityManager.get().remove( entity );
     }
 
     /**
@@ -151,7 +152,7 @@ abstract class AbstractJpaRepository<T extends Identifiable<ID>, ID extends Seri
      * @param entityManager the entity manager to use
      */
     @Inject
-    void setEntityManager( EntityManager entityManager )
+    void setEntityManager( Provider<EntityManager> entityManager )
     {
         this.entityManager = entityManager;
     }
@@ -163,7 +164,7 @@ abstract class AbstractJpaRepository<T extends Identifiable<ID>, ID extends Seri
      */
     protected EntityManager getEntityManager()
     {
-        return entityManager;
+        return entityManager.get();
     }
 
 }
