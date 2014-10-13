@@ -1,22 +1,21 @@
 apply plugin: 'java'
 //apply plugin: 'jar' 
 apply plugin: 'war' 
-//apply plugin: 'tomcat'
-apply plugin: 'jetty'
+apply plugin: 'jettyEclipse'
 apply plugin: 'eclipse'
 apply plugin: 'distribution'
 apply plugin: 'jacoco'
 
 buildscript {
-	repositories {
-    	// jcenter()
+	repositories {    	
     	mavenCentral()
+    	jcenter()
   	}
   	dependencies {
 		// we need this to get git version info
     	classpath 'org.ajoberstar:gradle-git:0.9.0'
-    	// Tomcat with gradle
-    	//classpath 'org.gradle.api.plugins:gradle-tomcat-plugin:0.9.9'
+    	// Jetty 9+
+    	classpath (group: 'com.sahlbach.gradle', name: 'gradle-jetty-eclipse-plugin', version: '1.9.2')
   	}
 }
 // Initialize GIT information 
@@ -34,6 +33,7 @@ def FIM_GIT_COMMIT = "${repo.head().abbreviatedId}"
 def FIM_GIT_BRANCH = "${repo.branch.getCurrent().getName()}"
 version = "${currentVersion}-${FIM_GIT_BRANCH}"
 def manifestVersion = "${currentVersion}${FIM_BUILD_NUMBER_FORMATED}-${FIM_GIT_BRANCH}"
+jettyEclipse.contextPath = "/fim"
 
 // This is for dependencies...
 repositories {
@@ -80,9 +80,9 @@ dependencies {
         exclude module: 'log4j'
     }  
     compile 'taglibs:standard:1.1.2'  
-    // w-mail sending
+    // e-mail sending
     compile 'javax.mail:mail:1.4.7'
-    //  db drivers
+    // db drivers
     compile 'org.postgresql:postgresql:9.3-1102-jdbc41'
     compile 'mysql:mysql-connector-java:5.1.32'
     //compile 'org.jumpmind.symmetric.jdbc:mariadb-java-client:1.1.1'
@@ -98,13 +98,6 @@ dependencies {
     testCompile 'org.apache.derby:derby:10.11.1.1'
     testCompile 'org.dbunit:dbunit:2.5.0'
     
-    // for running tomcat
-    def tomcatVersion = '7.0.47'
-    //tomcat "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}",
-    //       "org.apache.tomcat.embed:tomcat-embed-logging-juli:${tomcatVersion}"
-    //tomcat("org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}") {
-    //    exclude group: 'org.eclipse.jdt.core.compiler', module: 'ecj'
-    //}
 }
 
 // War customization
@@ -198,6 +191,9 @@ task ftp << {
 	}
 }
 
+// Redefinition of jettyRun task
+task("jettyRun", dependsOn: 'jettyEclipseRun') << {
+}
 
 
 // Sample to see how to define such things
