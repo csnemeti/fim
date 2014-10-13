@@ -26,7 +26,7 @@ ext.repo = Grgit.open(project.file('.'))
 // Custom settings...
 sourceCompatibility = 1.8
 war.archiveName "fim.war"
-def currentVersion = "0.1"
+def currentVersion = "0.2"
 def FIM_CI = System.getenv("CI") ?: "false"
 def FIM_BUILD_NUMBER = System.getenv("BUILD_ID") ?: "unknown"
 def FIM_BUILD_NUMBER_FORMATED = System.getenv("BUILD_ID") ? "." + System.getenv("BUILD_ID") : ""
