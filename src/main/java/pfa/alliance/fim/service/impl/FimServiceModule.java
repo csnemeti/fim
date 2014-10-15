@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import pfa.alliance.fim.dao.impl.FimDaoModule;
 import pfa.alliance.fim.service.ConfigurationService;
 import pfa.alliance.fim.service.DatabaseMigrationService;
+import pfa.alliance.fim.service.EmailService;
 import pfa.alliance.fim.service.PersistenceService;
 import pfa.alliance.fim.service.UserManagerService;
 
@@ -36,6 +37,13 @@ public class FimServiceModule
     /** The default configuration file for JPA. */
     private static final String DEFAULT_JPA_CONFIG_FILE = "/env/fim.properties";
 
+    private static final String[] JPA_CONFIG_PROPERTIES = { "javax.persistence.jdbc.user",
+        "javax.persistence.jdbc.password", "javax.persistence.jdbc.url", "javax.persistence.jdbc.drive" };
+
+    private static final String[] EMAIL_CONFIG_PROPERTIES = { "mail.smtp.auth", "mail.smtp.starttls.enable",
+        "mail.smtp.host", "mail.smtp.port", "mail.smtp.socketFactory.port", "mail.smtp.socketFactory.class",
+        "mail.smtp.username", "mail.smtp.password", "mail.smtp.subjectPrefix" };
+
     @Override
     protected void configure()
     {
@@ -44,6 +52,7 @@ public class FimServiceModule
         // bind services
         bind( ConfigurationService.class ).to( ConfigurationServiceImpl.class );
         bind( DatabaseMigrationService.class ).to( DatabaseMigrationServiceImpl.class );
+        bind( EmailService.class ).to( EmailServiceImpl.class );
         bind( PersistenceService.class ).to( PersistenceServiceImpl.class );
 
         bind( UserManagerService.class ).to( UserManagetServiceImpl.class );
@@ -63,7 +72,72 @@ public class FimServiceModule
         LOG.debug( "Reading configuration from environment file: {}", fimEnvFileName );
         Properties props = readConfigurationFrom( fimEnvFileName );
         LOG.debug( "Read JPAconfiguration: {}", props );
-        return props;
+        return filterProperties( props, JPA_CONFIG_PROPERTIES );
+    }
+
+    /**
+     * Gets the e-mail configuration from environment file.
+     * 
+     * @return the email configuration
+     */
+    @Provides
+    @EmailConfiguration
+    public Properties getEmailConfiguration()
+    {
+        LOG.debug( "Reading e-mail configuration..." );
+        String fimEnvFileName = getEnvironmentFileName();
+        LOG.debug( "Reading configuration from environment file: {}", fimEnvFileName );
+        Properties props = readConfigurationFrom( fimEnvFileName );
+        LOG.debug( "Read EmailConfiguration: {}", props );
+        Properties result = filterProperties( props, EMAIL_CONFIG_PROPERTIES );
+        addProperty( result, "mail.smtp.password", "fim.email.password" );
+        return result;
+    }
+
+    /**
+     * Add / overwrite a property into {@link Properties}. The property is searched in System Properties first and if
+     * not found there search continues in Environment Properties.
+     * 
+     * @param props the {@link Properties} with some already existing mappings
+     * @param propsName the key name of the record in {@link Properties}
+     * @param systemName the key name of the system property we search for
+     */
+    private static void addProperty( Properties props, String propsName, String systemName )
+    {
+        String value = System.getProperty( systemName );
+        if ( value == null )
+        {
+            String envName = systemName.replace( '.', '_' ).toUpperCase();
+            value = System.getenv( envName );
+        }
+        if ( value != null )
+        {
+            props.setProperty( propsName, value );
+        }
+    }
+
+    /**
+     * Creates a new property that keeps only the specified values in collection.
+     * 
+     * @param props the original properties
+     * @param propertyNames the list of properties to keep
+     * @return the new properties
+     */
+    private static Properties filterProperties( Properties props, String... propertyNames )
+    {
+        Properties result = new Properties();
+        if ( props != null )
+        {
+            for ( String key : propertyNames )
+            {
+                String value = props.getProperty( key );
+                if ( value != null )
+                {
+                    result.setProperty( key, value );
+                }
+            }
+        }
+        return result;
     }
 
     /**
