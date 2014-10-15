@@ -1,4 +1,4 @@
-package pfa.alliance.fim.web.stripes.action.main;
+package pfa.alliance.fim.web.stripes.action.user;
 
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -22,11 +22,11 @@ import pfa.alliance.fim.web.stripes.action.BasePageActionBean;
  * @author Balaceanu Sergiu-Denis
  */
 @UrlBinding( value = "/user/dashboard" )
-public class HomePageActionBean
+public class UserDashboardActionBean
     extends BasePageActionBean
 {
     /** The logger used in this class. */
-    private static final Logger LOG = LoggerFactory.getLogger( HomePageActionBean.class );
+    private static final Logger LOG = LoggerFactory.getLogger( UserDashboardActionBean.class );
 
     @DefaultHandler
     public Resolution goToHomePage()

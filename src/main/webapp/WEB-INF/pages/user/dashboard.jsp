@@ -4,6 +4,6 @@
        <stripes:layout-render name="/WEB-INF/pages/layout/menu/menu.jsp"/>       
     </stripes:layout-component>
     <stripes:layout-component name="content">       
-       <stripes:layout-render name="/WEB-INF/pages/cards/userCard.jsp"/>        	
+       <stripes:layout-render name="/WEB-INF/pages/cards/user/userCard.jsp"/>        	
     </stripes:layout-component>
 </stripes:layout-render>

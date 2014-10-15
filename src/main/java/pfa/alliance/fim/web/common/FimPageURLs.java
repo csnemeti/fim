@@ -9,7 +9,7 @@ public enum FimPageURLs
 {
     MAIN_PAGE( "/index.jsp" ),
     USER_DASBOARD_PAGE( "/user/dashboard" ),
-    USER_DASBOARD_JSP( "/WEB-INF/pages/dashboard.jsp" ),
+    USER_DASBOARD_JSP( "/WEB-INF/pages/user/dashboard.jsp" ),
     WIZZARD_PAGE( "/setup" ),
     USER_REGISTER_PAGE( "/user/register" ),
     USER_REGISTER_JSP( "/WEB-INF/pages/user/user-register.jsp" ),
