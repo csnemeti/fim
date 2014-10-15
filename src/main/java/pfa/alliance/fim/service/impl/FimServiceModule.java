@@ -42,7 +42,7 @@ public class FimServiceModule
 
     private static final String[] EMAIL_CONFIG_PROPERTIES = { "mail.smtp.auth", "mail.smtp.starttls.enable",
         "mail.smtp.host", "mail.smtp.port", "mail.smtp.socketFactory.port", "mail.smtp.socketFactory.class",
-        "mail.smtp.username", "mail.smtp.password" };
+        "mail.smtp.username", "mail.smtp.password", "mail.smtp.subjectPrefix" };
 
     @Override
     protected void configure()
@@ -120,7 +120,7 @@ public class FimServiceModule
      * Creates a new property that keeps only the specified values in collection.
      * 
      * @param props the original properties
-     * @param propertyNames the list of properr4ies to keep
+     * @param propertyNames the list of properties to keep
      * @return the new properties
      */
     private static Properties filterProperties( Properties props, String... propertyNames )
