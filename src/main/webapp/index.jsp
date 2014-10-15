@@ -5,5 +5,7 @@
 <a href="/fim/user/dashboard">Dashboard</a><br />
 <a href="/fim/user/register">Register</a><br />
 <a href="/fim/user/login">Login</a><br />
+<a href="/fim/project/create">Create project</a><br/>
+<a href="/fim/project/edit/users">Edit project users</a><br/>
 </body>
 </html>
