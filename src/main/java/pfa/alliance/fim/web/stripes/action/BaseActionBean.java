@@ -1,5 +1,7 @@
 package pfa.alliance.fim.web.stripes.action;
 
+import javax.servlet.http.HttpSession;
+
 import net.sourceforge.stripes.action.ActionBean;
 import net.sourceforge.stripes.action.ActionBeanContext;
 import net.sourceforge.stripes.action.LocalizableMessage;
@@ -24,6 +26,16 @@ public abstract class BaseActionBean
     public ActionBeanContext getContext()
     {
         return context;
+    }
+
+    /**
+     * Gets the user session. A new session will be created if there's none.
+     * 
+     * @return the user session
+     */
+    protected HttpSession getSession()
+    {
+        return context.getRequest().getSession( true );
     }
 
     /**
