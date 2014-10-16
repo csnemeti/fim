@@ -15,13 +15,13 @@ import pfa.alliance.fim.model.user.User;
 import pfa.alliance.fim.model.user.UserStatus;
 
 /**
- * This class is used for testing {@link UserManagetServiceImpl}.
+ * This class is used for testing {@link UserManagerServiceImpl}.
  * 
  * @author Csaba
  */
-public class UserManagetServiceImplTest
+public class UserManagerServiceImplTest
 {
-    private UserManagetServiceImpl userManagetServiceImpl;
+    private UserManagerServiceImpl userManagetServiceImpl;
 
     private UserRepository userRepositoryMock;
 
@@ -29,7 +29,7 @@ public class UserManagetServiceImplTest
     public void init()
     {
         userRepositoryMock = Mockito.mock( UserRepository.class );
-        userManagetServiceImpl = new UserManagetServiceImpl( userRepositoryMock );
+        userManagetServiceImpl = new UserManagerServiceImpl( userRepositoryMock );
     }
 
     @Test

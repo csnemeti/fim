@@ -55,7 +55,7 @@ public class FimServiceModule
         bind( EmailService.class ).to( EmailServiceImpl.class );
         bind( PersistenceService.class ).to( PersistenceServiceImpl.class );
 
-        bind( UserManagerService.class ).to( UserManagetServiceImpl.class );
+        bind( UserManagerService.class ).to( UserManagerServiceImpl.class );
     }
 
     /**

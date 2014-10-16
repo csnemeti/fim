@@ -24,11 +24,11 @@ import com.google.inject.persist.Transactional;
  * @author Csaba
  */
 @Singleton
-class UserManagetServiceImpl
+class UserManagerServiceImpl
     implements UserManagerService
 {
     /** The logger used in this class. */
-    private static final Logger LOG = LoggerFactory.getLogger( UserManagetServiceImpl.class );
+    private static final Logger LOG = LoggerFactory.getLogger( UserManagerServiceImpl.class );
 
     private static final String PREFIX = "Hello! This is The F.I.M. software. Your password is... ";
 
@@ -37,7 +37,7 @@ class UserManagetServiceImpl
     private final UserRepository userRepository;
 
     @Inject
-    public UserManagetServiceImpl( UserRepository userRepository )
+    public UserManagerServiceImpl( UserRepository userRepository )
     {
         this.userRepository = userRepository;
     }
