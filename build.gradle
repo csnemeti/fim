@@ -1,5 +1,4 @@
 apply plugin: 'java'
-//apply plugin: 'jar' 
 apply plugin: 'war' 
 apply plugin: 'jettyEclipse'
 apply plugin: 'eclipse'
@@ -18,6 +17,7 @@ buildscript {
     	classpath (group: 'com.sahlbach.gradle', name: 'gradle-jetty-eclipse-plugin', version: '1.9.2')
   	}
 }
+ 
 // Initialize GIT information 
 import org.ajoberstar.grgit.*
 ext.repo = Grgit.open(project.file('.'))
@@ -99,18 +99,30 @@ dependencies {
     testCompile 'org.dbunit:dbunit:2.5.0'
     
 }
-
+task("generateJar", dependsOn: 'classes', type: Jar) {
+	    from('.') {
+	        include 'contributors.txt'
+	    }
+	    manifest {
+	        attributes 'FIM_CI': FIM_CI, 'FIM_BUILD_NUMBER': FIM_BUILD_NUMBER, 'FIM_GIT_COMMIT': FIM_GIT_COMMIT, 
+	        			'FIM_GIT_BRANCH': FIM_GIT_BRANCH, 
+	        			'Implementation-Title': 'Free Issue Manager (fim)', 
+	        			'Implementation-Version': manifestVersion, 'Created-At' : getDate()
+	    } 
+}
 // War customization
 war {
-    from('.') {
-        include 'contributors.txt'
-        into('WEB-INF/classes')
+    from(libsDir) {
+        include '*.jar'
+        into('WEB-INF/lib')
     }
-    manifest {
-        attributes 'FIM_CI': FIM_CI, 'FIM_BUILD_NUMBER': FIM_BUILD_NUMBER, 'FIM_GIT_COMMIT': FIM_GIT_COMMIT, 
-        			'FIM_GIT_BRANCH': FIM_GIT_BRANCH, 'Implementation-Title': 'Free Issue Manager (fim)', 
-        			'Implementation-Version': manifestVersion, 'Created-At' : getDate()
-    } 
+//    manifest {
+//        attributes 'FIM_CI': FIM_CI, 'FIM_BUILD_NUMBER': FIM_BUILD_NUMBER, 'FIM_GIT_COMMIT': FIM_GIT_COMMIT, 
+//        			'FIM_GIT_BRANCH': FIM_GIT_BRANCH, 
+//        			'Implementation-Title': 'Free Issue Manager (fim)', 
+//        			'Implementation-Version': manifestVersion, 'Created-At' : getDate()
+//    }
+	dependsOn generateJar
 }
 
 // "Cobertura task"
@@ -200,8 +212,3 @@ task("jettyRun", dependsOn: 'jettyEclipseRun') << {
 test {
     systemProperties 'property': 'value'
 }
-//jar {
-//    manifest {
-//        attributes 'Implementation-Title': 'Gradle Quickstart', 'Implementation-Version': version
-//    }
-//}
