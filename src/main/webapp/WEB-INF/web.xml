@@ -4,6 +4,9 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 
 	<listener>
+		<listener-class>pfa.alliance.fim.servlets.LogInitializerListener</listener-class>
+	</listener>
+	<listener>
 		<listener-class>com.silvermindsoftware.sg.context.GuiceContextListener</listener-class>
 	</listener>
 	<context-param>
@@ -73,4 +76,5 @@
 		<servlet-name>StripesDispatcher</servlet-name>
 		<url-pattern>/project/*</url-pattern>
 	</servlet-mapping>
+	
 </web-app>
