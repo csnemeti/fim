@@ -62,6 +62,17 @@ public class ManifestUtils
         return ( result != null ) ? result.toString() : null;
     }
 
+    public static Attributes getFimMainAttributes()
+    {
+        Attributes attributes = null;
+        getFimManifest();
+        if ( fimManifest != null )
+        {
+            attributes = fimManifest.getMainAttributes();
+        }
+        return attributes;
+    }
+
     /**
      * Gets the FIM's manifest file.
      * 
