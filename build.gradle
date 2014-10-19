@@ -82,6 +82,8 @@ dependencies {
     compile 'taglibs:standard:1.1.2'  
     // e-mail sending
     compile 'javax.mail:mail:1.4.7'
+    compile 'org.apache.velocity:velocity:1.7'
+    
     // db drivers
     compile 'org.postgresql:postgresql:9.3-1102-jdbc41'
     compile 'mysql:mysql-connector-java:5.1.32'
