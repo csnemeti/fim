@@ -33,7 +33,7 @@ import pfa.alliance.fim.model.Identifiable;
 public class User
     extends GenericModel implements Identifiable<Integer>
 {
-    private static final long serialVersionUID = -7478487015028567486L;
+    private static final long serialVersionUID = 4717969508781933217L;
 
     /** The user ID. */
     @Id
@@ -68,6 +68,9 @@ public class User
     @OneToMany( mappedBy = "user", cascade = CascadeType.ALL )
     @OrderBy( "id DESC" )
     private Set<UserLogin> logins;
+
+    @OneToMany( mappedBy = "user", cascade = CascadeType.ALL )
+    private Set<UserOneTimeLink> oneTimeLinks;
 
     @Override
     public Integer getId()
@@ -149,6 +152,16 @@ public class User
     public void setLogins( Set<UserLogin> logins )
     {
         this.logins = logins;
+    }
+
+    public Set<UserOneTimeLink> getOneTimeLinks()
+    {
+        return oneTimeLinks;
+    }
+
+    public void setOneTimeLinks( Set<UserOneTimeLink> oneTimeLinks )
+    {
+        this.oneTimeLinks = oneTimeLinks;
     }
 
     @Override
