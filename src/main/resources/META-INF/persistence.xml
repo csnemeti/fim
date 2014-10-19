@@ -12,6 +12,7 @@
         <!-- JPA entities must be registered here -->
         <class>pfa.alliance.fim.model.user.User</class> 
         <class>pfa.alliance.fim.model.user.UserLogin</class> 
+        <class>pfa.alliance.fim.model.user.UserOneTimeLink</class> 
 
         <validation-mode>AUTO</validation-mode>
 		<!--  We suppose to provide these values on-the-fly -->
