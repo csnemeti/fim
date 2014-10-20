@@ -78,13 +78,37 @@ abstract class AbstractJpaRepository<T extends Identifiable<ID>, ID extends Seri
     {
         if ( isNewEntity( obj ) )
         {
-            entityManager.get().persist( obj );
-            return obj;
+            return saveNewEntity( obj );
         }
         else
         {
-            return entityManager.get().merge( obj );
+            return updateExistingEntity( obj );
         }
+    }
+
+    /**
+     * Saves a new entity. Do not call {@link #save(Identifiable)} or {@link #save(Collection)} from this method. It
+     * will cause infinite loop.
+     * 
+     * @param obj the entity to be saved (inserted)
+     * @return the saved object (might be the same or a different one)
+     */
+    protected T saveNewEntity( T obj )
+    {
+        entityManager.get().persist( obj );
+        return obj;
+    }
+
+    /**
+     * Updates an existing entity. Do not call {@link #save(Identifiable)} or {@link #save(Collection)} from this
+     * method. It will cause infinite loop.
+     * 
+     * @param obj the entity to be saved (updated)
+     * @return the saved object (might be the same or a different one)
+     */
+    protected T updateExistingEntity( T obj )
+    {
+        return entityManager.get().merge( obj );
     }
 
     /**

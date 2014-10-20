@@ -9,7 +9,7 @@ INSERT INTO enum_one_time_link_type (name) VALUES('FORGOT_PASWORD');
 CREATE TABLE user_one_time_link (
 	id bigserial PRIMARY KEY,
 	uuid varchar(200) NOT NULL,
-	designation varcar(30) NOT NULL,
+	designation varchar(30) NOT NULL,
 	expires_at timestamp with time zone NOT NULL,
 	user_id integer NOT NULL,
 	

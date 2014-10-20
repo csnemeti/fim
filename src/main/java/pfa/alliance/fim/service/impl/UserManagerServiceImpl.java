@@ -3,6 +3,11 @@
  */
 package pfa.alliance.fim.service.impl;
 
+import java.sql.Timestamp;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.persistence.PersistenceException;
@@ -12,7 +17,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pfa.alliance.fim.dao.UserRepository;
+import pfa.alliance.fim.model.user.OneTimeLinkType;
 import pfa.alliance.fim.model.user.User;
+import pfa.alliance.fim.model.user.UserOneTimeLink;
 import pfa.alliance.fim.model.user.UserStatus;
 import pfa.alliance.fim.service.UserManagerService;
 
@@ -34,6 +41,9 @@ class UserManagerServiceImpl
 
     private static final String SUFIX = "Nah... We encrypt that so it's secret.";
 
+    /** One day in milliseconds. */
+    private static final long ONE_DAY_IN_MILLISECONDS = 24L * 3600L * 1000L;
+
     private final UserRepository userRepository;
 
     @Inject
@@ -50,6 +60,10 @@ class UserManagerServiceImpl
         User user = createNewUser( email, cleanPassword, firstName, lastName );
         try
         {
+            UserOneTimeLink link = createUserOneTimeLinkFor( user, OneTimeLinkType.USER_REGISTRATION );
+            Set<UserOneTimeLink> links = new HashSet<UserOneTimeLink>();
+            links.add( link );
+            user.setOneTimeLinks( links );
             User savedUser = userRepository.save( user );
             // TODO send e-mail
             return savedUser;
@@ -69,6 +83,23 @@ class UserManagerServiceImpl
         }
     }
 
+    /**
+     * Creates a {@link UserOneTimeLink} for a given {@link User} and for a given designation.
+     * 
+     * @param user the {@link User} for whom this link is name
+     * @param designation the designation of the link
+     * @return the created object
+     */
+    private UserOneTimeLink createUserOneTimeLinkFor( User user, OneTimeLinkType designation )
+    {
+        UserOneTimeLink link = new UserOneTimeLink();
+        link.setDesignation( designation );
+        link.setExpiresAt( new Timestamp( System.currentTimeMillis() + ONE_DAY_IN_MILLISECONDS ) );
+        link.setUser( user );
+        UUID uuid = new UUID( System.nanoTime(), System.currentTimeMillis() );
+        link.setUuid( uuid.toString() );
+        return link;
+    }
     /**
      * Checks if the user data that is provided is duplicate or not.
      * 
