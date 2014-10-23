@@ -15,6 +15,17 @@ public interface EmailService
     /**
      * Send an e-mail.
      * 
+     * @param to the TO address
+     * @param subject the e-mail subject
+     * @param content the e-mail HTML content
+     * @throws MessagingException in case sending fails
+     */
+    void sendEmail( String to, String subject, String content )
+        throws MessagingException;
+
+    /**
+     * Send an e-mail.
+     * 
      * @param from the FROM address
      * @param to the TO address
      * @param cc the list of persons who should be in CC

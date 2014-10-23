@@ -3,6 +3,10 @@
  */
 package pfa.alliance.fim.service.impl;
 
+import java.util.Locale;
+import java.util.Map;
+
+import javax.mail.MessagingException;
 import javax.persistence.PersistenceException;
 
 import org.junit.Assert;
@@ -13,6 +17,9 @@ import org.mockito.Mockito;
 import pfa.alliance.fim.dao.UserRepository;
 import pfa.alliance.fim.model.user.User;
 import pfa.alliance.fim.model.user.UserStatus;
+import pfa.alliance.fim.service.EmailGeneratorService;
+import pfa.alliance.fim.service.EmailService;
+import pfa.alliance.fim.service.EmailType;
 
 /**
  * This class is used for testing {@link UserManagerServiceImpl}.
@@ -25,22 +32,40 @@ public class UserManagerServiceImplTest
 
     private UserRepository userRepositoryMock;
 
+    private EmailService emailServiceMock;
+
+    private EmailGeneratorService emailGeneratorServiceMock;
+
     @Before
     public void init()
     {
         userRepositoryMock = Mockito.mock( UserRepository.class );
-        userManagetServiceImpl = new UserManagerServiceImpl( userRepositoryMock );
+        emailServiceMock = Mockito.mock( EmailService.class );
+        emailGeneratorServiceMock = Mockito.mock( EmailGeneratorService.class );
+        userManagetServiceImpl =
+            new UserManagerServiceImpl( userRepositoryMock, emailServiceMock, emailGeneratorServiceMock );
     }
 
     @Test
     public void test_registerUser_validData()
+        throws Exception
     {
         // prepare
         userRepositoryMock.save( Mockito.any( User.class ) );
+        Mockito.when( emailGeneratorServiceMock.getSubject( EmailType.REGISTER_USER, null, Locale.UK ) ).thenReturn( "Subject" );
+        Mockito.when( emailGeneratorServiceMock.getContent( Mockito.any( EmailType.class ), Mockito.any( Map.class ),
+                                                            Mockito.any( Locale.class ) ) ).thenReturn( "Content" );
+        emailServiceMock.sendEmail( "email@test.com", "Subject", "Content" );
         // call
-        userManagetServiceImpl.registerUser( "email@test.com", "abc", "First", "Name" );
+        userManagetServiceImpl.registerUser( "email@test.com", "abc", "First", "Name", Locale.UK );
         // verify
         Mockito.verify( userRepositoryMock, Mockito.atLeastOnce() ).save( Mockito.any( User.class ) );
+        Mockito.verify( emailGeneratorServiceMock, Mockito.atLeastOnce() ).getSubject( EmailType.REGISTER_USER, null,
+                                                                                       Locale.UK );
+        Mockito.verify( emailGeneratorServiceMock, Mockito.atLeastOnce() ).getContent( Mockito.any( EmailType.class ),
+                                                                                       Mockito.any( Map.class ),
+                                                                                       Mockito.any( Locale.class ) );
+        Mockito.verify( emailServiceMock, Mockito.atLeastOnce() ).sendEmail( "email@test.com", "Subject", "Content" );
     }
 
     @Test( expected = DuplicateUserDataException.class )
@@ -50,9 +75,46 @@ public class UserManagerServiceImplTest
         Mockito.when( userRepositoryMock.save( Mockito.any( User.class ) ) ).thenThrow( new PersistenceException(
                                                                                                                   "These data violates unique constraint" ) );
         // call
-        userManagetServiceImpl.registerUser( "email@test.com", "abc", "First", "Name" );
-        // verify
-        Mockito.verify( userRepositoryMock, Mockito.atLeastOnce() ).save( Mockito.any( User.class ) );
+        try
+        {
+            userManagetServiceImpl.registerUser( "email@test.com", "abc", "First", "Name", Locale.UK );
+        }
+        finally
+        {
+            // verify
+            Mockito.verify( userRepositoryMock, Mockito.atLeastOnce() ).save( Mockito.any( User.class ) );
+            Mockito.verifyZeroInteractions( emailGeneratorServiceMock, emailServiceMock );
+        }
+    }
+
+    @Test( expected = RuntimeException.class )
+    public void test_registerUser_validDataFailEmailSending()
+        throws Exception
+    {
+        // prepare
+        userRepositoryMock.save( Mockito.any( User.class ) );
+        Mockito.when( emailGeneratorServiceMock.getSubject( EmailType.REGISTER_USER, null, Locale.UK ) ).thenReturn( "Subject" );
+        Mockito.when( emailGeneratorServiceMock.getContent( Mockito.any( EmailType.class ), Mockito.any( Map.class ),
+                                                            Mockito.any( Locale.class ) ) ).thenReturn( "Content" );
+        Mockito.doThrow( new MessagingException( "4 testing" ) ).when( emailServiceMock ).sendEmail( "email@test.com",
+                                                                                                     "Subject",
+                                                                                                     "Content" );
+        // call
+        try
+        {
+            userManagetServiceImpl.registerUser( "email@test.com", "abc", "First", "Name", Locale.UK );
+        }
+        finally
+        {
+            // verify
+            Mockito.verify( userRepositoryMock, Mockito.atLeastOnce() ).save( Mockito.any( User.class ) );
+            Mockito.verify( emailGeneratorServiceMock, Mockito.atLeastOnce() ).getSubject( EmailType.REGISTER_USER,
+                                                                                           null, Locale.UK );
+            Mockito.verify( emailGeneratorServiceMock, Mockito.atLeastOnce() ).getContent( Mockito.any( EmailType.class ),
+                                                                                           Mockito.any( Map.class ),
+                                                                                           Mockito.any( Locale.class ) );
+            Mockito.verify( emailServiceMock, Mockito.atLeastOnce() ).sendEmail( "email@test.com", "Subject", "Content" );
+        }
     }
 
     @Test( expected = PersistenceException.class )
@@ -63,9 +125,16 @@ public class UserManagerServiceImplTest
                                                                                                                   new IllegalArgumentException(
                                                                                                                                                 "4 testing" ) ) );
         // call
-        userManagetServiceImpl.registerUser( "email@test.com", "abc", "First", "Name" );
-        // verify
-        Mockito.verify( userRepositoryMock, Mockito.atLeastOnce() ).save( Mockito.any( User.class ) );
+        try
+        {
+            userManagetServiceImpl.registerUser( "email@test.com", "abc", "First", "Name", Locale.UK );
+        }
+        finally
+        {
+            // verify
+            Mockito.verify( userRepositoryMock, Mockito.atLeastOnce() ).save( Mockito.any( User.class ) );
+            Mockito.verifyZeroInteractions( emailGeneratorServiceMock, emailServiceMock );
+        }
     }
 
     @Test

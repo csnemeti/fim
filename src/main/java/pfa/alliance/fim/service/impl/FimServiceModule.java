@@ -16,7 +16,9 @@ import org.slf4j.LoggerFactory;
 import pfa.alliance.fim.dao.impl.FimDaoModule;
 import pfa.alliance.fim.service.ConfigurationService;
 import pfa.alliance.fim.service.DatabaseMigrationService;
+import pfa.alliance.fim.service.EmailGeneratorService;
 import pfa.alliance.fim.service.EmailService;
+import pfa.alliance.fim.service.FimUrlGeneratorService;
 import pfa.alliance.fim.service.PersistenceService;
 import pfa.alliance.fim.service.UserManagerService;
 
@@ -42,7 +44,7 @@ public class FimServiceModule
 
     private static final String[] EMAIL_CONFIG_PROPERTIES = { "mail.smtp.auth", "mail.smtp.starttls.enable",
         "mail.smtp.host", "mail.smtp.port", "mail.smtp.socketFactory.port", "mail.smtp.socketFactory.class",
-        "mail.smtp.username", "mail.smtp.password", "mail.smtp.subjectPrefix" };
+        "mail.smtp.username", "mail.smtp.password", "mail.smtp.subjectPrefix", "mail.smtp.from", "mail.debug" };
 
     @Override
     protected void configure()
@@ -53,7 +55,9 @@ public class FimServiceModule
         bind( ConfigurationService.class ).to( ConfigurationServiceImpl.class );
         bind( DatabaseMigrationService.class ).to( DatabaseMigrationServiceImpl.class );
         bind( EmailService.class ).to( EmailServiceImpl.class );
+        bind( EmailGeneratorService.class ).to( EmailGeneratorServiceImpl.class );
         bind( PersistenceService.class ).to( PersistenceServiceImpl.class );
+        bind( FimUrlGeneratorService.class ).to( FimUrlGeneratorServiceImpl.class );
 
         bind( UserManagerService.class ).to( UserManagerServiceImpl.class );
     }

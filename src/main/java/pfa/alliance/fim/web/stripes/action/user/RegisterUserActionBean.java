@@ -80,7 +80,7 @@ public class RegisterUserActionBean
         LOG.debug( "Trying to register user: firstName = {}, lastName = {}, email = {}", firstName, lastName, email );
         try
         {
-            userManagerService.registerUser( email, password, firstName, lastName );
+            userManagerService.registerUser( email, password, firstName, lastName, getContext().getLocale() );
             dbOperationResult = USER_CREATED_RESPONSE;
         }
         catch ( DuplicateUserDataException e )

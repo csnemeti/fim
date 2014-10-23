@@ -3,6 +3,8 @@
  */
 package pfa.alliance.fim.service;
 
+import java.util.Locale;
+
 import pfa.alliance.fim.model.user.User;
 import pfa.alliance.fim.model.user.UserStatus;
 
@@ -19,9 +21,10 @@ public interface UserManagerService
      * @param cleanPassword password typed in clear form
      * @param firstName the user first name
      * @param lastName the user last name
+     * @param locale the {@link Locale} used in e-mail sending
      * @return the created User
      */
-    User registerUser( String email, String cleanPassword, String firstName, String lastName );
+    User registerUser( String email, String cleanPassword, String firstName, String lastName, Locale locale );
 
     /**
      * Authenticate a {@link User}.

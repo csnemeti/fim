@@ -4,12 +4,16 @@
 package pfa.alliance.fim.service.impl;
 
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.mail.MessagingException;
 import javax.persistence.PersistenceException;
 
 import org.apache.commons.codec.digest.DigestUtils;
@@ -21,6 +25,10 @@ import pfa.alliance.fim.model.user.OneTimeLinkType;
 import pfa.alliance.fim.model.user.User;
 import pfa.alliance.fim.model.user.UserOneTimeLink;
 import pfa.alliance.fim.model.user.UserStatus;
+import pfa.alliance.fim.service.EmailGeneratorService;
+import pfa.alliance.fim.service.EmailService;
+import pfa.alliance.fim.service.EmailType;
+import pfa.alliance.fim.service.FimUrlGeneratorService;
 import pfa.alliance.fim.service.UserManagerService;
 
 import com.google.inject.persist.Transactional;
@@ -46,17 +54,29 @@ class UserManagerServiceImpl
 
     private final UserRepository userRepository;
 
+    private final EmailService emailService;
+
+    private final EmailGeneratorService emailGeneratorService;
+
+    private final FimUrlGeneratorService fimUrlGeneratorService;
+
     @Inject
-    public UserManagerServiceImpl( UserRepository userRepository )
+    public UserManagerServiceImpl( UserRepository userRepository, EmailService emailService,
+                                   EmailGeneratorService emailGeneratorService,
+                                   FimUrlGeneratorService fimUrlGeneratorService )
     {
         this.userRepository = userRepository;
+        this.emailService = emailService;
+        this.emailGeneratorService = emailGeneratorService;
+        this.fimUrlGeneratorService = fimUrlGeneratorService;
     }
 
     @Override
     @Transactional
-    public User registerUser( String email, String cleanPassword, String firstName, String lastName )
+    public User registerUser( String email, String cleanPassword, String firstName, String lastName, Locale locale )
     {
-        LOG.debug( "Trying to create new user: email = {}, first name = {}, last name = {}", email, firstName, lastName );
+        LOG.debug( "Trying to create new user: email = {}, first name = {}, last name = {}, locale = {}", email,
+                   firstName, lastName, locale );
         User user = createNewUser( email, cleanPassword, firstName, lastName );
         try
         {
@@ -65,8 +85,8 @@ class UserManagerServiceImpl
             links.add( link );
             user.setOneTimeLinks( links );
             User savedUser = userRepository.save( user );
-            // TODO send e-mail
-            return savedUser;
+            sendRegistrationEmail( link, locale );
+            user = savedUser;
         }
         catch ( PersistenceException e )
         {
@@ -81,6 +101,25 @@ class UserManagerServiceImpl
                 throw e;
             }
         }
+        catch ( MessagingException e )
+        {
+            LOG.error( "User created, but fail to send e-mail. Rollback all: {}", user, e );
+            throw new RuntimeException( e );
+        }
+        return user;
+    }
+
+    private void sendRegistrationEmail( UserOneTimeLink link, Locale locale )
+        throws MessagingException
+    {
+        User user = link.getUser();
+        String to = user.getEmail();
+        String subject = emailGeneratorService.getSubject( EmailType.REGISTER_USER, null, locale );
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put( "name", user.getFirstName() + " " + user.getLastName() );
+        parameters.put( "link", fimUrlGeneratorService.getActivateAccountLink( link.getUuid() ) );
+        String content = emailGeneratorService.getContent( EmailType.REGISTER_USER, parameters, locale );
+        emailService.sendEmail( to, subject, content );
     }
 
     /**

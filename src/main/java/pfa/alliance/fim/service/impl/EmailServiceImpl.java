@@ -47,6 +47,14 @@ public class EmailServiceImpl
     }
 
     @Override
+    public void sendEmail( String to, String subject, String content )
+        throws MessagingException
+    {
+        sendEmail( null, new String[] { to }, null, null, subject, content );
+
+    }
+
+    @Override
     public void sendEmail( String from, String[] to, String[] cc, String[] bcc, String subject, String content )
         throws MessagingException
     {
@@ -55,15 +63,20 @@ public class EmailServiceImpl
                    content.length() );
 
         Properties properties = emailConfiguration.get();
+        String localFrom = from;
+        if ( StringUtils.isBlank( localFrom ) )
+        {
+            localFrom = properties.getProperty( "mail.smtp.from" ).trim();
+        }
         Authenticator authenticator = getAuthenticator( properties );
         Session session = Session.getInstance( properties, authenticator );
         LOG.debug( "Building message..." );
         Message message =
-            createMessage( session, from, to, cc, bcc, properties.getProperty( "mail.smtp.subjectPrefix" ), subject,
+            createMessage( session, localFrom, to, cc, bcc, properties.getProperty( "mail.smtp.subjectPrefix" ), subject,
                            content );
         LOG.debug( "Sending message..." );
         sendMessage( message );
-        LOG.info( "E-mail sent: FROM = {}, TO = {}, CC = {}, BCC = {}, Subject = {}", from, Arrays.toString( to ),
+        LOG.info( "E-mail sent: FROM = {}, TO = {}, CC = {}, BCC = {}, Subject = {}", localFrom, Arrays.toString( to ),
                   Arrays.toString( cc ), Arrays.toString( bcc ), subject );
     }
 
@@ -144,7 +157,7 @@ public class EmailServiceImpl
             {
                 subjectValue = subject;
             }
-
+            message.setFrom( new InternetAddress( from ) );
             message.setSubject( subjectValue );
             message.setContent( content, "text/html; charset=utf-8" );
         }
