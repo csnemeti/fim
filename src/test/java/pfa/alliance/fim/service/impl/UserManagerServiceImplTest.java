@@ -20,6 +20,7 @@ import pfa.alliance.fim.model.user.UserStatus;
 import pfa.alliance.fim.service.EmailGeneratorService;
 import pfa.alliance.fim.service.EmailService;
 import pfa.alliance.fim.service.EmailType;
+import pfa.alliance.fim.service.FimUrlGeneratorService;
 
 /**
  * This class is used for testing {@link UserManagerServiceImpl}.
@@ -36,14 +37,18 @@ public class UserManagerServiceImplTest
 
     private EmailGeneratorService emailGeneratorServiceMock;
 
+    private FimUrlGeneratorService fimUrlGeneratorServiceMock;
+
     @Before
     public void init()
     {
         userRepositoryMock = Mockito.mock( UserRepository.class );
         emailServiceMock = Mockito.mock( EmailService.class );
         emailGeneratorServiceMock = Mockito.mock( EmailGeneratorService.class );
+        fimUrlGeneratorServiceMock = Mockito.mock( FimUrlGeneratorService.class );
         userManagetServiceImpl =
-            new UserManagerServiceImpl( userRepositoryMock, emailServiceMock, emailGeneratorServiceMock );
+            new UserManagerServiceImpl( userRepositoryMock, emailServiceMock, emailGeneratorServiceMock,
+                                        fimUrlGeneratorServiceMock );
     }
 
     @Test
@@ -55,6 +60,7 @@ public class UserManagerServiceImplTest
         Mockito.when( emailGeneratorServiceMock.getSubject( EmailType.REGISTER_USER, null, Locale.UK ) ).thenReturn( "Subject" );
         Mockito.when( emailGeneratorServiceMock.getContent( Mockito.any( EmailType.class ), Mockito.any( Map.class ),
                                                             Mockito.any( Locale.class ) ) ).thenReturn( "Content" );
+        Mockito.when( fimUrlGeneratorServiceMock.getActivateAccountLink( Mockito.anyString() ) ).thenReturn( "url" );
         emailServiceMock.sendEmail( "email@test.com", "Subject", "Content" );
         // call
         userManagetServiceImpl.registerUser( "email@test.com", "abc", "First", "Name", Locale.UK );
@@ -66,6 +72,7 @@ public class UserManagerServiceImplTest
                                                                                        Mockito.any( Map.class ),
                                                                                        Mockito.any( Locale.class ) );
         Mockito.verify( emailServiceMock, Mockito.atLeastOnce() ).sendEmail( "email@test.com", "Subject", "Content" );
+        Mockito.verify( fimUrlGeneratorServiceMock, Mockito.atLeastOnce() ).getActivateAccountLink( Mockito.anyString() );
     }
 
     @Test( expected = DuplicateUserDataException.class )
@@ -83,7 +90,7 @@ public class UserManagerServiceImplTest
         {
             // verify
             Mockito.verify( userRepositoryMock, Mockito.atLeastOnce() ).save( Mockito.any( User.class ) );
-            Mockito.verifyZeroInteractions( emailGeneratorServiceMock, emailServiceMock );
+            Mockito.verifyZeroInteractions( emailGeneratorServiceMock, emailServiceMock, fimUrlGeneratorServiceMock );
         }
     }
 
@@ -99,6 +106,7 @@ public class UserManagerServiceImplTest
         Mockito.doThrow( new MessagingException( "4 testing" ) ).when( emailServiceMock ).sendEmail( "email@test.com",
                                                                                                      "Subject",
                                                                                                      "Content" );
+        Mockito.when( fimUrlGeneratorServiceMock.getActivateAccountLink( Mockito.anyString() ) ).thenReturn( "url" );
         // call
         try
         {
@@ -114,6 +122,7 @@ public class UserManagerServiceImplTest
                                                                                            Mockito.any( Map.class ),
                                                                                            Mockito.any( Locale.class ) );
             Mockito.verify( emailServiceMock, Mockito.atLeastOnce() ).sendEmail( "email@test.com", "Subject", "Content" );
+            Mockito.verify( fimUrlGeneratorServiceMock, Mockito.atLeastOnce() ).getActivateAccountLink( Mockito.anyString() );
         }
     }
 
@@ -133,7 +142,7 @@ public class UserManagerServiceImplTest
         {
             // verify
             Mockito.verify( userRepositoryMock, Mockito.atLeastOnce() ).save( Mockito.any( User.class ) );
-            Mockito.verifyZeroInteractions( emailGeneratorServiceMock, emailServiceMock );
+            Mockito.verifyZeroInteractions( emailGeneratorServiceMock, emailServiceMock, fimUrlGeneratorServiceMock );
         }
     }
 
