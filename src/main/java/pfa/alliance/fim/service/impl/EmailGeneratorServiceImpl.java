@@ -26,7 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pfa.alliance.fim.service.EmailGeneratorService;
-import pfa.alliance.fim.service.EmailType;
+import pfa.alliance.fim.service.NameProvider;
 
 /**
  * This class implements the {@link EmailGeneratorService}.
@@ -44,7 +44,7 @@ public class EmailGeneratorServiceImpl
     private final ResourceBundle.Control utf8Rbontrol = new UTF8Control();
 
     @Override
-    public String getSubject( EmailType emailType, Map<String, Object> parameters, Locale locale )
+    public String getSubject( NameProvider emailType, Map<String, Object> parameters, Locale locale )
     {
         LOG.debug( "Getting subject for: EmailType = {}, parameters = {}, locale = {}", emailType, parameters, locale );
         ResourceBundle stripesResourceBundle = ResourceBundle.getBundle( "StripesResources", locale, utf8Rbontrol );
@@ -56,7 +56,7 @@ public class EmailGeneratorServiceImpl
     }
 
     @Override
-    public String getContent( EmailType emailType, Map<String, Object> parameters, Locale locale )
+    public String getContent( NameProvider emailType, Map<String, Object> parameters, Locale locale )
     {
         LOG.debug( "Getting content for: EmailType = {}, parameters = {}, locale = {}", emailType, parameters, locale );
         VelocityEngine ve = new VelocityEngine();

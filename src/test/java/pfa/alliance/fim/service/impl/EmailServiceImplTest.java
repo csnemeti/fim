@@ -55,8 +55,8 @@ public class EmailServiceImplTest
     public void test_sendEmail_noAuthentication()
         throws Exception
     {
-        emailServiceImpl.sendEmail( "from@test.com", new String[] { "to1@test.com" }, new String[0], null, "Subject 1",
-                                    "Content" );
+        emailProperties.setProperty( "mail.smtp.from", "from@test.com" );
+        emailServiceImpl.sendEmail( "to1@test.com", "Subject 1", "Content" );
         Assert.assertEquals( "Invokation issue", true, emailServiceImpl.sendMessageCalled );
     }
 

@@ -46,6 +46,8 @@ public class FimServiceModule
         "mail.smtp.host", "mail.smtp.port", "mail.smtp.socketFactory.port", "mail.smtp.socketFactory.class",
         "mail.smtp.username", "mail.smtp.password", "mail.smtp.subjectPrefix", "mail.smtp.from", "mail.debug" };
 
+    private static final String FIM_HTTPS_URL = "fim.https.url";
+
     @Override
     protected void configure()
     {
@@ -96,6 +98,27 @@ public class FimServiceModule
         Properties result = filterProperties( props, EMAIL_CONFIG_PROPERTIES );
         addProperty( result, "mail.smtp.password", "fim.email.password" );
         return result;
+    }
+
+    /**
+     * Gets the URL for F.I.M.
+     * 
+     * @return the FIM url
+     */
+    @Provides
+    @FimUrlConfiguration
+    public String getFimUrlConfiguration()
+    {
+        LOG.debug( "Reading FIM url configuration..." );
+        String fimEnvFileName = getEnvironmentFileName();
+        LOG.debug( "Reading configuration from environment file: {}", fimEnvFileName );
+        Properties props = readConfigurationFrom( fimEnvFileName );
+        String url = props.getProperty( FIM_HTTPS_URL );
+        if ( !url.endsWith( "/" ) )
+        {
+            url += "/";
+        }
+        return url;
     }
 
     /**

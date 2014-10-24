@@ -21,7 +21,7 @@ public interface EmailGeneratorService
      * @param locale the desired {@link Locale}
      * @return the e-mail subject to be used
      */
-    String getSubject( EmailType emailType, Map<String, Object> parameters, Locale locale );
+    String getSubject( NameProvider emailType, Map<String, Object> parameters, Locale locale );
 
     /**
      * Gets the content of an e-mail.
@@ -31,5 +31,5 @@ public interface EmailGeneratorService
      * @param locale the desired {@link Locale}
      * @return the e-mail content to be used
      */
-    String getContent( EmailType emailType, Map<String, Object> parameters, Locale locale );
+    String getContent( NameProvider emailType, Map<String, Object> parameters, Locale locale );
 }

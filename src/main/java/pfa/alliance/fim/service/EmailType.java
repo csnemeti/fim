@@ -9,6 +9,7 @@ package pfa.alliance.fim.service;
  * @author Csaba
  */
 public enum EmailType
+    implements NameProvider
 {
     REGISTER_USER
 }
