@@ -1,6 +1,7 @@
 apply plugin: 'java'
 apply plugin: 'war' 
-apply plugin: 'jettyEclipse'
+//apply plugin: 'jettyEclipse'
+apply from: 'https://raw.github.com/akhikhl/gretty/master/pluginScripts/gretty.plugin'
 apply plugin: 'eclipse'
 apply plugin: 'distribution'
 apply plugin: 'jacoco'
@@ -14,7 +15,7 @@ buildscript {
 		// we need this to get git version info
     	classpath 'org.ajoberstar:gradle-git:0.9.0'
     	// Jetty 9+
-    	classpath (group: 'com.sahlbach.gradle', name: 'gradle-jetty-eclipse-plugin', version: '1.9.2')
+    	//classpath (group: 'com.sahlbach.gradle', name: 'gradle-jetty-eclipse-plugin', version: '1.9.2')    	
   	}
 }
  
@@ -33,7 +34,7 @@ def FIM_GIT_COMMIT = "${repo.head().abbreviatedId}"
 def FIM_GIT_BRANCH = "${repo.branch.getCurrent().getName()}"
 version = "${currentVersion}-${FIM_GIT_BRANCH}"
 def manifestVersion = "${currentVersion}${FIM_BUILD_NUMBER_FORMATED}-${FIM_GIT_BRANCH}"
-jettyEclipse.contextPath = "/fim"
+//jettyEclipse.contextPath = "/fim"
 
 // This is for dependencies...
 repositories {
@@ -206,9 +207,19 @@ task ftp << {
 }
 
 // Redefinition of jettyRun task
-task("jettyRun", dependsOn: 'jettyEclipseRun') << {
-}
+//task("jettyRun", dependsOn: 'appRun') << {
+//}
 
+gretty {
+  httpsEnabled = true
+  // optionally you can specify port. 8443 is the default.
+  httpsPort = 8443
+  sslKeyStorePath = './etc/ssl/keystore'
+  sslKeyStorePassword='33NFcgHVfXeIw3lrhY1mTaMukc0qtJsKJaNMHz6eeHlgy6ZJoxBRLNnA3UVGqY0LoNq9sqQhDEb2nA3SFi139tB8QRCWzJe8UkFEfVwLvBT18UIqqkMp3eaWr8pwptbH'
+  sslKeyManagerPassword='jct30I3U4xzkm37zKSY4quNjSaFLw635Ej62dQD7oqL4pCv4oKJ736ne2H5FW3o5TYJn68OE5upLNg9rGH6rDkJ3bt9f45cXJeLF6IgmKLqPmPdtsjBVI1HMGlYklRS5'
+  
+  //jvmArgs = ['-Xdebug', '-Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n']
+}
 
 // Sample to see how to define such things
 test {

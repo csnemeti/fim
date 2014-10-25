@@ -85,7 +85,7 @@ public class ManifestUtils
             try
             {
                 Enumeration<URL> resources = ManifestUtils.class.getClassLoader().getResources( MANIFEST_URL );
-                while ( resources.hasMoreElements() )
+                while ( resources.hasMoreElements() && fimManifest == null )
                 {
                     URL url = resources.nextElement();
                     LOG.debug( "Checking: {}", url );
@@ -97,7 +97,6 @@ public class ManifestUtils
                         if ( attributes != null && attributes.getValue( FIM_CI ) != null )
                         {
                             fimManifest = manifest;
-                            break;
                         }
                     }
                     catch ( IOException e )
