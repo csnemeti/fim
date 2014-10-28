@@ -122,9 +122,11 @@ public class DateUtils
     }
 
     /**
-     * @param from
-     * @param to
-     * @return
+     * Displays a time interval.
+     * 
+     * @param from the FROM time
+     * @param to the TO time
+     * @return the time interval
      */
     public static String getTimeInterval( Date from, Date to )
     {

@@ -40,8 +40,6 @@ public interface UserManagerService
      * Gets the {@link UserOneTimeLink} with {@link User} filled in from database.
      * 
      * @param uuid the link unique identifier (uuid).
-     * @param designation the link designation (null = any designation)
-     * @return the {@link UserOneTimeLink} or null if not found
      */
     void activateUser( String uuid );
 }

@@ -46,7 +46,7 @@ public class UserDashboardActionBean
     /**
      * Returns the current logged user name or username (if name is missing).
      * 
-     * @return
+     * @return the name of the user or the login name if we have no name information
      */
     public String getUsername()
     {
@@ -62,7 +62,7 @@ public class UserDashboardActionBean
     /**
      * Returns the current logged user email .
      * 
-     * @return
+     * @return the user e-mail
      */
     public String getUserEmail()
     {
@@ -72,7 +72,7 @@ public class UserDashboardActionBean
     /**
      * Returns the last login date of the current user .
      * 
-     * @return
+     * @return the last time when user logged in
      */
     public String getLastLoginTime()
     {
