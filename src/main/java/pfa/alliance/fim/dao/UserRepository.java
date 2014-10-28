@@ -3,7 +3,9 @@
  */
 package pfa.alliance.fim.dao;
 
+import pfa.alliance.fim.model.user.OneTimeLinkType;
 import pfa.alliance.fim.model.user.User;
+import pfa.alliance.fim.model.user.UserOneTimeLink;
 
 /**
  * This interface defines the {@link User} repository methods.
@@ -48,4 +50,14 @@ public interface UserRepository
      * @param user the user object
      */
     void addNewLoginInfoAndLimitLogs( User user );
+
+    /**
+     * Gets the {@link UserOneTimeLink} based on UUID and designation (that can be null).
+     * 
+     * @param uuid the unique identifier value (called also UUID)
+     * @param designation the reason why we have this link. If null, reason doesn't matter
+     * @return the link if UUID AND designation match or the link with given UUID if we have no designation or null if
+     *         UUID doesn't exists
+     */
+    UserOneTimeLink getOneTimeLinkBy( String uuid, OneTimeLinkType designation );
 }

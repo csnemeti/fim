@@ -6,6 +6,7 @@ package pfa.alliance.fim.service;
 import java.util.Locale;
 
 import pfa.alliance.fim.model.user.User;
+import pfa.alliance.fim.model.user.UserOneTimeLink;
 import pfa.alliance.fim.model.user.UserStatus;
 
 /**
@@ -36,9 +37,11 @@ public interface UserManagerService
     User login( String username, String cleanPassword );
 
     /**
-     * Sends the user registration e-mail.
+     * Gets the {@link UserOneTimeLink} with {@link User} filled in from database.
      * 
-     * @param user the {@link User} to whom the e-mail should be sent
+     * @param uuid the link unique identifier (uuid).
+     * @param designation the link designation (null = any designation)
+     * @return the {@link UserOneTimeLink} or null if not found
      */
-    void sendRegistrationEmail( User user );
+    void activateUser( String uuid );
 }

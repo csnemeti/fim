@@ -25,10 +25,12 @@ import pfa.alliance.fim.model.user.OneTimeLinkType;
 import pfa.alliance.fim.model.user.User;
 import pfa.alliance.fim.model.user.UserOneTimeLink;
 import pfa.alliance.fim.model.user.UserStatus;
+import pfa.alliance.fim.service.ActivationFailReason;
 import pfa.alliance.fim.service.EmailGeneratorService;
 import pfa.alliance.fim.service.EmailService;
 import pfa.alliance.fim.service.EmailType;
 import pfa.alliance.fim.service.FimUrlGeneratorService;
+import pfa.alliance.fim.service.UserActivationFailException;
 import pfa.alliance.fim.service.UserManagerService;
 
 import com.google.inject.persist.Transactional;
@@ -229,10 +231,57 @@ class UserManagerServiceImpl
         return DigestUtils.sha512Hex( PREFIX + cleanPassword + SUFIX );
     }
 
-    @Override
-    public void sendRegistrationEmail( User user )
+    private void sendRegistrationEmail( User user )
     {
         // TODO implement this
 
+    }
+
+    @Override
+    @Transactional
+    public void activateUser( String uuid )
+    {
+        LOG.debug( "Trying to activate user with uuid = {}", uuid );
+        UserOneTimeLink link = userRepository.getOneTimeLinkBy( uuid, OneTimeLinkType.USER_REGISTRATION );
+        validateLinkAndUser( link );
+        setLinkActivated( link );
+        // TODO save
+    }
+
+    /**
+     * Validate link and user for activation.
+     * 
+     * @param link the link that contains the user too
+     */
+    private void validateLinkAndUser( UserOneTimeLink link )
+    {
+        // if link is null, UUID was not valid (or UUID us valid but is not for user activation)
+        if ( link == null )
+        {
+            throw new UserActivationFailException( ActivationFailReason.UUID_NOT_FOUND );
+        }
+        // check if link is not expired
+        if ( link.getExpiresAt().before( new Timestamp( System.currentTimeMillis() ) ) )
+        {
+            throw new UserActivationFailException( ActivationFailReason.UUID_EXPIRED );
+        }
+        // check if user status is NEW (the only legal status for activation)
+        User user = link.getUser();
+        if ( !UserStatus.NEW.equals( user.getStatus() ) )
+        {
+            throw new UserActivationFailException( ActivationFailReason.USER_ALREADY_ACTIVE );
+        }
+    }
+
+    /**
+     * Make all changes necessary so that {@link User} represented by the link will be {@link UserStatus#ACTIVE}.
+     * 
+     * @param link the link with the {@link User}
+     */
+    private void setLinkActivated( UserOneTimeLink link )
+    {
+        link.getUser().setStatus( UserStatus.ACTIVE );
+        // this will make the link expired
+        link.setExpiresAt( new Timestamp( System.currentTimeMillis() ) );
     }
 }
