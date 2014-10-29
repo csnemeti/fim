@@ -239,13 +239,13 @@ class UserManagerServiceImpl
 
     @Override
     @Transactional
-    public void activateUser( String uuid )
+    public void activateUser( final String uuid )
     {
         LOG.debug( "Trying to activate user with uuid = {}", uuid );
         UserOneTimeLink link = userRepository.getOneTimeLinkBy( uuid, OneTimeLinkType.USER_REGISTRATION );
-        validateLinkAndUser( link );
+        validateLinkAndUser( link, uuid );
         setLinkActivated( link );
-        // TODO save
+        // TODO save - JPA saves the modified data automatically, so we do not really need to do this
     }
 
     /**
@@ -253,22 +253,25 @@ class UserManagerServiceImpl
      * 
      * @param link the link that contains the user too
      */
-    private void validateLinkAndUser( UserOneTimeLink link )
+    private void validateLinkAndUser( UserOneTimeLink link, final String uuid )
     {
         // if link is null, UUID was not valid (or UUID us valid but is not for user activation)
         if ( link == null )
         {
+            LOG.info( "UUID {} is not found for user registration", uuid );
             throw new UserActivationFailException( ActivationFailReason.UUID_NOT_FOUND );
         }
         // check if link is not expired
         if ( link.getExpiresAt().before( new Timestamp( System.currentTimeMillis() ) ) )
         {
+            LOG.info( "Link coresponding to requested UUID is expired: {}", link );
             throw new UserActivationFailException( ActivationFailReason.UUID_EXPIRED );
         }
         // check if user status is NEW (the only legal status for activation)
         User user = link.getUser();
         if ( !UserStatus.NEW.equals( user.getStatus() ) )
         {
+            LOG.info( "User has a status that suggests activation already happened: {}", user );
             throw new UserActivationFailException( ActivationFailReason.USER_ALREADY_ACTIVE );
         }
     }
@@ -280,6 +283,7 @@ class UserManagerServiceImpl
      */
     private void setLinkActivated( UserOneTimeLink link )
     {
+        LOG.debug( "Preparing data for user activation: {}", link );
         link.getUser().setStatus( UserStatus.ACTIVE );
         // this will make the link expired
         link.setExpiresAt( new Timestamp( System.currentTimeMillis() ) );
