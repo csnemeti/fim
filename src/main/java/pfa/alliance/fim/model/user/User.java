@@ -29,7 +29,6 @@ import pfa.alliance.fim.model.Identifiable;
  * @author Nemeti
  */
 @Entity(name="fim_user")
-
 public class User
     extends GenericModel implements Identifiable<Integer>
 {

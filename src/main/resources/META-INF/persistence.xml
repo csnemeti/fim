@@ -7,7 +7,8 @@
 
     <!-- A JPA Persistence Unit -->
     <persistence-unit name="fimJpaUnit" transaction-type="RESOURCE_LOCAL">
-        <provider>org.batoo.jpa.core.BatooPersistenceProvider</provider>
+        <!--  <provider>org.batoo.jpa.core.BatooPersistenceProvider</provider> -->
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
         <!-- JPA entities must be registered here -->
         <class>pfa.alliance.fim.model.user.User</class> 
