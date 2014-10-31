@@ -7,8 +7,14 @@
 
     <!-- A JPA Persistence Unit -->
     <persistence-unit name="fimJpaUnit" transaction-type="RESOURCE_LOCAL">
-        <!--  <provider>org.batoo.jpa.core.BatooPersistenceProvider</provider> -->
-        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <!--  Provider definition in persistence.xml is optional. 
+        We need to define it only for the case when we have several providers and for choose the one we want to use.
+        We use one for running application (BatooJPA) and one for generate schema (Hibernate).
+        One id compilation dependency the other is buildscript dependency and we're fine now...
+        So... leave these lines commented and make sure these two never meet each other!
+        <provider>org.batoo.jpa.core.BatooPersistenceProvider</provider>
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>  
+        -->
 
         <!-- JPA entities must be registered here -->
         <class>pfa.alliance.fim.model.user.User</class> 

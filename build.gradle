@@ -18,11 +18,6 @@ buildscript {
     	classpath (group: 'com.sahlbach.gradle', name: 'gradle-jetty-eclipse-plugin', version: '1.9.2')
     	// Generating JPA schema
     	classpath "io.github.divinespear:jpa-schema-gradle-plugin:0.1.11" 
-    	//classpath 'org.postgresql:postgresql:9.3-1102-jdbc41'
-    	//classpath 'mysql:mysql-connector-java:5.1.32'
-    	//classpath 'org.hibernate:hibernate-entitymanager:4.3.6.Final'
-    	
-    	
   	}
 }
  
@@ -225,14 +220,7 @@ sourceSets {
         output.resourcesDir = output.classesDir
     }
 }
-task("replacePersistenceProvider", type: Copy){
-	from("${projectDir}/src/main/resources/META-INF"){
-        include "persistence.xml"
-    }
-    // you have to use a new path for youre modified file
-    into("${buildDir}/tmp/persistence")
-    filter { line -> line.contains('BatooPersistenceProvider') ? '<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>' : line }
-}
+
 generateSchema {
     // default options
     // see SchemaGenerationConfig to all options
@@ -255,9 +243,13 @@ generateSchema {
             databaseProductName = 'MySQL'
             databaseMajorVersion = 5
         }
+        derby {
+            databaseProductName = 'Apache Derby'
+            databaseMajorVersion = 10
+            databaseMinorVersion = 7
+        }
     }
 }
-tasks.generateSchema.dependsOn replacePersistenceProvider
 
 
 
