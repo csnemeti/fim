@@ -25,10 +25,12 @@ public class GenericModel
     @Version
     private int version;
 
-    @Column( name = "created_at", insertable = false, updatable = false, nullable = false )
+    // beware that in Posgres this will generate timestamp WITHOUT timezone
+    @Column( name = "created_at", insertable = false, updatable = false, nullable = false, columnDefinition = "timestamp DEFAULT current_timestamp" )
     private Timestamp createdAt;
 
-    @Column( name = "modified_at", insertable = false, updatable = false, nullable = false )
+    // beware that in Posgres this will generate timestamp WITHOUT timezone
+    @Column( name = "modified_at", insertable = false, updatable = false, nullable = false, columnDefinition = "timestamp DEFAULT current_timestamp" )
     private Timestamp lastModified;
 
     public int getVersion()
