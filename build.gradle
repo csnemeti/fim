@@ -4,6 +4,7 @@ apply plugin: 'jettyEclipse'
 apply plugin: 'eclipse'
 apply plugin: 'distribution'
 apply plugin: 'jacoco'
+apply plugin: 'jpa-schema-generate'
 
 buildscript {
 	repositories {    	
@@ -15,6 +16,8 @@ buildscript {
     	classpath 'org.ajoberstar:gradle-git:0.9.0'
     	// Jetty 9+
     	classpath (group: 'com.sahlbach.gradle', name: 'gradle-jetty-eclipse-plugin', version: '1.9.2')
+    	// Generating JPA schema
+    	classpath "io.github.divinespear:jpa-schema-gradle-plugin:0.1.11" 
   	}
 }
  
@@ -208,6 +211,47 @@ task ftp << {
 // Redefinition of jettyRun task
 task("jettyRun", dependsOn: 'jettyEclipseRun') << {
 }
+
+// Generate schema from JPA entities
+sourceSets {
+    main {
+        // set output to same directories
+        // jpa implementations always scan classes using classpath that found persistence.xml
+        output.resourcesDir = output.classesDir
+    }
+}
+
+generateSchema {
+    // default options
+    // see SchemaGenerationConfig to all options
+    format = 'true'
+    persistenceXml = '${buildDir}/tmp/persistence/persistence.xml'
+    persistenceUnitName = 'fimJpaUnit'
+    //databaseAction = 'create'
+    scriptAction = 'create'
+    //createSourceMode = 'script'
+    //createSourceFile = 'script'
+    
+    // if you want multiple output
+    targets {
+        postgres {
+            //jdbcDriver = 'org.postgresql.Driver'
+            databaseProductName = 'PostgreSQL'
+            databaseMajorVersion = 9
+        }
+        mysql {
+            databaseProductName = 'MySQL'
+            databaseMajorVersion = 5
+        }
+        derby {
+            databaseProductName = 'Apache Derby'
+            databaseMajorVersion = 10
+            databaseMinorVersion = 7
+        }
+    }
+}
+
+
 
 
 // Sample to see how to define such things

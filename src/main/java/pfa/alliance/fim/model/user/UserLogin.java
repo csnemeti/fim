@@ -14,8 +14,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.persistence.Version;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -41,7 +39,6 @@ public class UserLogin
 
     /** The timestamp when this occurred. */
     @Column( name = "created_at", nullable = false )
-    @Temporal( TemporalType.TIMESTAMP )
     private Timestamp createdAt;
 
     /** The user to whom this record belongs. */
