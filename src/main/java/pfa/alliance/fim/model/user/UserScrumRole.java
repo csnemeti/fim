@@ -2,7 +2,6 @@ package pfa.alliance.fim.model.user;
 
 
 /**
- * The scrum role of the {@link User} . This have a {@link Board} scope.
  * 
  * @author Dennis
  * 
