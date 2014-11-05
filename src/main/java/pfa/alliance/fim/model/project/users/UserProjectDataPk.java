@@ -13,7 +13,7 @@ import pfa.alliance.fim.model.project.Project;
 import pfa.alliance.fim.model.user.User;
 
 /**
- * The composed key that is formed by a {@link User} and a {@link Board}. The role of the entity is
+ * The composed key that is formed by a {@link User} and a Project. The role of the entity is
  * pure for Hibernate necessity
  * 
  * @author Dennis
