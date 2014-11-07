@@ -77,17 +77,43 @@ class UserManagerServiceImpl
     @Transactional
     public User registerUser( String email, String cleanPassword, String firstName, String lastName, Locale locale )
     {
+        return saveNewlyCreatedUser( email, cleanPassword, firstName, lastName, locale,
+                                      OneTimeLinkType.USER_REGISTRATION );
+    }
+
+    @Override
+    @Transactional
+    public User inviteUser( String email, String firstName, String lastName, Locale locale )
+    {
+        return saveNewlyCreatedUser( email, "User: " + System.nanoTime(), firstName, lastName, locale,
+                                      OneTimeLinkType.USER_INVITE );
+    }
+
+    /**
+     * Saves a newly created {@link User} and send it's welcome e-mail.
+     * 
+     * @param email the user e-mail address
+     * @param cleanPassword the user desired clean password
+     * @param firstName the user first name
+     * @param lastName the user last name
+     * @param locale the {@link Locale} (language) of welcome e-mail
+     * @param linkType the designation of {@link UserOneTimeLink} to create
+     * @return the created {@link User} after it was saved in database
+     */
+    private User saveNewlyCreatedUser( String email, String cleanPassword, String firstName, String lastName,
+                                        Locale locale, OneTimeLinkType linkType )
+    {
         LOG.debug( "Trying to create new user: email = {}, first name = {}, last name = {}, locale = {}", email,
                    firstName, lastName, locale );
         User user = createNewUser( email, cleanPassword, firstName, lastName );
         try
         {
-            UserOneTimeLink link = createUserOneTimeLinkFor( user, OneTimeLinkType.USER_REGISTRATION );
+            UserOneTimeLink link = createUserOneTimeLinkFor( user, linkType );
             Set<UserOneTimeLink> links = new HashSet<UserOneTimeLink>();
             links.add( link );
             user.setOneTimeLinks( links );
             User savedUser = userRepository.save( user );
-            sendRegistrationEmail( link, locale );
+            sendNewUserWelcomeEmail( link, locale );
             user = savedUser;
         }
         catch ( PersistenceException e )
@@ -111,17 +137,47 @@ class UserManagerServiceImpl
         return user;
     }
 
-    private void sendRegistrationEmail( UserOneTimeLink link, Locale locale )
+    /**
+     * Sends the registration / invite e-mail.
+     * 
+     * @param link the {@link UserOneTimeLink} with {@link User} data filled in.
+     * @param locale the language for e-mail
+     * @throws MessagingException in case sending fails
+     */
+    private void sendNewUserWelcomeEmail( UserOneTimeLink link, Locale locale )
         throws MessagingException
     {
         User user = link.getUser();
         String to = user.getEmail();
-        String subject = emailGeneratorService.getSubject( EmailType.REGISTER_USER, null, locale );
+        EmailType emailType = getEmailTypeFor( link.getDesignation() );
+        String subject = emailGeneratorService.getSubject( emailType, null, locale );
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put( "name", user.getFirstName() + " " + user.getLastName() );
-        parameters.put( "link", fimUrlGeneratorService.getActivateAccountLink( link.getUuid() ) );
-        String content = emailGeneratorService.getContent( EmailType.REGISTER_USER, parameters, locale );
+        parameters.put( "link", fimUrlGeneratorService.getOneTimeLinkLink( link ) );
+        String content = emailGeneratorService.getContent( emailType, parameters, locale );
         emailService.sendEmail( to, subject, content );
+    }
+
+    /**
+     * Gets the {@link EmailType} value corresponding for given {@link OneTimeLinkType}.
+     * 
+     * @param linkType the provided {@link OneTimeLinkType}
+     * @return the corresponding {@link EmailType}
+     */
+    private static EmailType getEmailTypeFor( final OneTimeLinkType linkType )
+    {
+        EmailType emailType = null;
+        switch ( linkType )
+        {
+            case USER_REGISTRATION:
+                emailType = EmailType.REGISTER_USER;
+                break;
+
+            default:
+                LOG.error( "Unknown email type to choose for: {}", linkType );
+                throw new IllegalArgumentException( "Invalid value: " + linkType );
+        }
+        return emailType;
     }
 
     /**

@@ -1,0 +1,15 @@
+<html>
+<head>
+	<title>Invitation to join to F.I.M.</title>
+<head>
+<body>
+	<h1>Invitation to join to F.I.M.</h1>
+<p>Hello,</p>
+<p>You were invited to join F.I.M. In order to facilitate your registration we created an account for with minimal information about you (this e-mail address, first name and last name). The account is not activated, you can perform activation by clicking this :</p>
+<a href="$link">Activate account</a> link and continue filling in the mandatory data.
+<p><b>NOTE:</b> The link is valid only for 24 hours. In case you do not activate it in time, the account (with all data data about you) will be wiped out from the system.<p>
+
+Regards,<br />
+Free Issue Manager Team
+</body>
+</html>

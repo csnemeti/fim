@@ -3,6 +3,8 @@
  */
 package pfa.alliance.fim.service;
 
+import pfa.alliance.fim.model.user.UserOneTimeLink;
+
 /**
  * This service is used for generating URLs (that are in most of the cases added in e-mails).
  * 
@@ -11,10 +13,10 @@ package pfa.alliance.fim.service;
 public interface FimUrlGeneratorService
 {
     /**
-     * Gets the link for activate account.
+     * Gets a one time usable HTTP(S) link.
      * 
-     * @param activationUuid the UUID of user that should be part of the link
+     * @param link the link record
      * @return the built link
      */
-    String getActivateAccountLink( String activationUuid );
+    String getOneTimeLinkLink( final UserOneTimeLink link );
 }

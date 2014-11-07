@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pfa.alliance.fim.service.UserManagerService;
+import pfa.alliance.fim.service.impl.DuplicateUserDataException;
 import pfa.alliance.fim.web.common.FimPageURLs;
 import pfa.alliance.fim.web.stripes.action.BasePageActionBean;
 
@@ -45,6 +46,10 @@ public class InviteUserActionBean
     /** Message key regarding Database operation */
     private String dbOperationResult;
 
+    private final static String USER_CREATED_RESPONSE = "userInvite.userCreated";
+
+    private final static String DUPLICATE_USER_RESPONSE = "userRegistration.duplicateUser";
+
     @Inject
     public InviteUserActionBean( UserManagerService userManagerService )
     {
@@ -56,6 +61,26 @@ public class InviteUserActionBean
     public Resolution goToHomePage()
     {
         LOG.debug( "Show page..." );
+        return new ForwardResolution( FimPageURLs.USER_INVITE_JSP.getURL() );
+    }
+
+    /**
+     * Method called when user presses Submit button from registration form.
+     * 
+     * @return the place where it should go after the operation
+     */
+    public Resolution tryRegister()
+    {
+        LOG.debug( "Inviting user: firstName = {}, lastName = {}, email = {}", firstName, lastName, email );
+        try
+        {
+            userManagerService.inviteUser( email, firstName, lastName, getContext().getLocale() );
+            dbOperationResult = USER_CREATED_RESPONSE;
+        }
+        catch ( DuplicateUserDataException e )
+        {
+            dbOperationResult = DUPLICATE_USER_RESPONSE;
+        }
         return new ForwardResolution( FimPageURLs.USER_INVITE_JSP.getURL() );
     }
 

@@ -10,6 +10,7 @@ import javax.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pfa.alliance.fim.model.user.UserOneTimeLink;
 import pfa.alliance.fim.service.FimUrlGeneratorService;
 
 /**
@@ -40,9 +41,22 @@ public class FimUrlGeneratorServiceImpl
     }
 
     @Override
-    public String getActivateAccountLink( String activationUuid )
+    public String getOneTimeLinkLink( final UserOneTimeLink link )
     {
-        return getBaseLink() + "user/activate/" + activationUuid;
+        String result = null;
+        switch ( link.getDesignation() )
+        {
+            case USER_REGISTRATION:
+                result = getBaseLink() + "user/activate/" + link.getUuid();
+                break;
+            case USER_INVITE:
+                result = getBaseLink() + "user/profile?token=" + link.getUuid();
+                break;
+
+            default:
+                throw new IllegalArgumentException( "Invalid value: " + link.getDesignation() );
+        }
+        return result;
     }
 
     /**

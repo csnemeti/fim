@@ -28,6 +28,17 @@ public interface UserManagerService
     User registerUser( String email, String cleanPassword, String firstName, String lastName, Locale locale );
 
     /**
+     * Invite a new {@link User}. The {@link UserStatus} will be {@link UserStatus#NEW}.
+     * 
+     * @param email the user e-mail
+     * @param firstName the user first name
+     * @param lastName the user last name
+     * @param locale the {@link Locale} used in e-mail sending
+     * @return the created User
+     */
+    User inviteUser( String email, String firstName, String lastName, Locale locale );
+
+    /**
      * Authenticate a {@link User}.
      * 
      * @param username the user login name

@@ -134,6 +134,10 @@ war {
 task("cobertura", dependsOn: 'jacocoTestReport') << {
 }
 
+// javadoc settings
+build.dependsOn javadoc
+
+
 // Additional war files
 task createJavadocWar(type: Zip, dependsOn: javadoc) {
     from('build/docs/javadoc/'){

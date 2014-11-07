@@ -16,6 +16,7 @@ import org.mockito.Mockito;
 
 import pfa.alliance.fim.dao.UserRepository;
 import pfa.alliance.fim.model.user.User;
+import pfa.alliance.fim.model.user.UserOneTimeLink;
 import pfa.alliance.fim.model.user.UserStatus;
 import pfa.alliance.fim.service.EmailGeneratorService;
 import pfa.alliance.fim.service.EmailService;
@@ -60,7 +61,7 @@ public class UserManagerServiceImplTest
         Mockito.when( emailGeneratorServiceMock.getSubject( EmailType.REGISTER_USER, null, Locale.UK ) ).thenReturn( "Subject" );
         Mockito.when( emailGeneratorServiceMock.getContent( Mockito.any( EmailType.class ), Mockito.any( Map.class ),
                                                             Mockito.any( Locale.class ) ) ).thenReturn( "Content" );
-        Mockito.when( fimUrlGeneratorServiceMock.getActivateAccountLink( Mockito.anyString() ) ).thenReturn( "url" );
+        Mockito.when( fimUrlGeneratorServiceMock.getOneTimeLinkLink( Mockito.any( UserOneTimeLink.class ) ) ).thenReturn( "url" );
         emailServiceMock.sendEmail( "email@test.com", "Subject", "Content" );
         // call
         userManagetServiceImpl.registerUser( "email@test.com", "abc", "First", "Name", Locale.UK );
@@ -72,7 +73,7 @@ public class UserManagerServiceImplTest
                                                                                        Mockito.any( Map.class ),
                                                                                        Mockito.any( Locale.class ) );
         Mockito.verify( emailServiceMock, Mockito.atLeastOnce() ).sendEmail( "email@test.com", "Subject", "Content" );
-        Mockito.verify( fimUrlGeneratorServiceMock, Mockito.atLeastOnce() ).getActivateAccountLink( Mockito.anyString() );
+        Mockito.verify( fimUrlGeneratorServiceMock, Mockito.atLeastOnce() ).getOneTimeLinkLink( Mockito.any( UserOneTimeLink.class ) );
     }
 
     @Test( expected = DuplicateUserDataException.class )
@@ -106,7 +107,7 @@ public class UserManagerServiceImplTest
         Mockito.doThrow( new MessagingException( "4 testing" ) ).when( emailServiceMock ).sendEmail( "email@test.com",
                                                                                                      "Subject",
                                                                                                      "Content" );
-        Mockito.when( fimUrlGeneratorServiceMock.getActivateAccountLink( Mockito.anyString() ) ).thenReturn( "url" );
+        Mockito.when( fimUrlGeneratorServiceMock.getOneTimeLinkLink( Mockito.any( UserOneTimeLink.class ) ) ).thenReturn( "url" );
         // call
         try
         {
@@ -122,7 +123,7 @@ public class UserManagerServiceImplTest
                                                                                            Mockito.any( Map.class ),
                                                                                            Mockito.any( Locale.class ) );
             Mockito.verify( emailServiceMock, Mockito.atLeastOnce() ).sendEmail( "email@test.com", "Subject", "Content" );
-            Mockito.verify( fimUrlGeneratorServiceMock, Mockito.atLeastOnce() ).getActivateAccountLink( Mockito.anyString() );
+            Mockito.verify( fimUrlGeneratorServiceMock, Mockito.atLeastOnce() ).getOneTimeLinkLink( Mockito.any( UserOneTimeLink.class ) );
         }
     }
 
