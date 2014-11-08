@@ -48,7 +48,7 @@ public class InviteUserActionBean
 
     private final static String USER_CREATED_RESPONSE = "userInvite.userCreated";
 
-    private final static String DUPLICATE_USER_RESPONSE = "userRegistration.duplicateUser";
+    private final static String DUPLICATE_USER_RESPONSE = "userInvite.duplicateUser";
 
     @Inject
     public InviteUserActionBean( UserManagerService userManagerService )

@@ -172,7 +172,9 @@ class UserManagerServiceImpl
             case USER_REGISTRATION:
                 emailType = EmailType.REGISTER_USER;
                 break;
-
+            case USER_INVITE:
+                emailType = EmailType.INVITE_USER;
+                break;
             default:
                 LOG.error( "Unknown email type to choose for: {}", linkType );
                 throw new IllegalArgumentException( "Invalid value: " + linkType );

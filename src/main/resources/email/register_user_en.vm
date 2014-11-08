@@ -7,7 +7,7 @@
 <p>Hello $name,</p>
 <p>We would like to inform you that your account was successfully created in F.I.M. system. In order to log in, first you must activate your account. This can be done by clicking on the link below:</p>
 <a href="$link">Activate account</a>
-<p><b>NOTE:</b> The link is valid only for 24 hours. In case you do not activate your account in time, the account (with all data you provided) will be deleted.<p>
+<p><b>NOTE:</b> The link is valid only for 24 hours. In case you do not activate your account in time, it will be deleted (with all data you provided).</p>
 
 Regards,<br />
 Free Issue Manager Team
