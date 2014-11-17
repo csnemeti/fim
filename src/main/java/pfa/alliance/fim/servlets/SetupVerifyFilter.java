@@ -92,7 +92,7 @@ public class SetupVerifyFilter
             {
                 AuthenticatedUserDTO user =
                     new AuthenticatedUserDTO( -1, "First", "Last", "my@email.com", "username",
-                                              new Timestamp( System.currentTimeMillis() ) );
+                                              new Timestamp( System.currentTimeMillis() ), null );
                 SecurityUtil.putUserIntoSession( user, session );
             }
         }

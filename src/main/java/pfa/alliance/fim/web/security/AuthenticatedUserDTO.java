@@ -5,6 +5,11 @@ package pfa.alliance.fim.web.security;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -18,7 +23,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 public class AuthenticatedUserDTO
     implements Serializable
 {
-    private static final long serialVersionUID = -8177414215766169468L;
+    private static final long serialVersionUID = -8177414215766169469L;
 
     /** The user ID in database. */
     private final int id;
@@ -38,6 +43,9 @@ public class AuthenticatedUserDTO
     /** The time when user logged in. */
     private final Timestamp lastLogin;
 
+    /** List of permissions assigned by each project. */
+    private final Map<Integer, List<Permission>> projectPermissions;
+
     /**
      * Called when instance of this class is created.
      * 
@@ -49,15 +57,36 @@ public class AuthenticatedUserDTO
      * @param lastLogin the time when user last logged in
      */
     public AuthenticatedUserDTO( int id, String firstName, String lastName, String email, String username,
-                                 Timestamp lastLogin )
+                                 Timestamp lastLogin, Map<Integer, List<Permission>> projectPermissions )
     {
-        super();
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.username = username;
         this.lastLogin = lastLogin;
+        // you will not be allowed to make changes on the permissions
+        this.projectPermissions = Collections.unmodifiableMap( getPermissionsClone( projectPermissions ) );
+    }
+
+    /**
+     * Create a copy of the map received as parameter. Copy will be also on inner {@link List} from values
+     * 
+     * @param projectPermissions the map to "clone"
+     * @return the cloned {@link Map}
+     */
+    private static Map<Integer, List<Permission>> getPermissionsClone( Map<Integer, List<Permission>> projectPermissions )
+    {
+        Map<Integer, List<Permission>> copyProjectPermissions = new HashMap<Integer, List<Permission>>();
+        if ( projectPermissions != null )
+        {
+            for ( Map.Entry<Integer, List<Permission>> permissions : projectPermissions.entrySet() )
+            {
+                List<Permission> copyPermissions = new ArrayList<Permission>( permissions.getValue() );
+                copyProjectPermissions.put( permissions.getKey(), copyPermissions );
+            }
+        }
+        return copyProjectPermissions;
     }
 
     public String getFirstName()
@@ -83,6 +112,25 @@ public class AuthenticatedUserDTO
     public Timestamp getLastLogin()
     {
         return lastLogin;
+    }
+
+    /**
+     * Verifies if user has a given permission.
+     * 
+     * @param projectId the ID of the project where permission could be related. If null, permission will be searched in
+     *            set of permission that are project independent
+     * @param permission the permission to verify if exists
+     * @return true if permission is found, false if not
+     */
+    public boolean hasPermission( Integer projectId, Permission permission )
+    {
+        boolean found = false;
+        List<Permission> permissions = projectPermissions.get( projectId );
+        if ( permissions != null )
+        {
+            found = permissions.contains( permission );
+        }
+        return found;
     }
 
     @Override

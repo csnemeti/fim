@@ -129,7 +129,7 @@ public class LoginUserActionBean
         Timestamp lastLogin = getUserLastLogin( user.getLogins() );
         AuthenticatedUserDTO userDTO =
             new AuthenticatedUserDTO( user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(),
-                                      user.getLogin(), lastLogin );
+                                      user.getLogin(), lastLogin, null );
         SecurityUtil.putUserIntoSession( userDTO, getContext().getRequest().getSession( true ) );
     }
 

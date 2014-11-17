@@ -42,7 +42,7 @@ public class SecurityUtilTest
         // prepare
         AuthenticatedUserDTO user =
             new AuthenticatedUserDTO( 1, "Test", "User", "email@email.com", "username",
-                                      new Timestamp( System.currentTimeMillis() ) );
+                                      new Timestamp( System.currentTimeMillis() ), null );
         HttpSession session = Mockito.mock( HttpSession.class );
         Mockito.when( session.getAttribute( "USER_DTO" ) ).thenReturn( user );
 
@@ -77,7 +77,7 @@ public class SecurityUtilTest
         // prepare
         AuthenticatedUserDTO user =
             new AuthenticatedUserDTO( 1, "Test", "User", "email@email.com", "username",
-                                      new Timestamp( System.currentTimeMillis() ) );
+                                      new Timestamp( System.currentTimeMillis() ), null );
         HttpSession session = Mockito.mock( HttpSession.class );
 
         // call
