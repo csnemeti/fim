@@ -6,8 +6,10 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -15,90 +17,114 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 
 import pfa.alliance.fim.model.GenericModel;
 import pfa.alliance.fim.model.Identifiable;
-import pfa.alliance.fim.model.project.users.UserProjectData;
 
-@Entity
-@Table(name = "project")
-public class Project extends GenericModel implements Identifiable<Integer> {
-  private static final long serialVersionUID = 177356267632L;
-  @Column(name="id")
-  private int id;
-  @Column(name = "name")
-  private String name;
-  @Column(name = "description")
-  private String description;
-  @OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.board", orphanRemoval = true, cascade = {
-      CascadeType.PERSIST, CascadeType.MERGE})
-  private List<UserProjectData> userBoardData;
+@Entity( name = "project" )
+public class Project
+    extends GenericModel
+    implements Identifiable<Integer>
+{
+    private static final long serialVersionUID = 177356267632L;
 
-  public Project() {
-    super();
-  }
+    @Id
+    @GeneratedValue( strategy = GenerationType.IDENTITY )
+    @Column( name = "id" )
+    private Integer id;
 
-  public String getName() {
-    return name;
-  }
+    @Column( name = "name", nullable = false, length = 50 )
+    private String name;
 
-  public void setName(String name) {
-    this.name = name;
-  }
+    @Column( name = "code", nullable = false, unique = true, length = 20 )
+    private String code;
 
-  public String getDescription() {
-    return description;
-  }
+    @Column( name = "description", length = 2000 )
+    private String description;
 
-  public void setDescription(String description) {
-    this.description = description;
-  }
-  
-  @Override
-  public Integer getId() {
-   return id;
-  }
+    @OneToMany( fetch = FetchType.LAZY, mappedBy = "project", orphanRemoval = true, cascade = { CascadeType.PERSIST,
+        CascadeType.MERGE } )
+    private List<UserProjectRelation> userBoardData;
 
-  @Override
-  public void setId(Integer id) {
-    this.id = id;
-  }
-
-  @Override
-  public int hashCode() {
-    HashCodeBuilder hcb = new HashCodeBuilder();
-
-    hcb.append(name);
-    hcb.append(description);
-
-    return hcb.toHashCode();
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    if (this == obj) {
-      return true;
+    public Project()
+    {
+        super();
     }
 
-    if (!(obj instanceof Project)) {
-      return false;
+    public String getName()
+    {
+        return name;
     }
 
-    Project that = (Project) obj;
-    EqualsBuilder eb = new EqualsBuilder();
+    public void setName( String name )
+    {
+        this.name = name;
+    }
 
-    eb.append(name, that.name);
-    eb.append(description, that.description);
+    public String getDescription()
+    {
+        return description;
+    }
 
-    return eb.isEquals();
-  }
+    public void setDescription( String description )
+    {
+        this.description = description;
+    }
 
-  @Override
-  public String toString() {
-    ToStringBuilder tsb = new ToStringBuilder(this);
+    @Override
+    public Integer getId()
+    {
+        return id;
+    }
 
-    tsb.append("id", id);
-    tsb.append("name", name);
-    tsb.append("description", description);
+    @Override
+    public void setId( Integer id )
+    {
+        this.id = id;
+    }
 
-    return tsb.toString();
-  }
+    @Override
+    public int hashCode()
+    {
+        HashCodeBuilder hcb = new HashCodeBuilder();
+
+        hcb.append( code );
+        hcb.append( name );
+        hcb.append( description );
+
+        return hcb.toHashCode();
+    }
+
+    @Override
+    public boolean equals( Object obj )
+    {
+        if ( this == obj )
+        {
+            return true;
+        }
+
+        if ( !( obj instanceof Project ) )
+        {
+            return false;
+        }
+
+        Project that = (Project) obj;
+        EqualsBuilder eb = new EqualsBuilder();
+
+        eb.append( code, that.code );
+        eb.append( name, that.name );
+        eb.append( description, that.description );
+
+        return eb.isEquals();
+    }
+
+    @Override
+    public String toString()
+    {
+        ToStringBuilder tsb = new ToStringBuilder( this );
+
+        tsb.append( "id", id );
+        tsb.append( "name", name );
+        tsb.append( "code", code );
+
+        return tsb.toString();
+    }
 
 }

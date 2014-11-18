@@ -37,6 +37,7 @@ public class User
     /** The user ID. */
     @Id
     @GeneratedValue( strategy = GenerationType.IDENTITY )
+    @Column( name = "id" )
     private Integer id;
 
     /** The first name of the user. */
