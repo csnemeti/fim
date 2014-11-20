@@ -297,6 +297,18 @@ class UserManagerServiceImpl
 
     @Override
     @Transactional
+    public User forgotPassword( String username )
+    {
+        User user = userRepository.findByUsername( username );
+        if ( user != null )
+        {
+
+        }
+        return user;
+    }
+
+    @Override
+    @Transactional
     public void activateUser( final String uuid )
     {
         LOG.debug( "Trying to activate user with uuid = {}", uuid );

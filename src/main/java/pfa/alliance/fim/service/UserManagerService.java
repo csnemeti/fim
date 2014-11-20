@@ -48,6 +48,13 @@ public interface UserManagerService
     User login( String username, String cleanPassword );
 
     /**
+     * Generates a One time link that allows user to set a new password.
+     * 
+     * @param username the username of user that forgot his / her password
+     */
+    User forgotPassword( String username );
+
+    /**
      * Gets the {@link UserOneTimeLink} with {@link User} filled in from database.
      * 
      * @param uuid the link unique identifier (uuid).
