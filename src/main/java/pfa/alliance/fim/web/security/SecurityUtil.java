@@ -37,7 +37,12 @@ public final class SecurityUtil
      */
     public static AuthenticatedUserDTO getUserFromSession( HttpSession session )
     {
-        return (AuthenticatedUserDTO) session.getAttribute( USER_DTO_KEY );
+        AuthenticatedUserDTO userDTO = null;
+        if ( session != null )
+        {
+            userDTO = (AuthenticatedUserDTO) session.getAttribute( USER_DTO_KEY );
+        }
+        return userDTO;
     }
 
     /**

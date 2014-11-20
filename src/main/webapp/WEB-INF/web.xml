@@ -48,6 +48,12 @@
 			<param-value>pfa.alliance.fim.web.stripes.action</param-value>
 		</init-param>
 		<init-param>
+			<param-name>Interceptor.Classes</param-name>
+			<param-value>
+				pfa.alliance.fim.web.stripes.interceptor.SecurityInterceptor
+			</param-value>
+		</init-param>
+		<init-param>
 			<param-name>LocalePicker.Locales</param-name>
 			<param-value>en:UTF-8</param-value>
 		</init-param>
