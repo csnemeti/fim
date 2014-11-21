@@ -17,6 +17,7 @@ import javax.mail.MessagingException;
 import javax.persistence.PersistenceException;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -300,11 +301,42 @@ class UserManagerServiceImpl
     public User forgotPassword( String username )
     {
         User user = userRepository.findByUsername( username );
-        if ( user != null )
+        if ( user != null && UserStatus.ACTIVE.equals( user.getStatus() ) )
         {
-
+            Set<UserOneTimeLink> links = user.getOneTimeLinks();
+            UserOneTimeLink forgotPassword = getForgotPasswordOneTimeLink( links );
+            if ( forgotPassword == null )
+            {
+                // TODO create a new one and send the e-mail
+            }
+            else
+            {
+                // TODO extend the lifetime of existing one and resend the e-mail
+            }
         }
         return user;
+    }
+
+    /**
+     * Gets the {@link UserOneTimeLink} for {@link OneTimeLinkType#FORGOT_PASWORD} designation.
+     * 
+     * @param links all the links a user has
+     * @return the one with right designation or null if no such link is found or list is empty
+     */
+    private UserOneTimeLink getForgotPasswordOneTimeLink( Set<UserOneTimeLink> links )
+    {
+        UserOneTimeLink result = null;
+        if ( CollectionUtils.isNotEmpty( links ) )
+        {
+            for ( UserOneTimeLink link : links )
+            {
+                if(OneTimeLinkType.FORGOT_PASWORD.equals( link.getDesignation() )){
+                    result = link;
+                    break;
+                }
+            }
+        }
+        return result;
     }
 
     @Override
