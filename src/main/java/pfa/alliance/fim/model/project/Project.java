@@ -80,6 +80,26 @@ public class Project
         this.id = id;
     }
 
+    public String getCode()
+    {
+        return code;
+    }
+
+    public void setCode( String code )
+    {
+        this.code = code;
+    }
+
+    public List<UserProjectRelation> getUserBoardData()
+    {
+        return userBoardData;
+    }
+
+    public void setUserBoardData( List<UserProjectRelation> userBoardData )
+    {
+        this.userBoardData = userBoardData;
+    }
+
     @Override
     public int hashCode()
     {

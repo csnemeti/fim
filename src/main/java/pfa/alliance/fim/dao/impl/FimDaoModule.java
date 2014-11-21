@@ -3,6 +3,7 @@
  */
 package pfa.alliance.fim.dao.impl;
 
+import pfa.alliance.fim.dao.ProjectRepository;
 import pfa.alliance.fim.dao.UserRepository;
 
 import com.google.inject.AbstractModule;
@@ -20,6 +21,7 @@ public class FimDaoModule
     protected void configure()
     {
         bind( UserRepository.class ).to( UserRepositoryImpl.class );
+        bind( ProjectRepository.class ).to( ProjectRepositoryImpl.class );
     }
 
 }

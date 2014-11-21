@@ -20,6 +20,7 @@ import pfa.alliance.fim.service.EmailGeneratorService;
 import pfa.alliance.fim.service.EmailService;
 import pfa.alliance.fim.service.FimUrlGeneratorService;
 import pfa.alliance.fim.service.PersistenceService;
+import pfa.alliance.fim.service.ProjectManagementService;
 import pfa.alliance.fim.service.UserManagerService;
 
 import com.google.inject.AbstractModule;
@@ -62,6 +63,7 @@ public class FimServiceModule
         bind( FimUrlGeneratorService.class ).to( FimUrlGeneratorServiceImpl.class );
 
         bind( UserManagerService.class ).to( UserManagerServiceImpl.class );
+        bind( ProjectManagementService.class ).to( ProjectManagementServiceImpl.class );
     }
 
     /**
