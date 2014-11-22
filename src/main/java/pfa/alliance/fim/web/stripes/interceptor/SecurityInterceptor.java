@@ -7,6 +7,7 @@ import java.lang.reflect.Method;
 
 import net.sourceforge.stripes.action.ActionBean;
 import net.sourceforge.stripes.action.ActionBeanContext;
+import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.controller.ExecutionContext;
 import net.sourceforge.stripes.controller.Interceptor;
@@ -16,6 +17,7 @@ import net.sourceforge.stripes.controller.LifecycleStage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pfa.alliance.fim.web.common.FimPageURLs;
 import pfa.alliance.fim.web.security.AuthenticatedUserDTO;
 import pfa.alliance.fim.web.security.FimSecurity;
 import pfa.alliance.fim.web.security.SecurityUtil;
@@ -122,7 +124,7 @@ public class SecurityInterceptor
      */
     private Resolution handleUserNotAuthenticated( ExecutionContext context )
     {
-        return null;
+        return new RedirectResolution( FimPageURLs.USER_LOGIN_PAGE.getURL() );
     }
 
     /**

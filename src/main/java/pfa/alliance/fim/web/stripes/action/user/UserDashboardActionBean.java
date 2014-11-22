@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import pfa.alliance.fim.util.DateUtils;
 import pfa.alliance.fim.web.common.FimPageURLs;
 import pfa.alliance.fim.web.security.AuthenticatedUserDTO;
+import pfa.alliance.fim.web.security.FimSecurity;
 import pfa.alliance.fim.web.security.SecurityUtil;
 import pfa.alliance.fim.web.stripes.action.BasePageActionBean;
 
@@ -22,6 +23,7 @@ import pfa.alliance.fim.web.stripes.action.BasePageActionBean;
  * @author Balaceanu Sergiu-Denis
  */
 @UrlBinding( value = "/user/dashboard" )
+@FimSecurity
 public class UserDashboardActionBean
     extends BasePageActionBean
 {
