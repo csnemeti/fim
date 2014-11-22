@@ -7,5 +7,5 @@ package pfa.alliance.fim.model.project;
  * @author Dennis
  */
 public enum UserRoleInsideProject {
-    SCRUM_MASTER, PRODUCT_OWNER, TEAM, STATISTICAL;
+    SCRUM_MASTER, PRODUCT_OWNER, TEAM, STATISTICAL, OWNER;
 }
