@@ -189,7 +189,7 @@ public class FimServiceModule
         {
             fimEnv = "-" + fimEnv;
         }
-        return "/env/fim" + fimEnv + ".properties";
+        return "env/fim" + fimEnv + ".properties";
     }
 
     /**
