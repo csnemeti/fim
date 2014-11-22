@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import pfa.alliance.fim.dao.UserOneTimeLinkRepository;
 import pfa.alliance.fim.dao.UserRepository;
 import pfa.alliance.fim.model.user.User;
 import pfa.alliance.fim.model.user.UserOneTimeLink;
@@ -34,6 +35,8 @@ public class UserManagerServiceImplTest
 
     private UserRepository userRepositoryMock;
 
+    private UserOneTimeLinkRepository userOneTimeLinkRepositoryMock;
+
     private EmailService emailServiceMock;
 
     private EmailGeneratorService emailGeneratorServiceMock;
@@ -47,9 +50,10 @@ public class UserManagerServiceImplTest
         emailServiceMock = Mockito.mock( EmailService.class );
         emailGeneratorServiceMock = Mockito.mock( EmailGeneratorService.class );
         fimUrlGeneratorServiceMock = Mockito.mock( FimUrlGeneratorService.class );
+        userOneTimeLinkRepositoryMock = Mockito.mock( UserOneTimeLinkRepository.class );
         userManagetServiceImpl =
             new UserManagerServiceImpl( userRepositoryMock, emailServiceMock, emailGeneratorServiceMock,
-                                        fimUrlGeneratorServiceMock );
+                                        fimUrlGeneratorServiceMock, userOneTimeLinkRepositoryMock);
     }
 
     @Test

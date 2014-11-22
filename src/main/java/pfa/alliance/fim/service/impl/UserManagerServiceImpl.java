@@ -21,6 +21,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pfa.alliance.fim.dao.UserOneTimeLinkRepository;
 import pfa.alliance.fim.dao.UserRepository;
 import pfa.alliance.fim.model.user.OneTimeLinkType;
 import pfa.alliance.fim.model.user.User;
@@ -57,21 +58,26 @@ class UserManagerServiceImpl
 
     private final UserRepository userRepository;
 
+    private final UserOneTimeLinkRepository userOneTimeLinkRepository;
+
     private final EmailService emailService;
 
     private final EmailGeneratorService emailGeneratorService;
 
     private final FimUrlGeneratorService fimUrlGeneratorService;
 
+
     @Inject
     public UserManagerServiceImpl( UserRepository userRepository, EmailService emailService,
                                    EmailGeneratorService emailGeneratorService,
-                                   FimUrlGeneratorService fimUrlGeneratorService )
+                                   FimUrlGeneratorService fimUrlGeneratorService,
+                                   UserOneTimeLinkRepository userOneTimeLinkRepository )
     {
         this.userRepository = userRepository;
         this.emailService = emailService;
         this.emailGeneratorService = emailGeneratorService;
         this.fimUrlGeneratorService = fimUrlGeneratorService;
+        this.userOneTimeLinkRepository = userOneTimeLinkRepository;
     }
 
     @Override
@@ -307,12 +313,16 @@ class UserManagerServiceImpl
             UserOneTimeLink forgotPassword = getForgotPasswordOneTimeLink( links );
             if ( forgotPassword == null )
             {
-                // TODO create a new one and send the e-mail
+                // create a new one and send the e-mail
+                forgotPassword = createUserOneTimeLinkFor( user, OneTimeLinkType.FORGOT_PASWORD );
             }
             else
             {
-                // TODO extend the lifetime of existing one and resend the e-mail
+                // extend the lifetime of existing one and resend the e-mail
+                forgotPassword.setExpiresAt( new Timestamp( System.currentTimeMillis() + ONE_DAY_IN_MILLISECONDS ) );
             }
+            userOneTimeLinkRepository.save( forgotPassword );
+            // TODO send e-mail
         }
         return user;
     }
@@ -338,6 +348,7 @@ class UserManagerServiceImpl
         }
         return result;
     }
+
 
     @Override
     @Transactional
