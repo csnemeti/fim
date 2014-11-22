@@ -4,6 +4,7 @@
 package pfa.alliance.fim.web.stripes.action.user;
 
 import javax.inject.Inject;
+import javax.mail.MessagingException;
 
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -33,6 +34,8 @@ public class ForgotPasswordActionBean
     private static final Logger LOG = LoggerFactory.getLogger( ForgotPasswordActionBean.class );
 
     private static final String DB_OPERATION_INVALID_DATA = "ForgotPassword.InvalidLogin";
+
+    private static final String DB_OPERATION_UNABLE_TO_SEND_EMAIL = "ForgotPassword.UnableToSendEmail";
 
     private static final String DB_OPERATION_USER_NEW = "ForgotPassword.UserStatusNew";
 
@@ -70,10 +73,17 @@ public class ForgotPasswordActionBean
     public Resolution tryForgotPassword()
     {
         LOG.debug( "Trying to reset password for user: {}", username );
-        User user = userManagerService.forgotPassword( username );
-        processUserResultAndResultForwardToDashboard( user );
-        // reset username
-        username = null;
+        try
+        {
+            User user = userManagerService.forgotPassword( username, getContext().getLocale() );
+            processUserResultAndResultForwardToDashboard( user );
+            // reset username
+            username = null;
+        }
+        catch ( MessagingException e )
+        {
+            dbOperationResult = DB_OPERATION_UNABLE_TO_SEND_EMAIL;
+        }
         return new ForwardResolution( FimPageURLs.USER_FORGOT_PASSWORD_JSP.getURL() );
     }
 
@@ -103,7 +113,6 @@ public class ForgotPasswordActionBean
                     dbOperationResult = DB_OPERATION_SUCCESSFUL;
                     break;
             }
-
         }
     }
 

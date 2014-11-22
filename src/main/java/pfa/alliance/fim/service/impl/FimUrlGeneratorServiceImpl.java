@@ -49,6 +49,7 @@ public class FimUrlGeneratorServiceImpl
             case USER_REGISTRATION:
                 result = getBaseLink() + "user/activate/" + link.getUuid();
                 break;
+            case FORGOT_PASWORD:
             case USER_INVITE:
                 result = getBaseLink() + "user/profile?token=" + link.getUuid();
                 break;

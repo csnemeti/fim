@@ -1,6 +1,6 @@
 package pfa.alliance.fim.web.stripes.action;
 
-import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.UrlBinding;
 import pfa.alliance.fim.web.common.FimPageURLs;
@@ -22,7 +22,7 @@ public class RedirectActionBean
      */
     public Resolution goToDashboard()
     {
-        return new ForwardResolution( FimPageURLs.USER_DASBOARD_JSP.getURL() );
+        return new RedirectResolution( FimPageURLs.USER_DASBOARD_PAGE.getURL() );
     }
 
 }

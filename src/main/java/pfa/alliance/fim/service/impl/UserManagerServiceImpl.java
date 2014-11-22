@@ -182,6 +182,9 @@ class UserManagerServiceImpl
             case USER_INVITE:
                 emailType = EmailType.INVITE_USER;
                 break;
+            case FORGOT_PASWORD:
+                emailType = EmailType.FORGOT_PASSWORD;
+                break;
             default:
                 LOG.error( "Unknown email type to choose for: {}", linkType );
                 throw new IllegalArgumentException( "Invalid value: " + linkType );
@@ -304,7 +307,8 @@ class UserManagerServiceImpl
 
     @Override
     @Transactional
-    public User forgotPassword( String username )
+    public User forgotPassword( String username, Locale locale )
+        throws MessagingException
     {
         User user = userRepository.findByUsername( username );
         if ( user != null && UserStatus.ACTIVE.equals( user.getStatus() ) )
@@ -322,9 +326,31 @@ class UserManagerServiceImpl
                 forgotPassword.setExpiresAt( new Timestamp( System.currentTimeMillis() + ONE_DAY_IN_MILLISECONDS ) );
             }
             userOneTimeLinkRepository.save( forgotPassword );
-            // TODO send e-mail
+            // send e-mail
+            sendForgotPasswordLink( forgotPassword, locale );
         }
         return user;
+    }
+
+    /**
+     * Sends forgot password link.
+     * 
+     * @param forgotPasswordLink the forgot password link
+     * @param locale the {@link Locale} used for sending e-mail
+     * @throws MessagingException in case e-mail sending fails
+     */
+    private void sendForgotPasswordLink( UserOneTimeLink forgotPasswordLink, Locale locale )
+        throws MessagingException
+    {
+        User user = forgotPasswordLink.getUser();
+        String to = user.getEmail();
+        EmailType emailType = getEmailTypeFor( forgotPasswordLink.getDesignation() );
+        String subject = emailGeneratorService.getSubject( emailType, null, locale );
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put( "name", user.getFirstName() + " " + user.getLastName() );
+        parameters.put( "link", fimUrlGeneratorService.getOneTimeLinkLink( forgotPasswordLink ) );
+        String content = emailGeneratorService.getContent( emailType, parameters, locale );
+        emailService.sendEmail( to, subject, content );
     }
 
     /**
@@ -338,9 +364,12 @@ class UserManagerServiceImpl
         UserOneTimeLink result = null;
         if ( CollectionUtils.isNotEmpty( links ) )
         {
+            final Timestamp now = new Timestamp( System.currentTimeMillis() ); 
             for ( UserOneTimeLink link : links )
             {
-                if(OneTimeLinkType.FORGOT_PASWORD.equals( link.getDesignation() )){
+                if ( OneTimeLinkType.FORGOT_PASWORD.equals( link.getDesignation() )
+                    && link.getLastModified().before( now ) )
+                {
                     result = link;
                     break;
                 }

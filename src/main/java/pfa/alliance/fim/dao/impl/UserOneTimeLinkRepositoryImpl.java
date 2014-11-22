@@ -7,7 +7,7 @@ import pfa.alliance.fim.dao.UserOneTimeLinkRepository;
 import pfa.alliance.fim.model.user.UserOneTimeLink;
 
 /**
- * This is the implementation for {@link UserOneTimeLinkRepository}
+ * This is the implementation for {@link UserOneTimeLinkRepository}.
  * 
  * @author Csaba
  */

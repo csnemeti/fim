@@ -5,6 +5,8 @@ package pfa.alliance.fim.service;
 
 import java.util.Locale;
 
+import javax.mail.MessagingException;
+
 import pfa.alliance.fim.model.user.User;
 import pfa.alliance.fim.model.user.UserOneTimeLink;
 import pfa.alliance.fim.model.user.UserStatus;
@@ -51,8 +53,11 @@ public interface UserManagerService
      * Generates a One time link that allows user to set a new password.
      * 
      * @param username the username of user that forgot his / her password
+     * @param locale the locale to be used in e-mail sending
+     * @throws MessagingException if e-mail sending fails
      */
-    User forgotPassword( String username );
+    User forgotPassword( String username, Locale locale )
+        throws MessagingException;
 
     /**
      * Gets the {@link UserOneTimeLink} with {@link User} filled in from database.
