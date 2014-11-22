@@ -23,5 +23,17 @@ import java.lang.annotation.Target;
 @Target( { ElementType.METHOD, ElementType.TYPE } )
 public @interface FimSecurity
 {
+    /**
+     * Checks if logged in user has ALL {@link Permission}s from the list.
+     * 
+     * @return the {@link Permission}s user must have
+     */
+    Permission[] checkIfAll() default {};
 
+    /**
+     * Checks if logged in user has ANY {@link Permission}s from the list.
+     * 
+     * @return the {@link Permission}s user must have at least one
+     */
+    Permission[] checkIfAny() default {};
 }

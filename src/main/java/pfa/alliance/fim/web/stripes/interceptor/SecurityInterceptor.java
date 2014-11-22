@@ -4,6 +4,7 @@
 package pfa.alliance.fim.web.stripes.interceptor;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 
 import net.sourceforge.stripes.action.ActionBean;
 import net.sourceforge.stripes.action.ActionBeanContext;
@@ -20,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import pfa.alliance.fim.web.common.FimPageURLs;
 import pfa.alliance.fim.web.security.AuthenticatedUserDTO;
 import pfa.alliance.fim.web.security.FimSecurity;
+import pfa.alliance.fim.web.security.Permission;
 import pfa.alliance.fim.web.security.SecurityUtil;
 
 /**
@@ -51,7 +53,7 @@ public class SecurityInterceptor
                 LOG.info( "A page was found that requires authenticated user, redirecting user to login..." );
                 resolution = handleUserNotAuthenticated( context );
             }
-            else if ( privilegesAreSatisfied( securityAnnotation, userDTO ) )
+            else if ( arePrivilegesSatisfied( securityAnnotation, context.getActionBean(), userDTO ) )
             {
                 // everything is OK, you may proceed
                 LOG.debug( "Found security constraints, and they are satisfied by the logged in user role" );
@@ -108,12 +110,89 @@ public class SecurityInterceptor
      * Check if requested permissions are satisfied by current user permissions.
      * 
      * @param securityAnnotation the security constraints
+     * @param action the ActionBean where the security annotation was found
      * @param userDTO the suer
      * @return true if privileges are satisfied
      */
-    private boolean privilegesAreSatisfied( final FimSecurity securityAnnotation, final AuthenticatedUserDTO userDTO )
+    private boolean arePrivilegesSatisfied( final FimSecurity securityAnnotation, final ActionBean action,
+                                            final AuthenticatedUserDTO userDTO )
     {
-        return false;
+        return checkIfAll( securityAnnotation.checkIfAll(), action, userDTO )
+            && checkIfAny( securityAnnotation.checkIfAll(), action, userDTO );
+
+    }
+
+    /**
+     * Check is ALL {@link Permission}s specified are present in {@link AuthenticatedUserDTO}.
+     * 
+     * @param permissions the {@link Permission}s the user must have. It might be empty.
+     * @param action the {@link ActionBean} that requests security constraints, it may have additional information that
+     *            may help in permission checking
+     * @param userDTO the user with it's {@link Permission}s
+     * @return true if there are no {@link Permission}s to check OR in case {@link Permission}s are satisfied, false in
+     *         all other cases
+     */
+    private boolean checkIfAll( final Permission[] permissions, final ActionBean action,
+                                final AuthenticatedUserDTO userDTO )
+    {
+        if ( permissions != null && permissions.length > 0 )
+        {
+            for ( Permission permission : permissions )
+            {
+                if ( !doesUserHavePermission( permission, action, userDTO ) )
+                {
+                    LOG.info( "User {} rejected from ActionBean {} because it doesn't have permission: {}", userDTO,
+                              action, permission );
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Check is ANY {@link Permission} specified is present in {@link AuthenticatedUserDTO}.
+     * 
+     * @param permissions the {@link Permission}s from which user must have at least one. It might be empty.
+     * @param action the {@link ActionBean} that requests security constraints, it may have additional information that
+     *            may help in permission checking
+     * @param userDTO the user with it's {@link Permission}s
+     * @return true if there are no {@link Permission}s to check OR in case one {@link Permission} is found, false in
+     *         all other cases
+     */
+    private boolean checkIfAny( final Permission[] permissions, final ActionBean action,
+                                final AuthenticatedUserDTO userDTO )
+    {
+        if ( permissions != null && permissions.length > 0 )
+        {
+            for ( Permission permission : permissions )
+            {
+                if ( doesUserHavePermission( permission, action, userDTO ) )
+                {
+                    return true;
+                }
+            }
+            // if arrive here, no permission was found
+            LOG.info( "User {} rejected from ActionBean {} because it doesn't have ANY permission from: {}", userDTO,
+                      action, Arrays.toString( permissions ) );
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Check if the user has a {@link Permission}.
+     * 
+     * @param permission the {@link Permission} to verify
+     * @param action the {@link ActionBean} that requests security constraints, it may have additional information that
+     *            may help in permission checking
+     * @param userDTO the user with it's {@link Permission}s
+     * @return true if {@link Permission} is found, false otherwise
+     */
+    private boolean doesUserHavePermission( final Permission permission, final ActionBean action,
+                                            final AuthenticatedUserDTO userDTO )
+    {
+        return true;
     }
 
     /**
