@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pfa.alliance.fim.model.user.User;
+import pfa.alliance.fim.model.user.UserRole;
 import pfa.alliance.fim.model.user.UserStatus;
 
 /**
@@ -83,6 +84,7 @@ public class AbstractJpaRepository_CUD_Test
         user.setLogin( "csaba@csaba.ro" );
         user.setPassword( "abc" );
         user.setStatus( UserStatus.NEW );
+        user.setDefaultRole( UserRole.ADMIN );
 
         userRepositoryImpl.save( user );
     }

@@ -55,6 +55,8 @@ public class AuthenticatedUserDTO
      * @param email the user e-mail address
      * @param username the user login name
      * @param lastLogin the time when user last logged in
+     * @param projectPermissions the permission user may have in different context. generic context is mapped on null
+     *            key
      */
     public AuthenticatedUserDTO( int id, String firstName, String lastName, String email, String username,
                                  Timestamp lastLogin, Map<Integer, List<Permission>> projectPermissions )

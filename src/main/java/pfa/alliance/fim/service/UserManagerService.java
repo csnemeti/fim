@@ -54,6 +54,7 @@ public interface UserManagerService
      * 
      * @param username the username of user that forgot his / her password
      * @param locale the locale to be used in e-mail sending
+     * @return The {@link User} that was found to reset it's password
      * @throws MessagingException if e-mail sending fails
      */
     User forgotPassword( String username, Locale locale )
