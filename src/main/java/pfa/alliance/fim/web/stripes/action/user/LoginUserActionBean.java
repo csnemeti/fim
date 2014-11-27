@@ -4,6 +4,10 @@
 package pfa.alliance.fim.web.stripes.action.user;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -20,9 +24,11 @@ import org.slf4j.LoggerFactory;
 
 import pfa.alliance.fim.model.user.User;
 import pfa.alliance.fim.model.user.UserLogin;
+import pfa.alliance.fim.model.user.UserRole;
 import pfa.alliance.fim.service.UserManagerService;
 import pfa.alliance.fim.web.common.FimPageURLs;
 import pfa.alliance.fim.web.security.AuthenticatedUserDTO;
+import pfa.alliance.fim.web.security.Permission;
 import pfa.alliance.fim.web.security.SecurityUtil;
 import pfa.alliance.fim.web.stripes.action.BasePageActionBean;
 
@@ -129,8 +135,36 @@ public class LoginUserActionBean
         Timestamp lastLogin = getUserLastLogin( user.getLogins() );
         AuthenticatedUserDTO userDTO =
             new AuthenticatedUserDTO( user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(),
-                                      user.getLogin(), lastLogin, null );
+                                      user.getLogin(), lastLogin, convertPermissions( user ) );
         SecurityUtil.putUserIntoSession( userDTO, getContext().getRequest().getSession( true ) );
+    }
+
+    /**
+     * Convert the existing user permission into expected format.
+     * 
+     * @param user the {@link User} with it's own permission system
+     * @return the expected format for {@link AuthenticatedUserDTO}. Key is a Project ID, value is list or
+     *         {@link Permission}s from that Project. null key keeps the default Permissions.
+     */
+    private Map<Integer, List<Permission>> convertPermissions( User user )
+    {
+        Map<Integer, List<Permission>> permissionsMap = new HashMap<Integer, List<Permission>>();
+
+        // TODO - remove dummy
+        List<Permission> permissions = new ArrayList<Permission>();
+        if ( UserRole.PRODUCT_OWNER.equals( user.getDefaultRole() )
+            || UserRole.SCRUM_MASTER.equals( user.getDefaultRole() ) || UserRole.ADMIN.equals( user.getDefaultRole() ) )
+        {
+            permissions.add( Permission.PROJECT_CREATE_PROJECT );
+            permissions.add( Permission.PROJECT_LIST_PROJECTS );
+        }
+        if ( UserRole.ADMIN.equals( user.getDefaultRole() ) )
+        {
+            permissions.add( Permission.ADMIN_INVITE_USER );
+            permissions.add( Permission.ADMIN_SEARCH_USERS );
+        }
+        permissionsMap.put( null, permissions );
+        return permissionsMap;
     }
 
     /**

@@ -32,7 +32,7 @@ import pfa.alliance.fim.model.Identifiable;
 public class User
     extends GenericModel implements Identifiable<Integer>
 {
-    private static final long serialVersionUID = 4717969508781933217L;
+    private static final long serialVersionUID = 4717969508781933238L;
 
     /** The user ID. */
     @Id
@@ -64,6 +64,11 @@ public class User
     @Enumerated( EnumType.STRING )
     @Column( name = "status", length = 20, nullable = false )
     private UserStatus status;
+
+    /** The user "default" role. */
+    @Enumerated( EnumType.STRING )
+    @Column( name = "default_role", length = 20, nullable = false )
+    private UserRole defaultRole;
 
     @OneToMany( mappedBy = "user", cascade = CascadeType.ALL )
     @OrderBy( "id DESC" )
@@ -164,6 +169,16 @@ public class User
         this.oneTimeLinks = oneTimeLinks;
     }
 
+    public UserRole getDefaultRole()
+    {
+        return defaultRole;
+    }
+
+    public void setDefaultRole( UserRole defaultRole )
+    {
+        this.defaultRole = defaultRole;
+    }
+
     @Override
     public int hashCode()
     {
@@ -194,6 +209,7 @@ public class User
     {
         ToStringBuilder tsb = new ToStringBuilder( this );
         tsb.append( "username", login ).append( "email", email ).append( "status", status );
+        tsb.append( "defaultRole", defaultRole );
         tsb.append( "first name", firstName ).append( "last name", lastName );
         return tsb.toString();
     }

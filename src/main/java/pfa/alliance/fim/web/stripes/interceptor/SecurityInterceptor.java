@@ -192,7 +192,9 @@ public class SecurityInterceptor
     private boolean doesUserHavePermission( final Permission permission, final ActionBean action,
                                             final AuthenticatedUserDTO userDTO )
     {
-        return true;
+        // TODO get the project ID later
+        Integer projectId = null;
+        return userDTO.hasPermission( projectId, permission );
     }
 
     /**
