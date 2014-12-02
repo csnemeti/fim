@@ -15,7 +15,7 @@ import javax.persistence.UniqueConstraint;
 /**
  * This entity is used for reading from DB the mapping between the {@link UserRole} and corresponding list of
  * {@link UserPermission}. This entity contains only one such mapping (between role and permission) so the set of
- * permissions for a given role should be a Set<PermissionToRole>.
+ * permissions for a given role should be a <code>Set&lt;PermissionToRole&gt;</code>.
  * 
  * @author Csaba
  */
