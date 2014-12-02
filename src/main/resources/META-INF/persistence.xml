@@ -19,7 +19,8 @@
         <!-- JPA entities must be registered here -->
         <class>pfa.alliance.fim.model.user.User</class> 
         <class>pfa.alliance.fim.model.user.UserLogin</class> 
-        <class>pfa.alliance.fim.model.user.UserOneTimeLink</class> 
+        <class>pfa.alliance.fim.model.user.UserOneTimeLink</class>
+        <class>pfa.alliance.fim.model.user.PermissionToRole</class> 
  
         <class>pfa.alliance.fim.model.project.UserProjectRelation</class> 
         <class>pfa.alliance.fim.model.project.Project</class> 
