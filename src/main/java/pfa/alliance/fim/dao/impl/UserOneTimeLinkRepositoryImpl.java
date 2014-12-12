@@ -3,6 +3,8 @@
  */
 package pfa.alliance.fim.dao.impl;
 
+import javax.inject.Singleton;
+
 import pfa.alliance.fim.dao.UserOneTimeLinkRepository;
 import pfa.alliance.fim.model.user.UserOneTimeLink;
 
@@ -11,6 +13,7 @@ import pfa.alliance.fim.model.user.UserOneTimeLink;
  * 
  * @author Csaba
  */
+@Singleton
 public class UserOneTimeLinkRepositoryImpl
     extends AbstractJpaRepository<UserOneTimeLink, Long>
     implements UserOneTimeLinkRepository

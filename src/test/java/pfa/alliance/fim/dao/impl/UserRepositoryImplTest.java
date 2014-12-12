@@ -103,7 +103,7 @@ public class UserRepositoryImplTest
     }
 
     @AfterClass
-    public static void closeEntityManager()
+    public static void finish()
     {
         userRepositoryImpl = null;
     }
