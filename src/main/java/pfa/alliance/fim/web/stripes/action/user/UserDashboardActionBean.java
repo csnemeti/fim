@@ -5,7 +5,6 @@ import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.UrlBinding;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DurationFormatUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,12 +52,7 @@ public class UserDashboardActionBean
     public String getUsername()
     {
         AuthenticatedUserDTO userDTO = getLoggedUser();
-        String name = StringUtils.join( new String[] { userDTO.getFirstName(), userDTO.getLastName() }, " " );
-        if ( StringUtils.isBlank( name ) )
-        {
-            name = userDTO.getEmail();
-        }
-        return name;
+        return userDTO.getName();
     }
 
     /**
