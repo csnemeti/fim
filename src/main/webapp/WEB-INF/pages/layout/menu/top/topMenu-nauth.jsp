@@ -5,10 +5,21 @@
 <stripes:layout-definition>
 
 	<ul class="nav navbar-top-links navbar-right">
-<!-- 	
-		<a href="#">Login</</a>
-		<a href="#">Register</</a>
- -->		
+
+				<!-- LOG IN --> 
+		<li class="dropdown">
+			<a href="/fim/user/login"> 
+				<i class="fa fa-sign-in fa-fw"></i>
+			</a>
+		</li>
+		
+		<!-- REGISTER --> 
+		<li class="dropdown">
+			<a href="/fim/user/register"> 
+				<i class="fa fa-plus-square fa-fw"></i>
+			</a>
+		</li>
+			
 		<!-- LANGUAGES -->
 		<li class="dropdown"><a class="dropdown-toggle navbar-flag"
 			data-toggle="dropdown" href="#"> <i class="fa fa-flag fa-fw"></i>
