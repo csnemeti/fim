@@ -128,7 +128,7 @@ class UserManagerServiceImpl
             if ( isDuplicateUserInfoRelatedException( e ) )
             {
                 LOG.warn( "Duplicate data for user: {}", user, e );
-                throw new DuplicateUserDataException( "Duplicate user data", e );
+                throw new DuplicateDataException( "Duplicate user data", e );
             }
             else
             {

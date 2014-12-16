@@ -80,7 +80,7 @@ public class UserManagerServiceImplTest
         Mockito.verify( fimUrlGeneratorServiceMock, Mockito.atLeastOnce() ).getOneTimeLinkLink( Mockito.any( UserOneTimeLink.class ) );
     }
 
-    @Test( expected = DuplicateUserDataException.class )
+    @Test( expected = DuplicateDataException.class )
     public void test_registerUser_duplicatedData()
     {
         // prepare

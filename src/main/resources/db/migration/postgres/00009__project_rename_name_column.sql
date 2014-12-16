@@ -1,0 +1,1 @@
+ALTER TABLE project RENAME COLUMN name TO project_name;

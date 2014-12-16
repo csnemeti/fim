@@ -1,8 +1,7 @@
 package pfa.alliance.fim.model.project;
 
-import java.util.List;
+import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -30,7 +29,7 @@ public class Project
     @Column( name = "id" )
     private Integer id;
 
-    @Column( name = "name", nullable = false, length = 50 )
+    @Column( name = "project_name", nullable = false, length = 50 )
     private String name;
 
     @Column( name = "code", nullable = false, unique = true, length = 20 )
@@ -39,9 +38,8 @@ public class Project
     @Column( name = "description", length = 2000 )
     private String description;
 
-    @OneToMany( fetch = FetchType.LAZY, mappedBy = "project", orphanRemoval = true, cascade = { CascadeType.PERSIST,
-        CascadeType.MERGE } )
-    private List<UserProjectRelation> userBoardData;
+    @OneToMany( fetch = FetchType.LAZY, mappedBy = "project" )
+    private Set<UserProjectRelation> userBoardData;
 
     public Project()
     {
@@ -90,12 +88,12 @@ public class Project
         this.code = code;
     }
 
-    public List<UserProjectRelation> getUserBoardData()
+    public Set<UserProjectRelation> getUserBoardData()
     {
         return userBoardData;
     }
 
-    public void setUserBoardData( List<UserProjectRelation> userBoardData )
+    public void setUserBoardData( Set<UserProjectRelation> userBoardData )
     {
         this.userBoardData = userBoardData;
     }

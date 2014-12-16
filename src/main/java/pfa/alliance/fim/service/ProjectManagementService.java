@@ -3,6 +3,7 @@
  */
 package pfa.alliance.fim.service;
 
+import java.util.Locale;
 import java.util.Map;
 
 import pfa.alliance.fim.model.project.Project;
@@ -23,8 +24,9 @@ public interface ProjectManagementService
      * @param description project description
      * @param creatorUserId the ID of the user who created the project
      * @param additionalUsers additional users expressed as UserId - role on the project
+     * @param locale the current request {@link Locale} (for e-mail sending)
      * @return the created project
      */
     Project create( String name, String code, String description, int creatorUserId,
-                    Map<Integer, UserRoleInsideProject> additionalUsers );
+                    Map<Integer, UserRoleInsideProject> additionalUsers, Locale locale );
 }

@@ -3,9 +3,16 @@
  */
 package pfa.alliance.fim.service.impl;
 
+import java.util.HashSet;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import javax.inject.Inject;
+import javax.persistence.PersistenceException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pfa.alliance.fim.dao.ProjectRepository;
 import pfa.alliance.fim.dao.UserRepository;
@@ -25,6 +32,9 @@ import com.google.inject.persist.Transactional;
 public class ProjectManagementServiceImpl
     implements ProjectManagementService
 {
+    /** The logger used in this class. */
+    private static final Logger LOG = LoggerFactory.getLogger( ProjectManagementServiceImpl.class );
+
     /** The Project repository to use in this class. */
     private final ProjectRepository projectRepository;
 
@@ -47,18 +57,58 @@ public class ProjectManagementServiceImpl
     @Override
     @Transactional
     public Project create( String name, String code, String description, int creatorUserId,
-                           Map<Integer, UserRoleInsideProject> additionalUsers )
+                           Map<Integer, UserRoleInsideProject> additionalUsers, Locale locale )
     {
         Project project = createBaseProjectInstance( name, code, description );
-        project = projectRepository.save( project );
-        UserProjectRelation owner = addToProject( project, creatorUserId, UserRoleInsideProject.OWNER );
-        project = projectRepository.save( project );
-        // TODO send e-mail about project creation to owner
+        try
+        {
+            // UserProjectRelation owner = addToProject( project, creatorUserId, UserRoleInsideProject.OWNER );
+            project = projectRepository.save( project );
+            // project = projectRepository.save( project );
+            // TODO send e-mail about project creation to owner
+        }
+        catch ( PersistenceException e )
+        {
+            if ( isDuplicateUserInfoRelatedException( e ) )
+            {
+                LOG.warn( "Duplicate data for project: {}", project, e );
+                throw new DuplicateDataException( "Duplicate project data", e );
+            }
+            else
+            {
+                LOG.error( "Could not create the project: {}", project, e );
+                throw e;
+            }
+
+        }
         return project;
     }
 
     /**
-     * Add a {@link User} to {@link Project} in the givne {@link UserRoleInsideProject}.
+     * Checks if the user data that is provided is duplicate or not.
+     * 
+     * @param e the exception we received
+     * @return true if information about duplicate e-mail or username was found
+     */
+    private boolean isDuplicateUserInfoRelatedException( PersistenceException e )
+    {
+        Throwable t = e;
+        boolean found = false;
+        do
+        {
+            String message = t.getMessage();
+            if ( message.contains( "violates unique constraint" ) )
+            {
+                found = true;
+            }
+            t = t.getCause();
+        }
+        while ( t != null && !found );
+        return found;
+    }
+
+    /**
+     * Add a {@link User} to {@link Project} in the given {@link UserRoleInsideProject}.
      * 
      * @param project the project where user should be added
      * @param userId the ID of the user to be added
@@ -72,7 +122,13 @@ public class ProjectManagementServiceImpl
         relation.setProject( project );
         relation.setUser( user );
         relation.setUserRole( role );
-        project.getUserBoardData().add( relation );
+        Set<UserProjectRelation> relations = project.getUserBoardData();
+        if ( relations == null )
+        {
+            relations = new HashSet<UserProjectRelation>();
+            project.setUserBoardData( relations );
+        }
+        relations.add( relation );
         return relation;
     }
 
