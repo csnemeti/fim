@@ -2,6 +2,7 @@ package pfa.alliance.fim.model.project;
 
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -38,7 +39,7 @@ public class Project
     @Column( name = "description", length = 2000 )
     private String description;
 
-    @OneToMany( fetch = FetchType.LAZY, mappedBy = "project" )
+    @OneToMany( fetch = FetchType.LAZY, mappedBy = "project", orphanRemoval = true, cascade = CascadeType.ALL )
     private Set<UserProjectRelation> userBoardData;
 
     public Project()

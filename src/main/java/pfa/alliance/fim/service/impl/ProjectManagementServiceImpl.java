@@ -62,7 +62,7 @@ public class ProjectManagementServiceImpl
         Project project = createBaseProjectInstance( name, code, description );
         try
         {
-            // UserProjectRelation owner = addToProject( project, creatorUserId, UserRoleInsideProject.OWNER );
+            UserProjectRelation owner = addToProject( project, creatorUserId, UserRoleInsideProject.OWNER );
             project = projectRepository.save( project );
             // project = projectRepository.save( project );
             // TODO send e-mail about project creation to owner
