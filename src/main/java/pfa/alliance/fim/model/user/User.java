@@ -29,15 +29,15 @@ import pfa.alliance.fim.model.Identifiable;
  * @author Nemeti
  */
 @Entity(name="fim_user")
-
 public class User
     extends GenericModel implements Identifiable<Integer>
 {
-    private static final long serialVersionUID = -7478487015028567486L;
+    private static final long serialVersionUID = 4717969508781933238L;
 
     /** The user ID. */
     @Id
     @GeneratedValue( strategy = GenerationType.IDENTITY )
+    @Column( name = "id" )
     private Integer id;
 
     /** The first name of the user. */
@@ -65,9 +65,17 @@ public class User
     @Column( name = "status", length = 20, nullable = false )
     private UserStatus status;
 
+    /** The user "default" role. */
+    @Enumerated( EnumType.STRING )
+    @Column( name = "default_role", length = 20, nullable = false )
+    private UserRole defaultRole;
+
     @OneToMany( mappedBy = "user", cascade = CascadeType.ALL )
     @OrderBy( "id DESC" )
     private Set<UserLogin> logins;
+
+    @OneToMany( mappedBy = "user", cascade = CascadeType.ALL )
+    private Set<UserOneTimeLink> oneTimeLinks;
 
     @Override
     public Integer getId()
@@ -151,6 +159,26 @@ public class User
         this.logins = logins;
     }
 
+    public Set<UserOneTimeLink> getOneTimeLinks()
+    {
+        return oneTimeLinks;
+    }
+
+    public void setOneTimeLinks( Set<UserOneTimeLink> oneTimeLinks )
+    {
+        this.oneTimeLinks = oneTimeLinks;
+    }
+
+    public UserRole getDefaultRole()
+    {
+        return defaultRole;
+    }
+
+    public void setDefaultRole( UserRole defaultRole )
+    {
+        this.defaultRole = defaultRole;
+    }
+
     @Override
     public int hashCode()
     {
@@ -181,6 +209,7 @@ public class User
     {
         ToStringBuilder tsb = new ToStringBuilder( this );
         tsb.append( "username", login ).append( "email", email ).append( "status", status );
+        tsb.append( "defaultRole", defaultRole );
         tsb.append( "first name", firstName ).append( "last name", lastName );
         return tsb.toString();
     }

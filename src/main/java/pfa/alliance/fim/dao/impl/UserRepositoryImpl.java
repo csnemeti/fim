@@ -16,14 +16,17 @@ import javax.persistence.NonUniqueResultException;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pfa.alliance.fim.dao.UserRepository;
+import pfa.alliance.fim.model.user.OneTimeLinkType;
 import pfa.alliance.fim.model.user.User;
 import pfa.alliance.fim.model.user.UserLogin;
+import pfa.alliance.fim.model.user.UserOneTimeLink;
 import pfa.alliance.fim.model.user.UserStatus;
 
 /**
@@ -97,9 +100,9 @@ class UserRepositoryImpl
      * @param users the list of users
      * @return the result or null if {@link List} is empty
      */
-    private static User uniqueResult( List<User> users )
+    private static <T> T uniqueResult( List<T> users )
     {
-        User result = null;
+        T result = null;
         switch ( users.size() )
         {
             case 0:
@@ -150,6 +153,32 @@ class UserRepositoryImpl
             logins.remove( login );
             getEntityManager().remove( login );
         }
+    }
+
+    @Override
+    public UserOneTimeLink getOneTimeLinkBy( String uuid, OneTimeLinkType designation )
+    {
+        LOG.debug( "Getting one time link for uuid = {}, designation = {}", uuid, designation );
+        EntityManager em = getEntityManager();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<UserOneTimeLink> criteria = cb.createQuery( UserOneTimeLink.class );
+        Root<UserOneTimeLink> root = criteria.from( UserOneTimeLink.class );
+        root.fetch( "user" );
+        Predicate[] predicates = null;
+        if(designation != null){
+            predicates = new Predicate[2];
+            predicates[1] = cb.equal( root.get( "designation" ), designation );
+        }else{
+            predicates = new Predicate[1];
+        }
+        predicates[0] = cb.equal( root.get( "uuid" ), uuid );
+        criteria.where( predicates );
+
+        TypedQuery<UserOneTimeLink> query = em.createQuery( criteria );
+        List<UserOneTimeLink> results = query.getResultList();
+        LOG.debug( "Returned results: {}", results );
+        UserOneTimeLink link = uniqueResult( results );
+        return link;
     }
 
     @Override

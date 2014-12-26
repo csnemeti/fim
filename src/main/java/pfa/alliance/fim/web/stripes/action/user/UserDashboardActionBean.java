@@ -1,11 +1,10 @@
-package pfa.alliance.fim.web.stripes.action.main;
+package pfa.alliance.fim.web.stripes.action.user;
 
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.UrlBinding;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DurationFormatUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import pfa.alliance.fim.util.DateUtils;
 import pfa.alliance.fim.web.common.FimPageURLs;
 import pfa.alliance.fim.web.security.AuthenticatedUserDTO;
+import pfa.alliance.fim.web.security.FimSecurity;
 import pfa.alliance.fim.web.security.SecurityUtil;
 import pfa.alliance.fim.web.stripes.action.BasePageActionBean;
 
@@ -22,11 +22,12 @@ import pfa.alliance.fim.web.stripes.action.BasePageActionBean;
  * @author Balaceanu Sergiu-Denis
  */
 @UrlBinding( value = "/user/dashboard" )
-public class HomePageActionBean
+@FimSecurity
+public class UserDashboardActionBean
     extends BasePageActionBean
 {
     /** The logger used in this class. */
-    private static final Logger LOG = LoggerFactory.getLogger( HomePageActionBean.class );
+    private static final Logger LOG = LoggerFactory.getLogger( UserDashboardActionBean.class );
 
     @DefaultHandler
     public Resolution goToHomePage()
@@ -46,23 +47,18 @@ public class HomePageActionBean
     /**
      * Returns the current logged user name or username (if name is missing).
      * 
-     * @return
+     * @return the name of the user or the login name if we have no name information
      */
     public String getUsername()
     {
         AuthenticatedUserDTO userDTO = getLoggedUser();
-        String name = StringUtils.join( new String[] { userDTO.getFirstName(), userDTO.getLastName() }, " " );
-        if ( StringUtils.isBlank( name ) )
-        {
-            name = userDTO.getEmail();
-        }
-        return name;
+        return userDTO.getName();
     }
 
     /**
      * Returns the current logged user email .
      * 
-     * @return
+     * @return the user e-mail
      */
     public String getUserEmail()
     {
@@ -72,7 +68,7 @@ public class HomePageActionBean
     /**
      * Returns the last login date of the current user .
      * 
-     * @return
+     * @return the last time when user logged in
      */
     public String getLastLoginTime()
     {

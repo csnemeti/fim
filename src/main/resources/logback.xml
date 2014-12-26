@@ -13,7 +13,7 @@
 		</encoder>
 	</appender>
 	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>logs/fim.log</file>
+		<file>${fim.log.dir}/fim.log</file>
 		
 		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
 			<fileNamePattern>test.%i.log.zip</fileNamePattern>
@@ -33,7 +33,8 @@
 	<logger name="pfa.alliance" level="DEBUG" />
 	<logger name="org.batoo.jpa.core.SQL" level="DEBUG" />
 	<logger name="net.sourceforge" level="INFO"></logger>
-	<!-- <logger name="net.sourceforge.stripes" level="DEBUG"/>
+	<logger name="net.sourceforge.stripes" level="DEBUG"/>
+<!-- 	
 	<logger name="com.silvermindsoftware" level="DEBUG"/>
  -->
 

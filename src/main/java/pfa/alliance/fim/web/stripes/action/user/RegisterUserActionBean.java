@@ -16,7 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pfa.alliance.fim.service.UserManagerService;
-import pfa.alliance.fim.service.impl.DuplicateUserDataException;
+import pfa.alliance.fim.service.impl.DuplicateDataException;
 import pfa.alliance.fim.web.common.FimPageURLs;
 import pfa.alliance.fim.web.stripes.action.BasePageActionBean;
 
@@ -80,10 +80,10 @@ public class RegisterUserActionBean
         LOG.debug( "Trying to register user: firstName = {}, lastName = {}, email = {}", firstName, lastName, email );
         try
         {
-            userManagerService.registerUser( email, password, firstName, lastName );
+            userManagerService.registerUser( email, password, firstName, lastName, getContext().getLocale() );
             dbOperationResult = USER_CREATED_RESPONSE;
         }
-        catch ( DuplicateUserDataException e )
+        catch ( DuplicateDataException e )
         {
             dbOperationResult = DUPLICATE_USER_RESPONSE;
         }

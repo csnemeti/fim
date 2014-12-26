@@ -52,7 +52,7 @@ class DatabaseMigrationServiceImpl
     public boolean upgradeDb()
     {
         LOG.info( "DB upgrade started" );
-        Flyway flyway = new Flyway();
+        Flyway flyway = createFlyway();
         flyway.setSqlMigrationPrefix( "" );
         flyway.setLocations( "classpath:/db/migration/postgres" );
         flyway.setDataSource( jpaConfiguration.getProperty( JPASettings.JDBC_URL ),
@@ -62,6 +62,16 @@ class DatabaseMigrationServiceImpl
 
         LOG.info( "DB upgrade completed" );
         return false;
+    }
+
+    /**
+     * Creates an instance from {@link Flyway}.
+     * 
+     * @return the created instance
+     */
+    Flyway createFlyway()
+    {
+        return new Flyway();
     }
 
 }

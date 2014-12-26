@@ -8,8 +8,6 @@ import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.persistence.Version;
 
 /**
@@ -27,12 +25,12 @@ public class GenericModel
     @Version
     private int version;
 
-    @Column( name = "created_at", insertable = false, updatable = false )
-    @Temporal( TemporalType.TIMESTAMP )
+    // beware that in Posgres this will generate timestamp WITHOUT timezone
+    @Column( name = "created_at", insertable = false, updatable = false, nullable = false, columnDefinition = "timestamp DEFAULT current_timestamp" )
     private Timestamp createdAt;
 
-    @Column( name = "modified_at", insertable = false, updatable = false )
-    @Temporal( TemporalType.TIMESTAMP )
+    // beware that in Posgres this will generate timestamp WITHOUT timezone
+    @Column( name = "modified_at", insertable = false, updatable = false, nullable = false, columnDefinition = "timestamp DEFAULT current_timestamp" )
     private Timestamp lastModified;
 
     public int getVersion()

@@ -8,10 +8,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
-import javax.persistence.EntityManager;
-
 import pfa.alliance.fim.dao.JpaRepository;
 import pfa.alliance.fim.model.Identifiable;
 
@@ -21,10 +17,9 @@ import pfa.alliance.fim.model.Identifiable;
  * @author Csaba
  */
 abstract class AbstractJpaRepository<T extends Identifiable<ID>, ID extends Serializable>
+    extends BaseRepository
     implements JpaRepository<T, ID>
 {
-    /** The entity manager used in the application. */
-    private Provider<EntityManager> entityManager;
 
     /**
      * Check if a record with the given ID exists in database.
@@ -47,7 +42,7 @@ abstract class AbstractJpaRepository<T extends Identifiable<ID>, ID extends Seri
     @Override
     public T findOne( ID id )
     {
-        return entityManager.get().find( getEntityClass(), id );
+        return getEntityManager().find( getEntityClass(), id );
     }
 
     /**
@@ -78,13 +73,37 @@ abstract class AbstractJpaRepository<T extends Identifiable<ID>, ID extends Seri
     {
         if ( isNewEntity( obj ) )
         {
-            entityManager.get().persist( obj );
-            return obj;
+            return saveNewEntity( obj );
         }
         else
         {
-            return entityManager.get().merge( obj );
+            return updateExistingEntity( obj );
         }
+    }
+
+    /**
+     * Saves a new entity. Do not call {@link #save(Identifiable)} or {@link #save(Collection)} from this method. It
+     * will cause infinite loop.
+     * 
+     * @param obj the entity to be saved (inserted)
+     * @return the saved object (might be the same or a different one)
+     */
+    protected T saveNewEntity( T obj )
+    {
+        getEntityManager().persist( obj );
+        return obj;
+    }
+
+    /**
+     * Updates an existing entity. Do not call {@link #save(Identifiable)} or {@link #save(Collection)} from this
+     * method. It will cause infinite loop.
+     * 
+     * @param obj the entity to be saved (updated)
+     * @return the saved object (might be the same or a different one)
+     */
+    protected T updateExistingEntity( T obj )
+    {
+        return getEntityManager().merge( obj );
     }
 
     /**
@@ -110,7 +129,7 @@ abstract class AbstractJpaRepository<T extends Identifiable<ID>, ID extends Seri
     @Override
     public void delete( T entity )
     {
-        entityManager.get().remove( entity );
+        getEntityManager().remove( entity );
     }
 
     /**
@@ -145,26 +164,4 @@ abstract class AbstractJpaRepository<T extends Identifiable<ID>, ID extends Seri
         ID id = obj.getId();
         return id == null;
     }
-
-    /**
-     * Sets (by Guice) the {@link EntityManager} for this repository.
-     * 
-     * @param entityManager the entity manager to use
-     */
-    @Inject
-    void setEntityManager( Provider<EntityManager> entityManager )
-    {
-        this.entityManager = entityManager;
-    }
-
-    /**
-     * Gets the {@link EntityManager} instance set in this repository.
-     * 
-     * @return the entity manager to use
-     */
-    protected EntityManager getEntityManager()
-    {
-        return entityManager.get();
-    }
-
 }

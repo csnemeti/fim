@@ -11,16 +11,10 @@
 		</a>
 		<ul class="nav nav-second-level collapse">
 			<li>
-				<a href="#">
-					<i class="fa fa-plus fa-fw"></i>
-					<stripes:label for="createUserItem" />
-				</a>
-			</li>
-			<li>
-				<a href="#">
+				<stripes:link beanclass="pfa.alliance.fim.web.stripes.action.user.InviteUserActionBean">
 					<i class="fa fa-envelope-o fa-fw"></i>
 					<stripes:label for="inviteUserItem" />
-				</a>
+				</stripes:link>				
 			</li>
 			<li>
 				<a href="#">

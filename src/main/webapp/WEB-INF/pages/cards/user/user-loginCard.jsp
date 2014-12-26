@@ -2,11 +2,6 @@
 <%@ taglib prefix="stripes" uri="http://stripes.sourceforge.net/stripes.tld"%>
 
 <stripes:layout-definition>
-<!-- 
-        	<td><stripes:label for="userLogin.username"/></td>  
-        	<td><stripes:label for="userLogin.password"/></td>  
-     	</tr>
- -->     	
 <stripes:form beanclass="pfa.alliance.fim.web.stripes.action.user.LoginUserActionBean" focus="username" id="loginForm"> 
 	<div align="center">
 	<div style="padding-top:15px">
@@ -24,6 +19,9 @@
     	<stripes:submit class="btn btn-default" name="tryLogin" value="Login..." ></stripes:submit> 
     	<input type="button" class="btn btn-default" name="reset" value="Clear" onclick="clearFormContent(this.form)"/> 
 	</div>
+	<stripes:link beanclass="pfa.alliance.fim.web.stripes.action.user.ForgotPasswordActionBean">
+		<stripes:label for="forgotPassword" />
+	</stripes:link>	
 	</div>
 </stripes:form>
 

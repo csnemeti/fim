@@ -1,24 +1,27 @@
 apply plugin: 'java'
-//apply plugin: 'jar' 
 apply plugin: 'war' 
-//apply plugin: 'tomcat'
-apply plugin: 'jetty'
+//apply plugin: 'jettyEclipse'
+apply from: 'https://raw.github.com/akhikhl/gretty/master/pluginScripts/gretty.plugin'
 apply plugin: 'eclipse'
 apply plugin: 'distribution'
 apply plugin: 'jacoco'
+apply plugin: 'jpa-schema-generate'
 
 buildscript {
-	repositories {
-    	// jcenter()
+	repositories {    	
     	mavenCentral()
+    	jcenter()
   	}
   	dependencies {
 		// we need this to get git version info
     	classpath 'org.ajoberstar:gradle-git:0.9.0'
-    	// Tomcat with gradle
-    	//classpath 'org.gradle.api.plugins:gradle-tomcat-plugin:0.9.9'
+    	// Jetty 9+
+    	//classpath (group: 'com.sahlbach.gradle', name: 'gradle-jetty-eclipse-plugin', version: '1.9.2')
+    	// Generating JPA schema
+    	classpath "io.github.divinespear:jpa-schema-gradle-plugin:0.1.11" 
   	}
 }
+ 
 // Initialize GIT information 
 import org.ajoberstar.grgit.*
 ext.repo = Grgit.open(project.file('.'))
@@ -26,7 +29,7 @@ ext.repo = Grgit.open(project.file('.'))
 // Custom settings...
 sourceCompatibility = 1.8
 war.archiveName "fim.war"
-def currentVersion = "0.1"
+def currentVersion = "0.2"
 def FIM_CI = System.getenv("CI") ?: "false"
 def FIM_BUILD_NUMBER = System.getenv("BUILD_ID") ?: "unknown"
 def FIM_BUILD_NUMBER_FORMATED = System.getenv("BUILD_ID") ? "." + System.getenv("BUILD_ID") : ""
@@ -34,14 +37,15 @@ def FIM_GIT_COMMIT = "${repo.head().abbreviatedId}"
 def FIM_GIT_BRANCH = "${repo.branch.getCurrent().getName()}"
 version = "${currentVersion}-${FIM_GIT_BRANCH}"
 def manifestVersion = "${currentVersion}${FIM_BUILD_NUMBER_FORMATED}-${FIM_GIT_BRANCH}"
+//jettyEclipse.contextPath = "/fim"
 
 // This is for dependencies...
 repositories {
     mavenCentral()
 }
 dependencies {
-	providedCompile 'javax.servlet:servlet-api:2.5'
-	//providedCompile "javax.servlet:javax.servlet-api:3.+"
+	//providedCompile 'javax.servlet:servlet-api:2.5'
+	providedCompile "javax.servlet:javax.servlet-api:3.1.0"
     //compile group: 'commons-collections', name: 'commons-collections', version: '3.2'
 	// misc
 	compile 'commons-io:commons-io:2.4'
@@ -80,9 +84,11 @@ dependencies {
         exclude module: 'log4j'
     }  
     compile 'taglibs:standard:1.1.2'  
-    // w-mail sending
+    // e-mail sending
     compile 'javax.mail:mail:1.4.7'
-    //  db drivers
+    compile 'org.apache.velocity:velocity:1.7'
+    
+    // db drivers
     compile 'org.postgresql:postgresql:9.3-1102-jdbc41'
     compile 'mysql:mysql-connector-java:5.1.32'
     //compile 'org.jumpmind.symmetric.jdbc:mariadb-java-client:1.1.1'
@@ -98,31 +104,40 @@ dependencies {
     testCompile 'org.apache.derby:derby:10.11.1.1'
     testCompile 'org.dbunit:dbunit:2.5.0'
     
-    // for running tomcat
-    def tomcatVersion = '7.0.47'
-    //tomcat "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}",
-    //       "org.apache.tomcat.embed:tomcat-embed-logging-juli:${tomcatVersion}"
-    //tomcat("org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}") {
-    //    exclude group: 'org.eclipse.jdt.core.compiler', module: 'ecj'
-    //}
 }
-
+task("generateJar", dependsOn: 'classes', type: Jar) {
+	    from('.') {
+	        include 'contributors.txt'
+	    }
+	    manifest {
+	        attributes 'FIM_CI': FIM_CI, 'FIM_BUILD_NUMBER': FIM_BUILD_NUMBER, 'FIM_GIT_COMMIT': FIM_GIT_COMMIT, 
+	        			'FIM_GIT_BRANCH': FIM_GIT_BRANCH, 
+	        			'Implementation-Title': 'Free Issue Manager (fim)', 
+	        			'Implementation-Version': manifestVersion, 'Created-At' : getDate()
+	    } 
+}
 // War customization
 war {
-    from('.') {
-        include 'contributors.txt'
-        into('WEB-INF/classes')
+    from(libsDir) {
+        include '*.jar'
+        into('WEB-INF/lib')
     }
-    manifest {
-        attributes 'FIM_CI': FIM_CI, 'FIM_BUILD_NUMBER': FIM_BUILD_NUMBER, 'FIM_GIT_COMMIT': FIM_GIT_COMMIT, 
-        			'FIM_GIT_BRANCH': FIM_GIT_BRANCH, 'Implementation-Title': 'Free Issue Manager (fim)', 
-        			'Implementation-Version': manifestVersion, 'Created-At' : getDate()
-    } 
+//    manifest {
+//        attributes 'FIM_CI': FIM_CI, 'FIM_BUILD_NUMBER': FIM_BUILD_NUMBER, 'FIM_GIT_COMMIT': FIM_GIT_COMMIT, 
+//        			'FIM_GIT_BRANCH': FIM_GIT_BRANCH, 
+//        			'Implementation-Title': 'Free Issue Manager (fim)', 
+//        			'Implementation-Version': manifestVersion, 'Created-At' : getDate()
+//    }
+	dependsOn generateJar
 }
 
 // "Cobertura task"
 task("cobertura", dependsOn: 'jacocoTestReport') << {
 }
+
+// javadoc settings
+build.dependsOn javadoc
+
 
 // Additional war files
 task createJavadocWar(type: Zip, dependsOn: javadoc) {
@@ -198,14 +213,65 @@ task ftp << {
 	}
 }
 
+// Redefinition of jettyRun task
+//task("jettyRun", dependsOn: 'appRun') << {
+//}
+
+// Generate schema from JPA entities
+sourceSets {
+    main {
+        // set output to same directories
+        // jpa implementations always scan classes using classpath that found persistence.xml
+        output.resourcesDir = output.classesDir
+    }
+}
+
+generateSchema {
+    // default options
+    // see SchemaGenerationConfig to all options
+    format = 'true'
+    persistenceXml = '${buildDir}/tmp/persistence/persistence.xml'
+    persistenceUnitName = 'fimJpaUnit'
+    //databaseAction = 'create'
+    scriptAction = 'create'
+    //createSourceMode = 'script'
+    //createSourceFile = 'script'
+    
+    // if you want multiple output
+    targets {
+        postgres {
+            //jdbcDriver = 'org.postgresql.Driver'
+            databaseProductName = 'PostgreSQL'
+            databaseMajorVersion = 9
+        }
+        mysql {
+            databaseProductName = 'MySQL'
+            databaseMajorVersion = 5
+        }
+        derby {
+            databaseProductName = 'Apache Derby'
+            databaseMajorVersion = 10
+            databaseMinorVersion = 7
+        }
+    }
+}
+
+
+
+
+gretty {
+  httpsEnabled = true
+  // optionally you can specify port. 8443 is the default.
+  httpsPort = 8443
+  sslKeyStorePath = './etc/ssl/keystore'
+  sslKeyStorePassword='33NFcgHVfXeIw3lrhY1mTaMukc0qtJsKJaNMHz6eeHlgy6ZJoxBRLNnA3UVGqY0LoNq9sqQhDEb2nA3SFi139tB8QRCWzJe8UkFEfVwLvBT18UIqqkMp3eaWr8pwptbH'
+  sslKeyManagerPassword='jct30I3U4xzkm37zKSY4quNjSaFLw635Ej62dQD7oqL4pCv4oKJ736ne2H5FW3o5TYJn68OE5upLNg9rGH6rDkJ3bt9f45cXJeLF6IgmKLqPmPdtsjBVI1HMGlYklRS5'
+  
+  jvmArgs = ['-Dfim.log.dir=./logs']
+}
 
 
 // Sample to see how to define such things
 test {
     systemProperties 'property': 'value'
 }
-//jar {
-//    manifest {
-//        attributes 'Implementation-Title': 'Gradle Quickstart', 'Implementation-Version': version
-//    }
-//}
