@@ -30,26 +30,4 @@ public interface JpaFindAllSupport<T extends Identifiable<ID>, ID extends Serial
      * @return the list or records
      */
     List<T> findAll( Sort sort );
-
-    /**
-     * Gets the number of total objects of this type from database.
-     * 
-     * @return the total number of results
-     */
-    long count();
-
-    /**
-     * Gets the list of all IDs for the records defined in the database.
-     * @return the list of all IDs
-     * @see #findAllIds(Sort)
-     */
-    List<ID> findAllIds();
-
-    /**
-     * Gets the list of all IDs for the records defined in the database in the given order.
-     * @param sort the ordering criteria. If null no ordering criteria is defined
-     * @return the list of all IDs
-     * @see #findAllIds()
-     */
-    List<ID> findAllIds(Sort sort);
 }

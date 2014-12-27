@@ -7,8 +7,18 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map.Entry;
+
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Order;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Root;
 
 import pfa.alliance.fim.dao.JpaRepository;
+import pfa.alliance.fim.dao.Sort;
 import pfa.alliance.fim.model.Identifiable;
 
 /**
@@ -20,37 +30,54 @@ abstract class AbstractJpaRepository<T extends Identifiable<ID>, ID extends Seri
     extends BaseRepository
     implements JpaRepository<T, ID>
 {
-
-    /**
-     * Check if a record with the given ID exists in database.
-     * 
-     * @param id the ID to check
-     * @return true if the ID was found, false otherwise
-     */
     @Override
     public boolean exists( ID id )
     {
         return findOne( id ) != null;
     }
 
-    /**
-     * Finds the object with given ID as primary key.
-     * 
-     * @param id the primary key of the record
-     * @return the corresponding object or null if object is not found
-     */
     @Override
     public T findOne( ID id )
     {
         return getEntityManager().find( getEntityClass(), id );
     }
 
-    /**
-     * Save all the objects sent as parameters.
-     * 
-     * @param objects the objects to save
-     * @return the saved objects
-     */
+    @Override
+    public long count()
+    {
+        String sql = "SELECT COUNT(f." + getIdColumnName() + ") FROM " + getEntityClass().getSimpleName() + " f";
+        TypedQuery<Long> countQuery = getEntityManager().createQuery( sql, Long.class );
+        return countQuery.getSingleResult();
+    }
+
+    @Override
+    public List<ID> findAllIds()
+    {
+        return findAllIds( null );
+    }
+
+    @Override
+    public List<ID> findAllIds( Sort sort )
+    {
+        EntityManager em = getEntityManager();
+        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+        CriteriaQuery<ID> criteriaQuery = criteriaBuilder.createQuery( getIdClass() );
+        Root<T> from = criteriaQuery.from( getEntityClass() );
+        if ( sort != null && !sort.isEmpty() )
+        {
+            List<Order> orders = new ArrayList<Order>();
+            for ( Entry<String, Boolean> sortEntry : sort.getSorting().entrySet() )
+            {
+                Path path = from.get( sortEntry.getKey() );
+                Order order = ( sortEntry.getValue() ) ? criteriaBuilder.asc( path ) : criteriaBuilder.desc( path );
+                orders.add( order );
+            }
+            criteriaQuery.orderBy( orders );
+        }
+        TypedQuery<ID> query = em.createQuery( criteriaQuery );
+        return query.getResultList();
+    }
+
     @Override
     public List<T> save( Collection<T> objects )
     {
@@ -62,12 +89,6 @@ abstract class AbstractJpaRepository<T extends Identifiable<ID>, ID extends Seri
         return saved;
     }
 
-    /**
-     * Saves the given object.
-     * 
-     * @param obj the object to save
-     * @return the saved object
-     */
     @Override
     public T save( T obj )
     {
@@ -106,11 +127,6 @@ abstract class AbstractJpaRepository<T extends Identifiable<ID>, ID extends Seri
         return getEntityManager().merge( obj );
     }
 
-    /**
-     * Deletes an object with a given ID.
-     * 
-     * @param id the ID of the object to delete
-     */
     @Override
     public void delete( ID id )
     {
@@ -121,22 +137,12 @@ abstract class AbstractJpaRepository<T extends Identifiable<ID>, ID extends Seri
         }
     }
 
-    /**
-     * Deletes a given object.
-     * 
-     * @param entity the object to delete
-     */
     @Override
     public void delete( T entity )
     {
         getEntityManager().remove( entity );
     }
 
-    /**
-     * Delete a collection of objects.
-     * 
-     * @param entities the objects to be deleted
-     */
     @Override
     public void delete( Collection<? extends T> entities )
     {
@@ -152,6 +158,23 @@ abstract class AbstractJpaRepository<T extends Identifiable<ID>, ID extends Seri
      * @return the entity {@link Class}
      */
     protected abstract Class<T> getEntityClass();
+
+    /**
+     * Gets the {@link Class} of the ID that this repository is managing.
+     * 
+     * @return the Id {@link Class}
+     */
+    protected abstract Class<ID> getIdClass();
+
+    /**
+     * Gets the name of the ID column.
+     * 
+     * @return this implementation return "id"
+     */
+    protected String getIdColumnName()
+    {
+        return "id";
+    }
 
     /**
      * Find if this object is new. In order to do that, it checks if object ID is null.

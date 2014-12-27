@@ -1,4 +1,4 @@
 fim
 ===
 
-Free issue manager
+Free Issue Manager

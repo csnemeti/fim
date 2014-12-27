@@ -19,16 +19,14 @@ import org.mockito.Mockito;
 
 import pfa.alliance.fim.service.ConfigurationService;
 import pfa.alliance.fim.service.PersistenceService;
-import pfa.alliance.fim.servlets.SetupVerifyFilter;
 
 /**
  * Test if the {@link SetupVerifyFilter} is redirecting the request properly .
- * 
+ *
  * @author Balaceanu Sergiu-Denis
  */
 public class SetupVerifyFilterTest
 {
-  
     @Test
     public void testProperlyConfigured()
         throws IOException
@@ -37,13 +35,10 @@ public class SetupVerifyFilterTest
         HttpServletResponse httpServletResponse = mock( HttpServletResponse.class );
         FilterChain filterChain = mock( FilterChain.class );
         FilterConfig filterConfig = mock( FilterConfig.class );
-
         // mock configuration as the application is properly configured
         ConfigurationService configurationService = mock( ConfigurationService.class );
         when( configurationService.isConfigurationCompleted() ).thenReturn( true );
-
         PersistenceService persistenceService = mock( PersistenceService.class );
-
         SetupVerifyFilter setupVerifyFilter = new SetupVerifyFilter( configurationService, persistenceService );
         try
         {
@@ -53,7 +48,6 @@ public class SetupVerifyFilterTest
         {
             assertTrue( "ServletException while init filter !", false );
         }
-
         try
         {
             setupVerifyFilter.doFilter( servletRequest, httpServletResponse, filterChain );
@@ -66,9 +60,7 @@ public class SetupVerifyFilterTest
         {
             assertTrue( "ServletException while doFilter !", false );
         }
-
         setupVerifyFilter.destroy();
-
         // verify if the response was not redirected to the wizard
         verify( httpServletResponse, never() ).sendRedirect( pfa.alliance.fim.web.common.FimPageURLs.WIZZARD_PAGE.getURL() );
         verify( configurationService ).isConfigurationCompleted();
@@ -84,13 +76,10 @@ public class SetupVerifyFilterTest
         HttpServletResponse httpServletResponse = mock( HttpServletResponse.class );
         FilterChain filterChain = mock( FilterChain.class );
         FilterConfig filterConfig = mock( FilterConfig.class );
-
         // mock configuration as the application is not properly configured
         ConfigurationService configurationService = mock( ConfigurationService.class );
         when( configurationService.isConfigurationCompleted() ).thenReturn( false );
-
         PersistenceService persistenceService = mock( PersistenceService.class );
-
         SetupVerifyFilter setupVerifyFilter = new SetupVerifyFilter( configurationService, persistenceService );
         try
         {
@@ -100,7 +89,6 @@ public class SetupVerifyFilterTest
         {
             assertTrue( "ServletException while init filter !", false );
         }
-
         try
         {
             setupVerifyFilter.doFilter( servletRequest, httpServletResponse, filterChain );
@@ -113,9 +101,7 @@ public class SetupVerifyFilterTest
         {
             assertTrue( "ServletException while doFilter !", false );
         }
-
         setupVerifyFilter.destroy();
-
         // verify if the response was redirected to the wizard
         verify( httpServletResponse ).sendRedirect( pfa.alliance.fim.web.common.FimPageURLs.WIZZARD_PAGE.getURL() );
         verify( configurationService ).isConfigurationCompleted();

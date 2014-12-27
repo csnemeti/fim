@@ -25,7 +25,7 @@ import pfa.alliance.fim.web.security.SecurityUtil;
 
 /**
  * Filter that verify if the FIM Application is properly configured.
- * 
+ *
  * @author Balaceanu Sergiu-Denis
  */
 @Singleton
@@ -42,7 +42,7 @@ public class SetupVerifyFilter
 
     /**
      * Called when instance of this class is created
-     * 
+     *
      * @param configurationService the
      * @param persistenceService
      */
@@ -104,5 +104,4 @@ public class SetupVerifyFilter
         LOG.debug( "SetupVerifyFilter destroyed ..." );
         // add code to release any resource
     }
-
 }
