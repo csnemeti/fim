@@ -49,6 +49,16 @@ public class Sort
         return sorting;
     }
 
+    /**
+     * Checks if there are no sorting conditions defined.
+     * 
+     * @return true if there are no sorting conditions defined
+     */
+    public boolean isEmpty()
+    {
+        return sorting.isEmpty();
+    }
+
     @Override
     public Iterator<Entry<String, Boolean>> iterator()
     {

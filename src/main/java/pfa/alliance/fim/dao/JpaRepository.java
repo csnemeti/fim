@@ -34,22 +34,6 @@ public interface JpaRepository<T extends Identifiable<ID>, ID extends Serializab
     T findOne( ID id );
 
     /**
-     * Gets all the records form the given object. Pay attention to memory usage!
-     * 
-     * @return the list of objects as result.
-     */
-    // public abstract List<T> findAll();
-
-    // public abstract List<T> findAll(Sort sort);
-    // public abstract List<T> findAll(Pageable pageable);
-    /**
-     * Gets the number of total objects of this type from database.
-     * 
-     * @return the total number of results
-     */
-    // long count();
-
-    /**
      * Save all the objects sent as parameters.
      * 
      * @param objects the objects to save
