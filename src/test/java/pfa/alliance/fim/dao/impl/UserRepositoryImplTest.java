@@ -3,6 +3,11 @@
  */
 package pfa.alliance.fim.dao.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.NonUniqueResultException;
+
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -26,7 +31,6 @@ public class UserRepositoryImplTest
     private static final Logger LOG = LoggerFactory.getLogger( UserRepositoryImplTest.class );
 
     private static UserRepositoryImpl userRepositoryImpl;
-
 
     @BeforeClass
     public static void init()
@@ -100,6 +104,39 @@ public class UserRepositoryImplTest
         User user = userRepositoryImpl.findByEmail( "user4@email.com" );
         Assert.assertNotNull( "User should NOT be null", user );
         Assert.assertEquals( "UserStatus issue", UserStatus.NEW, user.getStatus() );
+    }
+
+    @Test
+    public void test_uniqueResult_noResults()
+    {
+        List<User> users = new ArrayList<User>();
+        User user = UserRepositoryImpl.uniqueResult( users );
+        Assert.assertNull( "Should be null", user );
+    }
+
+    @Test
+    public void test_uniqueResult_oneResult()
+    {
+        List<User> users = new ArrayList<User>();
+        User dummy = new User();
+        users.add(dummy);
+        
+        User user = UserRepositoryImpl.uniqueResult( users );
+        
+        Assert.assertNotNull( "Should NOT be null", user );
+        Assert.assertSame( "Wrong instance", dummy, user );
+    }
+
+    @Test(expected=NonUniqueResultException.class)
+    public void test_uniqueResult_twoResults()
+    {
+        List<User> users = new ArrayList<User>();
+        User dummy = new User();
+        users.add(dummy);
+        dummy = new User();
+        users.add(dummy);
+        
+        UserRepositoryImpl.uniqueResult( users );
     }
 
     @AfterClass

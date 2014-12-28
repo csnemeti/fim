@@ -45,7 +45,7 @@ abstract class AbstractJpaRepository<T extends Identifiable<ID>, ID extends Seri
     @Override
     public long count()
     {
-        String sql = "SELECT COUNT(f." + getIdColumnName() + ") FROM " + getEntityClass() + " f";
+        String sql = "SELECT COUNT(f." + getIdColumnName() + ") FROM " + getEntityClass().getCanonicalName() + " f";
         TypedQuery<Long> countQuery = getEntityManager().createQuery( sql, Long.class );
         return countQuery.getSingleResult();
     }
@@ -63,12 +63,13 @@ abstract class AbstractJpaRepository<T extends Identifiable<ID>, ID extends Seri
         CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
         CriteriaQuery<ID> criteriaQuery = criteriaBuilder.createQuery( getIdClass() );
         Root<T> from = criteriaQuery.from( getEntityClass() );
+        criteriaQuery.select( from.get( getIdColumnName() ) );
         if ( sort != null && !sort.isEmpty() )
         {
             List<Order> orders = new ArrayList<Order>();
             for ( Entry<String, Boolean> sortEntry : sort.getSorting().entrySet() )
             {
-                Path path = from.get( sortEntry.getKey() );
+                Path<?> path = from.get( sortEntry.getKey() );
                 Order order = ( sortEntry.getValue() ) ? criteriaBuilder.asc( path ) : criteriaBuilder.desc( path );
                 orders.add( order );
             }
