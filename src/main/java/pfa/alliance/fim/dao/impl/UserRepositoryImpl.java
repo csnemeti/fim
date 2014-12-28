@@ -187,7 +187,13 @@ class UserRepositoryImpl
         return User.class;
     }
 
-    private static class UserLoginComparator
+    @Override
+    protected Class<Integer> getIdClass()
+    {
+        return Integer.class;
+    }
+
+    static class UserLoginComparator
         implements Comparator<UserLogin>
     {
 

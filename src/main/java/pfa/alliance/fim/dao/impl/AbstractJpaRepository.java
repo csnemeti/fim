@@ -45,7 +45,7 @@ abstract class AbstractJpaRepository<T extends Identifiable<ID>, ID extends Seri
     @Override
     public long count()
     {
-        String sql = "SELECT COUNT(f." + getIdColumnName() + ") FROM " + getEntityClass().getSimpleName() + " f";
+        String sql = "SELECT COUNT(f." + getIdColumnName() + ") FROM " + getEntityClass() + " f";
         TypedQuery<Long> countQuery = getEntityManager().createQuery( sql, Long.class );
         return countQuery.getSingleResult();
     }
