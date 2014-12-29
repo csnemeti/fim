@@ -5,6 +5,7 @@ package pfa.alliance.fim.dao.impl;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.Properties;
 
 import javax.persistence.EntityManager;
@@ -66,6 +67,7 @@ public abstract class BaseDbUnitTest
         persistService = injector.getInstance( PersistService.class );
         LOG.info( "Starting persistence..." );
         persistService.start();
+
         entityManager = injector.getInstance( EntityManager.class );
         reloadDataFromScratch();
     }
@@ -80,11 +82,22 @@ public abstract class BaseDbUnitTest
         return injector;
     }
 
+    static Connection createConnection()
+        throws SQLException
+    {
+        return DriverManager.getConnection( "jdbc:derby:memory:unit-testing-jpa" );
+    }
+
     static void reloadDataFromScratch()
         throws Exception
     {
+        Connection conn = createConnection();
+        reloadDataFromScratch( conn );
+    }
 
-        Connection conn = DriverManager.getConnection( "jdbc:derby:memory:unit-testing-jpa" );
+    static void reloadDataFromScratch( final Connection conn )
+        throws Exception
+    {
         IDatabaseConnection connection = new DatabaseConnection( conn );
 
         FlatXmlDataSetBuilder flatXmlDataSetBuilder = new FlatXmlDataSetBuilder();
