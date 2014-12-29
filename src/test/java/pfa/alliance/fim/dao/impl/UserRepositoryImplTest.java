@@ -101,7 +101,7 @@ public class UserRepositoryImplTest
     @Test
     public void test_findByEmail_newUser()
     {
-        User user = userRepositoryImpl.findByEmail( "user4@email.com" );
+        User user = userRepositoryImpl.findByEmail( "user6@email.com" );
         Assert.assertNotNull( "User should NOT be null", user );
         Assert.assertEquals( "UserStatus issue", UserStatus.NEW, user.getStatus() );
     }

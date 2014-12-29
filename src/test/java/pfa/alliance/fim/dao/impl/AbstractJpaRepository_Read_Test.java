@@ -28,6 +28,8 @@ public class AbstractJpaRepository_Read_Test
 
     /** The logger used in this class. */
     private static final Logger LOG = LoggerFactory.getLogger( AbstractJpaRepository_Read_Test.class );
+    
+    private static final int TOTAL_USERS_IN_DB = 6;
 
     private static UserRepositoryImpl userRepositoryImpl;
 
@@ -78,7 +80,7 @@ public class AbstractJpaRepository_Read_Test
     public void test_count()
     {
         long users = userRepositoryImpl.count();
-        Assert.assertEquals( "Wrong number of users found", 5L, users );
+        Assert.assertEquals( "Wrong number of users found", TOTAL_USERS_IN_DB, (int)users );
     }
 
     @Test
@@ -86,9 +88,9 @@ public class AbstractJpaRepository_Read_Test
     {
         List<Integer> userIds = userRepositoryImpl.findAllIds();
         Assert.assertNotNull( "Ids list should not be null", userIds );
-        Assert.assertEquals( "Wrong number of users found", 5, userIds.size() );
+        Assert.assertEquals( "Wrong number of users found", TOTAL_USERS_IN_DB, userIds.size() );
         Set<Integer> distinnctIds = new HashSet<Integer>( userIds );
-        Assert.assertEquals( "Wrong number of users found (2)", 5, distinnctIds.size() );
+        Assert.assertEquals( "Wrong number of users found (2)", TOTAL_USERS_IN_DB, distinnctIds.size() );
     }
 
     @Test
@@ -97,9 +99,9 @@ public class AbstractJpaRepository_Read_Test
         Sort sort = new Sort();
         List<Integer> userIds = userRepositoryImpl.findAllIds( sort );
         Assert.assertNotNull( "Ids list should not be null", userIds );
-        Assert.assertEquals( "Wrong number of users found", 5, userIds.size() );
+        Assert.assertEquals( "Wrong number of users found", TOTAL_USERS_IN_DB, userIds.size() );
         Set<Integer> distinnctIds = new HashSet<Integer>( userIds );
-        Assert.assertEquals( "Wrong number of users found (2)", 5, distinnctIds.size() );
+        Assert.assertEquals( "Wrong number of users found (2)", TOTAL_USERS_IN_DB, distinnctIds.size() );
     }
 
     @Test
@@ -109,9 +111,9 @@ public class AbstractJpaRepository_Read_Test
         sort.add( "id", true );
         List<Integer> userIds = userRepositoryImpl.findAllIds( sort );
         Assert.assertNotNull( "Ids list should not be null", userIds );
-        Assert.assertEquals( "Wrong number of users found", 5, userIds.size() );
+        Assert.assertEquals( "Wrong number of users found", TOTAL_USERS_IN_DB, userIds.size() );
         Set<Integer> distinnctIds = new HashSet<Integer>( userIds );
-        Assert.assertEquals( "Wrong number of users found (2)", 5, distinnctIds.size() );
+        Assert.assertEquals( "Wrong number of users found (2)", TOTAL_USERS_IN_DB, distinnctIds.size() );
 
         // IDs should be in ascending order
         Integer previous = userIds.get( 0 );
@@ -132,9 +134,9 @@ public class AbstractJpaRepository_Read_Test
         sort.add( "createdAt", false );
         List<Integer> userIds = userRepositoryImpl.findAllIds( sort );
         Assert.assertNotNull( "Ids list should not be null", userIds );
-        Assert.assertEquals( "Wrong number of users found", 5, userIds.size() );
+        Assert.assertEquals( "Wrong number of users found", TOTAL_USERS_IN_DB, userIds.size() );
         Set<Integer> distinnctIds = new HashSet<Integer>( userIds );
-        Assert.assertEquals( "Wrong number of users found (2)", 5, distinnctIds.size() );
+        Assert.assertEquals( "Wrong number of users found (2)", TOTAL_USERS_IN_DB, distinnctIds.size() );
 
         // IDs should be in descending order
         Integer previous = userIds.get( 0 );
