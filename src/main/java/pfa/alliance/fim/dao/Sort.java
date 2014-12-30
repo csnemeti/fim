@@ -65,4 +65,31 @@ public class Sort
         return sorting.entrySet().iterator();
     }
 
+    @Override
+    public String toString()
+    {
+        StringBuilder sb = new StringBuilder( "ORDER BY " );
+        if ( sorting.isEmpty() )
+        {
+            sb.append( "<<none>>" );
+        }
+        else
+        {
+            String separator = "";
+            for ( Map.Entry<String, Boolean> entry : sorting.entrySet() )
+            {
+                sb.append( separator ).append( entry.getKey() );
+                if ( entry.getValue() )
+                {
+                    sb.append( " ASC" );
+                }
+                else
+                {
+                    sb.append( " DESC" );
+                }
+                separator = ", ";
+            }
+        }
+        return sb.toString();
+    }
 }

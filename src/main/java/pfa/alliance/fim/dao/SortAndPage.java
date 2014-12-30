@@ -8,9 +8,11 @@ package pfa.alliance.fim.dao;
  * 
  * @author Nemeti Csaba
  */
-public class SortedPage
+public class SortAndPage
     extends Sort
 {
+    private static final long serialVersionUID = 8107023985826649620L;
+
     /** The maximum number of items to retrieve at once. */
     public final static int MAX_ITEMS_TO_RETRIEVE = 1000;
 
@@ -73,11 +75,21 @@ public class SortedPage
     /**
      * Configure this class for retrieving the next page (set of data). This means increasing the start index value with
      * value for max items to retrieve.
+     * 
      * @see #setStartIndex(int)
      * @see #getMaxItems()
      */
     public void nextPage()
     {
-        setStartIndex( getMaxItems() + getMaxItems() );
+        setStartIndex( getStartIndex() + getMaxItems() );
+    }
+
+    @Override
+    public String toString()
+    {
+        StringBuilder sb = new StringBuilder( super.toString() );
+        sb.append( " OFFSET " ).append( startIndex );
+        sb.append( " LIMIT " ).append( maxItems );
+        return sb.toString();
     }
 }
