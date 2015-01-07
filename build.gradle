@@ -44,7 +44,6 @@ repositories {
     mavenCentral()
 }
 dependencies {
-	//providedCompile 'javax.servlet:servlet-api:2.5'
 	providedCompile "javax.servlet:javax.servlet-api:3.1.0"
     //compile group: 'commons-collections', name: 'commons-collections', version: '3.2'
 	// misc
@@ -59,14 +58,14 @@ dependencies {
     compile 'ch.qos.logback:logback-classic:1.1.2'
     // google guice
     compile 'com.google.guava:guava:14.0.1'    
-    compile ('com.google.inject:guice:4.0-beta4') {
+    compile ('com.google.inject:guice:4.0-beta5') {
     	exclude module: 'guava'
     }
-    compile ('com.google.inject.extensions:guice-servlet:4.0-beta4') {
+    compile ('com.google.inject.extensions:guice-servlet:4.0-beta5') {
     	exclude module: 'guava'
     }
 	// persistence
-	compile ('com.google.inject.extensions:guice-persist:4.0-beta4') {
+	compile ('com.google.inject.extensions:guice-persist:4.0-beta5') {
     	exclude module: 'guava'
     }
 	compile 'org.batoo.jpa:batoo-jpa:2.0.1.2'
