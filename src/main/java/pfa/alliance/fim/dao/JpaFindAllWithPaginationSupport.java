@@ -27,4 +27,12 @@ public interface JpaFindAllWithPaginationSupport<T extends Identifiable<ID>, ID 
      */
     List<T> findAll( Sort sort, int startIndex, int maxItems);
 
+
+    /**
+     * Gets a subset of the records form the given object. Pay attention to memory usage!
+     * 
+     * @param page any ordering and pagination criteria
+     * @return the list or records
+     */
+    List<T> findAll( SortAndPage page);
 }

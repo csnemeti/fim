@@ -17,8 +17,11 @@ import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Root;
 
+import pfa.alliance.fim.dao.JpaFindAllSupport;
+import pfa.alliance.fim.dao.JpaFindAllWithPaginationSupport;
 import pfa.alliance.fim.dao.JpaRepository;
 import pfa.alliance.fim.dao.Sort;
+import pfa.alliance.fim.dao.SortAndPage;
 import pfa.alliance.fim.model.Identifiable;
 
 /**
@@ -151,6 +154,80 @@ abstract class AbstractJpaRepository<T extends Identifiable<ID>, ID extends Seri
         {
             delete( obj );
         }
+    }
+
+    /**
+     * Gets all the records form the given object. Pay attention to memory usage!
+     * 
+     * @return the list of objects as result.
+     */
+    public List<T> findAll()
+    {
+        return findAll( (Sort) null );
+    }
+
+    /**
+     * Gets all the records form the given object. Pay attention to memory usage!
+     * 
+     * @param sort any ordering criteria
+     * @return the list or records
+     */
+    public List<T> findAll( Sort sort )
+    {
+        // IMPORTANT: in order to prevent calling find..() methods (especially findAll() without pagination) we enforce
+        // an interface to be implemented. We can provide a default implementation but this methods should be hidden and
+        // called only through interface. That's the reason why we this class should never implement JpaFindAllSupport
+        // but the final repository interfaces and classes MUST.
+        if ( !( this instanceof JpaFindAllSupport ) )
+        {
+            throw new IllegalStateException(
+                                             "In order to call this method your reporsitory must implement JpaFindAllSupport" );
+        }
+
+        // TODO implement this
+        return null;
+    }
+
+    /**
+     * Gets a subset of the records form the given object. Pay attention to memory usage!
+     * 
+     * @param sort any ordering criteria
+     * @param startIndex the start index
+     * @param maxItems the maximum number of items to retrieve
+     * @return the list or records
+     */
+    public List<T> findAll( Sort sort, int startIndex, int maxItems )
+    {
+        // IMPORTANT: in order to prevent calling find..() methods (especially findAll() without pagination) we enforce
+        // an interface to be implemented. We can provide a default implementation but this methods should be hidden and
+        // called only through interface. That's the reason why we this class should never implement
+        // JpaFindAllWithPaginationSupport but the final repository interfaces and classes MUST.
+        if ( sort == null )
+        {
+            throw new IllegalArgumentException( "Sort should not be null" );
+        }
+        if ( !( this instanceof JpaFindAllWithPaginationSupport ) )
+        {
+            throw new IllegalStateException(
+                                             "In order to call this method your reporsitory must implement JpaFindAllWithPaginationSupport" );
+        }
+        // TODO implement this
+        return null;
+    }
+
+    /**
+     * Gets a subset of the records form the given object. Pay attention to memory usage!
+     * 
+     * @param page any ordering and pagination criteria
+     * @return the list or records
+     */
+    public List<T> findAll( SortAndPage page )
+    {
+        if ( page == null )
+        {
+            throw new IllegalArgumentException( "SortAndPage should not be null" );
+        }
+        return findAll( page, page.getStartIndex(), page.getMaxItems() );
     }
 
     /**
