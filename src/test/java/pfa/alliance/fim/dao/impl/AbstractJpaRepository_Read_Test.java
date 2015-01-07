@@ -4,6 +4,7 @@
 package pfa.alliance.fim.dao.impl;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -14,7 +15,10 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pfa.alliance.fim.dao.JpaFindAllSupport;
+import pfa.alliance.fim.dao.JpaFindAllWithPaginationSupport;
 import pfa.alliance.fim.dao.Sort;
+import pfa.alliance.fim.dao.SortAndPage;
 import pfa.alliance.fim.model.user.User;
 
 /**
@@ -31,13 +35,18 @@ public class AbstractJpaRepository_Read_Test
     
     private static final int TOTAL_USERS_IN_DB = 6;
 
-    private static UserRepositoryImpl userRepositoryImpl;
+    private static UserRepositoryImplWithFind userRepositoryImpl;
+
+    private static UserRepositoryImplNoFind userRepositoryImplSimple;
 
     @BeforeClass
     public static void init()
     {
-        userRepositoryImpl = new UserRepositoryImpl();
+        userRepositoryImpl = new UserRepositoryImplWithFind();
         getInjector().injectMembers( userRepositoryImpl );
+
+        userRepositoryImplSimple = new UserRepositoryImplNoFind();
+        getInjector().injectMembers( userRepositoryImplSimple );
     }
 
     @Test
@@ -150,9 +159,127 @@ public class AbstractJpaRepository_Read_Test
         }
     }
 
+    @Test
+    public void test_findAll()
+    {
+        List<User> users = userRepositoryImpl.findAll();
+        Assert.assertNotNull( "Users list should not be null", users );
+        Assert.assertEquals( "Wrong number of users found", TOTAL_USERS_IN_DB, users.size() );
+        Set<Integer> distinnctIds = new HashSet<Integer>();
+        for ( User user : users )
+        {
+            distinnctIds.add( user.getId() );
+        }
+        Assert.assertEquals( "Wrong number of users found (2)", TOTAL_USERS_IN_DB, distinnctIds.size() );
+
+    }
+
+    @Test
+    public void test_findAll_orderByIdAsc()
+    {
+        Sort sort = new Sort();
+        sort.add( "id", true );
+        List<User> users = userRepositoryImpl.findAll( sort );
+        Assert.assertNotNull( "User list should not be null", users );
+        Assert.assertEquals( "Wrong number of users found", TOTAL_USERS_IN_DB, users.size() );
+        LinkedHashSet<Integer> distinnctIds = new LinkedHashSet<Integer>();
+        for ( User user : users )
+        {
+            distinnctIds.add( user.getId() );
+        }
+        Assert.assertEquals( "Wrong number of users found (2)", TOTAL_USERS_IN_DB, distinnctIds.size() );
+
+        // IDs should be in ascending order
+        Integer previous = users.get( 0 ).getId();
+        for ( int i = 1; i < users.size(); i++ )
+        {
+            Integer curent = users.get( i ).getId();
+            if ( curent <= previous )
+            {
+                Assert.fail( "Ids are not orderred ascending: " + distinnctIds );
+            }
+        }
+    }
+
+    @Test( expected = IllegalArgumentException.class )
+    public void test_findAll_withNullPagination()
+    {
+        userRepositoryImpl.findAll( (SortAndPage) null );
+    }
+
+    @Test( expected = IllegalArgumentException.class )
+    public void test_findAll_withNullPagination2()
+    {
+        userRepositoryImpl.findAll( (Sort) null, 1, 3 );
+    }
+
+    @Test
+    public void test_findAll_orderByCreationTimeDesc()
+    {
+        SortAndPage sort = new SortAndPage();
+        sort.add( "createdAt", false );
+        sort.setStartIndex( 3 );
+        sort.setMaxItems( 2 );
+        List<User> users = userRepositoryImpl.findAll( sort );
+        Assert.assertNotNull( "User list should not be null", users );
+        Assert.assertEquals( "Wrong number of users found", 2, users.size() );
+
+        Integer id1 = users.get( 0 ).getId();
+        Integer id2 = users.get( 1 ).getId();
+        Assert.assertNotEquals( "Wrong number of users found (2)", id1, id2 );
+        Assert.assertTrue( "Order is wrong: " + id1 + " > " + id2, id1 > id2 );
+    }
+
+    @Test( expected = IllegalStateException.class )
+    public void test_findAll_noInterface1()
+    {
+        SortAndPage sort = new SortAndPage();
+        userRepositoryImplSimple.findAll( sort );
+    }
+
+    @Test( expected = IllegalStateException.class )
+    public void test_findAll_noInterface2()
+    {
+        userRepositoryImplSimple.findAll();
+    }
+
     @AfterClass
     public static void destroy()
     {
         userRepositoryImpl = null;
+    }
+
+    /**
+     * This is an extension that implements all findAll(...) methods. We allow ourself to do this since we're in unit
+     * test and operate with small amount of data. Both interface should not be implemented in real world unless small
+     * amount of data is processed (so that pagination is not mandatory).
+     */
+    private static class UserRepositoryImplNoFind
+        extends AbstractJpaRepository<User, Integer>
+    {
+
+        @Override
+        protected Class<User> getEntityClass()
+        {
+            return User.class;
+        }
+
+        @Override
+        protected Class<Integer> getIdClass()
+        {
+            return Integer.class;
+        }
+    }
+
+    /**
+     * This is an extension that implements all findAll(...) methods. We allow ourself to do this since we're in unit
+     * test and operate with small amount of data. Both interface should not be implemented in real world unless small
+     * amount of data is processed (so that pagination is not mandatory).
+     */
+    private static class UserRepositoryImplWithFind
+        extends UserRepositoryImplNoFind
+        implements JpaFindAllSupport, JpaFindAllWithPaginationSupport
+    {
+
     }
 }

@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.persistence.EntityManager;
@@ -174,45 +175,19 @@ abstract class AbstractJpaRepository<T extends Identifiable<ID>, ID extends Seri
      */
     public List<T> findAll( Sort sort )
     {
-        // IMPORTANT: in order to prevent calling find..() methods (especially findAll() without pagination) we enforce
-        // an interface to be implemented. We can provide a default implementation but this methods should be hidden and
-        // called only through interface. That's the reason why we this class should never implement JpaFindAllSupport
-        // but the final repository interfaces and classes MUST.
+        // IMPORTANT: in order to prevent calling findAll..() methods (especially findAll() without pagination) we
+        // enforce an interface to be implemented. We can provide a default implementation but we need to constrain the
+        // possibility to call any time these methods.
+        // What we did to make it work is that we provide a default implementation calling it is conditioned by the
+        // repository class should implement JpaFindAllSupport.
         if ( !( this instanceof JpaFindAllSupport ) )
         {
             throw new IllegalStateException(
                                              "In order to call this method your reporsitory must implement JpaFindAllSupport" );
         }
 
-        // TODO implement this
-        return null;
-    }
-
-    /**
-     * Gets a subset of the records form the given object. Pay attention to memory usage!
-     * 
-     * @param sort any ordering criteria
-     * @param startIndex the start index
-     * @param maxItems the maximum number of items to retrieve
-     * @return the list or records
-     */
-    public List<T> findAll( Sort sort, int startIndex, int maxItems )
-    {
-        // IMPORTANT: in order to prevent calling find..() methods (especially findAll() without pagination) we enforce
-        // an interface to be implemented. We can provide a default implementation but this methods should be hidden and
-        // called only through interface. That's the reason why we this class should never implement
-        // JpaFindAllWithPaginationSupport but the final repository interfaces and classes MUST.
-        if ( sort == null )
-        {
-            throw new IllegalArgumentException( "Sort should not be null" );
-        }
-        if ( !( this instanceof JpaFindAllWithPaginationSupport ) )
-        {
-            throw new IllegalStateException(
-                                             "In order to call this method your reporsitory must implement JpaFindAllWithPaginationSupport" );
-        }
-        // TODO implement this
-        return null;
+        TypedQuery<T> query = createFindAllQuery( sort );
+        return query.getResultList();
     }
 
     /**
@@ -228,6 +203,61 @@ abstract class AbstractJpaRepository<T extends Identifiable<ID>, ID extends Seri
             throw new IllegalArgumentException( "SortAndPage should not be null" );
         }
         return findAll( page, page.getStartIndex(), page.getMaxItems() );
+    }
+
+    /**
+     * Gets a subset of the records form the given object. Pay attention to memory usage!
+     * 
+     * @param sort any ordering criteria
+     * @param startIndex the start index
+     * @param maxItems the maximum number of items to retrieve
+     * @return the list or records
+     */
+    public List<T> findAll( Sort sort, int startIndex, int maxItems )
+    {
+        // IMPORTANT: in order to prevent calling findAll..() methods (especially findAll() without pagination) we
+        // enforce an interface to be implemented. We can provide a default implementation but we need to constrain the
+        // possibility to call any time these methods.
+        // What we did to make it work is that we provide a default implementation calling it is conditioned by the
+        // repository class should implement JpaFindAllWithPaginationSupport.
+        if ( sort == null )
+        {
+            throw new IllegalArgumentException( "Sort should not be null" );
+        }
+        if ( !( this instanceof JpaFindAllWithPaginationSupport ) )
+        {
+            throw new IllegalStateException(
+                                             "In order to call this method your reporsitory must implement JpaFindAllWithPaginationSupport" );
+        }
+        TypedQuery<T> query = createFindAllQuery( sort );
+        query.setFirstResult( startIndex );
+        query.setMaxResults( maxItems );
+        return query.getResultList();
+    }
+
+    /**
+     * Builds a query for findAll with sorting condition.
+     * 
+     * @param sort the sorting condition (if null, it will not be added any ORDER BY to query)
+     * @return the built query
+     */
+    private TypedQuery<T> createFindAllQuery( Sort sort )
+    {
+        EntityManager em = getEntityManager();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<T> criteria = cb.createQuery( getEntityClass() );
+        Root<T> root = criteria.from( getEntityClass() );
+        if ( sort != null && !sort.isEmpty() )
+        {
+            List<Order> order = new ArrayList<Order>();
+            for ( Map.Entry<String, Boolean> entry : sort )
+            {
+                Path<?> path = root.get( entry.getKey() );
+                order.add( ( entry.getValue() ) ? cb.asc( path ) : cb.desc( path ) );
+            }
+            criteria.orderBy( order );
+        }
+        return em.createQuery( criteria );
     }
 
     /**
