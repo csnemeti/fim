@@ -7,8 +7,22 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Order;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Root;
+
+import pfa.alliance.fim.dao.JpaFindAllSupport;
+import pfa.alliance.fim.dao.JpaFindAllWithPaginationSupport;
 import pfa.alliance.fim.dao.JpaRepository;
+import pfa.alliance.fim.dao.Sort;
+import pfa.alliance.fim.dao.SortAndPage;
 import pfa.alliance.fim.model.Identifiable;
 
 /**
@@ -20,37 +34,55 @@ abstract class AbstractJpaRepository<T extends Identifiable<ID>, ID extends Seri
     extends BaseRepository
     implements JpaRepository<T, ID>
 {
-
-    /**
-     * Check if a record with the given ID exists in database.
-     * 
-     * @param id the ID to check
-     * @return true if the ID was found, false otherwise
-     */
     @Override
     public boolean exists( ID id )
     {
         return findOne( id ) != null;
     }
 
-    /**
-     * Finds the object with given ID as primary key.
-     * 
-     * @param id the primary key of the record
-     * @return the corresponding object or null if object is not found
-     */
     @Override
     public T findOne( ID id )
     {
         return getEntityManager().find( getEntityClass(), id );
     }
 
-    /**
-     * Save all the objects sent as parameters.
-     * 
-     * @param objects the objects to save
-     * @return the saved objects
-     */
+    @Override
+    public long count()
+    {
+        String sql = "SELECT COUNT(f." + getIdColumnName() + ") FROM " + getEntityClass().getCanonicalName() + " f";
+        TypedQuery<Long> countQuery = getEntityManager().createQuery( sql, Long.class );
+        return countQuery.getSingleResult();
+    }
+
+    @Override
+    public List<ID> findAllIds()
+    {
+        return findAllIds( null );
+    }
+
+    @Override
+    public List<ID> findAllIds( Sort sort )
+    {
+        EntityManager em = getEntityManager();
+        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+        CriteriaQuery<ID> criteriaQuery = criteriaBuilder.createQuery( getIdClass() );
+        Root<T> from = criteriaQuery.from( getEntityClass() );
+        criteriaQuery.select( from.get( getIdColumnName() ) );
+        if ( sort != null && !sort.isEmpty() )
+        {
+            List<Order> orders = new ArrayList<Order>();
+            for ( Entry<String, Boolean> sortEntry : sort.getSorting().entrySet() )
+            {
+                Path<?> path = from.get( sortEntry.getKey() );
+                Order order = ( sortEntry.getValue() ) ? criteriaBuilder.asc( path ) : criteriaBuilder.desc( path );
+                orders.add( order );
+            }
+            criteriaQuery.orderBy( orders );
+        }
+        TypedQuery<ID> query = em.createQuery( criteriaQuery );
+        return query.getResultList();
+    }
+
     @Override
     public List<T> save( Collection<T> objects )
     {
@@ -62,12 +94,6 @@ abstract class AbstractJpaRepository<T extends Identifiable<ID>, ID extends Seri
         return saved;
     }
 
-    /**
-     * Saves the given object.
-     * 
-     * @param obj the object to save
-     * @return the saved object
-     */
     @Override
     public T save( T obj )
     {
@@ -106,11 +132,6 @@ abstract class AbstractJpaRepository<T extends Identifiable<ID>, ID extends Seri
         return getEntityManager().merge( obj );
     }
 
-    /**
-     * Deletes an object with a given ID.
-     * 
-     * @param id the ID of the object to delete
-     */
     @Override
     public void delete( ID id )
     {
@@ -121,22 +142,12 @@ abstract class AbstractJpaRepository<T extends Identifiable<ID>, ID extends Seri
         }
     }
 
-    /**
-     * Deletes a given object.
-     * 
-     * @param entity the object to delete
-     */
     @Override
     public void delete( T entity )
     {
         getEntityManager().remove( entity );
     }
 
-    /**
-     * Delete a collection of objects.
-     * 
-     * @param entities the objects to be deleted
-     */
     @Override
     public void delete( Collection<? extends T> entities )
     {
@@ -147,11 +158,131 @@ abstract class AbstractJpaRepository<T extends Identifiable<ID>, ID extends Seri
     }
 
     /**
+     * Gets all the records form the given object. Pay attention to memory usage!
+     * 
+     * @return the list of objects as result.
+     */
+    public List<T> findAll()
+    {
+        return findAll( (Sort) null );
+    }
+
+    /**
+     * Gets all the records form the given object. Pay attention to memory usage!
+     * 
+     * @param sort any ordering criteria
+     * @return the list or records
+     */
+    public List<T> findAll( Sort sort )
+    {
+        // IMPORTANT: in order to prevent calling findAll..() methods (especially findAll() without pagination) we
+        // enforce an interface to be implemented. We can provide a default implementation but we need to constrain the
+        // possibility to call any time these methods.
+        // What we did to make it work is that we provide a default implementation calling it is conditioned by the
+        // repository class should implement JpaFindAllSupport.
+        if ( !( this instanceof JpaFindAllSupport ) )
+        {
+            throw new IllegalStateException(
+                                             "In order to call this method your reporsitory must implement JpaFindAllSupport" );
+        }
+
+        TypedQuery<T> query = createFindAllQuery( sort );
+        return query.getResultList();
+    }
+
+    /**
+     * Gets a subset of the records form the given object. Pay attention to memory usage!
+     * 
+     * @param page any ordering and pagination criteria
+     * @return the list or records
+     */
+    public List<T> findAll( SortAndPage page )
+    {
+        if ( page == null )
+        {
+            throw new IllegalArgumentException( "SortAndPage should not be null" );
+        }
+        return findAll( page, page.getStartIndex(), page.getMaxItems() );
+    }
+
+    /**
+     * Gets a subset of the records form the given object. Pay attention to memory usage!
+     * 
+     * @param sort any ordering criteria
+     * @param startIndex the start index
+     * @param maxItems the maximum number of items to retrieve
+     * @return the list or records
+     */
+    public List<T> findAll( Sort sort, int startIndex, int maxItems )
+    {
+        // IMPORTANT: in order to prevent calling findAll..() methods (especially findAll() without pagination) we
+        // enforce an interface to be implemented. We can provide a default implementation but we need to constrain the
+        // possibility to call any time these methods.
+        // What we did to make it work is that we provide a default implementation calling it is conditioned by the
+        // repository class should implement JpaFindAllWithPaginationSupport.
+        if ( sort == null )
+        {
+            throw new IllegalArgumentException( "Sort should not be null" );
+        }
+        if ( !( this instanceof JpaFindAllWithPaginationSupport ) )
+        {
+            throw new IllegalStateException(
+                                             "In order to call this method your reporsitory must implement JpaFindAllWithPaginationSupport" );
+        }
+        TypedQuery<T> query = createFindAllQuery( sort );
+        query.setFirstResult( startIndex );
+        query.setMaxResults( maxItems );
+        return query.getResultList();
+    }
+
+    /**
+     * Builds a query for findAll with sorting condition.
+     * 
+     * @param sort the sorting condition (if null, it will not be added any ORDER BY to query)
+     * @return the built query
+     */
+    private TypedQuery<T> createFindAllQuery( Sort sort )
+    {
+        EntityManager em = getEntityManager();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<T> criteria = cb.createQuery( getEntityClass() );
+        Root<T> root = criteria.from( getEntityClass() );
+        if ( sort != null && !sort.isEmpty() )
+        {
+            List<Order> order = new ArrayList<Order>();
+            for ( Map.Entry<String, Boolean> entry : sort )
+            {
+                Path<?> path = root.get( entry.getKey() );
+                order.add( ( entry.getValue() ) ? cb.asc( path ) : cb.desc( path ) );
+            }
+            criteria.orderBy( order );
+        }
+        return em.createQuery( criteria );
+    }
+
+    /**
      * Gets the {@link Class} of the entity that this repository is managing.
      * 
      * @return the entity {@link Class}
      */
     protected abstract Class<T> getEntityClass();
+
+    /**
+     * Gets the {@link Class} of the ID that this repository is managing.
+     * 
+     * @return the Id {@link Class}
+     */
+    protected abstract Class<ID> getIdClass();
+
+    /**
+     * Gets the name of the ID column.
+     * 
+     * @return this implementation return "id"
+     */
+    protected String getIdColumnName()
+    {
+        return "id";
+    }
 
     /**
      * Find if this object is new. In order to do that, it checks if object ID is null.

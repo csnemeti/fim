@@ -4,7 +4,14 @@
 package pfa.alliance.fim.dao.impl;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Types;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import javax.persistence.EntityManager;
@@ -66,6 +73,7 @@ public abstract class BaseDbUnitTest
         persistService = injector.getInstance( PersistService.class );
         LOG.info( "Starting persistence..." );
         persistService.start();
+
         entityManager = injector.getInstance( EntityManager.class );
         reloadDataFromScratch();
     }
@@ -80,11 +88,121 @@ public abstract class BaseDbUnitTest
         return injector;
     }
 
+    static Connection createConnection()
+        throws SQLException
+    {
+        return DriverManager.getConnection( "jdbc:derby:memory:unit-testing-jpa" );
+    }
+
     static void reloadDataFromScratch()
         throws Exception
     {
+        Connection conn = createConnection();
+        patchDerbyAutoIncrements( conn );
+        reloadDataFromScratch( conn );
+    }
 
-        Connection conn = DriverManager.getConnection( "jdbc:derby:memory:unit-testing-jpa" );
+    private static void patchDerbyAutoIncrements( final Connection conn )
+        throws SQLException
+    {
+        DatabaseMetaData metaData = conn.getMetaData();
+        List<String> tableNames = getTableNamedFromDB( metaData );
+        for ( String table : tableNames )
+        {
+            checkAndPatchPkForTable( conn, metaData, table );
+        }
+    }
+
+    /**
+     * Gets the DB table names.
+     * 
+     * @param metaData the {@link DatabaseMetaData} for where the table names can be found
+     * @return the list of tables
+     * @throws SQLException in case of error
+     */
+    private static List<String> getTableNamedFromDB( final DatabaseMetaData metaData )
+        throws SQLException
+    {
+        List<String> tables = new ArrayList<String>();
+        try (ResultSet rs = metaData.getTables( null, null, "%", new String[] { "TABLE" } ))
+        {
+            while ( rs.next() )
+            {
+                tables.add( rs.getString( "TABLE_NAME" ) );
+            }
+        }
+        return tables;
+    }
+
+    /**
+     * Patch primary keys...
+     * 
+     * @param conn
+     * @param metaData
+     * @param tableNames
+     * @throws SQLException
+     */
+    private static void checkAndPatchPkForTable( Connection conn, DatabaseMetaData metaData, final String tableName )
+        throws SQLException
+    {
+        List<String> pks = new ArrayList<String>();
+        try (ResultSet rs = metaData.getPrimaryKeys( null, null, tableName ))
+        {
+            while ( rs.next() )
+            {
+                pks.add( rs.getString( "COLUMN_NAME" ) );
+            }
+        }
+        if ( pks.size() == 1 )
+        {
+            String type = null;
+            String columnName = pks.get( 0 );
+            try (ResultSet rs = metaData.getColumns( null, null, tableName, columnName ))
+            {
+                if ( rs.next() )
+                {
+                    if ( isIntegerAndAutoincrementType( rs ) )
+                    {
+                        type = rs.getString( "TYPE_NAME" );
+                        String columnDef = rs.getString( "COLUMN_DEF" );
+                        if ( columnDef.toLowerCase().contains( " start 1 " ) )
+                        {
+                            // this needs fix
+                            patchPk( conn, tableName, columnName, type );
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private static void patchPk( Connection conn, final String tableName, final String columnName,
+                                 final String columnType ) throws SQLException
+    {
+        String sql =
+            "ALTER TABLE " + tableName + " ALTER COLUMN " + columnName //+ " SET DEFAULT "// + columnType
+                + " RESTART WITH 1";
+        try (Statement stmt = conn.createStatement())
+        {
+            stmt.execute( sql );
+        }catch (SQLException e) {
+            LOG.error( "Cound not alter column {}.{}", tableName, columnName, e );
+            throw e;
+        };
+    }
+
+    private static boolean isIntegerAndAutoincrementType( ResultSet rs )
+        throws SQLException
+    {
+        final int typeCode = rs.getInt( "DATA_TYPE" );
+        boolean autoincrement = "YES".equalsIgnoreCase( rs.getString( "IS_AUTOINCREMENT" ) );
+        return autoincrement
+            && ( Types.TINYINT == typeCode || Types.SMALLINT == typeCode || Types.INTEGER == typeCode || Types.BIGINT == typeCode );
+    }
+
+    static void reloadDataFromScratch( final Connection conn )
+        throws Exception
+    {
         IDatabaseConnection connection = new DatabaseConnection( conn );
 
         FlatXmlDataSetBuilder flatXmlDataSetBuilder = new FlatXmlDataSetBuilder();

@@ -23,4 +23,10 @@ public class ProjectRepositoryImpl
         return Project.class;
     }
 
+    @Override
+    protected Class<Integer> getIdClass()
+    {
+        return Integer.class;
+    }
+
 }

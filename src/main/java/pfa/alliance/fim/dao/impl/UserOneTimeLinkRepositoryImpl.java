@@ -25,4 +25,10 @@ public class UserOneTimeLinkRepositoryImpl
         return UserOneTimeLink.class;
     }
 
+    @Override
+    protected Class<Long> getIdClass()
+    {
+        return Long.class;
+    }
+
 }

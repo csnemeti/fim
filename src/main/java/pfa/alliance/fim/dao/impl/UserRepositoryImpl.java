@@ -61,7 +61,7 @@ class UserRepositoryImpl
         LOG.debug( "Returned results: {}", results );
         User user = uniqueResult( results );
         // we get the logins only if there's a chance to log in the user
-        if ( user != null && user.getStatus() == UserStatus.ACTIVE )
+        if ( isUserActive( user ) )
         {
             user.getLogins().size();
         }
@@ -93,6 +93,15 @@ class UserRepositoryImpl
         LOG.debug( "Returned results: {}", results );
         return uniqueResult( results );
     }
+    /**
+     * Verifies if the given object (representing a User) is not null and has status ACTIVE.
+     * @param user the user to check
+     * @return true if is not null and active, false otherwise
+     */
+    static boolean isUserActive( User user )
+    {
+        return user != null && UserStatus.ACTIVE == user.getStatus();
+    }
 
     /**
      * Handle unique result.
@@ -100,7 +109,7 @@ class UserRepositoryImpl
      * @param users the list of users
      * @return the result or null if {@link List} is empty
      */
-    private static <T> T uniqueResult( List<T> users )
+    static <T> T uniqueResult( List<T> users )
     {
         T result = null;
         switch ( users.size() )
@@ -165,10 +174,13 @@ class UserRepositoryImpl
         Root<UserOneTimeLink> root = criteria.from( UserOneTimeLink.class );
         root.fetch( "user" );
         Predicate[] predicates = null;
-        if(designation != null){
+        if ( designation != null )
+        {
             predicates = new Predicate[2];
             predicates[1] = cb.equal( root.get( "designation" ), designation );
-        }else{
+        }
+        else
+        {
             predicates = new Predicate[1];
         }
         predicates[0] = cb.equal( root.get( "uuid" ), uuid );
@@ -187,7 +199,13 @@ class UserRepositoryImpl
         return User.class;
     }
 
-    private static class UserLoginComparator
+    @Override
+    protected Class<Integer> getIdClass()
+    {
+        return Integer.class;
+    }
+
+    static class UserLoginComparator
         implements Comparator<UserLogin>
     {
 

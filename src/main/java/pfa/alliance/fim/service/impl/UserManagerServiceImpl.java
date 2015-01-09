@@ -66,7 +66,6 @@ class UserManagerServiceImpl
 
     private final FimUrlGeneratorService fimUrlGeneratorService;
 
-
     @Inject
     public UserManagerServiceImpl( UserRepository userRepository, EmailService emailService,
                                    EmailGeneratorService emailGeneratorService,
@@ -85,7 +84,7 @@ class UserManagerServiceImpl
     public User registerUser( String email, String cleanPassword, String firstName, String lastName, Locale locale )
     {
         return saveNewlyCreatedUser( email, cleanPassword, firstName, lastName, locale,
-                                      OneTimeLinkType.USER_REGISTRATION );
+                                     OneTimeLinkType.USER_REGISTRATION );
     }
 
     @Override
@@ -93,7 +92,7 @@ class UserManagerServiceImpl
     public User inviteUser( String email, String firstName, String lastName, Locale locale )
     {
         return saveNewlyCreatedUser( email, "User: " + System.nanoTime(), firstName, lastName, locale,
-                                      OneTimeLinkType.USER_INVITE );
+                                     OneTimeLinkType.USER_INVITE );
     }
 
     /**
@@ -108,7 +107,7 @@ class UserManagerServiceImpl
      * @return the created {@link User} after it was saved in database
      */
     private User saveNewlyCreatedUser( String email, String cleanPassword, String firstName, String lastName,
-                                        Locale locale, OneTimeLinkType linkType )
+                                       Locale locale, OneTimeLinkType linkType )
     {
         LOG.debug( "Trying to create new user: email = {}, first name = {}, last name = {}, locale = {}", email,
                    firstName, lastName, locale );
@@ -209,6 +208,7 @@ class UserManagerServiceImpl
         link.setUuid( uuid.toString() );
         return link;
     }
+
     /**
      * Checks if the user data that is provided is duplicate or not.
      * 
@@ -364,11 +364,10 @@ class UserManagerServiceImpl
         UserOneTimeLink result = null;
         if ( CollectionUtils.isNotEmpty( links ) )
         {
-            final Timestamp now = new Timestamp( System.currentTimeMillis() ); 
+            final Timestamp now = new Timestamp( System.currentTimeMillis() );
             for ( UserOneTimeLink link : links )
             {
-                if ( OneTimeLinkType.FORGOT_PASWORD.equals( link.getDesignation() )
-                    && link.getLastModified().before( now ) )
+                if ( OneTimeLinkType.FORGOT_PASWORD.equals( link.getDesignation() ) && link.getExpiresAt().after( now ) )
                 {
                     result = link;
                     break;
@@ -377,7 +376,6 @@ class UserManagerServiceImpl
         }
         return result;
     }
-
 
     @Override
     @Transactional
