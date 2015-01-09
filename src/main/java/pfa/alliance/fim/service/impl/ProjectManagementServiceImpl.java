@@ -69,7 +69,7 @@ public class ProjectManagementServiceImpl
         }
         catch ( PersistenceException e )
         {
-            if ( isDuplicateUserInfoRelatedException( e ) )
+            if ( isDuplicateInfoRelatedException( e ) )
             {
                 LOG.warn( "Duplicate data for project: {}", project, e );
                 throw new DuplicateDataException( "Duplicate project data", e );
@@ -90,7 +90,7 @@ public class ProjectManagementServiceImpl
      * @param e the exception we received
      * @return true if information about duplicate e-mail or username was found
      */
-    private boolean isDuplicateUserInfoRelatedException( PersistenceException e )
+    private boolean isDuplicateInfoRelatedException( PersistenceException e )
     {
         Throwable t = e;
         boolean found = false;

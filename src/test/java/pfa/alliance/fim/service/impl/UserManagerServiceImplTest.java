@@ -27,6 +27,7 @@ import pfa.alliance.fim.service.EmailGeneratorService;
 import pfa.alliance.fim.service.EmailService;
 import pfa.alliance.fim.service.EmailType;
 import pfa.alliance.fim.service.FimUrlGeneratorService;
+import pfa.alliance.fim.service.UserActivationFailException;
 
 /**
  * This class is used for testing {@link UserManagerServiceImpl}.
@@ -57,7 +58,7 @@ public class UserManagerServiceImplTest
         userOneTimeLinkRepositoryMock = Mockito.mock( UserOneTimeLinkRepository.class );
         userManagetServiceImpl =
             new UserManagerServiceImpl( userRepositoryMock, emailServiceMock, emailGeneratorServiceMock,
-                                        fimUrlGeneratorServiceMock, userOneTimeLinkRepositoryMock);
+                                        fimUrlGeneratorServiceMock, userOneTimeLinkRepositoryMock );
     }
 
     @Test
@@ -407,5 +408,80 @@ public class UserManagerServiceImplTest
                                                                                        Mockito.any( Locale.class ) );
         Mockito.verify( emailServiceMock, Mockito.atLeastOnce() ).sendEmail( "user1@email.com",
                                                                              "Forgot password: subject", "content" );
+    }
+
+    @Test( expected = UserActivationFailException.class )
+    public void test_activateUser_invalidUuid()
+    {
+        UserOneTimeLink link = null;
+        Mockito.when( userRepositoryMock.getOneTimeLinkBy( "abc", OneTimeLinkType.USER_REGISTRATION ) ).thenReturn( link );
+
+        try
+        {
+            userManagetServiceImpl.activateUser( "abc" );
+        }
+        finally
+        {
+            Mockito.verify( userRepositoryMock, Mockito.atLeastOnce() ).getOneTimeLinkBy( "abc",
+                                                                                          OneTimeLinkType.USER_REGISTRATION );
+        }
+    }
+
+    @Test( expected = UserActivationFailException.class )
+    public void test_activateUser_expiredUuid()
+    {
+        UserOneTimeLink link = new UserOneTimeLink();
+        link.setExpiresAt( new Timestamp( System.currentTimeMillis() - 1000L ) );
+        Mockito.when( userRepositoryMock.getOneTimeLinkBy( "abc", OneTimeLinkType.USER_REGISTRATION ) ).thenReturn( link );
+
+        try
+        {
+            userManagetServiceImpl.activateUser( "abc" );
+        }
+        finally
+        {
+            Mockito.verify( userRepositoryMock, Mockito.atLeastOnce() ).getOneTimeLinkBy( "abc",
+                                                                                          OneTimeLinkType.USER_REGISTRATION );
+        }
+    }
+
+    @Test( expected = UserActivationFailException.class )
+    public void test_activateUser_alreadyActiveuser()
+    {
+        UserOneTimeLink link = new UserOneTimeLink();
+        link.setExpiresAt( new Timestamp( System.currentTimeMillis() + 2000L ) );
+        User user = new User();
+        user.setStatus( UserStatus.ACTIVE );
+        link.setUser( user );
+        Mockito.when( userRepositoryMock.getOneTimeLinkBy( "abc", OneTimeLinkType.USER_REGISTRATION ) ).thenReturn( link );
+
+        try
+        {
+            userManagetServiceImpl.activateUser( "abc" );
+        }
+        finally
+        {
+            Mockito.verify( userRepositoryMock, Mockito.atLeastOnce() ).getOneTimeLinkBy( "abc",
+                                                                                          OneTimeLinkType.USER_REGISTRATION );
+        }
+    }
+
+    @Test
+    public void test_activateUser_sucessfull()
+    {
+        UserOneTimeLink link = new UserOneTimeLink();
+        Timestamp ts = new Timestamp( System.currentTimeMillis() + 2000L );
+        link.setExpiresAt( ts );
+        User user = new User();
+        user.setStatus( UserStatus.NEW );
+        link.setUser( user );
+        Mockito.when( userRepositoryMock.getOneTimeLinkBy( "abc", OneTimeLinkType.USER_REGISTRATION ) ).thenReturn( link );
+
+        userManagetServiceImpl.activateUser( "abc" );
+        Mockito.verify( userRepositoryMock, Mockito.atLeastOnce() ).getOneTimeLinkBy( "abc",
+                                                                                      OneTimeLinkType.USER_REGISTRATION );
+        
+        Assert.assertEquals( "User status error", UserStatus.ACTIVE, user.getStatus() );
+        Assert.assertTrue( "Link expiration issue: " + ts + " > " + link.getExpiresAt(), ts.after( link.getExpiresAt() ) );
     }
 }
