@@ -9,6 +9,7 @@ import javax.mail.MessagingException;
 
 import pfa.alliance.fim.model.user.User;
 import pfa.alliance.fim.model.user.UserOneTimeLink;
+import pfa.alliance.fim.model.user.UserRole;
 import pfa.alliance.fim.model.user.UserStatus;
 
 /**
@@ -36,9 +37,10 @@ public interface UserManagerService
      * @param firstName the user first name
      * @param lastName the user last name
      * @param locale the {@link Locale} used in e-mail sending
+     * @param defaultRole the default role this user should have
      * @return the created User
      */
-    User inviteUser( String email, String firstName, String lastName, Locale locale );
+    User inviteUser( String email, String firstName, String lastName, UserRole defaultRole, Locale locale );
 
     /**
      * Authenticate a {@link User}.

@@ -26,6 +26,7 @@ import pfa.alliance.fim.dao.UserRepository;
 import pfa.alliance.fim.model.user.OneTimeLinkType;
 import pfa.alliance.fim.model.user.User;
 import pfa.alliance.fim.model.user.UserOneTimeLink;
+import pfa.alliance.fim.model.user.UserRole;
 import pfa.alliance.fim.model.user.UserStatus;
 import pfa.alliance.fim.service.ActivationFailReason;
 import pfa.alliance.fim.service.EmailGeneratorService;
@@ -84,15 +85,15 @@ class UserManagerServiceImpl
     public User registerUser( String email, String cleanPassword, String firstName, String lastName, Locale locale )
     {
         return saveNewlyCreatedUser( email, cleanPassword, firstName, lastName, locale,
-                                     OneTimeLinkType.USER_REGISTRATION );
+                                     OneTimeLinkType.USER_REGISTRATION, UserRole.TEAM );
     }
 
     @Override
     @Transactional
-    public User inviteUser( String email, String firstName, String lastName, Locale locale )
+    public User inviteUser( String email, String firstName, String lastName, UserRole defaultRole, Locale locale )
     {
         return saveNewlyCreatedUser( email, "User: " + System.nanoTime(), firstName, lastName, locale,
-                                     OneTimeLinkType.USER_INVITE );
+                                     OneTimeLinkType.USER_INVITE, defaultRole );
     }
 
     /**
@@ -104,14 +105,15 @@ class UserManagerServiceImpl
      * @param lastName the user last name
      * @param locale the {@link Locale} (language) of welcome e-mail
      * @param linkType the designation of {@link UserOneTimeLink} to create
+     * @param defaultRole the default role this user should have
      * @return the created {@link User} after it was saved in database
      */
     private User saveNewlyCreatedUser( String email, String cleanPassword, String firstName, String lastName,
-                                       Locale locale, OneTimeLinkType linkType )
+                                       Locale locale, OneTimeLinkType linkType, UserRole defaultRole )
     {
         LOG.debug( "Trying to create new user: email = {}, first name = {}, last name = {}, locale = {}", email,
                    firstName, lastName, locale );
-        User user = createNewUser( email, cleanPassword, firstName, lastName );
+        User user = createNewUser( email, cleanPassword, firstName, lastName, defaultRole );
         try
         {
             UserOneTimeLink link = createUserOneTimeLinkFor( user, linkType );
@@ -239,9 +241,11 @@ class UserManagerServiceImpl
      * @param cleanPassword the user password in clean text form
      * @param firstName the user first name
      * @param lastName the user last name
+     * @param defaultRole the default role this user should have
      * @return the built object
      */
-    private User createNewUser( String email, String cleanPassword, String firstName, String lastName )
+    private User createNewUser( String email, String cleanPassword, String firstName, String lastName,
+                                UserRole defaultRole )
     {
         User user = new User();
         user.setEmail( email );
@@ -250,6 +254,7 @@ class UserManagerServiceImpl
         user.setLastName( lastName );
         user.setPassword( encryptPassword( cleanPassword ) );
         user.setStatus( UserStatus.NEW );
+        user.setDefaultRole( defaultRole );
         return user;
     }
 

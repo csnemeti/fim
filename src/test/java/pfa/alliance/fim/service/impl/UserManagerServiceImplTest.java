@@ -22,6 +22,7 @@ import pfa.alliance.fim.dao.UserRepository;
 import pfa.alliance.fim.model.user.OneTimeLinkType;
 import pfa.alliance.fim.model.user.User;
 import pfa.alliance.fim.model.user.UserOneTimeLink;
+import pfa.alliance.fim.model.user.UserRole;
 import pfa.alliance.fim.model.user.UserStatus;
 import pfa.alliance.fim.service.EmailGeneratorService;
 import pfa.alliance.fim.service.EmailService;
@@ -97,7 +98,7 @@ public class UserManagerServiceImplTest
         Mockito.when( fimUrlGeneratorServiceMock.getOneTimeLinkLink( Mockito.any( UserOneTimeLink.class ) ) ).thenReturn( "url" );
         emailServiceMock.sendEmail( "email@test.com", "Subject", "Content" );
         // call
-        userManagetServiceImpl.inviteUser( "email@test.com", "First", "Name", Locale.UK );
+        userManagetServiceImpl.inviteUser( "email@test.com", "First", "Name", UserRole.STATISTICAL, Locale.UK );
         // verify
         Mockito.verify( userRepositoryMock, Mockito.atLeastOnce() ).save( Mockito.any( User.class ) );
         Mockito.verify( emailGeneratorServiceMock, Mockito.atLeastOnce() ).getSubject( EmailType.INVITE_USER, null,

@@ -15,6 +15,7 @@ import net.sourceforge.stripes.validation.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pfa.alliance.fim.model.user.UserRole;
 import pfa.alliance.fim.service.UserManagerService;
 import pfa.alliance.fim.service.impl.DuplicateDataException;
 import pfa.alliance.fim.web.common.FimPageURLs;
@@ -74,7 +75,7 @@ public class InviteUserActionBean
         LOG.debug( "Inviting user: firstName = {}, lastName = {}, email = {}", firstName, lastName, email );
         try
         {
-            userManagerService.inviteUser( email, firstName, lastName, getContext().getLocale() );
+            userManagerService.inviteUser( email, firstName, lastName, UserRole.TEAM, getContext().getLocale() );
             dbOperationResult = USER_CREATED_RESPONSE;
         }
         catch ( DuplicateDataException e )
