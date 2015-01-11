@@ -134,11 +134,20 @@ war {
 // "Cobertura task"
 task("cobertura", dependsOn: 'jacocoTestReport') << {
 }
+build.dependsOn cobertura
+task createCoberturaWar(type: Zip, dependsOn: cobertura) {
+    from('build/reports/jacoco/test/html/'){
+    } 
+    from('etc/web-xmls/cobertura/'){
+    	include 'web.xml'
+        into('WEB-INF/')
+    } 
+    archiveName('fim-cobertura.war')
+}
+
 
 // javadoc settings
 build.dependsOn javadoc
-
-
 // Additional war files
 task createJavadocWar(type: Zip, dependsOn: javadoc) {
     from('build/docs/javadoc/'){
@@ -273,5 +282,5 @@ gretty {
 
 // Sample to see how to define such things
 test {
-    systemProperties 'property': 'value'
+    systemProperties 'test': 'true'
 }
