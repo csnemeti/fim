@@ -19,6 +19,8 @@ import pfa.alliance.fim.model.user.UserRole;
 import pfa.alliance.fim.service.UserManagerService;
 import pfa.alliance.fim.service.impl.DuplicateDataException;
 import pfa.alliance.fim.web.common.FimPageURLs;
+import pfa.alliance.fim.web.security.FimSecurity;
+import pfa.alliance.fim.web.security.Permission;
 import pfa.alliance.fim.web.stripes.action.BasePageActionBean;
 
 /**
@@ -27,6 +29,7 @@ import pfa.alliance.fim.web.stripes.action.BasePageActionBean;
  * @author Csaba
  */
 @UrlBinding( "/user/invite" )
+@FimSecurity( checkIfAll = { Permission.ADMIN_INVITE_USER } )
 public class InviteUserActionBean
     extends BasePageActionBean
 {

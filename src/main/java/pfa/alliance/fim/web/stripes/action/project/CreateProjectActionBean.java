@@ -2,7 +2,6 @@ package pfa.alliance.fim.web.stripes.action.project;
 
 import javax.inject.Inject;
 
-import net.sourceforge.stripes.action.ActionBeanContext;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
@@ -17,6 +16,8 @@ import pfa.alliance.fim.service.ProjectManagementService;
 import pfa.alliance.fim.service.impl.DuplicateDataException;
 import pfa.alliance.fim.web.common.FimPageURLs;
 import pfa.alliance.fim.web.security.AuthenticatedUserDTO;
+import pfa.alliance.fim.web.security.FimSecurity;
+import pfa.alliance.fim.web.security.Permission;
 import pfa.alliance.fim.web.security.SecurityUtil;
 import pfa.alliance.fim.web.stripes.action.BasePageActionBean;
 
@@ -27,6 +28,7 @@ import pfa.alliance.fim.web.stripes.action.BasePageActionBean;
  * @author Csaba
  */
 @UrlBinding( value = "/project/create" )
+@FimSecurity( checkIfAll = { Permission.PROJECT_CREATE_PROJECT } )
 public class CreateProjectActionBean
     extends BasePageActionBean
 {
@@ -71,21 +73,15 @@ public class CreateProjectActionBean
         this.projectManagementService = projectManagementService;
     }
 
-    @Override
-    public void setContext( ActionBeanContext context )
-    {
-        super.setContext( context );
-
-        // get the current user form session and configure values
-        AuthenticatedUserDTO user = SecurityUtil.getUserFromSession( getSession() );
-        ownerId = user.getId();
-        ownerName = user.getName();
-    }
-
     @DefaultHandler
     public Resolution goToHomePage()
     {
         LOG.debug( "Show page..." );
+        // get the current user form session and configure values
+        AuthenticatedUserDTO user = SecurityUtil.getUserFromSession( getSession() );
+        ownerId = user.getId();
+        ownerName = user.getName();
+        // redirect to JSP
         return new ForwardResolution( FimPageURLs.CREATE_PROJECT_JSP.getURL() );
     }
 

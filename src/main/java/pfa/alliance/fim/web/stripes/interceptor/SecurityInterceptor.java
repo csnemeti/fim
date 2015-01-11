@@ -36,6 +36,11 @@ public class SecurityInterceptor
 {
     private static final Logger LOG = LoggerFactory.getLogger( SecurityInterceptor.class );
 
+    public SecurityInterceptor()
+    {
+        LOG.info( "Starting security interceptor" );
+    }
+
     @Override
     public Resolution intercept( ExecutionContext context )
         throws Exception
