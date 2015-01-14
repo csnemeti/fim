@@ -82,7 +82,7 @@
 		<servlet-name>StripesDispatcher</servlet-name>
 		<url-pattern>/project/*</url-pattern>
 	</servlet-mapping>
-<!-- 	
+ 	
 	<security-constraint>
 		<web-resource-collection>
 			<web-resource-name>secure</web-resource-name>
@@ -92,5 +92,5 @@
 			<transport-guarantee>CONFIDENTIAL</transport-guarantee>
 		</user-data-constraint>
 	</security-constraint>
- -->	
+	
 </web-app>
