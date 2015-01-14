@@ -3,6 +3,8 @@
  */
 package pfa.alliance.fim.dao.impl;
 
+import static pfa.alliance.fim.dao.impl.DaoUtil.uniqueResult;
+
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,7 +14,6 @@ import java.util.Set;
 
 import javax.inject.Singleton;
 import javax.persistence.EntityManager;
-import javax.persistence.NonUniqueResultException;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -101,31 +102,6 @@ class UserRepositoryImpl
     static boolean isUserActive( User user )
     {
         return user != null && UserStatus.ACTIVE == user.getStatus();
-    }
-
-    /**
-     * Handle unique result.
-     * 
-     * @param users the list of users
-     * @return the result or null if {@link List} is empty
-     */
-    static <T> T uniqueResult( List<T> users )
-    {
-        T result = null;
-        switch ( users.size() )
-        {
-            case 0:
-                result = null;
-                break;
-            case 1:
-                result = users.get( 0 );
-                break;
-            default:
-                NonUniqueResultException ex = new NonUniqueResultException( users.size() + " > 1" );
-                LOG.error( "Got too many results for a unique result", ex );
-                throw ex;
-        }
-        return result;
     }
 
     @Override

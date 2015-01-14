@@ -14,6 +14,8 @@
 <a href="/fim/user/login">Login</a><br />
 <a href="/fim/project/create">Create project</a><br/>
 <a href="/fim/project/edit/users">Edit project users</a><br/>
+<a href="/fim/project/P1">P1 Project dashboard</a><br/>
+
 
 <h2>FIM Manifest</h2>
 <table style="border: 1px solid black">

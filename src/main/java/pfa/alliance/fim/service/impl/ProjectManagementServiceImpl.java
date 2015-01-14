@@ -16,6 +16,8 @@ import org.slf4j.LoggerFactory;
 
 import pfa.alliance.fim.dao.ProjectRepository;
 import pfa.alliance.fim.dao.UserRepository;
+import pfa.alliance.fim.dto.ProjectDTO;
+import pfa.alliance.fim.dto.UserDTO;
 import pfa.alliance.fim.model.project.Project;
 import pfa.alliance.fim.model.project.UserProjectRelation;
 import pfa.alliance.fim.model.project.UserRoleInsideProject;
@@ -23,6 +25,7 @@ import pfa.alliance.fim.model.user.User;
 import pfa.alliance.fim.service.ProjectManagementService;
 
 import com.google.inject.persist.Transactional;
+import com.google.inject.persist.UnitOfWork;
 
 /**
  * This is the implementation of {@link ProjectManagementService}
@@ -41,6 +44,9 @@ public class ProjectManagementServiceImpl
     /** The User repository to use in this class. */
     private final UserRepository userRepository;
 
+    /** For RO methods. */
+    private final UnitOfWork unitOfWork;
+
     /**
      * Called when instance of this class is created.
      * 
@@ -48,10 +54,12 @@ public class ProjectManagementServiceImpl
      * @param userRepository the instance of User repository to use in this class
      */
     @Inject
-    ProjectManagementServiceImpl( ProjectRepository projectRepository, UserRepository userRepository )
+    ProjectManagementServiceImpl( ProjectRepository projectRepository, UserRepository userRepository,
+                                  UnitOfWork unitOfWork )
     {
         this.projectRepository = projectRepository;
         this.userRepository = userRepository;
+        this.unitOfWork = unitOfWork;
     }
 
     @Override
@@ -149,4 +157,66 @@ public class ProjectManagementServiceImpl
         return project;
     }
 
+    @Override
+    public ProjectDTO getProjectDetails( String code )
+    {
+        LOG.debug( "Getting project Infor for code = {}", code );
+        // unitOfWork.begin();
+        try
+        {
+            Project project = projectRepository.findByCode( code );
+            ProjectDTO projectDTO = convertToProjectDTO( project );
+            LOG.debug( "Project code = {}, project = {}", code, projectDTO );
+            if ( projectDTO != null )
+            {
+                User owner = projectRepository.findOwnerForProject( project.getId() );
+                projectDTO.setOwner( convertToUserDTO( owner ) );
+            }
+            return projectDTO;
+        }
+        finally
+        {
+            // unitOfWork.end();
+        }
+    }
+
+    /**
+     * Convert {@link Project} into {@link ProjectDTO}
+     * 
+     * @param project the Project to be converted (could be null)
+     * @return the converted project or null if initial Project was null
+     */
+    private static ProjectDTO convertToProjectDTO( Project project )
+    {
+        ProjectDTO projectDTO = null;
+        if ( project != null )
+        {
+            projectDTO = new ProjectDTO();
+            projectDTO.setId( project.getId() );
+            projectDTO.setCode( project.getCode() );
+            projectDTO.setName( project.getName() );
+            projectDTO.setDescription( project.getDescription() );
+        }
+        return projectDTO;
+    }
+
+    /**
+     * Convert {@link User} into {@link UserDTO}
+     * 
+     * @param project the User to be converted (could be null)
+     * @return the converted user or null if initial User was null
+     */
+    private static UserDTO convertToUserDTO( User user )
+    {
+        UserDTO userDTO = null;
+        if ( user != null )
+        {
+            userDTO = new UserDTO();
+            userDTO.setId( user.getId() );
+            userDTO.setFirstName( user.getFirstName() );
+            userDTO.setLastName( user.getLastName() );
+            userDTO.setEmail( user.getEmail() );
+        }
+        return userDTO;
+    }
 }

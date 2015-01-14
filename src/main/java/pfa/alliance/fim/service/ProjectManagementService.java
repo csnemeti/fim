@@ -6,6 +6,7 @@ package pfa.alliance.fim.service;
 import java.util.Locale;
 import java.util.Map;
 
+import pfa.alliance.fim.dto.ProjectDTO;
 import pfa.alliance.fim.model.project.Project;
 import pfa.alliance.fim.model.project.UserRoleInsideProject;
 
@@ -29,4 +30,12 @@ public interface ProjectManagementService
      */
     Project create( String name, String code, String description, int creatorUserId,
                     Map<Integer, UserRoleInsideProject> additionalUsers, Locale locale );
+    
+    /**
+     * Gets a project details based on the given code.
+     * 
+     * @param code the code of the project
+     * @return the Project if found, null if not
+     */
+    ProjectDTO getProjectDetails( String code );
 }

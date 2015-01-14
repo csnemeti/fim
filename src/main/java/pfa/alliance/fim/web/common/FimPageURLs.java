@@ -21,6 +21,7 @@ public enum FimPageURLs
     USER_FORGOT_PASSWORD_JSP( "/WEB-INF/pages/user/user-forgotPassword.jsp" ),
     CREATE_PROJECT_PAGE("/project/create"),
     CREATE_PROJECT_JSP("/WEB-INF/pages/project/createProject.jsp"),
+    PROJECT_DASHBOARD_JSP( "/WEB-INF/pages/project/dashboard.jsp" ),
     EDIT_PROJECT_USERS_PAGE("/project/edit/users"),
     EDIT_PROJECT_USERS_JSP("/WEB-INF/pages/project/editProjectUsers.jsp");
 
