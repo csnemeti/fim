@@ -7,10 +7,8 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.EntityTransaction;
 import javax.persistence.NonUniqueResultException;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -115,7 +113,7 @@ public class UserRepositoryImplTest
     public void test_uniqueResult_noResults()
     {
         List<User> users = new ArrayList<User>();
-        User user = UserRepositoryImpl.uniqueResult( users );
+        User user = DaoUtil.uniqueResult( users );
         Assert.assertNull( "Should be null", user );
     }
 
@@ -126,7 +124,7 @@ public class UserRepositoryImplTest
         User dummy = new User();
         users.add( dummy );
 
-        User user = UserRepositoryImpl.uniqueResult( users );
+        User user = DaoUtil.uniqueResult( users );
 
         Assert.assertNotNull( "Should NOT be null", user );
         Assert.assertSame( "Wrong instance", dummy, user );
@@ -141,7 +139,7 @@ public class UserRepositoryImplTest
         dummy = new User();
         users.add( dummy );
 
-        UserRepositoryImpl.uniqueResult( users );
+        DaoUtil.uniqueResult( users );
     }
 
     @Test

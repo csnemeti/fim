@@ -25,7 +25,6 @@ import pfa.alliance.fim.model.user.User;
 import pfa.alliance.fim.service.ProjectManagementService;
 
 import com.google.inject.persist.Transactional;
-import com.google.inject.persist.UnitOfWork;
 
 /**
  * This is the implementation of {@link ProjectManagementService}
@@ -44,9 +43,6 @@ public class ProjectManagementServiceImpl
     /** The User repository to use in this class. */
     private final UserRepository userRepository;
 
-    /** For RO methods. */
-    private final UnitOfWork unitOfWork;
-
     /**
      * Called when instance of this class is created.
      * 
@@ -54,12 +50,10 @@ public class ProjectManagementServiceImpl
      * @param userRepository the instance of User repository to use in this class
      */
     @Inject
-    ProjectManagementServiceImpl( ProjectRepository projectRepository, UserRepository userRepository,
-                                  UnitOfWork unitOfWork )
+    ProjectManagementServiceImpl( ProjectRepository projectRepository, UserRepository userRepository )
     {
         this.projectRepository = projectRepository;
         this.userRepository = userRepository;
-        this.unitOfWork = unitOfWork;
     }
 
     @Override
