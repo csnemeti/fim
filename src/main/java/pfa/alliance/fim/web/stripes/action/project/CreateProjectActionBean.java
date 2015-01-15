@@ -96,6 +96,8 @@ public class CreateProjectActionBean
                    projectCode, ownerId );
         try
         {
+            AuthenticatedUserDTO user = SecurityUtil.getUserFromSession( getSession() );
+            ownerId = user.getId();
             Project project =
                 projectManagementService.create( projectName, projectCode, projectDescription, ownerId, null,
                                                  getContext().getLocale() );
