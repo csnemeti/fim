@@ -84,7 +84,7 @@ public class ProjectDTO
             if ( StringUtils.isNotBlank( name ) )
             {
                 separatorLeft = " ( ";
-                separatorRight = " ) ";
+                separatorRight = " )";
             }
             else
             {
