@@ -33,7 +33,7 @@ public class AbstractJpaRepository_Read_Test
     /** The logger used in this class. */
     private static final Logger LOG = LoggerFactory.getLogger( AbstractJpaRepository_Read_Test.class );
     
-    private static final int TOTAL_USERS_IN_DB = 6;
+    private static final int TOTAL_USERS_IN_DB = 9;
 
     private static UserRepositoryImplWithFind userRepositoryImpl;
 
