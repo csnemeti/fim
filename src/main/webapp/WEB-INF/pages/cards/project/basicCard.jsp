@@ -8,7 +8,8 @@
             	<div class="panel-heading">
                 	<div style="margin-left: 3px ; margin-right: 3px;" class="row">
                     	<div style="float:left;width: 100%">
-                        	<div class="medium" title="[localize] project name">${actionBean.project.name}</div>
+                    		<i class="fa ${actionBean.project.state.stateClass} fa-2x" title="${actionBean.stateTitle}"></i> &nbsp;
+                        	<span class="medium" title="[localize] project name">${actionBean.project.name}</span>
                         </div>
                  	</div>
               	</div>
@@ -27,8 +28,20 @@
                  	</div>
                 	<div style="margin-left: 5px ; margin-right: 5px;" class="row">
                     	<div style="float:left;">
+                        	<div class="medium" style="float:left;">State</div>
+                        	<div class="medium" style="flow:left;margin-left: 150px">${actionBean.stateTitle} since TIME (xx days)</div>
+                        </div>
+                 	</div>
+                	<div style="margin-left: 5px ; margin-right: 5px;" class="row">
+                    	<div style="float:left;">
                         	<div class="medium" style="float:left;">Description</div>
                         	<div class="medium" style="flow:left;margin-left: 150px">${actionBean.project.description}</div>
+                        </div>
+                 	</div>
+                	<div style="margin-left: 5px ; margin-right: 5px;" class="row">
+                    	<div style="float:left;">
+                        	<div class="medium" style="float:left;">Created at</div>
+                        	<div class="medium" style="flow:left;margin-left: 150px">${actionBean.stateTitle} since TIME (xx days)</div>
                         </div>
                  	</div>
               	</div>

@@ -1,10 +1,13 @@
 package pfa.alliance.fim.model.project;
 
+import java.sql.Timestamp;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -38,6 +41,19 @@ public class Project
 
     @Column( name = "description", length = 2000 )
     private String description;
+
+    /** The project state. */
+    @Enumerated( EnumType.STRING )
+    @Column( name = "project_state", length = 20, nullable = false )
+    private ProjectState state = ProjectState.IN_PREPARATION;
+
+    /** The time when project state was changed. */
+    @Column( name = "state_changed_at", nullable = false )
+    private Timestamp stateChangedAt = new Timestamp( System.currentTimeMillis() );
+
+    /** If this flag is set (has value true), project will not be listed in search. */
+    @Column( name = "hidden", nullable = false )
+    private boolean hidden = false;
 
     @OneToMany( fetch = FetchType.LAZY, mappedBy = "project", orphanRemoval = true, cascade = CascadeType.ALL )
     private Set<UserProjectRelation> userBoardData;
@@ -99,6 +115,36 @@ public class Project
         this.userBoardData = userBoardData;
     }
 
+    public ProjectState getState()
+    {
+        return state;
+    }
+
+    public void setState( ProjectState state )
+    {
+        this.state = state;
+    }
+
+    public Timestamp getStateChangedAt()
+    {
+        return stateChangedAt;
+    }
+
+    public void setStateChangedAt( Timestamp stateChangedAt )
+    {
+        this.stateChangedAt = stateChangedAt;
+    }
+
+    public boolean isHidden()
+    {
+        return hidden;
+    }
+
+    public void setHidden( boolean hidden )
+    {
+        this.hidden = hidden;
+    }
+
     @Override
     public int hashCode()
     {
@@ -107,6 +153,8 @@ public class Project
         hcb.append( code );
         hcb.append( name );
         hcb.append( description );
+        hcb.append( state );
+        hcb.append( hidden );
 
         return hcb.toHashCode();
     }
@@ -130,6 +178,8 @@ public class Project
         eb.append( code, that.code );
         eb.append( name, that.name );
         eb.append( description, that.description );
+        eb.append( state, that.state );
+        eb.append( hidden, that.hidden );
 
         return eb.isEquals();
     }
@@ -142,6 +192,8 @@ public class Project
         tsb.append( "id", id );
         tsb.append( "name", name );
         tsb.append( "code", code );
+        tsb.append( "state", state );
+        tsb.append( "hidden", hidden );
 
         return tsb.toString();
     }

@@ -190,6 +190,10 @@ public class ProjectManagementServiceImpl
             projectDTO.setCode( project.getCode() );
             projectDTO.setName( project.getName() );
             projectDTO.setDescription( project.getDescription() );
+            projectDTO.setCreateAt( project.getCreatedAt() );
+            projectDTO.setHidden( project.isHidden() );
+            projectDTO.setState( project.getState() );
+            projectDTO.setStateChangedAt( project.getStateChangedAt() );
         }
         return projectDTO;
     }

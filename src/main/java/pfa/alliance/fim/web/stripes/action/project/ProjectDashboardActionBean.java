@@ -86,4 +86,8 @@ public class ProjectDashboardActionBean
         return project;
     }
 
+    public String getStateTitle()
+    {
+        return "title";
+    }
 }
