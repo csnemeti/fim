@@ -13,7 +13,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pfa.alliance.fim.dto.ProjectDTO;
+import pfa.alliance.fim.model.project.ProjectState;
 import pfa.alliance.fim.service.ProjectManagementService;
+import pfa.alliance.fim.util.DateUtils;
 import pfa.alliance.fim.web.common.FimPageURLs;
 import pfa.alliance.fim.web.security.FimSecurity;
 import pfa.alliance.fim.web.stripes.action.BasePageActionBean;
@@ -86,8 +88,54 @@ public class ProjectDashboardActionBean
         return project;
     }
 
+    /**
+     * Gets the project state localized name.
+     * 
+     * @return the localized name
+     */
     public String getStateTitle()
     {
-        return "title";
+        ProjectState state = project.getState();
+        return getMessage( state.getDeclaringClass().getCanonicalName() + "." + state.name() );
+    }
+
+    /**
+     * Gets the formated time when project was created.
+     * 
+     * @return the formated time when project was created
+     */
+    public String getFormatedCreateAt()
+    {
+        return DateUtils.formatDate( project.getCreateAt(), DateUtils.DATETIME_FORMAT_DAY_FIRST );
+    }
+
+    /**
+     * Gets the formated time period since project was created.
+     * 
+     * @return the formated period
+     */
+    public String getFormatedCreatePeriod()
+    {
+        return getFormatedUntilNowPeriod( project.getCreateAt() );
+    }
+
+    /**
+     * Gets the formated time when last state change was made.
+     * 
+     * @return the formated time when last state change was made
+     */
+    public String getFormatedLastStateChange()
+    {
+        return DateUtils.formatDate( project.getStateChangedAt(), DateUtils.DATETIME_FORMAT_DAY_FIRST );
+    }
+
+    /**
+     * Gets the formated time period since last state change was made.
+     * 
+     * @return the formated period
+     */
+    public String getFormatedLastStateChangePeriod()
+    {
+        return getFormatedUntilNowPeriod( project.getStateChangedAt() );
     }
 }
