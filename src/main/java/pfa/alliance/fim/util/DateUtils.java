@@ -158,10 +158,9 @@ public class DateUtils
     }
 
     /**
-     * Builds a time period.
+     * Builds a time period using current time as end date.
      * 
      * @param from from time
-     * @param to to time
      * @return the time period
      */
     public static Period buildTimePeriodUntilNow( Date from )
