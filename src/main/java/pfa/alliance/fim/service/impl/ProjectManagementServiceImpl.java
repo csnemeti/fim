@@ -53,6 +53,7 @@ public class ProjectManagementServiceImpl
 
     private final EmailGeneratorService emailGeneratorService;
 
+    /** Service used for generating URLs inside FIM. */
     private final FimUrlGeneratorService fimUrlGeneratorService;
 
     /**
@@ -60,6 +61,9 @@ public class ProjectManagementServiceImpl
      * 
      * @param projectRepository the instance of Project repository to use in this class
      * @param userRepository the instance of User repository to use in this class
+     * @param emailService the instance of service used for sending e-mails
+     * @param emailGeneratorService the instance of service used for generating e-mails
+     * @param fimUrlGeneratorService the instance of service used for generating full URLs inside FIM
      */
     @Inject
     ProjectManagementServiceImpl( ProjectRepository projectRepository, UserRepository userRepository,

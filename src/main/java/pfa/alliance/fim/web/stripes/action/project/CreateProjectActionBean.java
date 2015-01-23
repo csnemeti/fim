@@ -4,6 +4,7 @@ import javax.inject.Inject;
 
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.UrlBinding;
 import net.sourceforge.stripes.validation.Validate;
@@ -12,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pfa.alliance.fim.model.project.Project;
+import pfa.alliance.fim.service.FimUrlGeneratorService;
 import pfa.alliance.fim.service.ProjectManagementService;
 import pfa.alliance.fim.service.impl.DuplicateDataException;
 import pfa.alliance.fim.web.common.FimPageURLs;
@@ -58,6 +60,9 @@ public class CreateProjectActionBean
 
     private final ProjectManagementService projectManagementService;
 
+    /** Service used for generating URLs inside FIM. */
+    private final FimUrlGeneratorService fimUrlGeneratorService;
+
     private final static String PROJECT_CREATED_RESPONSE = "project.projectCreated";
 
     private final static String DUPLICATE_PROJECT_DATA_RESPONSE = "project.duplicateProjectData";
@@ -66,11 +71,14 @@ public class CreateProjectActionBean
      * Called when instance of this class is created.
      * 
      * @param projectManagementService the {@link ProjectManagementService} instance to be used in this class
+     * @param fimUrlGeneratorService the instance of service used for generating full URLs inside FIM
      */
     @Inject
-    public CreateProjectActionBean( ProjectManagementService projectManagementService )
+    public CreateProjectActionBean( ProjectManagementService projectManagementService,
+                                    FimUrlGeneratorService fimUrlGeneratorService )
     {
         this.projectManagementService = projectManagementService;
+        this.fimUrlGeneratorService = fimUrlGeneratorService;
     }
 
     @DefaultHandler
@@ -102,12 +110,15 @@ public class CreateProjectActionBean
                 projectManagementService.create( projectName, projectCode, projectDescription, ownerId, null,
                                                  getContext().getLocale() );
             dbOperationResult = PROJECT_CREATED_RESPONSE;
+            // create URL to project
+            String url = fimUrlGeneratorService.getProjectLink( project.getCode() );
+            return new RedirectResolution( url, false );
         }
         catch ( DuplicateDataException e )
         {
             dbOperationResult = DUPLICATE_PROJECT_DATA_RESPONSE;
+            return new ForwardResolution( FimPageURLs.CREATE_PROJECT_JSP.getURL() );
         }
-        return new ForwardResolution( FimPageURLs.CREATE_PROJECT_JSP.getURL() );
     }
 
     public String getProjectName()
