@@ -83,7 +83,7 @@ dependencies {
     compile ('net.sourceforge.stripes:stripes:1.5.8') {
         exclude module: 'log4j'
     }  
-    //compile 'taglibs:standard:1.1.2'
+    compile 'taglibs:standard:1.1.2'
     compile 'javax.servlet.jsp.jstl:javax.servlet.jsp.jstl-api:1.2.1'  
     // e-mail sending
     compile 'javax.mail:mail:1.4.7'
