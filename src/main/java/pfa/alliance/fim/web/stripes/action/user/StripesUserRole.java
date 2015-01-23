@@ -15,6 +15,8 @@ import pfa.alliance.fim.model.user.UserRole;
 public class StripesUserRole
     implements Serializable
 {
+    private static final long serialVersionUID = -8955465921568929223L;
+
     /** The object ID, the enumeration name. This will be set on Option value. */
     private String id;
 
