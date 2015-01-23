@@ -11,5 +11,5 @@ package pfa.alliance.fim.service;
 public enum EmailType
     implements NameProvider
 {
-    REGISTER_USER, INVITE_USER, FORGOT_PASSWORD
+    REGISTER_USER, INVITE_USER, FORGOT_PASSWORD, CREATE_PROJECT;
 }

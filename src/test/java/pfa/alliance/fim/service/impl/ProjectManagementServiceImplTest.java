@@ -17,6 +17,9 @@ import pfa.alliance.fim.dao.UserRepository;
 import pfa.alliance.fim.dto.ProjectDTO;
 import pfa.alliance.fim.model.project.Project;
 import pfa.alliance.fim.model.user.User;
+import pfa.alliance.fim.service.EmailGeneratorService;
+import pfa.alliance.fim.service.EmailService;
+import pfa.alliance.fim.service.FimUrlGeneratorService;
 
 /**
  * This class is used for testing {@link ProjectManagementServiceImpl}
@@ -31,13 +34,24 @@ public class ProjectManagementServiceImplTest
 
     private UserRepository userRepositoryMock;
 
+    private EmailService emailServiceMock;
+
+    private EmailGeneratorService emailGeneratorServiceMock;
+
+    private FimUrlGeneratorService fimUrlGeneratorServiceMock;
+
     @Before
     public void init()
     {
         projectRepositoryMock = Mockito.mock( ProjectRepository.class );
         userRepositoryMock = Mockito.mock( UserRepository.class );
+        emailServiceMock = Mockito.mock( EmailService.class );
+        emailGeneratorServiceMock = Mockito.mock( EmailGeneratorService.class );
+        fimUrlGeneratorServiceMock = Mockito.mock( FimUrlGeneratorService.class );
 
-        projectManagementServiceImpl = new ProjectManagementServiceImpl( projectRepositoryMock, userRepositoryMock );
+        projectManagementServiceImpl =
+            new ProjectManagementServiceImpl( projectRepositoryMock, userRepositoryMock, emailServiceMock,
+                                              emailGeneratorServiceMock, fimUrlGeneratorServiceMock );
     }
 
     @Test( expected = DuplicateDataException.class )

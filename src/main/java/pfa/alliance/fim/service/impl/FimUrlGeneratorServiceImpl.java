@@ -60,6 +60,12 @@ public class FimUrlGeneratorServiceImpl
         return result;
     }
 
+    @Override
+    public String getProjectLink( String projectCode )
+    {
+        return getBaseLink() + "project/show/" + projectCode;
+    }
+
     /**
      * Gets the F.I.M. base link.
      * 

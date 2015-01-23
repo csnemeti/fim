@@ -25,7 +25,7 @@ import pfa.alliance.fim.web.stripes.action.BasePageActionBean;
  * 
  * @author Csaba
  */
-@UrlBinding( value = "/project/{code}" )
+@UrlBinding( value = "/project/show/{code}" )
 @FimSecurity
 public class ProjectDashboardActionBean
     extends BasePageActionBean

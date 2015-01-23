@@ -1,0 +1,15 @@
+<html>
+<head>
+	<title>New Project ($projectName) created.</title>
+<head>
+<body>
+	<h1>New Project ($projectName) created.</h1>
+<p>Hello $userName,</p>
+<p>A new project was created with name <b>$projectName</b>. You can see the project at</p>
+<a href="$link">$link</a>
+<p>link. You received this e-mail because you are set OWNER of this project.</p>
+
+Regards,<br />
+Free Issue Manager Team
+</body>
+</html>

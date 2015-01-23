@@ -49,9 +49,16 @@ public class EmailGeneratorServiceImpl
         LOG.debug( "Getting subject for: EmailType = {}, parameters = {}, locale = {}", emailType, parameters, locale );
         ResourceBundle stripesResourceBundle = ResourceBundle.getBundle( "StripesResources", locale, utf8Rbontrol );
         String message = stripesResourceBundle.getString( "email.subject." + emailType );
-        // TODO process message
+        // process message
         LOG.debug( "Subject for: EmailType = {}, parameters = {}, locale = {} --> {}", emailType, parameters, locale,
                    message );
+        if ( parameters != null )
+        {
+            for ( Map.Entry<String, Object> parameter : parameters.entrySet() )
+            {
+                message = message.replaceAll( "\\{" + parameter.getKey() + "\\}", parameter.getValue().toString() );
+            }
+        }
         return message;
     }
 
@@ -60,8 +67,8 @@ public class EmailGeneratorServiceImpl
     {
         LOG.debug( "Getting content for: EmailType = {}, parameters = {}, locale = {}", emailType, parameters, locale );
         VelocityEngine ve = new VelocityEngine();
-        ve.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath"); 
-        ve.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
+        ve.setProperty( RuntimeConstants.RESOURCE_LOADER, "classpath" );
+        ve.setProperty( "classpath.resource.loader.class", ClasspathResourceLoader.class.getName() );
         ve.init();
         Template template =
             ve.getTemplate( "email/" + emailType.name().toLowerCase() + "_" + locale.getLanguage() + ".vm", "UTF-8" );
