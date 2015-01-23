@@ -3,6 +3,9 @@
  */
 package pfa.alliance.fim.web.stripes.action.user;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 
 import net.sourceforge.stripes.action.DefaultHandler;
@@ -47,6 +50,8 @@ public class InviteUserActionBean
     @Validate( required = true, trim = true, converter = EmailTypeConverter.class, on = "tryRegister" )
     private String email;
 
+    private UserRole defaultRole = UserRole.TEAM;
+
     /** Message key regarding Database operation */
     private String dbOperationResult;
 
@@ -75,10 +80,11 @@ public class InviteUserActionBean
      */
     public Resolution tryRegister()
     {
-        LOG.debug( "Inviting user: firstName = {}, lastName = {}, email = {}", firstName, lastName, email );
+        LOG.debug( "Inviting user: firstName = {}, lastName = {}, email = {}, default role = {}", firstName, lastName,
+                   email, defaultRole );
         try
         {
-            userManagerService.inviteUser( email, firstName, lastName, UserRole.TEAM, getContext().getLocale() );
+            userManagerService.inviteUser( email, firstName, lastName, defaultRole, getContext().getLocale() );
             dbOperationResult = USER_CREATED_RESPONSE;
         }
         catch ( DuplicateDataException e )
@@ -129,4 +135,26 @@ public class InviteUserActionBean
         return result;
     }
 
+    public String getDefaultRole()
+    {
+        return defaultRole.name();
+    }
+
+    public void setDefaultRole( String defaultRole )
+    {
+        this.defaultRole = UserRole.valueOf( defaultRole );
+    }
+
+    public List<StripesUserRole> getDefaultRoles()
+    {
+        List<StripesUserRole> roles = new ArrayList<StripesUserRole>();
+        UserRole[] orderedRoles =
+            new UserRole[] { UserRole.ADMIN, UserRole.PROJECT_ADMIN, UserRole.PRODUCT_OWNER, UserRole.SCRUM_MASTER,
+                UserRole.TEAM, UserRole.STATISTICAL };
+        for ( UserRole role : orderedRoles )
+        {
+            roles.add( new StripesUserRole( role, getMessage( role.getDeclaringClass().getName() + "." + role.name() ) ) );
+        }
+        return roles;
+    }
 }
