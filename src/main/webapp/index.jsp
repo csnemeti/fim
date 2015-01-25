@@ -9,10 +9,8 @@
 </style>
 <body>
 <h1>FIM</h1>
-<a href="/fim/user/dashboard">Dashboard</a><br />
 <a href="/fim/user/register">Register</a><br />
 <a href="/fim/user/login">Login</a><br />
-<a href="/fim/project/create">Create project</a><br/>
 <a href="/fim/project/edit/users">Edit project users</a><br/>
 <a href="/fim/project/show/P1">P1 Project dashboard</a><br/>
 

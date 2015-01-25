@@ -17,10 +17,10 @@
 				</stripes:link>				
 			</li>
 			<li>
-				<a href="#">
+				<stripes:link beanclass="pfa.alliance.fim.web.stripes.action.user.SearchUsersActionBean">
 					<i class="fa fa-search fa-fw"></i>
 					<stripes:label for="searchUsersItem" />
-				</a>
+				</stripes:link>				
 			</li>
 		</ul>
 	</li>
