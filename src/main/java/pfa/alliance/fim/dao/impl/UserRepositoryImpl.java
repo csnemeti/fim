@@ -20,10 +20,13 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pfa.alliance.fim.dao.UserRepository;
+import pfa.alliance.fim.dto.UserSearchDTO;
+import pfa.alliance.fim.dto.UserSearchResultDTO;
 import pfa.alliance.fim.model.user.OneTimeLinkType;
 import pfa.alliance.fim.model.user.User;
 import pfa.alliance.fim.model.user.UserLogin;
@@ -170,6 +173,35 @@ class UserRepositoryImpl
     }
 
     @Override
+    public long count( UserSearchDTO searchCriteria )
+    {
+        EntityManager em = getEntityManager();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Long> criteria = cb.createQuery( Long.class );
+        Root<User> root = criteria.from( User.class );
+        criteria.select( cb.count( root ) );
+        // add where constraints
+        
+        // countCriteria.where( restrictions )
+        TypedQuery<Long> query = em.createQuery( criteria );
+        return query.getSingleResult();
+    }
+
+    @Override
+    public List<UserSearchResultDTO> search( UserSearchDTO searchCriteria )
+    {
+        EntityManager em = getEntityManager();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        // TODO we should use projection here but Batoo has a problem with String -> enum convertion
+        // CriteriaQuery<UserSearchResultDTO> countCriteria = cb.createQuery( UserSearchResultDTO.class );
+        CriteriaQuery<User> criteria = cb.createQuery( User.class );
+        criteria.from( User.class );
+        TypedQuery<User> query = em.createQuery( criteria );
+        List<User> result = query.getResultList();
+        return convertToUserSearchResultDTO( result );
+    }
+
+    @Override
     protected Class<User> getEntityClass()
     {
         return User.class;
@@ -179,6 +211,20 @@ class UserRepositoryImpl
     protected Class<Integer> getIdClass()
     {
         return Integer.class;
+    }
+
+    private static List<UserSearchResultDTO> convertToUserSearchResultDTO( List<User> users )
+    {
+        List<UserSearchResultDTO> result = new ArrayList<>();
+        if ( CollectionUtils.isNotEmpty( users ) )
+        {
+            for ( User user : users )
+            {
+                result.add( new UserSearchResultDTO( user.getId(), user.getFirstName(), user.getLastName(),
+                                                     user.getEmail(), user.getStatus(), user.getDefaultRole() ) );
+            }
+        }
+        return result;
     }
 
     static class UserLoginComparator

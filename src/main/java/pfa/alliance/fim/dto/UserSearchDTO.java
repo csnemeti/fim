@@ -22,6 +22,10 @@ public class UserSearchDTO
 
     private String[] roles;
 
+    private int startIndex;
+
+    private int itemsPerPage;
+
     public String getFirstName()
     {
         return firstName;
@@ -62,10 +66,31 @@ public class UserSearchDTO
         this.roles = roles;
     }
 
+    public int getStartIndex()
+    {
+        return startIndex;
+    }
+
+    public void setStartIndex( int startIndex )
+    {
+        this.startIndex = startIndex;
+    }
+
+    public int getItemsPerPage()
+    {
+        return itemsPerPage;
+    }
+
+    public void setItemsPerPage( int itemsPerPage )
+    {
+        this.itemsPerPage = itemsPerPage;
+    }
+
     @Override
     public String toString()
     {
-        return "UserSearchDTO [firstName=" + firstName + ", lastName=" + lastName + ", email=" + email + ", roles="
+        return "UserSearchDTO [firstName=" + firstName + ", lastName=" + lastName + ", email=" + email
+            + ", startIndex=" + startIndex + ", itemsPerPage=" + itemsPerPage + ", roles="
             + Arrays.toString( roles ) + "]";
     }
 

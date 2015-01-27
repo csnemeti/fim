@@ -6,6 +6,7 @@ package pfa.alliance.fim.service.impl;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -23,6 +24,8 @@ import org.slf4j.LoggerFactory;
 
 import pfa.alliance.fim.dao.UserOneTimeLinkRepository;
 import pfa.alliance.fim.dao.UserRepository;
+import pfa.alliance.fim.dto.UserSearchDTO;
+import pfa.alliance.fim.dto.UserSearchResultDTO;
 import pfa.alliance.fim.model.user.OneTimeLinkType;
 import pfa.alliance.fim.model.user.User;
 import pfa.alliance.fim.model.user.UserOneTimeLink;
@@ -432,5 +435,19 @@ class UserManagerServiceImpl
         link.getUser().setStatus( UserStatus.ACTIVE );
         // this will make the link expired
         link.setExpiresAt( new Timestamp( System.currentTimeMillis() ) );
+    }
+
+    @Override
+    public long count( UserSearchDTO criteria )
+    {
+        LOG.debug( "Count the users matching criteria: {}", criteria );
+        return userRepository.count( criteria );
+    }
+
+    @Override
+    public List<UserSearchResultDTO> search( UserSearchDTO criteria )
+    {
+        LOG.debug( "Getting the users matching criteria: {}", criteria );
+        return userRepository.search( criteria );
     }
 }

@@ -25,13 +25,14 @@
 					numberDisplayed: 1
 				});
 			<c:if test="${actionBean.showResults}">				
-				$('#users').dataTable( {
-					"jQueryUI":       true,
+				var searchResultTable = $('#users').dataTable( {
+					<%-- UI change. --%>
+				    "jQueryUI" :  true,
 			        <%-- Search in table is off. --%>
 					"searching" : false,
 			        "processing": true,
 			        <%-- Default ordering, last name --%>
-			        "order": [[ 1, "asc" ]],
+			        "order": [[ 3, "asc" ]],
 			        <%-- Set as items / page options 25, 50, 100 with 25 as default. 
 			        First set is the value sent with request, second set represents the values to display. --%>
 			        "iDisplayLength": 25,
@@ -41,8 +42,34 @@
 			        "ajax": {
 			        	"url" : "<c:url value="${actionBean.resultsUrl}" />",
 			        	"type": "POST"
-			        }
+			        },
+			        "oLanguage": 
+				            {"oPaginate": 
+				                  {
+				                  "sNext": '&gt;',
+				                  "sLast": '&gt;&gt;',
+				                  "sFirst": '&lt;&lt;',
+				                  "sPrevious": '&lt;'
+				                  }
+				            //}
+	            			},
+	            "aoColumns": [
+	                          { "mData" : null, "sWidth":"25px", "bSortable": false, "mRender": function (data) {return '';}},
+	                          { "mData" : null, "sWidth":"25px", "bSortable": false, "mRender": function (data) {return '222';}},
+	                          { "mData" : "firstName"}, 
+	                          { "mData" : "lastName"}, 
+	                          { "mData" : "email"},
+	                          { "mData" : "defaultRole", "bSortable": false}, 
+	                          { "mData" : null, "bSortable": false, "mRender": function (data) {return '333';}} 
+	                      ]
 			    } );
+/*				
+				searchResultTable.on( 'order.dt search.dt', function () {
+					searchResultTable.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+			            cell.innerHTML = i+1;
+			        } );
+			    } ).draw();
+*/			    
 			</c:if>
 				// validate the comment form when it is submitted
 /* 				$("#loginForm").validate({
@@ -103,6 +130,8 @@
         	<table id="users" class="table table-striped table-bordered" cellspacing="0" width="100%">
        	        <thead>
 		            <tr>
+		                <th></th>
+		                <th></th>
 		                <th>First Name</th>
 		                <th>Last Name</th>
 		                <th>E-mail</th>
@@ -112,6 +141,8 @@
 		        </thead>
        	        <tfoot>
 		            <tr>
+		                <th></th>
+		                <th></th>
 		                <th>First Name</th>
 		                <th>Last Name</th>
 		                <th>E-mail</th>

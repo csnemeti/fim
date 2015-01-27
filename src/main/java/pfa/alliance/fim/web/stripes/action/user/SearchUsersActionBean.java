@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pfa.alliance.fim.dto.UserSearchDTO;
+import pfa.alliance.fim.dto.UserSearchResultDTO;
 import pfa.alliance.fim.model.user.UserRole;
 import pfa.alliance.fim.service.UserManagerService;
 import pfa.alliance.fim.web.common.FimPageURLs;
@@ -49,6 +50,9 @@ public class SearchUsersActionBean
 
     private boolean showResults = false;
 
+    /** Used in search result, this is a flag we need to respond with when return results. */
+    private int draw;
+
     /** The instance of {@link UserManagerService} to be used. */
     private final UserManagerService userManagerService;
 
@@ -66,6 +70,12 @@ public class SearchUsersActionBean
         return new ForwardResolution( FimPageURLs.USER_SEARCH_JSP.getURL() );
     }
 
+    /**
+     * This method is built to display the search result page. The method will not do the search itself. The search is
+     * controlled from client side where items / page, ordering criteria and other properties can be specified.
+     * 
+     * @return the forward to User search page
+     */
     public Resolution search()
     {
         LOG.debug( "Searching for: {}", userSearch );
@@ -73,13 +83,29 @@ public class SearchUsersActionBean
         return new ForwardResolution( FimPageURLs.USER_SEARCH_JSP.getURL() );
     }
 
+    /**
+     * This method is called through AJAX from DataTables in order to fill in the results.
+     * 
+     * @return a JSon with results
+     */
     public Resolution results()
     {
         LOG.debug( "Results for: {}", userSearch );
         JSONObject result = new JSONObject();
-        result.put( "recordsTotal", 0 );
-        // result.put( "recordsTotal", 0 );
-        result.put( "data", new ArrayList<UserSearchDTO>() );
+        result.put( "draw", draw );
+        long resultsNumber = userManagerService.count( userSearch );
+        result.put( "recordsTotal", resultsNumber );
+        List<UserSearchResultDTO> filteredResults;
+        if ( resultsNumber != 0L )
+        {
+            filteredResults = userManagerService.search( userSearch );
+        }
+        else
+        {
+            filteredResults = new ArrayList<>();
+        }
+        result.put( "recordsFiltered", filteredResults.size() );
+        result.put( "data", filteredResults );
         return new StreamingResolution( "application/json", new StringReader( result.toString() ) );
     }
 
@@ -184,5 +210,30 @@ public class SearchUsersActionBean
             }
         }
         return results.toArray();
+    }
+
+    public void setDraw( int draw )
+    {
+        this.draw = draw;
+    }
+
+    /**
+     * Used in search result, this is a flag telling us the index of the item is search start offset.
+     * 
+     * @param the start index
+     */
+    public void setStart( int start )
+    {
+        userSearch.setStartIndex( start );
+    }
+
+    /**
+     * Used in search result, this is a flag telling us expected items per page.
+     * 
+     * @param length the items per page
+     */
+    public void setLength( int length )
+    {
+        userSearch.setItemsPerPage( length );
     }
 }
