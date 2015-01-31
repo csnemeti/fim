@@ -56,6 +56,11 @@ public abstract class BaseActionBean
         return new LocalizableMessage( key, parameters ).getMessage( context.getLocale() );
     }
 
+    protected String getEnumMessage( Enum<?> value )
+    {
+        return getMessage( value.getDeclaringClass().getName() + "." + value.name() );
+    }
+
     /**
      * Gets a formated period representing the time difference from the past date until now.
      * 

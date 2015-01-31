@@ -7,6 +7,15 @@
 		<link rel="stylesheet" href="<stripes:url value="/js/datatables.net-1.10.4/jquery.dataTables.min.css" />" type="text/css"/>
 		<link rel="stylesheet" href="<stripes:url value="/js/datatables.net-1.10.4/jquery-ui.css" />" type="text/css"/>
 		<link rel="stylesheet" href="<stripes:url value="/js/datatables.net-1.10.4/jquery.dataTables_themeroller.css" />" type="text/css"/>
+		<style type="text/css">
+			img.userState {
+				width:  25px;
+				height: 25px;
+			}
+			.rowIndex {
+				text-align: right;
+			}
+		</style>
 		
 		<script type="text/javascript" src="<stripes:url value="/js/bootstrap-multiselect/js/bootstrap-multiselect.js" />"></script>
 		<script type="text/javascript" src="<stripes:url value="/js/datatables.net-1.10.4/jquery.dataTables.min.js" />"></script>
@@ -16,14 +25,18 @@
 		<script type="text/javascript" src="<stripes:url value="/js/jquery-validation-1.13.0/localization/messages_en.min.js" />"></script>
 		
 		<script type="text/javascript">
+			var localeMap = ${actionBean.localizationString};
 			function clearFormContent(theForm){
 				$("#" + theForm.id + " :text").val("");
 			}
 			function localizeText(text){
-				return "[localize] " + text;
+				return localeMap[text];
 			}
 			function buildUserStatusImage(userStatus){
-				return "status " + userStatus;
+				var abc = "<img class='userState' src='<c:url value="/images/user-state/" />" + userStatus.toLowerCase() + ".png' title='" + localizeText(userStatus) + "' />";
+				console.log("abc = ", abc);
+				//abc = "abc";
+				return abc;
 			}
 			
 			$().ready(function() {
@@ -61,19 +74,15 @@
 	            			},
 	            	<%-- Column definition. --%>
 	            	"aoColumns": [
-	                          { "mData" : null, "sWidth":"25px", "bSortable": false, "mRender": function (data) { return data.indexInTotalResults + 1;}},
-	                          { "mData" : null, "sWidth":"25px", "bSortable": false, 
-	                        	  "mRender": function (data) {
-	                        	  		return buildUserStatusImage(data.userStatusAsText);
-	                        		}
-	                          },
+	                          { "mData" : null, "sWidth":"25px", "bSortable": false, "sClass": "rowIndex", "mRender": function (data) { return data.indexInTotalResults + 1;}},
+	                          { "mData" : null, "sWidth":"25px", "bSortable": false, "mRender": function (data) {return buildUserStatusImage(data.userStatusAsText);}},
 	                          { "mData" : "firstName"}, 
 	                          { "mData" : "lastName"}, 
 	                          { "mData" : "email"},
 	                          { "mData" : null, "bSortable": false, "mRender": function (data) {return localizeText(data.defaultRoleAsText);}}, 
 	                          { "mData" : null, "bSortable": false, "mRender": function (data) {return "actions";}} 
 	                      ]
-			    	} );
+			    	});
 /*				
 				searchResultTable.on( 'order.dt search.dt', function () {
 					searchResultTable.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {

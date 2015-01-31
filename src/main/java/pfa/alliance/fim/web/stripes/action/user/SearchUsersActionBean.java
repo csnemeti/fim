@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import pfa.alliance.fim.dto.UserSearchDTO;
 import pfa.alliance.fim.dto.UserSearchResultDTO;
 import pfa.alliance.fim.model.user.UserRole;
+import pfa.alliance.fim.model.user.UserStatus;
 import pfa.alliance.fim.service.UserManagerService;
 import pfa.alliance.fim.web.common.FimPageURLs;
 import pfa.alliance.fim.web.security.FimSecurity;
@@ -152,7 +153,7 @@ public class SearchUsersActionBean
                 UserRole.TEAM, UserRole.STATISTICAL };
         for ( UserRole role : orderedRoles )
         {
-            roles.add( new StripesUserRole( role, getMessage( role.getDeclaringClass().getName() + "." + role.name() ) ) );
+            roles.add( new StripesUserRole( role, getEnumMessage( role ) ) );
         }
         return roles;
     }
@@ -235,5 +236,19 @@ public class SearchUsersActionBean
     public void setLength( int length )
     {
         userSearch.setItemsPerPage( length );
+    }
+
+    public String getLocalizationString()
+    {
+        JSONObject root = new JSONObject();
+        for ( UserStatus userStatus : UserStatus.values() )
+        {
+            root.put( userStatus.name(), getEnumMessage( userStatus ) );
+        }
+        for ( UserRole role : UserRole.values() )
+        {
+            root.put( role.name(), getEnumMessage( role ) );
+        }
+        return root.toString();
     }
 }
