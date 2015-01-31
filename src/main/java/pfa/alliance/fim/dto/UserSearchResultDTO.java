@@ -14,9 +14,16 @@ import pfa.alliance.fim.model.user.UserStatus;
 public class UserSearchResultDTO
     extends UserDTO
 {
-    private UserRole defaultRole;
+    /** This represents the index value of this item in the total results list. */
+    private int indexInTotalResults;
+    /** This represents the index value of this item in the currently displayed results list. */
+    private int indexInCurrentResults;
 
-    private UserStatus userStatus;
+    /** Textual name of the default role. */
+    private String defaultRoleAsText;
+
+    /** Textual name of the user status. */
+    private String userStatusAsText;
 
     /**
      * Called when instance of this class is created.
@@ -38,28 +45,46 @@ public class UserSearchResultDTO
                                 UserRole defaultRole )
     {
         super( id, firstName, lastName, email );
-        this.userStatus = userStatus;
-        this.defaultRole = defaultRole;
-    }
-
-    public UserRole getDefaultRole()
-    {
-        return defaultRole;
+        setUserStatus( userStatus );
+        setDefaultRole( defaultRole );
     }
 
     public void setDefaultRole( UserRole defaultRole )
     {
-        this.defaultRole = defaultRole;
+        this.defaultRoleAsText = defaultRole.name();
     }
-
-    public UserStatus getUserStatus()
-    {
-        return userStatus;
-    }
-
     public void setUserStatus( UserStatus userStatus )
     {
-        this.userStatus = userStatus;
+        this.userStatusAsText = userStatus.name();
     }
 
+    public int getIndexInTotalResults()
+    {
+        return indexInTotalResults;
+    }
+
+    public void setIndexInTotalResults( int indexInTotalResults )
+    {
+        this.indexInTotalResults = indexInTotalResults;
+    }
+
+    public int getIndexInCurrentResults()
+    {
+        return indexInCurrentResults;
+    }
+
+    public void setIndexInCurrentResults( int indexInCurrentResults )
+    {
+        this.indexInCurrentResults = indexInCurrentResults;
+    }
+
+    public String getDefaultRoleAsText()
+    {
+        return defaultRoleAsText;
+    }
+
+    public String getUserStatusAsText()
+    {
+        return userStatusAsText;
+    }
 }

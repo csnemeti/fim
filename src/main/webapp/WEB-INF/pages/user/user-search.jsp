@@ -19,6 +19,12 @@
 			function clearFormContent(theForm){
 				$("#" + theForm.id + " :text").val("");
 			}
+			function localizeText(text){
+				return "[localize] " + text;
+			}
+			function buildUserStatusImage(userStatus){
+				return "status " + userStatus;
+			}
 			
 			$().ready(function() {
 				$('#roles').multiselect({
@@ -43,6 +49,7 @@
 			        	"url" : "<c:url value="${actionBean.resultsUrl}" />",
 			        	"type": "POST"
 			        },
+			        <%-- Pagination, no localization is necessary. --%>
 			        "oLanguage": 
 				            {"oPaginate": 
 				                  {
@@ -51,18 +58,22 @@
 				                  "sFirst": '&lt;&lt;',
 				                  "sPrevious": '&lt;'
 				                  }
-				            //}
 	            			},
-	            "aoColumns": [
-	                          { "mData" : null, "sWidth":"25px", "bSortable": false, "mRender": function (data) {return '';}},
-	                          { "mData" : null, "sWidth":"25px", "bSortable": false, "mRender": function (data) {return '222';}},
+	            	<%-- Column definition. --%>
+	            	"aoColumns": [
+	                          { "mData" : null, "sWidth":"25px", "bSortable": false, "mRender": function (data) { return data.indexInTotalResults + 1;}},
+	                          { "mData" : null, "sWidth":"25px", "bSortable": false, 
+	                        	  "mRender": function (data) {
+	                        	  		return buildUserStatusImage(data.userStatusAsText);
+	                        		}
+	                          },
 	                          { "mData" : "firstName"}, 
 	                          { "mData" : "lastName"}, 
 	                          { "mData" : "email"},
-	                          { "mData" : "defaultRole", "bSortable": false}, 
-	                          { "mData" : null, "bSortable": false, "mRender": function (data) {return '333';}} 
+	                          { "mData" : null, "bSortable": false, "mRender": function (data) {return localizeText(data.defaultRoleAsText);}}, 
+	                          { "mData" : null, "bSortable": false, "mRender": function (data) {return "actions";}} 
 	                      ]
-			    } );
+			    	} );
 /*				
 				searchResultTable.on( 'order.dt search.dt', function () {
 					searchResultTable.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {

@@ -197,8 +197,11 @@ class UserRepositoryImpl
         CriteriaQuery<User> criteria = cb.createQuery( User.class );
         criteria.from( User.class );
         TypedQuery<User> query = em.createQuery( criteria );
+        final int offset = searchCriteria.getStartIndex();
+        query.setFirstResult( offset );
+        query.setMaxResults( searchCriteria.getItemsPerPage() );
         List<User> result = query.getResultList();
-        return convertToUserSearchResultDTO( result );
+        return convertToUserSearchResultDTO( result, offset );
     }
 
     @Override
@@ -213,15 +216,30 @@ class UserRepositoryImpl
         return Integer.class;
     }
 
-    private static List<UserSearchResultDTO> convertToUserSearchResultDTO( List<User> users )
+    /**
+     * Builds a {@link List} of {@link UserSearchResultDTO} from {@link List} of {@link User}s.
+     * 
+     * @param users the {@link List} of {@link User}s read from DB.
+     * @param firstItemIndexInTotalResults the index of the first item in total results
+     * @return the list of users converted to DTOs or an empty {@link List} if original parameter is null or empty
+     *         string
+     */
+    private static List<UserSearchResultDTO> convertToUserSearchResultDTO( List<User> users,
+                                                                           final int firstItemIndexInTotalResults )
     {
         List<UserSearchResultDTO> result = new ArrayList<>();
         if ( CollectionUtils.isNotEmpty( users ) )
         {
-            for ( User user : users )
+            final int totalUsers = users.size();
+            for ( int i = 0; i < totalUsers; i++ )
             {
-                result.add( new UserSearchResultDTO( user.getId(), user.getFirstName(), user.getLastName(),
-                                                     user.getEmail(), user.getStatus(), user.getDefaultRole() ) );
+                User user = users.get( i );
+                UserSearchResultDTO dto =
+                    new UserSearchResultDTO( user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(),
+                                             user.getStatus(), user.getDefaultRole() );
+                dto.setIndexInCurrentResults( i );
+                dto.setIndexInTotalResults( firstItemIndexInTotalResults + i );
+                result.add( dto );
             }
         }
         return result;
