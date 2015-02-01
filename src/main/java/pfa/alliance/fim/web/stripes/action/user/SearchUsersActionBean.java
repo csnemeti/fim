@@ -32,6 +32,7 @@ import pfa.alliance.fim.web.common.FimPageURLs;
 import pfa.alliance.fim.web.datatables.DatatablesOrder;
 import pfa.alliance.fim.web.security.FimSecurity;
 import pfa.alliance.fim.web.stripes.action.BasePageActionBean;
+import pfa.alliance.fim.web.stripes.action.StripesDropDownOption;
 
 /**
  * User search action bean.
@@ -154,26 +155,26 @@ public class SearchUsersActionBean
         return builder.toString();
     }
 
-    public List<StripesUserRole> getDefaultRoles()
+    public List<StripesDropDownOption> getDefaultRoles()
     {
-        List<StripesUserRole> roles = new ArrayList<StripesUserRole>();
+        List<StripesDropDownOption> roles = new ArrayList<StripesDropDownOption>();
         UserRole[] orderedRoles =
             new UserRole[] { UserRole.ADMIN, UserRole.PROJECT_ADMIN, UserRole.PRODUCT_OWNER, UserRole.SCRUM_MASTER,
                 UserRole.TEAM, UserRole.STATISTICAL };
         for ( UserRole role : orderedRoles )
         {
-            roles.add( new StripesUserRole( role, getEnumMessage( role ) ) );
+            roles.add( new StripesDropDownOption( role, getEnumMessage( role ) ) );
         }
         return roles;
     }
 
-    public List<StripesUserRole> getDefaultStatuses()
+    public List<StripesDropDownOption> getDefaultStatuses()
     {
-        List<StripesUserRole> statuses = new ArrayList<StripesUserRole>();
+        List<StripesDropDownOption> statuses = new ArrayList<StripesDropDownOption>();
         UserStatus[] orderedStatuses = new UserStatus[] { UserStatus.NEW, UserStatus.ACTIVE, UserStatus.DISABLED };
         for ( UserStatus status : orderedStatuses )
         {
-            statuses.add( new StripesUserRole( status, getEnumMessage( status ) ) );
+            statuses.add( new StripesDropDownOption( status, getEnumMessage( status ) ) );
         }
         return statuses;
     }

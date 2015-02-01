@@ -25,6 +25,7 @@ import pfa.alliance.fim.web.common.FimPageURLs;
 import pfa.alliance.fim.web.security.FimSecurity;
 import pfa.alliance.fim.web.security.Permission;
 import pfa.alliance.fim.web.stripes.action.BasePageActionBean;
+import pfa.alliance.fim.web.stripes.action.StripesDropDownOption;
 
 /**
  * This class is used for inviting persons to join FIM.
@@ -145,15 +146,15 @@ public class InviteUserActionBean
         this.defaultRole = UserRole.valueOf( defaultRole );
     }
 
-    public List<StripesUserRole> getDefaultRoles()
+    public List<StripesDropDownOption> getDefaultRoles()
     {
-        List<StripesUserRole> roles = new ArrayList<StripesUserRole>();
+        List<StripesDropDownOption> roles = new ArrayList<StripesDropDownOption>();
         UserRole[] orderedRoles =
             new UserRole[] { UserRole.ADMIN, UserRole.PROJECT_ADMIN, UserRole.PRODUCT_OWNER, UserRole.SCRUM_MASTER,
                 UserRole.TEAM, UserRole.STATISTICAL };
         for ( UserRole role : orderedRoles )
         {
-            roles.add( new StripesUserRole( role, getMessage( role.getDeclaringClass().getName() + "." + role.name() ) ) );
+            roles.add( new StripesDropDownOption( role, getMessage( role.getDeclaringClass().getName() + "." + role.name() ) ) );
         }
         return roles;
     }
