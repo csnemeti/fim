@@ -29,6 +29,7 @@ import pfa.alliance.fim.model.user.UserRole;
 import pfa.alliance.fim.model.user.UserStatus;
 import pfa.alliance.fim.service.UserManagerService;
 import pfa.alliance.fim.web.common.FimPageURLs;
+import pfa.alliance.fim.web.datatables.DatatablesOrder;
 import pfa.alliance.fim.web.security.FimSecurity;
 import pfa.alliance.fim.web.stripes.action.BasePageActionBean;
 
@@ -56,6 +57,9 @@ public class SearchUsersActionBean
 
     /** The instance of {@link UserManagerService} to be used. */
     private final UserManagerService userManagerService;
+
+    /** Ordering criteria in table. */
+    private DatatablesOrder order0 = new DatatablesOrder();
 
     @Inject
     public SearchUsersActionBean( UserManagerService userManagerService )
@@ -91,7 +95,8 @@ public class SearchUsersActionBean
      */
     public Resolution results()
     {
-        LOG.debug( "Results for: {}", userSearch );
+        fillInOrdering();
+        LOG.debug( "Results for: {}, {}", userSearch, order0 );
         JSONObject result = new JSONObject();
         result.put( "draw", draw );
         long resultsNumber = userManagerService.count( userSearch );
@@ -105,9 +110,10 @@ public class SearchUsersActionBean
         {
             filteredResults = new ArrayList<>();
         }
-        result.put( "recordsFiltered", filteredResults.size() );
+        // result.put( "recordsFiltered", filteredResults.size() );
+        result.put( "recordsFiltered", resultsNumber );
         result.put( "data", filteredResults );
-        return new StreamingResolution( "application/json", new StringReader( result.toString() ) );
+        return new StreamingResolution( "application/json", new StringReader( result.toString( 3 ) ) );
     }
 
     public UserSearchDTO getUserSearch()
@@ -142,9 +148,12 @@ public class SearchUsersActionBean
         builder.addParameter( "userSearch.firstName", getNotNullParameterValue( userSearch.getFirstName() ) );
         builder.addParameter( "userSearch.lastName", getNotNullParameterValue( userSearch.getLastName() ) );
         builder.addParameter( "userSearch.email", getNotNullParameterValue( userSearch.getEmail() ) );
-        builder.addParameter( "userSearch.defaultRole", getNotNullParameterValues( userSearch.getRoles() ) );
+        builder.addParameter( "userSearch.roles", getNotNullParameterValues( userSearch.getRoles() ) );
+        builder.addParameter( "userSearch.statuses", getNotNullParameterValues( userSearch.getStatuses() ) );
+        builder.addParameter( "filterDataTablesCall", true );
         return builder.toString();
     }
+
     public List<StripesUserRole> getDefaultRoles()
     {
         List<StripesUserRole> roles = new ArrayList<StripesUserRole>();
@@ -158,6 +167,17 @@ public class SearchUsersActionBean
         return roles;
     }
 
+    public List<StripesUserRole> getDefaultStatuses()
+    {
+        List<StripesUserRole> statuses = new ArrayList<StripesUserRole>();
+        UserStatus[] orderedStatuses = new UserStatus[] { UserStatus.NEW, UserStatus.ACTIVE, UserStatus.DISABLED };
+        for ( UserStatus status : orderedStatuses )
+        {
+            statuses.add( new StripesUserRole( status, getEnumMessage( status ) ) );
+        }
+        return statuses;
+    }
+
     /**
      * Encode the value into not-null parameter value.
      * 
@@ -167,15 +187,19 @@ public class SearchUsersActionBean
     private static String getNotNullParameterValue( String value )
     {
         String result = null;
-        try{
-            if(StringUtils.isNotBlank( value )){
+        try
+        {
+            if ( StringUtils.isNotBlank( value ) )
+            {
                 result = URLEncoder.encode( value, "UTF-8" );
             }
             else
             {
                 result = "";
             }
-        }catch(UnsupportedEncodingException e){
+        }
+        catch ( UnsupportedEncodingException e )
+        {
             LOG.error( "Could not UrlEncode {}", value, e );
         }
         if ( result == null )
@@ -198,9 +222,11 @@ public class SearchUsersActionBean
         {
             for ( String value : values )
             {
-                if(StringUtils.isNotBlank( value )){
-                    try{
-                        results.add(URLEncoder.encode( value, "UTF-8" ) );
+                if ( StringUtils.isNotBlank( value ) )
+                {
+                    try
+                    {
+                        results.add( URLEncoder.encode( value, "UTF-8" ) );
                     }
                     catch ( UnsupportedEncodingException e )
                     {
@@ -238,6 +264,11 @@ public class SearchUsersActionBean
         userSearch.setItemsPerPage( length );
     }
 
+    public DatatablesOrder getOrder0()
+    {
+        return order0;
+    }
+
     public String getLocalizationString()
     {
         JSONObject root = new JSONObject();
@@ -250,5 +281,31 @@ public class SearchUsersActionBean
             root.put( role.name(), getEnumMessage( role ) );
         }
         return root.toString();
+    }
+
+    /**
+     * "Transfer" ordering data from {@link #order0} into {@link #userSearch}.
+     */
+    private void fillInOrdering()
+    {
+        // any value that is not descending will mean ascending
+        userSearch.setAscending( !"desc".equalsIgnoreCase( order0.getDir() ) );
+        String column = null;
+        switch ( order0.getColumn() )
+        {
+            case 2:
+                column = "firstName";
+                break;
+            case 3:
+                column = "lastName";
+                break;
+            case 4:
+                column = "email";
+                break;
+            default:
+                LOG.warn( "Wrong ordering column value (it will use default ordering)): {}", order0.getColumn() );
+                break;
+        }
+        userSearch.setOrderBy( column );
     }
 }

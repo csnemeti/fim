@@ -56,6 +56,12 @@ public abstract class BaseActionBean
         return new LocalizableMessage( key, parameters ).getMessage( context.getLocale() );
     }
 
+    /**
+     * Gets the localized name of an enumeration values.
+     * 
+     * @param value the enumeration
+     * @return the localized value
+     */
     protected String getEnumMessage( Enum<?> value )
     {
         return getMessage( value.getDeclaringClass().getName() + "." + value.name() );
