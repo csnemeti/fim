@@ -316,15 +316,15 @@ public class SearchUsersActionBean
         {
             StringBuilder sb = new StringBuilder();
             sb.append( "<table><tr>" );
-            sb.append( "<td class='noSpacing'><a href='#'><i class='fa fa-eye fa-2x'></i></a></td>" );
-            sb.append( "<td class='noSpacing'><a href='#'><i class='fa fa-pencil-square fa-2x'></i></a></td>" );
+            sb.append( "<td class='noSpacing'><a href='#' title='" ).append( getMessage( "action.view" ) ).append( "'><i class='fa fa-eye fa-2x'></i></a></td>" );
+            sb.append( "<td class='noSpacing'><a href='#' title='" ).append( getMessage( "action.edit" ) ).append( "'><i class='fa fa-pencil-square fa-2x'></i></a></td>" );
             if ( UserStatus.ACTIVE.equals( dto.getUserStatus() ) )
             {
-                sb.append( "<td class='noSpacing'><a href='#'><i class='fa fa-minus-circle fa-2x'></i></a></td>" );
+                sb.append( "<td class='noSpacing'><a href='#' title='" ).append( getMessage( "action.disable" ) ).append( "'><i class='fa fa-minus-circle fa-2x'></i></a></td>" );
             }
             else
             {
-                sb.append( "<td class='noSpacing'><a href='#'><i class='fa fa-plus-circle fa-2x'></i></a></td>" );
+                sb.append( "<td class='noSpacing'><a href='#' title='" ).append( getMessage( "action.activate" ) ).append( "'><i class='fa fa-plus-circle fa-2x'></i></a></td>" );
             }
             sb.append( "</tr></table>" );
             dto.setActions( sb.toString() );
