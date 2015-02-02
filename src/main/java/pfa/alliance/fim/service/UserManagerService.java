@@ -83,7 +83,7 @@ public interface UserManagerService
     /**
      * Search for users matching the given search criteria
      * 
-     * @param criteriaCriteria the search criteria
+     * @param criteria the search criteria
      * @return the results
      */
     List<UserSearchResultDTO> search( UserSearchDTO criteria );

@@ -248,7 +248,7 @@ public class SearchUsersActionBean
     /**
      * Used in search result, this is a flag telling us the index of the item is search start offset.
      * 
-     * @param the start index
+     * @param start the start index
      */
     public void setStart( int start )
     {

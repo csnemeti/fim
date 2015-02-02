@@ -38,6 +38,7 @@ public class UserSearchResultDTO
     {
         super();
     }
+    
     /**
      * Called when instance of this class is created.
      * 
@@ -45,6 +46,7 @@ public class UserSearchResultDTO
      * @param firstName the User first name
      * @param lastName the user last name
      * @param email the user e-mail address
+     * @param userStatus the status of the user
      * @param defaultRole the suer default role
      */
     public UserSearchResultDTO( Integer id, String firstName, String lastName, String email, UserStatus userStatus,

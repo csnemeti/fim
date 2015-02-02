@@ -83,7 +83,7 @@ import org.slf4j.LoggerFactory;
  * In the given case, columns[...]... is useless parameter while order[...].. is important. Give the fact that Stripes
  * disabled index based parameter accessing in order to ensure that validators are working OK on them (
  * https://stripesframework.atlassian.net/browse/STS-841 ) we'll convert these from property[index][keyword] into
- * propertyindex.keyword. Example: <code>order[0][column] -> order0.column, order[0][dir] -> order0.dir </code>
+ * propertyindex.keyword. Example: <code>order[0][column] -&gt; order0.column, order[0][dir] -&gt; order0.dir </code>
  * 
  * @author Csaba
  */

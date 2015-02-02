@@ -38,7 +38,6 @@ public class StripesDropDownOption
      * 
      * @param enumValue the enumeration which name will be used as id
      * @param description the option description
-     * @see #StripesDropDownOptions(String, String)
      */
     public StripesDropDownOption( Enum<?> enumValue, String description )
     {
