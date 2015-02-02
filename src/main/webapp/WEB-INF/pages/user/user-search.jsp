@@ -15,6 +15,9 @@
 			.rowIndex {
 				text-align: right;
 			}
+			.noSpacing {
+				padding: 3px 5px 3px 5px !important;
+			}
 		</style>
 		
 		<script type="text/javascript" src="<stripes:url value="/js/bootstrap-multiselect/js/bootstrap-multiselect.js" />"></script>
@@ -28,6 +31,9 @@
 			var localeMap = ${actionBean.localizationString};
 			function clearFormContent(theForm){
 				$("#" + theForm.id + " :text").val("");
+				$("option:selected").removeAttr("selected");
+				$('#roles').multiselect('refresh');
+				$('#statuses').multiselect('refresh');
 			}
 			function localizeText(text){
 				return localeMap[text];
@@ -89,7 +95,7 @@
 	                          { "mData" : "lastName"}, 
 	                          { "mData" : "email"},
 	                          { "mData" : null, "bSortable": false, "mRender": function (data) {return localizeText(data.defaultRoleAsText);}}, 
-	                          { "mData" : null, "bSortable": false, "mRender": function (data) {return "actions";}} 
+	                          { "mData" : "actions", "sWidth":"110px", "bSortable": false, "sClass": "noSpacing"} 
 	                      ]
 			    	});
 			</c:if>

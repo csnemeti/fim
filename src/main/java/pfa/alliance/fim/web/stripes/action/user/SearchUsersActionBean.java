@@ -105,7 +105,7 @@ public class SearchUsersActionBean
         List<UserSearchResultDTO> filteredResults;
         if ( resultsNumber != 0L )
         {
-            filteredResults = userManagerService.search( userSearch );
+            filteredResults = process( userManagerService.search( userSearch ) );
         }
         else
         {
@@ -308,5 +308,27 @@ public class SearchUsersActionBean
                 break;
         }
         userSearch.setOrderBy( column );
+    }
+
+    private List<UserSearchResultDTO> process( List<UserSearchResultDTO> result )
+    {
+        for ( UserSearchResultDTO dto : result )
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.append( "<table><tr>" );
+            sb.append( "<td class='noSpacing'><a href='#'><i class='fa fa-eye fa-2x'></i></a></td>" );
+            sb.append( "<td class='noSpacing'><a href='#'><i class='fa fa-pencil-square fa-2x'></i></a></td>" );
+            if ( UserStatus.ACTIVE.equals( dto.getUserStatus() ) )
+            {
+                sb.append( "<td class='noSpacing'><a href='#'><i class='fa fa-minus-circle fa-2x'></i></a></td>" );
+            }
+            else
+            {
+                sb.append( "<td class='noSpacing'><a href='#'><i class='fa fa-plus-circle fa-2x'></i></a></td>" );
+            }
+            sb.append( "</tr></table>" );
+            dto.setActions( sb.toString() );
+        }
+        return result;
     }
 }

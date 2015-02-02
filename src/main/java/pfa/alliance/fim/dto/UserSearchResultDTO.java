@@ -25,6 +25,12 @@ public class UserSearchResultDTO
     /** Textual name of the user status. */
     private String userStatusAsText;
 
+    /** The user status. This will not be persisted into JSon. */
+    private transient UserStatus userStatus;
+
+    /** HTML encoded text for actions to fill in. */
+    private String actions = "";
+
     /**
      * Called when instance of this class is created.
      */
@@ -55,9 +61,14 @@ public class UserSearchResultDTO
     }
     public void setUserStatus( UserStatus userStatus )
     {
+        this.userStatus = userStatus;
         this.userStatusAsText = userStatus.name();
     }
 
+    public UserStatus getUserStatus()
+    {
+        return userStatus;
+    }
     public int getIndexInTotalResults()
     {
         return indexInTotalResults;
@@ -86,5 +97,15 @@ public class UserSearchResultDTO
     public String getUserStatusAsText()
     {
         return userStatusAsText;
+    }
+
+    public String getActions()
+    {
+        return actions;
+    }
+
+    public void setActions( String actions )
+    {
+        this.actions = actions;
     }
 }
