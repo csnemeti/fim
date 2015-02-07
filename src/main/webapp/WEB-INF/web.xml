@@ -59,7 +59,7 @@
 		</init-param>
 		<init-param>
 			<param-name>ActionResolver.Packages</param-name>
-			<param-value>pfa.alliance.fim.web.stripes.action</param-value>
+			<param-value>pfa.alliance.fim.web.stripes.action.user,pfa.alliance.fim.web.stripes.action.project</param-value>
 		</init-param>
 		<init-param>
 			<param-name>Interceptor.Classes</param-name>
