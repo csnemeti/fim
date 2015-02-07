@@ -17,15 +17,15 @@
                         </div>
                  	</div>
               	</div>
-                <a href="#">
                 	<div class="panel-footer">
-                    	<span class="pull-left"><stripes:label for="usercard-ViewDetails"/></span>
+                <stripes:link beanclass="pfa.alliance.fim.web.stripes.action.user.EditOwnProfileActionBean" title="Edit user profile">
+                    	<span class="pull-left" style="font-weight: bold">Edit details</span>
                         	<span class="pull-right">
                         	<i class="fa fa-arrow-circle-right"></i>
                         </span>
                         <div class="clearfix"></div>
+                </stripes:link>
                      </div>
-                </a>
       	</div>
 	</div>
 </stripes:layout-definition>
