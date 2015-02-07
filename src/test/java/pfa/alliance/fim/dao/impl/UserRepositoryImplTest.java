@@ -16,6 +16,8 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pfa.alliance.fim.dto.UserSearchDTO;
+import pfa.alliance.fim.dto.UserSearchResultDTO;
 import pfa.alliance.fim.model.user.OneTimeLinkType;
 import pfa.alliance.fim.model.user.User;
 import pfa.alliance.fim.model.user.UserOneTimeLink;
@@ -189,6 +191,56 @@ public class UserRepositoryImplTest
         Assert.assertEquals( "Wrong UUID", "uid1", link.getUuid() );
         Assert.assertTrue( "This should be expired",
                            link.getExpiresAt().before( new Timestamp( System.currentTimeMillis() ) ) );
+    }
+
+    @Test
+    public void test_getIdClass()
+    {
+        Class<?> idClass = userRepositoryImpl.getIdClass();
+        Assert.assertNotNull( "ID class should not be null", idClass );
+        Assert.assertEquals( "ID class issue", Integer.class, idClass );
+    }
+
+    @Test
+    public void test_searching_noCriteria()
+    {
+        UserSearchDTO criteriaDto = new UserSearchDTO();
+        criteriaDto.setItemsPerPage( 10 );
+        criteriaDto.setStartIndex( 0 );
+
+        criteriaDto.setOrderBy( "lastName" );
+
+        long result = userRepositoryImpl.count( criteriaDto );
+        Assert.assertEquals( "Count result issues", AbstractJpaRepository_Read_Test.TOTAL_USERS_IN_DB, result );
+
+        List<UserSearchResultDTO> resultList = userRepositoryImpl.search( criteriaDto );
+        Assert.assertNotNull( "Result list is should not be null", resultList );
+        Assert.assertEquals( "Search result size issues", AbstractJpaRepository_Read_Test.TOTAL_USERS_IN_DB,
+                             resultList.size() );
+    }
+
+    @Test
+    public void test_searching_allCriteria()
+    {
+        UserSearchDTO criteriaDto = new UserSearchDTO();
+        criteriaDto.setItemsPerPage( 10 );
+        criteriaDto.setStartIndex( 0 );
+
+        criteriaDto.setOrderBy( "lastName" );
+        criteriaDto.setAscending( false );
+
+        criteriaDto.setFirstName( "first" );
+        criteriaDto.setLastName( "last" );
+        criteriaDto.setEmail( ".com" );
+        criteriaDto.setStatuses( new String[] { "NEW", "ACTIVE" } );
+        criteriaDto.setRoles( new String[] { "STATISTICAL", "TEAM", "ADMIN" } );
+
+        long result = userRepositoryImpl.count( criteriaDto );
+        Assert.assertEquals( "Count result issues", 0, result );
+
+        List<UserSearchResultDTO> resultList = userRepositoryImpl.search( criteriaDto );
+        Assert.assertNotNull( "Result list is should not be null", resultList );
+        Assert.assertEquals( "Search result size issues", 0, resultList.size() );
     }
 
     @AfterClass

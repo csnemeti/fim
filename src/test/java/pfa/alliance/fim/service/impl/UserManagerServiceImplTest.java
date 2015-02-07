@@ -4,7 +4,9 @@
 package pfa.alliance.fim.service.impl;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -19,6 +21,8 @@ import org.mockito.Mockito;
 
 import pfa.alliance.fim.dao.UserOneTimeLinkRepository;
 import pfa.alliance.fim.dao.UserRepository;
+import pfa.alliance.fim.dto.UserSearchDTO;
+import pfa.alliance.fim.dto.UserSearchResultDTO;
 import pfa.alliance.fim.model.user.OneTimeLinkType;
 import pfa.alliance.fim.model.user.User;
 import pfa.alliance.fim.model.user.UserOneTimeLink;
@@ -484,5 +488,27 @@ public class UserManagerServiceImplTest
         
         Assert.assertEquals( "User status error", UserStatus.ACTIVE, user.getStatus() );
         Assert.assertTrue( "Link expiration issue: " + ts + " > " + link.getExpiresAt(), ts.after( link.getExpiresAt() ) );
+    }
+
+    @Test
+    public void test_count()
+    {
+        UserSearchDTO searchDto = new UserSearchDTO();
+        Mockito.when( userRepositoryMock.count( searchDto ) ).thenReturn( 4L );
+
+        long result = userManagetServiceImpl.count( searchDto );
+        Assert.assertEquals( "Count issues", 4L, result );
+    }
+
+    @Test
+    public void test_search()
+    {
+        UserSearchDTO searchDto = new UserSearchDTO();
+        final List<UserSearchResultDTO> expected = new ArrayList<UserSearchResultDTO>();
+        Mockito.when( userRepositoryMock.search( searchDto ) ).thenReturn( expected );
+
+        List<UserSearchResultDTO> result = userManagetServiceImpl.search( searchDto );
+        Assert.assertNotNull( "Result should not be null", result );
+        Assert.assertSame( "Result issues", expected, result );
     }
 }
