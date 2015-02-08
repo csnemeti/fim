@@ -31,9 +31,8 @@
 			}
 			
 			$().ready(function() {
-				$('#roles').multiselect({
-					numberDisplayed: 1
-				});
+				$('#status').multiselect();
+				$('#role').multiselect();
 				// set the placeholder
 				var placeholderSupported = ( 'placeholder' in document.createElement('input') );
 				if(placeholderSupported){
@@ -41,7 +40,12 @@
 					//document.getElementById("lastName").placeholder = "Starts with...";
 					//document.getElementById("email").placeholder = "Contains...";
 				}
-				
+				$('#dataForm').on('reset', function(){
+				    setTimeout(function(){
+				    	$('#status').multiselect('refresh');
+				    	$('#role').multiselect('refresh');
+				    });
+				});
 				// validate the comment form when it is submitted
 /* 				$("#loginForm").validate({
 					rules: {
@@ -90,6 +94,9 @@
 									<div class="form-group form-group-sm">
 										<stripes:label class="col-sm-4 control-label" style="text-align: right" for="userProfile.userStatus"/>
 										<div class="col-sm-6">
+											<stripes:select name="status" id="status" disabled="${actionBean.statusDisabled}">
+												<stripes:options-collection collection="${actionBean.defaultStatuses}" value="id" label="description"/>
+											</stripes:select>		
 						     			</div>
 						     		</div>		     	
 						     	</div>
@@ -99,6 +106,9 @@
 									<div class="form-group form-group-sm">
 										<stripes:label class="col-sm-4 control-label" style="text-align: right" for="userInvite.defaultRole"/>
 										<div class="col-sm-6">
+											<stripes:select name="role" id="role" disabled="${actionBean.roleDisabled}">
+												<stripes:options-collection collection="${actionBean.defaultRoles}" value="id" label="description"/>
+											</stripes:select>		
 						     			</div>
 						     		</div>		     	
 						     	</div>
@@ -126,7 +136,7 @@
 									<div class="form-group form-group-sm">
 										<stripes:label class="col-sm-4 control-label" style="text-align: right" for="userProfile.oldPassword"/>
 										<div class="col-sm-6">
-						     			<stripes:text class="form-control input-sm" name="password0" id="password0" maxlength="100"></stripes:text>
+						     			<stripes:password class="form-control input-sm" name="password0" id="password0" maxlength="100"></stripes:password>
 						     			</div>
 						     		</div>		     	
 						     	</div>
@@ -136,7 +146,7 @@
 									<div class="form-group form-group-sm">
 										<stripes:label class="col-sm-4 control-label" style="text-align: right" for="userProfile.newPassword"/>
 										<div class="col-sm-6">
-						     			<stripes:text class="form-control input-sm" name="password1" id="password1" maxlength="100"></stripes:text>
+						     			<stripes:password class="form-control input-sm" name="password1" id="password1" maxlength="100"></stripes:password>
 						     			</div>
 						     		</div>		     	
 						     	</div>
@@ -146,7 +156,7 @@
 									<div class="form-group form-group-sm">
 										<stripes:label class="col-sm-4 control-label" style="text-align: right" for="userProfile.newPassword2"/>
 										<div class="col-sm-6">
-						     			<stripes:text class="form-control input-sm" name="password2" id="password2" maxlength="100"></stripes:text>
+						     			<stripes:password class="form-control input-sm" name="password2" id="password2" maxlength="100"></stripes:password>
 						     			</div>
 						     		</div>		     	
 						     	</div>
@@ -182,6 +192,33 @@
 				        	<div align="center" style="padding-top: 10px">
 								<stripes:submit class="btn btn-default" name="changeEmail" value="Change"></stripes:submit>
 								<stripes:reset class="btn btn-default" name="resetEmail" value="Reset"></stripes:reset>
+				        	</div>	              		
+	              		</stripes:form>
+					</div>
+				</div>	
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-2"></div>
+	       	<div class="col-md-8" style="margin-top: 20px; min-width:400px">
+	       		<div class="panel panel-primary">
+	            	<div class="panel-heading">
+	            		<h1>Disable account</h1>
+	              	</div>
+	              	<div class="panel-body">
+	              		<stripes:form beanclass="pfa.alliance.fim.web.stripes.action.user.EditOwnProfileActionBean" id="disableAccountForm">
+				        	<div class="row">
+				        		<div class="col-sm-12">
+									<div class="form-group form-group-sm">
+										<stripes:label class="col-sm-4 control-label" style="text-align: right" for="userRegistration.password"/>
+										<div class="col-sm-6">
+						     			<stripes:password class="form-control input-sm" name="password" id="password" maxlength="100"></stripes:password>
+						     			</div>
+						     		</div>		     	
+						     	</div>
+							</div>
+				        	<div align="center" style="padding-top: 10px">
+								<stripes:submit class="btn btn-default" name="disableAccout" value="Disable..."></stripes:submit>
 				        	</div>	              		
 	              		</stripes:form>
 					</div>

@@ -66,6 +66,14 @@ public interface UserManagerService
         throws MessagingException;
 
     /**
+     * Gets the User with given ID.
+     * 
+     * @param id the ID of the user
+     * @return the found user or null if not found
+     */
+    User findById( int id );
+
+    /**
      * Gets the {@link UserOneTimeLink} with {@link User} filled in from database.
      * 
      * @param uuid the link unique identifier (uuid).

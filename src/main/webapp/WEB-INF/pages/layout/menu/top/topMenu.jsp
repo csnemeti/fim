@@ -21,7 +21,7 @@
 				<i class="fa fa-caret-down"></i>
 		</a>
 			<ul class="dropdown-menu dropdown-user">
-				<li><a href="#"><i class="fa fa-user fa-fw"></i><stripes:label for="userProfileItem"/></a></li>
+				<li><stripes:link beanclass="pfa.alliance.fim.web.stripes.action.user.EditOwnProfileActionBean"><i class="fa fa-user fa-fw"></i><stripes:label for="userProfileItem"/></stripes:link></li>
 				<li><a href="#"><i class="fa fa-gear fa-fw"></i><stripes:label for="userAccountSettings"/></a></li>
 				<li class="divider"></li>
 				<li><stripes:link beanclass="pfa.alliance.fim.web.stripes.action.user.LogoutUserActionBean"><i class="fa fa-sign-out fa-fw"></i><stripes:label for="userLogout"/></stripes:link></li>

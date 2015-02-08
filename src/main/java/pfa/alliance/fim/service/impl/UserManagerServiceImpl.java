@@ -450,4 +450,10 @@ class UserManagerServiceImpl
         LOG.debug( "Getting the users matching criteria: {}", criteria );
         return userRepository.search( criteria );
     }
+
+    @Override
+    public User findById( int id )
+    {
+        return userRepository.findOne( id );
+    }
 }
