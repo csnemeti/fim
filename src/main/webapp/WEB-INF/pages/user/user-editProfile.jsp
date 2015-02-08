@@ -18,10 +18,7 @@
 		<script type="text/javascript">
 			var localeMap = ${actionBean.localizationString};
 			function clearFormContent(theForm){
-				$("#" + theForm.id + " :text").val("");
-				$("option:selected").removeAttr("selected");
-				$('#roles').multiselect('refresh');
-				$('#statuses').multiselect('refresh');
+				$("#" + theForm.id + " :password").val("");
 			}
 			function localizeText(text){
 				return localeMap[text];
@@ -46,20 +43,55 @@
 				    	$('#role').multiselect('refresh');
 				    });
 				});
-				// validate the comment form when it is submitted
-/* 				$("#loginForm").validate({
+				// validate the data from forms
+ 				$("#dataForm").validate({
 					rules: {
-						password: "required",
-						username: "required",
+						firstName: "required",
+						lastName: "required"
 					}
 				});
- */			});			
+ 				$("#passwordForm").validate({
+					rules: {
+						password0: "required",
+						password1: {
+							required: true,
+							minlength: 6
+						},
+						password2: {
+							required: true,
+							minlength: 6,
+							equalTo: "#password1"
+						},
+					}
+				});
+ 				$("#emailForm").validate({
+					rules: {
+						email: {
+							required: true,
+							email: true
+						}
+					}
+				});
+ 				$("#disableAccountForm").validate({
+					rules: {
+						password: "required"
+					}
+				});
+		});			
 			</script>
 	</stripes:layout-component>
 	<stripes:layout-component name="menu">
        <stripes:layout-render name="/WEB-INF/pages/layout/menu/menu.jsp" />
     </stripes:layout-component>
     <stripes:layout-component name="content">
+       	<div class="row">
+	    	<div class="col-md-2"></div>
+	       	<div class="col-md-8" style="margin-top: 20px; min-width:400px">
+					<div class="form-group error">
+		 				<stripes:errors></stripes:errors>
+					</div>
+			</div>
+		</div>							
     	<div class="row">
 	    	<div class="col-md-2"></div>
 	       	<div class="col-md-8" style="margin-top: 20px; min-width:400px">
