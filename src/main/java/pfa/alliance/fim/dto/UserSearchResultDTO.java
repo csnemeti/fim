@@ -14,6 +14,8 @@ import pfa.alliance.fim.model.user.UserStatus;
 public class UserSearchResultDTO
     extends UserDTO
 {
+    private static final long serialVersionUID = 2652129191165807648L;
+
     /** This represents the index value of this item in the total results list. */
     private int indexInTotalResults;
     /** This represents the index value of this item in the currently displayed results list. */
@@ -93,21 +95,51 @@ public class UserSearchResultDTO
 
     public String getDefaultRoleAsText()
     {
-        return defaultRoleAsText;
+        return getEmptyStringIfNull( defaultRoleAsText );
     }
 
     public String getUserStatusAsText()
     {
-        return userStatusAsText;
+        return getEmptyStringIfNull( userStatusAsText );
     }
 
     public String getActions()
     {
-        return actions;
+        return getEmptyStringIfNull( actions );
     }
 
     public void setActions( String actions )
     {
         this.actions = actions;
+    }
+
+    @Override
+    public String getFirstName()
+    {
+        return getEmptyStringIfNull( super.getFirstName() );
+    }
+
+    @Override
+    public String getLastName()
+    {
+        return getEmptyStringIfNull( super.getLastName() );
+    }
+
+    @Override
+    public String getEmail()
+    {
+        return getEmptyStringIfNull( super.getEmail() );
+    }
+
+    /**
+     * Corrects the string value by returning empty string in case value is null. This is required by JSon
+     * serialization.
+     * 
+     * @param value the value to correct
+     * @return the corrected value
+     */
+    private static String getEmptyStringIfNull( final String value )
+    {
+        return ( value != null ) ? value : null;
     }
 }
