@@ -3,10 +3,13 @@
  */
 package pfa.alliance.fim.service;
 
+import java.util.List;
 import java.util.Locale;
 
 import javax.mail.MessagingException;
 
+import pfa.alliance.fim.dto.UserSearchDTO;
+import pfa.alliance.fim.dto.UserSearchResultDTO;
 import pfa.alliance.fim.model.user.User;
 import pfa.alliance.fim.model.user.UserOneTimeLink;
 import pfa.alliance.fim.model.user.UserRole;
@@ -63,9 +66,33 @@ public interface UserManagerService
         throws MessagingException;
 
     /**
+     * Gets the User with given ID.
+     * 
+     * @param id the ID of the user
+     * @return the found user or null if not found
+     */
+    User findById( int id );
+
+    /**
      * Gets the {@link UserOneTimeLink} with {@link User} filled in from database.
      * 
      * @param uuid the link unique identifier (uuid).
      */
     void activateUser( String uuid );
+    
+    /**
+     * Counts the number of results based on the given search criteria.
+     * 
+     * @param criteriaCriteria the search criteria
+     * @return the number of results
+     */
+    long count( UserSearchDTO criteriaCriteria );
+    
+    /**
+     * Search for users matching the given search criteria
+     * 
+     * @param criteria the search criteria
+     * @return the results
+     */
+    List<UserSearchResultDTO> search( UserSearchDTO criteria );
 }

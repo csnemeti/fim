@@ -220,7 +220,7 @@ bottom: 0;
     width: 100%;
     height: 100%;
 }
-
+/*
 table.dataTable thead .sorting,
 table.dataTable thead .sorting_asc,
 table.dataTable thead .sorting_desc,
@@ -247,7 +247,7 @@ table.dataTable thead .sorting:after {
     font-family: fontawesome;
     color: rgba(50,50,50,.5);
 }
-
+*/
 .btn-circle {
     width: 30px;
     height: 30px;

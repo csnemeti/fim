@@ -26,6 +26,30 @@ public class UserDTO
 
     private String email;
 
+    /**
+     * Called when instance of this class is created.
+     */
+    public UserDTO()
+    {
+    }
+
+    /**
+     * Called when instance of this class is created.
+     * 
+     * @param id the User ID
+     * @param firstName the User first name
+     * @param lastName the user last name
+     * @param email the user e-mail address
+     */
+    public UserDTO( int id, String firstName, String lastName, String email )
+    {
+        super();
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+    }
+
     public int getId()
     {
         return id;

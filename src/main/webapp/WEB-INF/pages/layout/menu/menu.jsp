@@ -3,7 +3,7 @@
 
 <stripes:layout-definition>
 
-<nav class="navbar navbar-default navbar-static-top" role="navigation"style="margin-bottom: 0">
+<nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
 	<!-- MOBILE MENU COLLAPSE -->
 	<div class="navbar-header">
     	<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">

@@ -19,4 +19,12 @@ public interface FimUrlGeneratorService
      * @return the built link
      */
     String getOneTimeLinkLink( final UserOneTimeLink link );
+
+    /**
+     * Builds URL to a project. The method doesn't check if the project exists.
+     * 
+     * @param projectCode the code of the project
+     * @return the build URL
+     */
+    String getProjectLink( final String projectCode );
 }

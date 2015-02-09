@@ -130,17 +130,48 @@ public class DateUtils
      */
     public static String getTimeInterval( Date from, Date to )
     {
-        if ( from == null || to == null )
-        {
-            throw new IllegalArgumentException();
-        }
-
-        Interval interval = new Interval( from.getTime(), to.getTime() );
-        Period toPeriod = interval.toPeriod();
+        Period toPeriod = buildTimePeriod( from, to );
 
         PeriodFormatter dateFormat =
             new PeriodFormatterBuilder().printZeroAlways().minimumPrintedDigits( 2 ).appendHours().minimumPrintedDigits( 2 ).appendSeparator( ":" ).appendMinutes().minimumPrintedDigits( 2 ).toFormatter();
 
         return toPeriod.toString( dateFormat );
+    }
+
+    /**
+     * Builds a time period.
+     * 
+     * @param from from time
+     * @param to to time
+     * @return the time period
+     */
+    public static Period buildTimePeriod( Date from, Date to )
+    {
+        if ( from == null || to == null )
+        {
+            throw new IllegalArgumentException( "ALL parameters are manadatory" );
+        }
+
+        Interval interval = new Interval( from.getTime(), to.getTime() );
+        Period toPeriod = interval.toPeriod();
+        return toPeriod;
+    }
+
+    /**
+     * Builds a time period using current time as end date.
+     * 
+     * @param from from time
+     * @return the time period
+     */
+    public static Period buildTimePeriodUntilNow( Date from )
+    {
+        if ( from == null )
+        {
+            throw new IllegalArgumentException( "From parameter is manadatory" );
+        }
+
+        Interval interval = new Interval( from.getTime(), System.currentTimeMillis() );
+        Period toPeriod = interval.toPeriod();
+        return toPeriod;
     }
 }

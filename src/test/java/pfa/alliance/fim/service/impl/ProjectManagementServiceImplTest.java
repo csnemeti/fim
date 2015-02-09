@@ -14,8 +14,12 @@ import org.mockito.Mockito;
 
 import pfa.alliance.fim.dao.ProjectRepository;
 import pfa.alliance.fim.dao.UserRepository;
+import pfa.alliance.fim.dto.ProjectDTO;
 import pfa.alliance.fim.model.project.Project;
 import pfa.alliance.fim.model.user.User;
+import pfa.alliance.fim.service.EmailGeneratorService;
+import pfa.alliance.fim.service.EmailService;
+import pfa.alliance.fim.service.FimUrlGeneratorService;
 
 /**
  * This class is used for testing {@link ProjectManagementServiceImpl}
@@ -30,13 +34,24 @@ public class ProjectManagementServiceImplTest
 
     private UserRepository userRepositoryMock;
 
+    private EmailService emailServiceMock;
+
+    private EmailGeneratorService emailGeneratorServiceMock;
+
+    private FimUrlGeneratorService fimUrlGeneratorServiceMock;
+
     @Before
     public void init()
     {
         projectRepositoryMock = Mockito.mock( ProjectRepository.class );
         userRepositoryMock = Mockito.mock( UserRepository.class );
+        emailServiceMock = Mockito.mock( EmailService.class );
+        emailGeneratorServiceMock = Mockito.mock( EmailGeneratorService.class );
+        fimUrlGeneratorServiceMock = Mockito.mock( FimUrlGeneratorService.class );
 
-        projectManagementServiceImpl = new ProjectManagementServiceImpl( projectRepositoryMock, userRepositoryMock );
+        projectManagementServiceImpl =
+            new ProjectManagementServiceImpl( projectRepositoryMock, userRepositoryMock, emailServiceMock,
+                                              emailGeneratorServiceMock, fimUrlGeneratorServiceMock );
     }
 
     @Test( expected = DuplicateDataException.class )
@@ -87,5 +102,70 @@ public class ProjectManagementServiceImplTest
 
         Mockito.verify( userRepositoryMock, Mockito.atLeastOnce() ).findOne( 1 );
         Mockito.verify( projectRepositoryMock, Mockito.atLeastOnce() ).save( Mockito.any( Project.class ) );
+    }
+
+    @Test
+    public void test_getProjectDetails_invalidCode()
+    {
+        Mockito.when( projectRepositoryMock.findByCode( "invalid" ) ).thenReturn( null );
+
+        ProjectDTO returned = projectManagementServiceImpl.getProjectDetails( "invalid" );
+
+        Assert.assertNull( "Returned project should be null", returned );
+        Mockito.verify( projectRepositoryMock, Mockito.atLeastOnce() ).findByCode( Mockito.anyString() );
+    }
+
+    @Test
+    public void test_getProjectDetails_validCodeNoOwner()
+    {
+        Project project = new Project();
+        project.setId( 111 );
+        project.setCode( "P1" );
+        project.setName( "Name: 111" );
+        project.setDescription( "Description: 111" );
+        User user = null;
+
+        Mockito.when( projectRepositoryMock.findByCode( "P1" ) ).thenReturn( project );
+        Mockito.when( projectRepositoryMock.findOwnerForProject( 111 ) ).thenReturn( user );
+
+        ProjectDTO returned = projectManagementServiceImpl.getProjectDetails( "P1" );
+
+        Assert.assertNotNull( "Returned project should be null", returned );
+        Assert.assertEquals( "Id issue", project.getId(), Integer.valueOf( returned.getId() ) );
+        Assert.assertEquals( "Code issue", project.getCode(), returned.getCode() );
+        Assert.assertEquals( "Name issue", project.getName(), returned.getName() );
+        Assert.assertEquals( "Description issue", project.getDescription(), returned.getDescription() );
+        Assert.assertEquals( "User issue", "<< unknown >>", returned.getOwnerInfo() );
+        Mockito.verify( projectRepositoryMock, Mockito.atLeastOnce() ).findByCode( Mockito.anyString() );
+        Mockito.verify( projectRepositoryMock, Mockito.atLeastOnce() ).findOwnerForProject( Mockito.anyInt() );
+    }
+
+    @Test
+    public void test_getProjectDetails_validCodeWithOwner()
+    {
+        Project project = new Project();
+        project.setId( 111 );
+        project.setCode( "P1" );
+        project.setName( "Name: 111" );
+        project.setDescription( "Description: 111" );
+        User user = new User();
+        user.setId( 112 );
+        user.setFirstName( "First" );
+        user.setLastName( "Name" );
+        user.setEmail( "e@ma.il" );
+
+        Mockito.when( projectRepositoryMock.findByCode( "P1" ) ).thenReturn( project );
+        Mockito.when( projectRepositoryMock.findOwnerForProject( 111 ) ).thenReturn( user );
+
+        ProjectDTO returned = projectManagementServiceImpl.getProjectDetails( "P1" );
+
+        Assert.assertNotNull( "Returned project should be null", returned );
+        Assert.assertEquals( "Id issue", project.getId(), Integer.valueOf( returned.getId() ) );
+        Assert.assertEquals( "Code issue", project.getCode(), returned.getCode() );
+        Assert.assertEquals( "Name issue", project.getName(), returned.getName() );
+        Assert.assertEquals( "Description issue", project.getDescription(), returned.getDescription() );
+        Assert.assertEquals( "User issue", "First Name ( e@ma.il )", returned.getOwnerInfo() );
+        Mockito.verify( projectRepositoryMock, Mockito.atLeastOnce() ).findByCode( Mockito.anyString() );
+        Mockito.verify( projectRepositoryMock, Mockito.atLeastOnce() ).findOwnerForProject( Mockito.anyInt() );
     }
 }

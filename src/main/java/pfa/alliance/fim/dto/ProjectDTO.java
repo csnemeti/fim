@@ -3,8 +3,12 @@
  */
 package pfa.alliance.fim.dto;
 
+import java.sql.Timestamp;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
+
+import pfa.alliance.fim.model.project.ProjectState;
 
 /**
  * DTO describing a Project.
@@ -19,9 +23,18 @@ public class ProjectDTO
 
     private String code;
 
+    private ProjectState state;
+
+    private Timestamp stateChangedAt;
+
+    private boolean hidden;
+
+
     private String description;
 
     private UserDTO owner;
+
+    private Timestamp createAt;
 
     public int getId()
     {
@@ -73,6 +86,46 @@ public class ProjectDTO
         this.owner = owner;
     }
 
+    public ProjectState getState()
+    {
+        return state;
+    }
+
+    public void setState( ProjectState state )
+    {
+        this.state = state;
+    }
+
+    public Timestamp getStateChangedAt()
+    {
+        return stateChangedAt;
+    }
+
+    public void setStateChangedAt( Timestamp stateChangedAt )
+    {
+        this.stateChangedAt = stateChangedAt;
+    }
+
+    public boolean isHidden()
+    {
+        return hidden;
+    }
+
+    public void setHidden( boolean hidden )
+    {
+        this.hidden = hidden;
+    }
+
+    public Timestamp getCreateAt()
+    {
+        return createAt;
+    }
+
+    public void setCreateAt( Timestamp createAt )
+    {
+        this.createAt = createAt;
+    }
+
     public String getOwnerInfo()
     {
         StringBuilder sb = new StringBuilder();
@@ -84,7 +137,7 @@ public class ProjectDTO
             if ( StringUtils.isNotBlank( name ) )
             {
                 separatorLeft = " ( ";
-                separatorRight = " ) ";
+                separatorRight = " )";
             }
             else
             {

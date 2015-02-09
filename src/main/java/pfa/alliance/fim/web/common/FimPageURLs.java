@@ -17,8 +17,11 @@ public enum FimPageURLs
     USER_INVITE_JSP( "/WEB-INF/pages/user/user-invite.jsp" ),
     USER_LOGIN_PAGE( "/user/login" ),
     USER_LOGIN_JSP( "/WEB-INF/pages/user/user-login.jsp" ),
+    USER_EDIT_PROFILE_JSP( "/WEB-INF/pages/user/user-editProfile.jsp" ),
     USER_ACTIVATION_JSP( "/WEB-INF/pages/user/user-activation.jsp" ),
     USER_FORGOT_PASSWORD_JSP( "/WEB-INF/pages/user/user-forgotPassword.jsp" ),
+    USER_SEARCH_JSP( "/WEB-INF/pages/user/user-search.jsp" ),
+
     CREATE_PROJECT_PAGE("/project/create"),
     CREATE_PROJECT_JSP("/WEB-INF/pages/project/createProject.jsp"),
     PROJECT_DASHBOARD_JSP( "/WEB-INF/pages/project/dashboard.jsp" ),

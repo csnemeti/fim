@@ -54,4 +54,19 @@ public class FimUrlGeneratorServiceImplTest
         Assert.assertEquals( "URL issues", "http://test-localhost:8080/fim/user/profile?token=uuid", url );
         Mockito.verify( urlProviderMock, Mockito.atLeastOnce() ).get();
     }
+
+    @Test
+    public void test_getProjectLink()
+    {
+        // prepare
+        Provider<String> urlProviderMock = Mockito.mock( Provider.class );
+        Mockito.when( urlProviderMock.get() ).thenReturn( "http://test-localhost:8080/fim/" );
+        FimUrlGeneratorServiceImpl fimUrlGeneratorServiceImpl = new FimUrlGeneratorServiceImpl( urlProviderMock );
+        // call
+        String url = fimUrlGeneratorServiceImpl.getProjectLink( "Project1" );
+        // test
+        Assert.assertNotNull( "URL should not be null", url );
+        Assert.assertEquals( "URL issues", "http://test-localhost:8080/fim/project/show/Project1", url );
+        Mockito.verify( urlProviderMock, Mockito.atLeastOnce() ).get();
+    }
 }

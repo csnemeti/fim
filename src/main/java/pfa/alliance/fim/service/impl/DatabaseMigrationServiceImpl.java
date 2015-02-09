@@ -53,6 +53,7 @@ class DatabaseMigrationServiceImpl
     {
         LOG.info( "DB upgrade started" );
         Flyway flyway = createFlyway();
+        flyway.setValidateOnMigrate( false );
         flyway.setSqlMigrationPrefix( "" );
         flyway.setLocations( "classpath:/db/migration/postgres" );
         flyway.setDataSource( jpaConfiguration.getProperty( JPASettings.JDBC_URL ),

@@ -35,6 +35,21 @@ public class EmailGeneratorServiceImplTest
     }
 
     @Test
+    public void test_getSubject_localeEnWithParams()
+    {
+        // prepare
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put( "name", "ProjectName" );
+        EmailGeneratorServiceImpl service = new EmailGeneratorServiceImpl();
+        // call
+        String subject = service.getSubject( EmailType.CREATE_PROJECT, parameters, Locale.UK );
+        // test
+        Assert.assertNotNull( "Subject should not be null", subject );
+        // see in StripesResources.properties the message
+        Assert.assertEquals( "Subject issue", "New Project (ProjectName) created.", subject );
+    }
+
+    @Test
     public void test_getContent_localeEnWithParams()
     {
         // prepare

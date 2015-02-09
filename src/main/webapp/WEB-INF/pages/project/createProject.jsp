@@ -4,11 +4,45 @@
 		<script type="text/javascript" src="<stripes:url value="/js/jquery-validation-1.13.0/jquery.validate.min.js" />"></script>
 		<script type="text/javascript" src="<stripes:url value="/js/jquery-validation-1.13.0/localization/messages_en.min.js" />"></script>
 		<script type="text/javascript">
+			var specialKeys = new Array();
+	        specialKeys.push(8); //Backspace
+	        specialKeys.push(9); //Tab
+	        specialKeys.push(46); //Delete
+	        specialKeys.push(36); //Home
+	        specialKeys.push(35); //End
+	        specialKeys.push(37); //Left
+	        specialKeys.push(39); //Right
+	        
+	        specialKeys.push(43); //Plus
+	        specialKeys.push(45); //Minus
+	        specialKeys.push(95); //Underscore
+	        
 			function clearFormContent(theForm){
 				$(".clearable").val("");
 			}
+			function isValidForCode(e){
+				var keyCode = e.keyCode == 0 ? e.charCode : e.keyCode;
+	            var ret = ((keyCode >= 48 && keyCode <= 57) || (keyCode >= 65 && keyCode <= 90) || 
+	            		(keyCode >= 97 && keyCode <= 122) || (specialKeys.indexOf(keyCode) != -1 && e.charCode != e.keyCode));
+	            return ret;
+			}
 			
 			$().ready(function() {
+				// block some operations on project code
+				var prjCode = document.getElementById("projectCode");
+				prjCode.onpaste = function(){
+					return false;
+				}
+				prjCode.ondrop = function(){
+					return false;
+				}
+				prjCode.onblur = function(){
+					var theValue = prjCode.value;
+					if(theValue != null){
+						prjCode.value = theValue.toUpperCase();
+					}
+				}
+				
 				// set the placeholder
 				var placeholderSupported = ( 'placeholder' in document.createElement('input') );
 				if(placeholderSupported){
@@ -51,8 +85,8 @@
 			</div>
 			
 			<div class="form-group">
-				<label for="projectCode" class="col-sm-2 control-label">Project Code:</label>
-				<stripes:text class="form-control clearable" name="projectCode" id="projectCode"></stripes:text>
+				<label for="projectCode" class="col-sm-6 control-label">Project Code (only letters, numbers, underscore (_), plus (+) and minus(-)):</label>
+				<stripes:text class="form-control clearable" name="projectCode" id="projectCode" onkeypress="return isValidForCode(event);"></stripes:text>
 			</div>
 				
 			<div class="form-group">

@@ -3,6 +3,7 @@
  */
 package pfa.alliance.fim.service.impl;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
@@ -22,6 +23,10 @@ import pfa.alliance.fim.model.project.Project;
 import pfa.alliance.fim.model.project.UserProjectRelation;
 import pfa.alliance.fim.model.project.UserRoleInsideProject;
 import pfa.alliance.fim.model.user.User;
+import pfa.alliance.fim.service.EmailGeneratorService;
+import pfa.alliance.fim.service.EmailService;
+import pfa.alliance.fim.service.EmailType;
+import pfa.alliance.fim.service.FimUrlGeneratorService;
 import pfa.alliance.fim.service.ProjectManagementService;
 
 import com.google.inject.persist.Transactional;
@@ -43,17 +48,34 @@ public class ProjectManagementServiceImpl
     /** The User repository to use in this class. */
     private final UserRepository userRepository;
 
+    /** E-mail service, used for sending e-mails. */
+    private final EmailService emailService;
+
+    private final EmailGeneratorService emailGeneratorService;
+
+    /** Service used for generating URLs inside FIM. */
+    private final FimUrlGeneratorService fimUrlGeneratorService;
+
     /**
      * Called when instance of this class is created.
      * 
      * @param projectRepository the instance of Project repository to use in this class
      * @param userRepository the instance of User repository to use in this class
+     * @param emailService the instance of service used for sending e-mails
+     * @param emailGeneratorService the instance of service used for generating e-mails
+     * @param fimUrlGeneratorService the instance of service used for generating full URLs inside FIM
      */
     @Inject
-    ProjectManagementServiceImpl( ProjectRepository projectRepository, UserRepository userRepository )
+    ProjectManagementServiceImpl( ProjectRepository projectRepository, UserRepository userRepository,
+                                  EmailService emailService, EmailGeneratorService emailGeneratorService,
+                                  FimUrlGeneratorService fimUrlGeneratorService )
     {
         this.projectRepository = projectRepository;
         this.userRepository = userRepository;
+
+        this.emailService = emailService;
+        this.emailGeneratorService = emailGeneratorService;
+        this.fimUrlGeneratorService = fimUrlGeneratorService;
     }
 
     @Override
@@ -67,7 +89,8 @@ public class ProjectManagementServiceImpl
             UserProjectRelation owner = addToProject( project, creatorUserId, UserRoleInsideProject.OWNER );
             project = projectRepository.save( project );
             // project = projectRepository.save( project );
-            // TODO send e-mail about project creation to owner
+            // send e-mail about project creation to owner
+            sendProjectCreatedEmail( owner, locale );
         }
         catch ( PersistenceException e )
         {
@@ -84,6 +107,38 @@ public class ProjectManagementServiceImpl
 
         }
         return project;
+    }
+
+    /**
+     * Send an e-mail about created project. If e-mail sending fails, this method will not thrown any error.
+     * 
+     * @param owner the owner who should receive the e-mail
+     */
+    private void sendProjectCreatedEmail( UserProjectRelation owner, Locale locale )
+    {
+        User user = owner.getUser();
+        Project project = owner.getProject();
+        String subject = null;
+
+        try
+        {
+            Map<String, Object> parameters = new HashMap<String, Object>();
+            parameters.put( "name", project.getName() );
+            subject = emailGeneratorService.getSubject( EmailType.CREATE_PROJECT, parameters, locale );
+
+            parameters = new HashMap<String, Object>();
+            parameters.put( "userName", user.getFirstName() + " " + user.getLastName() );
+            parameters.put( "projectName", project.getName() );
+            parameters.put( "link", fimUrlGeneratorService.getProjectLink( project.getCode() ) );
+            String content = emailGeneratorService.getContent( EmailType.CREATE_PROJECT, parameters, locale );
+
+            emailService.sendEmail( user.getEmail(), subject, content );
+        }
+        catch ( Exception e )
+        {
+            LOG.error( "Error sending e-mail: subject = {}, to = {}", subject, user.getEmail(), e );
+        }
+
     }
 
     /**
@@ -190,6 +245,10 @@ public class ProjectManagementServiceImpl
             projectDTO.setCode( project.getCode() );
             projectDTO.setName( project.getName() );
             projectDTO.setDescription( project.getDescription() );
+            projectDTO.setCreateAt( project.getCreatedAt() );
+            projectDTO.setHidden( project.isHidden() );
+            projectDTO.setState( project.getState() );
+            projectDTO.setStateChangedAt( project.getStateChangedAt() );
         }
         return projectDTO;
     }

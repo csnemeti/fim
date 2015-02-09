@@ -3,6 +3,10 @@
  */
 package pfa.alliance.fim.dao;
 
+import java.util.List;
+
+import pfa.alliance.fim.dto.UserSearchDTO;
+import pfa.alliance.fim.dto.UserSearchResultDTO;
 import pfa.alliance.fim.model.user.OneTimeLinkType;
 import pfa.alliance.fim.model.user.User;
 import pfa.alliance.fim.model.user.UserOneTimeLink;
@@ -60,4 +64,21 @@ public interface UserRepository
      *         UUID doesn't exists
      */
     UserOneTimeLink getOneTimeLinkBy( String uuid, OneTimeLinkType designation );
+
+    /**
+     * Counts the number of results based on the given search criteria.
+     * 
+     * @param criteria the search criteria
+     * @return the number of results
+     */
+    long count( UserSearchDTO criteria );
+
+    /**
+     * Search for users matching the given search criteria
+     * 
+     * @param criteria the search criteria
+     * @return the results
+     */
+    List<UserSearchResultDTO> search( UserSearchDTO criteria );
+
 }
