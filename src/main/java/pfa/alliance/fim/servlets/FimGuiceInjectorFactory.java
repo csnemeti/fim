@@ -55,7 +55,8 @@ public class FimGuiceInjectorFactory
         FimServiceModule fimServiceModule = new FimServiceModule();
         JpaPersistModule jpaPersistModule = new JpaPersistModule( "fimJpaUnit" );
         jpaPersistModule.properties( fimServiceModule.getJpaConfiguration() );
-        return Guice.createInjector( jpaPersistModule, fimServiceModule, new FimServletModule() );
+        FimJobsInitializerModule fimJobsModule = new FimJobsInitializerModule();
+        return Guice.createInjector( jpaPersistModule, fimServiceModule, fimJobsModule , new FimServletModule() );
     }
 
     private Properties readConfiguration()
