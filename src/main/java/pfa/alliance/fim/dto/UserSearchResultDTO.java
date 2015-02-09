@@ -140,6 +140,6 @@ public class UserSearchResultDTO
      */
     private static String getEmptyStringIfNull( final String value )
     {
-        return ( value != null ) ? value : null;
+        return ( value != null ) ? value : "";
     }
 }
