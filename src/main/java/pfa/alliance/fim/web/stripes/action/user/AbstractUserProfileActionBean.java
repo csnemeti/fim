@@ -20,8 +20,10 @@ import org.slf4j.LoggerFactory;
 import pfa.alliance.fim.model.user.User;
 import pfa.alliance.fim.model.user.UserRole;
 import pfa.alliance.fim.model.user.UserStatus;
+import pfa.alliance.fim.service.InvalidUserPasswordException;
 import pfa.alliance.fim.service.UserManagerService;
 import pfa.alliance.fim.web.common.FimPageURLs;
+import pfa.alliance.fim.web.security.SecurityUtil;
 import pfa.alliance.fim.web.stripes.action.BasePageActionBean;
 import pfa.alliance.fim.web.stripes.action.StripesDropDownOption;
 
@@ -64,6 +66,23 @@ public abstract class AbstractUserProfileActionBean
     @Validate( required = true, trim = true, minlength = 6, expression = "this eq password1", on = "changePassword" )
     private String password2;
 
+    private final static String USER_DATA_UPDATED = "EditProfileActionBean.UserDataUpdated";
+    private final static String INVALID_PASSWORD = "EditProfileActionBean.InvalidPassword";
+
+    private final static String PASSWORD_CHANGED = "EditProfileActionBean.PasswordChanged";
+
+    /** The code of the disable account DB operation. */
+    private String diableAccountDbOperation;
+
+    /** The code of the change password operation. */
+    private String changePasswordDbOperation;
+
+    /** The code of the change email operation. */
+    private String changeEmailDbOperation;
+
+    /** The code of the update data operation. */
+    private String updateDataDbOperation;
+
     protected AbstractUserProfileActionBean( UserManagerService userManagerService )
     {
         this.userManagerService = userManagerService;
@@ -91,7 +110,24 @@ public abstract class AbstractUserProfileActionBean
      */
     public Resolution disableAccout()
     {
-        return new RedirectResolution( FimPageURLs.MAIN_PAGE.getURL() );
+        final int userId = getUserId();
+        LOG.debug( "User with ID = {} asked for disable account", userId );
+        try
+        {
+            userManagerService.disableUserAtOwnRequest( userId, getPassword() );
+            // forced log out of user and redirect to main page
+            SecurityUtil.putUserIntoSession( null, getSession() );
+            LOG.info( "User {} account disabled at own request", userId );
+            return new RedirectResolution( FimPageURLs.MAIN_PAGE.getURL() );
+        }
+        catch ( InvalidUserPasswordException e )
+        {
+            LOG.info( "User {} account disabled rejected because of wrong password", userId );
+            // write that password is not correct
+            diableAccountDbOperation = INVALID_PASSWORD;
+            // do the same thing as you would do when access the page for view
+            return view();
+        }
     }
 
     /**
@@ -111,7 +147,22 @@ public abstract class AbstractUserProfileActionBean
      */
     public Resolution changePassword()
     {
-        return new ForwardResolution( FimPageURLs.USER_EDIT_PROFILE_JSP.getURL() );
+        final int userId = getUserId();
+        LOG.debug( "User with ID = {} asked for password change", userId );
+        try
+        {
+            userManagerService.changePassword( userId, getPassword0(), getPassword1() );
+            changePasswordDbOperation = PASSWORD_CHANGED;
+            LOG.info( "User {} password change successfull", userId );
+        }
+        catch ( InvalidUserPasswordException e )
+        {
+            LOG.info( "User {} password change rejected because of wrong OLD password", userId );
+            // write that password is not correct
+            changePasswordDbOperation = INVALID_PASSWORD;
+        }
+        // do the same thing as you would do when access the page for view
+        return view();
     }
 
     /**
@@ -121,7 +172,12 @@ public abstract class AbstractUserProfileActionBean
      */
     public Resolution changeData()
     {
-        return new ForwardResolution( FimPageURLs.USER_EDIT_PROFILE_JSP.getURL() );
+        final int userId = getUserId();
+        LOG.debug( "Change user data with ID = {}", userId );
+        userManagerService.changeUserData( userId, firstName, lastName );
+        updateDataDbOperation = USER_DATA_UPDATED;
+        // do the same thing as you would do when access the page for view
+        return view();
     }
 
     /**
@@ -315,4 +371,33 @@ public abstract class AbstractUserProfileActionBean
         return password2;
     }
 
+    public String getDiableAccountDbOperationText()
+    {
+        return getLocalizedOperation( diableAccountDbOperation );
+    }
+
+    public String getChangePasswordDbOperationText()
+    {
+        return getLocalizedOperation( changePasswordDbOperation );
+    }
+
+    public String getChangeEmailDbOperationText()
+    {
+        return getLocalizedOperation( changeEmailDbOperation );
+    }
+
+    public String getUpdateDataDbOperationText()
+    {
+        return getLocalizedOperation( updateDataDbOperation );
+    }
+
+    private String getLocalizedOperation( String operationCode )
+    {
+        String result = "";
+        if ( operationCode != null )
+        {
+            result = getMessage( operationCode );
+        }
+        return result;
+    }
 }

@@ -95,4 +95,30 @@ public interface UserManagerService
      * @return the results
      */
     List<UserSearchResultDTO> search( UserSearchDTO criteria );
+
+    /**
+     * Disable the user at own request. In order to prove it's not a trick, the current password must be provided.
+     * 
+     * @param userId the ID of the user that made the request
+     * @param clearTextPassword the current password of the user in clear text (as typed in browser) form
+     */
+    void disableUserAtOwnRequest( int userId, String clearTextPassword );
+
+    /**
+     * Change the the user password IF current password if correct.
+     * 
+     * @param userId the database ID of the user
+     * @param curentPassword the user current password
+     * @param newPassword the user new password
+     */
+    void changePassword( int userId, String curentPassword, String newPassword );
+
+    /**
+     * Update some of the user data.
+     * 
+     * @param userId the user ID
+     * @param firstName the user new first name
+     * @param lastName the user new last name
+     */
+    void changeUserData( int userId, final String firstName, final String lastName );
 }

@@ -36,6 +36,7 @@ import pfa.alliance.fim.service.EmailGeneratorService;
 import pfa.alliance.fim.service.EmailService;
 import pfa.alliance.fim.service.EmailType;
 import pfa.alliance.fim.service.FimUrlGeneratorService;
+import pfa.alliance.fim.service.InvalidUserPasswordException;
 import pfa.alliance.fim.service.UserActivationFailException;
 import pfa.alliance.fim.service.UserManagerService;
 
@@ -455,5 +456,67 @@ class UserManagerServiceImpl
     public User findById( int id )
     {
         return userRepository.findOne( id );
+    }
+
+    @Transactional
+    @Override
+    public void disableUserAtOwnRequest( final int userId, final String clearTextPassword )
+    {
+        User user = getSupossedlyValidUserAndValidatePassword( userId, clearTextPassword );
+        LOG.debug( "Disabling account (user ID = {}) at own request: {}", userId, user );
+        if ( user != null )
+        {
+            user.setStatus( UserStatus.DISABLED );
+            userRepository.save( user );
+        }
+    }
+
+    @Transactional
+    @Override
+    public void changePassword( int userId, String curentPassword, String newPassword )
+    {
+        User user = getSupossedlyValidUserAndValidatePassword( userId, curentPassword );
+        LOG.debug( "Changing password for (user ID = {}): {}", userId, user );
+        if ( user != null )
+        {
+            user.setPassword( encryptPassword( newPassword ) );
+            userRepository.save( user );
+        }
+    }
+
+    @Transactional
+    @Override
+    public void changeUserData( final int userId, final String firstName, final String lastName )
+    {
+        LOG.debug( "Updating user data user ID = {}, first name = {}, last name = {}", userId, firstName, lastName );
+        User user = userRepository.findOne( userId );
+        LOG.debug( "Updating user data for (user ID = {}): {}", userId, user );
+        if ( user != null )
+        {
+            user.setFirstName( firstName );
+            user.setLastName( lastName );
+            userRepository.save( user );
+        }
+    }
+
+    private User getSupossedlyValidUserAndValidatePassword( final int userId, final String clearTextPassword )
+    {
+        String encyptedPassword = encryptPassword( clearTextPassword );
+        LOG.debug( "Get user by ID = {} and validate the password = {}", encyptedPassword );
+        User user = userRepository.findOne( userId );
+        // the ID should be valid but extra careful always welcomed
+        if ( user != null )
+        {
+            if ( !encyptedPassword.equals( user.getPassword() ) )
+            {
+                LOG.info( "User with ID {} provided and invalid password", userId );
+                throw new InvalidUserPasswordException( "Wrong password for user with ID: " + userId );
+            }
+        }
+        else
+        {
+            LOG.error( "User with ID {} doesn't exists. According to APP ID is valid", userId );
+        }
+        return user;
     }
 }

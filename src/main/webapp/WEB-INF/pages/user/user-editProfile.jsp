@@ -34,8 +34,6 @@
 				var placeholderSupported = ( 'placeholder' in document.createElement('input') );
 				if(placeholderSupported){
 					//document.getElementById("firstName").placeholder = "Starts with...";
-					//document.getElementById("lastName").placeholder = "Starts with...";
-					//document.getElementById("email").placeholder = "Contains...";
 				}
 				$('#dataForm').on('reset', function(){
 				    setTimeout(function(){
@@ -145,6 +143,13 @@
 						     		</div>		     	
 						     	</div>
 							</div>
+				        	<div class="row">
+				        		<div class="col-sm-12">
+						     		<div class="form-group" style="text-align:center">
+						     			${actionBean.updateDataDbOperationText}
+						     		</div>
+						     	</div>
+							</div>
 				        	<div align="center" style="padding-top: 10px">
 								<stripes:submit class="btn btn-default" name="changeData" value="Change"></stripes:submit>
 								<stripes:reset class="btn btn-default" name="resetEmail" value="Reset"></stripes:reset>
@@ -193,6 +198,13 @@
 						     		</div>		     	
 						     	</div>
 							</div>
+				        	<div class="row">
+				        		<div class="col-sm-12">
+						     		<div class="form-group" style="text-align:center">
+						     			${actionBean.changePasswordDbOperationText}
+						     		</div>
+						     	</div>
+							</div>
 				        	<div align="center" style="padding-top: 10px">
 								<stripes:submit class="btn btn-default" name="changePassword" value="Change"></stripes:submit>
 								<input class="btn btn-default" type="button" name="reset" value="Clear" onclick="clearFormContent(this.form)"/>  
@@ -202,6 +214,7 @@
 				</div>	
 			</div>
 		</div>
+<!-- 		
 		<div class="row">
 			<div class="col-md-2"></div>
 	       	<div class="col-md-8" style="margin-top: 20px; min-width:400px">
@@ -221,6 +234,13 @@
 						     		</div>		     	
 						     	</div>
 							</div>
+				        	<div class="row">
+				        		<div class="col-sm-12">
+						     		<div class="form-group" style="text-align:center">
+						     			${actionBean.changeEmailDbOperationText}
+						     		</div>
+						     	</div>
+							</div>
 				        	<div align="center" style="padding-top: 10px">
 								<stripes:submit class="btn btn-default" name="changeEmail" value="Change"></stripes:submit>
 								<stripes:reset class="btn btn-default" name="resetEmail" value="Reset"></stripes:reset>
@@ -230,6 +250,7 @@
 				</div>	
 			</div>
 		</div>
+ -->		
 		<div class="row">
 			<div class="col-md-2"></div>
 	       	<div class="col-md-8" style="margin-top: 20px; min-width:400px">
@@ -247,6 +268,13 @@
 						     			<stripes:password class="form-control input-sm" name="password" id="password" maxlength="100"></stripes:password>
 						     			</div>
 						     		</div>		     	
+						     	</div>
+							</div>
+				        	<div class="row">
+				        		<div class="col-sm-12">
+						     		<div class="form-group" style="text-align:center">
+						     			${actionBean.diableAccountDbOperationText}
+						     		</div>
 						     	</div>
 							</div>
 				        	<div align="center" style="padding-top: 10px">
