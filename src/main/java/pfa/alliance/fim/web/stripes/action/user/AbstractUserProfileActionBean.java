@@ -23,6 +23,7 @@ import pfa.alliance.fim.model.user.UserStatus;
 import pfa.alliance.fim.service.InvalidUserPasswordException;
 import pfa.alliance.fim.service.UserManagerService;
 import pfa.alliance.fim.web.common.FimPageURLs;
+import pfa.alliance.fim.web.security.AuthenticatedUserDTO;
 import pfa.alliance.fim.web.security.SecurityUtil;
 import pfa.alliance.fim.web.stripes.action.BasePageActionBean;
 import pfa.alliance.fim.web.stripes.action.StripesDropDownOption;
@@ -137,6 +138,8 @@ public abstract class AbstractUserProfileActionBean
      */
     public Resolution changeEmail()
     {
+        // TODO after the e-mail change, update the user from session too
+        AuthenticatedUserDTO userDto = SecurityUtil.getUserFromSession( getSession() );
         return new ForwardResolution( FimPageURLs.USER_EDIT_PROFILE_JSP.getURL() );
     }
 
@@ -175,6 +178,10 @@ public abstract class AbstractUserProfileActionBean
         final int userId = getUserId();
         LOG.debug( "Change user data with ID = {}", userId );
         userManagerService.changeUserData( userId, firstName, lastName );
+        // update the user from session too
+        AuthenticatedUserDTO userDto = SecurityUtil.getUserFromSession( getSession() );
+        userDto.setFirstName( firstName );
+        userDto.setLastName( lastName );
         updateDataDbOperation = USER_DATA_UPDATED;
         // do the same thing as you would do when access the page for view
         return view();

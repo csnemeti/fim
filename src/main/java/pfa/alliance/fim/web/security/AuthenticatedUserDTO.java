@@ -24,16 +24,16 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 public class AuthenticatedUserDTO
     implements Serializable
 {
-    private static final long serialVersionUID = -8177414215766169469L;
+    private static final long serialVersionUID = -8177414215766169468L;
 
     /** The user ID in database. */
     private final int id;
 
     /** The user first name (might be null). */
-    private final String firstName;
+    private String firstName;
 
     /** The user last name (might be null). */
-    private final String lastName;
+    private String lastName;
 
     /** The user e-mail address. */
     private final String email;
@@ -120,6 +120,16 @@ public class AuthenticatedUserDTO
     public int getId()
     {
         return id;
+    }
+
+    public void setFirstName( String firstName )
+    {
+        this.firstName = firstName;
+    }
+
+    public void setLastName( String lastName )
+    {
+        this.lastName = lastName;
     }
 
     /**
