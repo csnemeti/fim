@@ -499,6 +499,13 @@ class UserManagerServiceImpl
         }
     }
 
+    /**
+     * Gets the {@link User} with given ID and verifies if the provided password is correct.
+     * 
+     * @param userId the ID of the user
+     * @param clearTextPassword the password in clear text form
+     * @return the User if found and password is valid, null otherwise
+     */
     private User getSupossedlyValidUserAndValidatePassword( final int userId, final String clearTextPassword )
     {
         String encyptedPassword = encryptPassword( clearTextPassword );
