@@ -58,6 +58,12 @@ public class CreateProjectActionBean
     /** Message key regarding Database operation */
     private String dbOperationResult;
 
+    /** Flag to indicate if project is hidden or not. */
+    private Boolean hidden;
+
+    /** Flag to indicate that project should be automatically set to ProjectState#ACTIVE. */
+    private Boolean activate;
+
     private final ProjectManagementService projectManagementService;
 
     /** Service used for generating URLs inside FIM. */
@@ -169,6 +175,26 @@ public class CreateProjectActionBean
     public void setOwnerName( String ownerName )
     {
         this.ownerName = ownerName;
+    }
+
+    public Boolean getHidden()
+    {
+        return hidden;
+    }
+
+    public void setHidden( Boolean hidden )
+    {
+        this.hidden = hidden;
+    }
+
+    public Boolean getActivate()
+    {
+        return activate;
+    }
+
+    public void setActivate( Boolean activate )
+    {
+        this.activate = activate;
     }
 
     public String getDbOperationResult()

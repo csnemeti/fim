@@ -51,6 +51,7 @@
 					document.getElementById("projectDescription").placeholder = "Enter a description for the project";
 					document.getElementById("ownerName").placeholder = "Enter the project owner";
 				}
+				$("[data-toggle='tooltip']").tooltip();
 				// validate the comment form when it is submitted
 				$("#prjForm").validate({
 					rules: {
@@ -83,21 +84,25 @@
 				<label for="projectName" class="col-sm-2 control-label">Name:</label>
 				<stripes:text class="form-control clearable" name="projectName" id="projectName"></stripes:text>
 			</div>
-			
 			<div class="form-group">
 				<label for="projectCode" class="col-sm-6 control-label">Project Code (only letters, numbers, underscore (_), plus (+) and minus(-)):</label>
 				<stripes:text class="form-control clearable" name="projectCode" id="projectCode" onkeypress="return isValidForCode(event);"></stripes:text>
 			</div>
-				
 			<div class="form-group">
 				<label for="projectName" class="col-sm-2 control-label">Description:</label>
 				<stripes:textarea class="form-control clearable" rows="5" cols="40" name="projectDescription" id="projectDescription"></stripes:textarea>
 			</div>
-			
 			<div class="form-group">
 				<label for="ownerName" class="col-sm-2 control-label">Project owner:</label>
 				<stripes:text class="form-control" name="ownerName" id="ownerName" readonly="readonly"></stripes:text>
 			</div>
+			<div class="form-group">
+				<stripes:checkbox class="" name="hidden" id="hidden"></stripes:checkbox> Make the project <a href="javascript: void(0)" data-toggle="tooltip" title="Hidden project means is not displayed on search.">hidden</a>
+			</div>
+			<div class="form-group">
+				<stripes:checkbox class="" name="activate" id="activate"></stripes:checkbox> <a href="javascript: void(0)" data-toggle="tooltip" title="By default projects are created with state IN PREPARATION. If you check this, projects state will be ACTIVE.">Activate</a> project directly
+			</div>
+
 			<div class="form-group error">
  				<stripes:errors></stripes:errors>
 			</div>
