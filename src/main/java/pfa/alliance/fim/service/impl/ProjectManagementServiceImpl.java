@@ -20,6 +20,7 @@ import pfa.alliance.fim.dao.UserRepository;
 import pfa.alliance.fim.dto.ProjectDTO;
 import pfa.alliance.fim.dto.UserDTO;
 import pfa.alliance.fim.model.project.Project;
+import pfa.alliance.fim.model.project.ProjectState;
 import pfa.alliance.fim.model.project.UserProjectRelation;
 import pfa.alliance.fim.model.project.UserRoleInsideProject;
 import pfa.alliance.fim.model.user.User;
@@ -80,10 +81,11 @@ public class ProjectManagementServiceImpl
 
     @Override
     @Transactional
-    public Project create( String name, String code, String description, int creatorUserId,
+    public Project create( String name, String code, String description, final boolean hidden,
+                           final ProjectState state, final int creatorUserId,
                            Map<Integer, UserRoleInsideProject> additionalUsers, Locale locale )
     {
-        Project project = createBaseProjectInstance( name, code, description );
+        Project project = createBaseProjectInstance( name, code, description, hidden, state );
         try
         {
             UserProjectRelation owner = addToProject( project, creatorUserId, UserRoleInsideProject.OWNER );
@@ -195,13 +197,26 @@ public class ProjectManagementServiceImpl
      * @param name the name of the project
      * @param code the code of the project
      * @param description the project description
+     * @param hidden flag indicating project is hidden (not visible on search)
+     * @param state the initial state of the project (Accepted values are {@link ProjectState#ACTIVE} and the default
+     *            value {@link ProjectState#IN_PREPARATION}.)
      * @return the created Project instance
      */
-    private static Project createBaseProjectInstance( String name, String code, String description )
+    private static Project createBaseProjectInstance( String name, String code, String description,
+                                                      final boolean hidden, final ProjectState state )
     {
         Project project = new Project();
         project.setName( name );
         project.setCode( code );
+        project.setHidden( hidden );
+        if ( ProjectState.ACTIVE.equals( state ) )
+        {
+            project.setState( ProjectState.ACTIVE );
+        }
+        else
+        {
+            project.setState( ProjectState.IN_PREPARATION );
+        }
         project.setDescription( description );
         return project;
     }

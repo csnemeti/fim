@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pfa.alliance.fim.model.project.Project;
+import pfa.alliance.fim.model.project.ProjectState;
 import pfa.alliance.fim.service.FimUrlGeneratorService;
 import pfa.alliance.fim.service.ProjectManagementService;
 import pfa.alliance.fim.service.impl.DuplicateDataException;
@@ -112,9 +113,10 @@ public class CreateProjectActionBean
         {
             AuthenticatedUserDTO user = SecurityUtil.getUserFromSession( getSession() );
             ownerId = user.getId();
+            ProjectState state = ( activate != null && activate ) ? ProjectState.ACTIVE : ProjectState.IN_PREPARATION;
             Project project =
-                projectManagementService.create( projectName, projectCode, projectDescription, ownerId, null,
-                                                 getContext().getLocale() );
+                projectManagementService.create( projectName, projectCode, projectDescription, hidden, state, ownerId,
+                                                 null, getContext().getLocale() );
             dbOperationResult = PROJECT_CREATED_RESPONSE;
             // create URL to project
             String url = fimUrlGeneratorService.getProjectLink( project.getCode() );

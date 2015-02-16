@@ -16,6 +16,7 @@ import pfa.alliance.fim.dao.ProjectRepository;
 import pfa.alliance.fim.dao.UserRepository;
 import pfa.alliance.fim.dto.ProjectDTO;
 import pfa.alliance.fim.model.project.Project;
+import pfa.alliance.fim.model.project.ProjectState;
 import pfa.alliance.fim.model.user.User;
 import pfa.alliance.fim.service.EmailGeneratorService;
 import pfa.alliance.fim.service.EmailService;
@@ -64,7 +65,7 @@ public class ProjectManagementServiceImplTest
             new PersistenceException( new IllegalStateException( "Duplicate data violates unique constraint" ) );
         Mockito.when( projectRepositoryMock.save( Mockito.any( Project.class ) ) ).thenThrow( e );
 
-        projectManagementServiceImpl.create( "name", "code", "description", 1, null, Locale.US );
+        projectManagementServiceImpl.create( "name", "code", "description", false, null, 1, null, Locale.US );
 
         Mockito.verify( userRepositoryMock, Mockito.atLeastOnce() ).findOne( 1 );
         Mockito.verify( projectRepositoryMock, Mockito.atLeastOnce() ).save( Mockito.any( Project.class ) );
@@ -79,7 +80,7 @@ public class ProjectManagementServiceImplTest
         Exception e = new PersistenceException( "4 testing" );
         Mockito.when( projectRepositoryMock.save( Mockito.any( Project.class ) ) ).thenThrow( e );
 
-        projectManagementServiceImpl.create( "name", "code", "description", 1, null, Locale.US );
+        projectManagementServiceImpl.create( "name", "code", "description", false, null, 1, null, Locale.US );
 
         Mockito.verify( userRepositoryMock, Mockito.atLeastOnce() ).findOne( 1 );
         Mockito.verify( projectRepositoryMock, Mockito.atLeastOnce() ).save( Mockito.any( Project.class ) );
@@ -95,7 +96,29 @@ public class ProjectManagementServiceImplTest
         project.setId( 1 );
         Mockito.when( projectRepositoryMock.save( Mockito.any( Project.class ) ) ).thenReturn( project );
 
-        Project returned = projectManagementServiceImpl.create( "name", "code", "description", 1, null, Locale.US );
+        Project returned =
+            projectManagementServiceImpl.create( "name", "code", "description", false, null, 1, null, Locale.US );
+
+        Assert.assertNotNull( "Returned project should not be null", returned );
+        Assert.assertSame( "Returned project is different", project, returned );
+
+        Mockito.verify( userRepositoryMock, Mockito.atLeastOnce() ).findOne( 1 );
+        Mockito.verify( projectRepositoryMock, Mockito.atLeastOnce() ).save( Mockito.any( Project.class ) );
+    }
+
+    @Test
+    public void test_create_successHiddenAndActive()
+    {
+        User user = new User();
+        user.setId( 1 );
+        Mockito.when( userRepositoryMock.findOne( 1 ) ).thenReturn( user );
+        Project project = new Project();
+        project.setId( 1 );
+        Mockito.when( projectRepositoryMock.save( Mockito.any( Project.class ) ) ).thenReturn( project );
+
+        Project returned =
+            projectManagementServiceImpl.create( "name", "code", "description", true, ProjectState.ACTIVE, 1, null,
+                                                 Locale.US );
 
         Assert.assertNotNull( "Returned project should not be null", returned );
         Assert.assertSame( "Returned project is different", project, returned );
