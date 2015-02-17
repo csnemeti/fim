@@ -50,9 +50,10 @@ public interface UserManagerService
      * 
      * @param username the user login name
      * @param cleanPassword the user password in clear text form
-     * @return the authenticated {@link User} or null if there's no such {@link User}
+     * @return a DTO containing the the authenticated {@link User} or null if there's no such {@link User} and a map
+     *         with permissions based on each project
      */
-    User login( String username, String cleanPassword );
+    LoggedInUserDTO login( String username, String cleanPassword );
 
     /**
      * Generates a One time link that allows user to set a new password.

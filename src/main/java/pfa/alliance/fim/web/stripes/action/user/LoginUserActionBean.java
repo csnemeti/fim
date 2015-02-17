@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import pfa.alliance.fim.model.user.User;
 import pfa.alliance.fim.model.user.UserLogin;
 import pfa.alliance.fim.model.user.UserRole;
+import pfa.alliance.fim.service.LoggedInUserDTO;
 import pfa.alliance.fim.service.UserManagerService;
 import pfa.alliance.fim.web.common.FimPageURLs;
 import pfa.alliance.fim.web.security.AuthenticatedUserDTO;
@@ -83,8 +84,8 @@ public class LoginUserActionBean
     public Resolution tryLogin()
     {
         LOG.debug( "Trying to login..., username = {}", username );
-        User user = userManagerService.login( username, password );
-        processUserResultAndResultForwardToDashboard( user );
+        LoggedInUserDTO userDTO = userManagerService.login( username, password );
+        processUserResultAndResultForwardToDashboard( userDTO );
         if ( dbOperationResult == null )
         {
             return new RedirectResolution( FimPageURLs.USER_DASBOARD_PAGE.getURL() );
@@ -98,10 +99,11 @@ public class LoginUserActionBean
     /**
      * Check the {@link User} received as parameter and set {@link #dbOperationResult} according to that.
      * 
-     * @param user the {@link User} that contains information
+     * @param userDTO the {@link LoggedInUserDTO} that contains the {@link User} information
      */
-    private void processUserResultAndResultForwardToDashboard( User user )
+    private void processUserResultAndResultForwardToDashboard( LoggedInUserDTO userDTO )
     {
+        User user = userDTO.getUser();
         if ( user == null )
         {
             // handle invalid user or wrong password
@@ -118,7 +120,7 @@ public class LoginUserActionBean
                     dbOperationResult = DB_OPERATION_USER_DISABLED;
                     break;
                 case ACTIVE:
-                    setUserOnSession( user );
+                    setUserOnSession( userDTO );
                     break;
             }
 
@@ -130,13 +132,14 @@ public class LoginUserActionBean
      * 
      * @param user the user to set on session
      */
-    private void setUserOnSession( User user )
+    private void setUserOnSession( LoggedInUserDTO userDTO )
     {
+        User user = userDTO.getUser();
         Timestamp lastLogin = getUserLastLogin( user.getLogins() );
-        AuthenticatedUserDTO userDTO =
+        AuthenticatedUserDTO authenticatedUserDTO =
             new AuthenticatedUserDTO( user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(),
                                       user.getLogin(), lastLogin, convertPermissions( user ) );
-        SecurityUtil.putUserIntoSession( userDTO, getContext().getRequest().getSession( true ) );
+        SecurityUtil.putUserIntoSession( authenticatedUserDTO, getContext().getRequest().getSession( true ) );
     }
 
     /**

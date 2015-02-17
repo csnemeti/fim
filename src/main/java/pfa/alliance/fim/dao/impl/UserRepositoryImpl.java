@@ -72,6 +72,7 @@ class UserRepositoryImpl
         if ( isUserActive( user ) )
         {
             user.getLogins().size();
+            user.getUserProjectRelation().size();
         }
         return user;
     }

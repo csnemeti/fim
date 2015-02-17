@@ -22,6 +22,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 
 import pfa.alliance.fim.model.GenericModel;
 import pfa.alliance.fim.model.Identifiable;
+import pfa.alliance.fim.model.project.UserProjectRelation;
 
 /**
  * This class defines a user.
@@ -32,7 +33,7 @@ import pfa.alliance.fim.model.Identifiable;
 public class User
     extends GenericModel implements Identifiable<Integer>
 {
-    private static final long serialVersionUID = 4717969508781933238L;
+    private static final long serialVersionUID = 4717969508781933237L;
 
     /** The user ID. */
     @Id
@@ -76,6 +77,9 @@ public class User
 
     @OneToMany( mappedBy = "user", cascade = CascadeType.ALL )
     private Set<UserOneTimeLink> oneTimeLinks;
+
+    @OneToMany( mappedBy = "user" )
+    private Set<UserProjectRelation> userProjectRelation;
 
     @Override
     public Integer getId()
@@ -177,6 +181,16 @@ public class User
     public void setDefaultRole( UserRole defaultRole )
     {
         this.defaultRole = defaultRole;
+    }
+
+    public Set<UserProjectRelation> getUserProjectRelation()
+    {
+        return userProjectRelation;
+    }
+
+    public void setUserProjectRelation( Set<UserProjectRelation> userProjectRelation )
+    {
+        this.userProjectRelation = userProjectRelation;
     }
 
     @Override

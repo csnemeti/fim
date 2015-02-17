@@ -39,6 +39,7 @@ import pfa.alliance.fim.service.EmailService;
 import pfa.alliance.fim.service.EmailType;
 import pfa.alliance.fim.service.FimUrlGeneratorService;
 import pfa.alliance.fim.service.InvalidUserPasswordException;
+import pfa.alliance.fim.service.LoggedInUserDTO;
 import pfa.alliance.fim.service.UserActivationFailException;
 
 /**
@@ -193,7 +194,9 @@ public class UserManagerServiceImplTest
         user.setStatus( UserStatus.ACTIVE );
         when( userRepositoryMock.findBy( Mockito.anyString(), Mockito.anyString() ) ).thenReturn( user );
         // call
-        User responseUser = userManagetServiceImpl.login( "user1", "password1" );
+        LoggedInUserDTO responseUserDto = userManagetServiceImpl.login( "user1", "password1" );
+        Assert.assertNotNull( "LoggedInUserDTO should NOT be null", responseUserDto );
+        User responseUser = responseUserDto.getUser();
         // verify
         Assert.assertNotNull( "User should not be null", responseUser );
         Assert.assertSame( "User incompatibility", user, responseUser );
@@ -207,9 +210,9 @@ public class UserManagerServiceImplTest
         User user = null;
         when( userRepositoryMock.findBy( Mockito.anyString(), Mockito.anyString() ) ).thenReturn( user );
         // call
-        User responseUser = userManagetServiceImpl.login( "user1", "password1" );
+        LoggedInUserDTO responseUserDto = userManagetServiceImpl.login( "user1", "password1" );
         // verify
-        Assert.assertNull( "User should not be null", responseUser );
+        Assert.assertNull( "LoggedInUserDTO should be null", responseUserDto );
         verify( userRepositoryMock, Mockito.atLeastOnce() ).findBy( Mockito.anyString(), Mockito.anyString() );
     }
 
@@ -222,7 +225,9 @@ public class UserManagerServiceImplTest
         user.setStatus( UserStatus.NEW );
         when( userRepositoryMock.findBy( Mockito.anyString(), Mockito.anyString() ) ).thenReturn( user );
         // call
-        User responseUser = userManagetServiceImpl.login( "user1", "password1" );
+        LoggedInUserDTO responseUserDto = userManagetServiceImpl.login( "user1", "password1" );
+        Assert.assertNotNull( "LoggedInUserDTO should NOT be null", responseUserDto );
+        User responseUser = responseUserDto.getUser();
         // verify
         Assert.assertNotNull( "User should not be null", responseUser );
         Assert.assertSame( "User incompatibility", user, responseUser );
@@ -238,7 +243,9 @@ public class UserManagerServiceImplTest
         user.setStatus( UserStatus.DISABLED );
         when( userRepositoryMock.findBy( Mockito.anyString(), Mockito.anyString() ) ).thenReturn( user );
         // call
-        User responseUser = userManagetServiceImpl.login( "user1", "password1" );
+        LoggedInUserDTO responseUserDto = userManagetServiceImpl.login( "user1", "password1" );
+        Assert.assertNotNull( "LoggedInUserDTO should NOT be null", responseUserDto );
+        User responseUser = responseUserDto.getUser();
         // verify
         Assert.assertNotNull( "User should not be null", responseUser );
         Assert.assertSame( "User incompatibility", user, responseUser );

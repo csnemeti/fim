@@ -26,6 +26,8 @@ import pfa.alliance.fim.dao.UserOneTimeLinkRepository;
 import pfa.alliance.fim.dao.UserRepository;
 import pfa.alliance.fim.dto.UserSearchDTO;
 import pfa.alliance.fim.dto.UserSearchResultDTO;
+import pfa.alliance.fim.model.project.UserProjectRelation;
+import pfa.alliance.fim.model.project.UserRoleInsideProject;
 import pfa.alliance.fim.model.user.OneTimeLinkType;
 import pfa.alliance.fim.model.user.User;
 import pfa.alliance.fim.model.user.UserOneTimeLink;
@@ -37,6 +39,7 @@ import pfa.alliance.fim.service.EmailService;
 import pfa.alliance.fim.service.EmailType;
 import pfa.alliance.fim.service.FimUrlGeneratorService;
 import pfa.alliance.fim.service.InvalidUserPasswordException;
+import pfa.alliance.fim.service.LoggedInUserDTO;
 import pfa.alliance.fim.service.UserActivationFailException;
 import pfa.alliance.fim.service.UserManagerService;
 
@@ -264,16 +267,27 @@ class UserManagerServiceImpl
 
     @Override
     @Transactional
-    public User login( String username, String cleanPassword )
+    public LoggedInUserDTO login( String username, String cleanPassword )
     {
         LOG.debug( "Trying to login: {}", username );
+        LoggedInUserDTO userDto = null;
         User user = userRepository.findBy( username, encryptPassword( cleanPassword ) );
         LOG.debug( "Authentication result... username = {} --> user = {}", username, user );
         if ( user != null )
         {
+            if ( UserStatus.ACTIVE.equals( user.getStatus() ) )
+            {
+                Set<UserRole> roles = extractDistinctUserRoleInsideProjects( user );
+                LOG.debug( "Roles for user with ID = {}: {}", user.getId(), roles );
+            }
+            else
+            {
+                LOG.debug( "User with ID = {} is not ACTIVE, roles will not be retrived", user.getId() );
+            }
+            userDto = new LoggedInUserDTO( user );
             checkUserStatusForLogin( user );
         }
-        return user;
+        return userDto;
     }
 
     /**
@@ -295,6 +309,23 @@ class UserManagerServiceImpl
                 LOG.info( "User status has invalid status for login: {}", user );
                 break;
         }
+    }
+
+    /**
+     * Extracts all {@link UserRoleInsideProject} types this {@link User} has.
+     * 
+     * @param user the {@link User} that may be assigned to several roles
+     * @return a non-null {@link Set} of {@link UserRoleInsideProject}
+     */
+    private static Set<UserRole> extractDistinctUserRoleInsideProjects( User user )
+    {
+        Set<UserRole> roles = new HashSet<UserRole>();
+        roles.add( user.getDefaultRole() );
+        for ( UserProjectRelation relation : user.getUserProjectRelation() )
+        {
+            roles.add( relation.getUserRole().getCorrespondingUserRole() );
+        }
+        return roles;
     }
 
     /**
