@@ -25,10 +25,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import pfa.alliance.fim.dao.RoleAndPermissionRepository;
 import pfa.alliance.fim.dao.UserOneTimeLinkRepository;
 import pfa.alliance.fim.dao.UserRepository;
 import pfa.alliance.fim.dto.UserSearchDTO;
 import pfa.alliance.fim.dto.UserSearchResultDTO;
+import pfa.alliance.fim.model.project.UserProjectRelation;
 import pfa.alliance.fim.model.user.OneTimeLinkType;
 import pfa.alliance.fim.model.user.User;
 import pfa.alliance.fim.model.user.UserOneTimeLink;
@@ -61,6 +63,8 @@ public class UserManagerServiceImplTest
 
     private FimUrlGeneratorService fimUrlGeneratorServiceMock;
 
+    private RoleAndPermissionRepository roleAndPermissionRepositoryMock;
+
     @Before
     public void init()
     {
@@ -69,9 +73,11 @@ public class UserManagerServiceImplTest
         emailGeneratorServiceMock = Mockito.mock( EmailGeneratorService.class );
         fimUrlGeneratorServiceMock = Mockito.mock( FimUrlGeneratorService.class );
         userOneTimeLinkRepositoryMock = Mockito.mock( UserOneTimeLinkRepository.class );
+        roleAndPermissionRepositoryMock = Mockito.mock( RoleAndPermissionRepository.class );
         userManagetServiceImpl =
             new UserManagerServiceImpl( userRepositoryMock, emailServiceMock, emailGeneratorServiceMock,
-                                        fimUrlGeneratorServiceMock, userOneTimeLinkRepositoryMock );
+                                        fimUrlGeneratorServiceMock, userOneTimeLinkRepositoryMock,
+                                        roleAndPermissionRepositoryMock );
     }
 
     @Test
@@ -186,12 +192,36 @@ public class UserManagerServiceImplTest
     }
 
     @Test
-    public void test_login_validData()
+    public void test_login_validDataNoProjectAssigned()
     {
         // prepare
         User user = new User();
         user.setId( 1 );
         user.setStatus( UserStatus.ACTIVE );
+        user.setUserProjectRelation( new HashSet<>() );
+        user.setDefaultRole( UserRole.TEAM );
+        when( userRepositoryMock.findBy( Mockito.anyString(), Mockito.anyString() ) ).thenReturn( user );
+        // call
+        LoggedInUserDTO responseUserDto = userManagetServiceImpl.login( "user1", "password1" );
+        Assert.assertNotNull( "LoggedInUserDTO should NOT be null", responseUserDto );
+        User responseUser = responseUserDto.getUser();
+        // verify
+        Assert.assertNotNull( "User should not be null", responseUser );
+        Assert.assertSame( "User incompatibility", user, responseUser );
+        verify( userRepositoryMock, Mockito.atLeastOnce() ).findBy( Mockito.anyString(), Mockito.anyString() );
+    }
+
+    @Test
+    public void test_login_validDataWithProjectAssigned()
+    {
+        // prepare
+        User user = new User();
+        user.setId( 1 );
+        user.setStatus( UserStatus.ACTIVE );
+        // TODO this must be changed
+        Set<UserProjectRelation> relations = new HashSet<>();
+        user.setUserProjectRelation( relations );
+        user.setDefaultRole( UserRole.TEAM );
         when( userRepositoryMock.findBy( Mockito.anyString(), Mockito.anyString() ) ).thenReturn( user );
         // call
         LoggedInUserDTO responseUserDto = userManagetServiceImpl.login( "user1", "password1" );
