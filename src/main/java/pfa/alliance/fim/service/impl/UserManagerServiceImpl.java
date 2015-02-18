@@ -22,6 +22,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pfa.alliance.fim.dao.RoleAndPermissionRepository;
 import pfa.alliance.fim.dao.UserOneTimeLinkRepository;
 import pfa.alliance.fim.dao.UserRepository;
 import pfa.alliance.fim.dto.UserSearchDTO;
@@ -31,6 +32,7 @@ import pfa.alliance.fim.model.project.UserRoleInsideProject;
 import pfa.alliance.fim.model.user.OneTimeLinkType;
 import pfa.alliance.fim.model.user.User;
 import pfa.alliance.fim.model.user.UserOneTimeLink;
+import pfa.alliance.fim.model.user.UserPermission;
 import pfa.alliance.fim.model.user.UserRole;
 import pfa.alliance.fim.model.user.UserStatus;
 import pfa.alliance.fim.service.ActivationFailReason;
@@ -74,17 +76,21 @@ class UserManagerServiceImpl
 
     private final FimUrlGeneratorService fimUrlGeneratorService;
 
+    private final RoleAndPermissionRepository roleAndPermissionRepository;
+
     @Inject
     public UserManagerServiceImpl( UserRepository userRepository, EmailService emailService,
                                    EmailGeneratorService emailGeneratorService,
                                    FimUrlGeneratorService fimUrlGeneratorService,
-                                   UserOneTimeLinkRepository userOneTimeLinkRepository )
+                                   UserOneTimeLinkRepository userOneTimeLinkRepository,
+                                   RoleAndPermissionRepository roleAndPermissionRepository )
     {
         this.userRepository = userRepository;
         this.emailService = emailService;
         this.emailGeneratorService = emailGeneratorService;
         this.fimUrlGeneratorService = fimUrlGeneratorService;
         this.userOneTimeLinkRepository = userOneTimeLinkRepository;
+        this.roleAndPermissionRepository = roleAndPermissionRepository;
     }
 
     @Override
@@ -275,16 +281,20 @@ class UserManagerServiceImpl
         LOG.debug( "Authentication result... username = {} --> user = {}", username, user );
         if ( user != null )
         {
+            Map<UserRole, List<UserPermission>> permissions = null;
             if ( UserStatus.ACTIVE.equals( user.getStatus() ) )
             {
                 Set<UserRole> roles = extractDistinctUserRoleInsideProjects( user );
                 LOG.debug( "Roles for user with ID = {}: {}", user.getId(), roles );
+                permissions = roleAndPermissionRepository.findPermissionsFor( roles );
+                LOG.debug( "Permissions for user with ID = {}: {}", user.getId(), permissions );
             }
             else
             {
                 LOG.debug( "User with ID = {} is not ACTIVE, roles will not be retrived", user.getId() );
+                permissions = new HashMap<>();
             }
-            userDto = new LoggedInUserDTO( user );
+            userDto = new LoggedInUserDTO( user, permissions );
             checkUserStatusForLogin( user );
         }
         return userDto;

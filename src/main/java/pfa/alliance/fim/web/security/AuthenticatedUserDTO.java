@@ -5,11 +5,13 @@ package pfa.alliance.fim.web.security;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -45,7 +47,7 @@ public class AuthenticatedUserDTO
     private final Timestamp lastLogin;
 
     /** List of permissions assigned by each project. */
-    private final Map<Integer, List<Permission>> projectPermissions;
+    private final Map<Integer, Collection<Permission>> projectPermissions;
 
     /**
      * Called when instance of this class is created.
@@ -60,7 +62,7 @@ public class AuthenticatedUserDTO
      *            key
      */
     public AuthenticatedUserDTO( int id, String firstName, String lastName, String email, String username,
-                                 Timestamp lastLogin, Map<Integer, List<Permission>> projectPermissions )
+                                 Timestamp lastLogin, Map<Integer, ? extends Collection<Permission>> projectPermissions )
     {
         this.id = id;
         this.firstName = firstName;
@@ -78,14 +80,14 @@ public class AuthenticatedUserDTO
      * @param projectPermissions the map to "clone"
      * @return the cloned {@link Map}
      */
-    private static Map<Integer, List<Permission>> getPermissionsClone( Map<Integer, List<Permission>> projectPermissions )
+    private static Map<Integer, Collection<Permission>> getPermissionsClone( Map<Integer, ? extends Collection<Permission>> projectPermissions )
     {
-        Map<Integer, List<Permission>> copyProjectPermissions = new HashMap<Integer, List<Permission>>();
+        Map<Integer, Collection<Permission>> copyProjectPermissions = new HashMap<>();
         if ( projectPermissions != null )
         {
-            for ( Map.Entry<Integer, List<Permission>> permissions : projectPermissions.entrySet() )
+            for ( Map.Entry<Integer, ? extends Collection<Permission>> permissions : projectPermissions.entrySet() )
             {
-                List<Permission> copyPermissions = new ArrayList<Permission>( permissions.getValue() );
+                Set<Permission> copyPermissions = new HashSet<>( permissions.getValue() );
                 copyProjectPermissions.put( permissions.getKey(), copyPermissions );
             }
         }
@@ -158,7 +160,7 @@ public class AuthenticatedUserDTO
     public boolean hasPermission( Integer projectId, Permission permission )
     {
         boolean found = false;
-        List<Permission> permissions = projectPermissions.get( projectId );
+        Collection<Permission> permissions = projectPermissions.get( projectId );
         if ( permissions != null )
         {
             found = permissions.contains( permission );

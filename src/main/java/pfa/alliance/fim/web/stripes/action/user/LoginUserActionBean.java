@@ -4,8 +4,8 @@
 package pfa.alliance.fim.web.stripes.action.user;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -19,11 +19,14 @@ import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.UrlBinding;
 import net.sourceforge.stripes.validation.Validate;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pfa.alliance.fim.model.project.UserProjectRelation;
 import pfa.alliance.fim.model.user.User;
 import pfa.alliance.fim.model.user.UserLogin;
+import pfa.alliance.fim.model.user.UserPermission;
 import pfa.alliance.fim.model.user.UserRole;
 import pfa.alliance.fim.service.LoggedInUserDTO;
 import pfa.alliance.fim.service.UserManagerService;
@@ -138,35 +141,52 @@ public class LoginUserActionBean
         Timestamp lastLogin = getUserLastLogin( user.getLogins() );
         AuthenticatedUserDTO authenticatedUserDTO =
             new AuthenticatedUserDTO( user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(),
-                                      user.getLogin(), lastLogin, convertPermissions( user ) );
+                                      user.getLogin(), lastLogin, convertPermissions( userDTO ) );
         SecurityUtil.putUserIntoSession( authenticatedUserDTO, getContext().getRequest().getSession( true ) );
     }
 
     /**
      * Convert the existing user permission into expected format.
      * 
-     * @param user the {@link User} with it's own permission system
+     * @param userDTO the {@link LoggedInUserDTO} containing the {@link User} with it's own permission system
      * @return the expected format for {@link AuthenticatedUserDTO}. Key is a Project ID, value is list or
      *         {@link Permission}s from that Project. null key keeps the default Permissions.
      */
-    private Map<Integer, List<Permission>> convertPermissions( User user )
+    private static Map<Integer, Set<Permission>> convertPermissions( LoggedInUserDTO userDTO )
     {
-        Map<Integer, List<Permission>> permissionsMap = new HashMap<Integer, List<Permission>>();
+        // we convert the map with permissions
+        Map<UserRole, Set<Permission>> rolePermissionsMap = new HashMap<>();
+        Map<UserRole, List<UserPermission>> userDtoPermissions = userDTO.getPermissions();
+        for ( Map.Entry<UserRole, List<UserPermission>> permissionEntry : userDtoPermissions.entrySet() )
+        {
+            Set<Permission> permissionsForRole = new HashSet<>();
+            rolePermissionsMap.put( permissionEntry.getKey(), permissionsForRole );
+            for ( UserPermission userPermission : permissionEntry.getValue() )
+            {
+                permissionsForRole.add( Permission.valueOf( userPermission.name() ) );
+            }
+        }
+        // for small memory footprint we clear the OLD permissions
+        userDtoPermissions.clear();
 
-        // TODO - remove dummy
-        List<Permission> permissions = new ArrayList<Permission>();
-        if ( UserRole.PRODUCT_OWNER.equals( user.getDefaultRole() )
-            || UserRole.SCRUM_MASTER.equals( user.getDefaultRole() ) || UserRole.ADMIN.equals( user.getDefaultRole() ) )
+        User user = userDTO.getUser();
+        Map<Integer, Set<Permission>> permissionsMap = new HashMap<>();
+        // we add the default mapping
+        permissionsMap.put( null, rolePermissionsMap.get( user.getDefaultRole() ) );
+        // we add the mapping based on project ID, null means default set
+        Set<UserProjectRelation> userProjectRelation = user.getUserProjectRelation();
+        if ( CollectionUtils.isNotEmpty( userProjectRelation ) )
         {
-            permissions.add( Permission.PROJECT_CREATE_PROJECT );
-            permissions.add( Permission.PROJECT_LIST_PROJECTS );
+            for ( UserProjectRelation relation : userProjectRelation )
+            {
+                UserRole role = relation.getUserRole().getCorrespondingUserRole();
+                permissionsMap.put( relation.getProject().getId(), rolePermissionsMap.get( role ) );
+            }
+            // for small memory footprint we clear the userProjectRelation
+            userProjectRelation.clear();
         }
-        if ( UserRole.ADMIN.equals( user.getDefaultRole() ) )
-        {
-            permissions.add( Permission.ADMIN_INVITE_USER );
-            permissions.add( Permission.ADMIN_SEARCH_USERS );
-        }
-        permissionsMap.put( null, permissions );
+
+        LOG.debug( "Permissions for user ID = {} : {}", user.getId(), permissionsMap );
         return permissionsMap;
     }
 
@@ -176,7 +196,7 @@ public class LoginUserActionBean
      * @param logins the list of last logins
      * @return the last login or the current time if list is empty
      */
-    private static Timestamp getUserLastLogin( Set<UserLogin> logins )
+    private static Timestamp getUserLastLogin( final Set<UserLogin> logins )
     {
         Timestamp lastLogin = null;
         for ( UserLogin login : logins )
@@ -193,6 +213,9 @@ public class LoginUserActionBean
                 }
             }
         }
+        // for small memory footprint we clear the logins
+        logins.clear();
+        // theoretical null guard
         if ( lastLogin == null )
         {
             lastLogin = new Timestamp( System.currentTimeMillis() );
