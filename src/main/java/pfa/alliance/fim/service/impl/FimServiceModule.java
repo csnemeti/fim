@@ -72,7 +72,7 @@ public class FimServiceModule
      * @return the JPA configuration
      */
     @Provides
-    @JpaConfiguration
+    @ServiceConfiguration( ServiceConfigurationType.JPA )
     public Properties getJpaConfiguration()
     {
         LOG.debug( "Reading JPA configuration..." );
@@ -89,7 +89,7 @@ public class FimServiceModule
      * @return the email configuration
      */
     @Provides
-    @EmailConfiguration
+    @ServiceConfiguration( ServiceConfigurationType.EMAIL )
     public Properties getEmailConfiguration()
     {
         LOG.debug( "Reading e-mail configuration..." );

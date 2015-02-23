@@ -41,7 +41,7 @@ public class EmailServiceImpl
     private Provider<Properties> emailConfiguration;
 
     @Inject
-    public EmailServiceImpl( @EmailConfiguration Provider<Properties> emailConfiguration )
+    public EmailServiceImpl( @ServiceConfiguration( ServiceConfigurationType.EMAIL ) Provider<Properties> emailConfiguration )
     {
         this.emailConfiguration = emailConfiguration;
     }

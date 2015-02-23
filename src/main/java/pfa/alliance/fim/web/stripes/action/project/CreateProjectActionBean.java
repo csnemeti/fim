@@ -115,8 +115,8 @@ public class CreateProjectActionBean
             ownerId = user.getId();
             ProjectState state = ( activate != null && activate ) ? ProjectState.ACTIVE : ProjectState.IN_PREPARATION;
             Project project =
-                projectManagementService.create( projectName, projectCode, projectDescription, hidden, state, ownerId,
-                                                 null, getContext().getLocale() );
+                projectManagementService.create( projectName, projectCode, projectDescription, isHiddenSet(), state,
+                                                 ownerId, null, getContext().getLocale() );
             dbOperationResult = PROJECT_CREATED_RESPONSE;
             // create URL to project
             String url = fimUrlGeneratorService.getProjectLink( project.getCode() );
@@ -182,6 +182,11 @@ public class CreateProjectActionBean
     public Boolean getHidden()
     {
         return hidden;
+    }
+
+    public boolean isHiddenSet()
+    {
+        return hidden != null && hidden;
     }
 
     public void setHidden( Boolean hidden )

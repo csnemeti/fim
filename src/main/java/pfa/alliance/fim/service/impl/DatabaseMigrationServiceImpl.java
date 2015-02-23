@@ -35,7 +35,7 @@ class DatabaseMigrationServiceImpl
      * @param jpaConfiguration the configuration properties for JPA
      */
     @Inject
-    DatabaseMigrationServiceImpl( @JpaConfiguration Properties jpaConfiguration )
+    DatabaseMigrationServiceImpl( @ServiceConfiguration( ServiceConfigurationType.JPA ) Properties jpaConfiguration )
     {
         this.jpaConfiguration = jpaConfiguration;
         LOG.debug( "Instance created..." );
