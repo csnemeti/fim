@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Balaceanu Sergiu-Denis
  */
-public class ManifestUtils
+public final class ManifestUtils
 {
     private static final Logger LOG = LoggerFactory.getLogger( ManifestUtils.class );
 

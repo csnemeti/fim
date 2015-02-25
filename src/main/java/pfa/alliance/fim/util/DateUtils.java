@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Balaceanu Sergiu-Denis
  */
-public class DateUtils
+public final class DateUtils
 {
 
     private static final Logger LOG = LoggerFactory.getLogger( DateUtils.class );

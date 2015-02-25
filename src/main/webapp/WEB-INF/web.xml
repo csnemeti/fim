@@ -38,6 +38,22 @@
 	</filter-mapping>
 
 	<filter>
+		<display-name>Filter used for changing Locale</display-name>
+		<filter-name>LocaleChangeFilter</filter-name>
+		<filter-class>pfa.alliance.fim.servlets.LocaleChangeFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>LocaleChangeFilter</filter-name>
+		<url-pattern>*.jsp</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>LocaleChangeFilter</filter-name>
+		<servlet-name>StripesDispatcher</servlet-name>
+		<dispatcher>REQUEST</dispatcher>
+	</filter-mapping>
+	
+	<filter>
 		<display-name>Stripes Filter</display-name>
 		<filter-name>StripesFilter</filter-name>
 		<filter-class>net.sourceforge.stripes.controller.StripesFilter</filter-class>
@@ -55,7 +71,7 @@
 		</init-param>
 		<init-param>
 			<param-name>Extension.Packages</param-name>
-			<param-value>com.silvermindsoftware.sg.extension</param-value>
+			<param-value>com.silvermindsoftware.sg.extension,pfa.alliance.fim.web.stripes.extensions</param-value>
 		</init-param>
 		<init-param>
 			<param-name>ActionResolver.Packages</param-name>
@@ -68,8 +84,12 @@
 			</param-value>
 		</init-param>
 		<init-param>
+            <param-name>LocalePicker.Class</param-name>            
+			<param-value>pfa.alliance.fim.web.stripes.StripesLocalePicker</param-value>
+        </init-param>
+		<init-param>
 			<param-name>LocalePicker.Locales</param-name>
-			<param-value>en:UTF-8</param-value>
+			<param-value>en:UTF-8,ro:UTF-8</param-value>
 		</init-param>
 	</filter>
 	<filter-mapping>

@@ -13,8 +13,8 @@
 	        specialKeys.push(37); //Left
 	        specialKeys.push(39); //Right
 	        
-	        specialKeys.push(43); //Plus
-	        specialKeys.push(45); //Minus
+	        //specialKeys.push(43); //Plus
+	        //specialKeys.push(45); //Minus
 	        specialKeys.push(95); //Underscore
 	        
 			function clearFormContent(theForm){
@@ -85,7 +85,7 @@
 				<stripes:text class="form-control clearable" name="projectName" id="projectName"></stripes:text>
 			</div>
 			<div class="form-group">
-				<label for="projectCode" class="col-sm-6 control-label">Project Code (only letters, numbers, underscore (_), plus (+) and minus(-)):</label>
+				<label for="projectCode" class="col-sm-6 control-label">Project Code (only letters, numbers and underscore (_)):</label>
 				<stripes:text class="form-control clearable" name="projectCode" id="projectCode" onkeypress="return isValidForCode(event);"></stripes:text>
 			</div>
 			<div class="form-group">
