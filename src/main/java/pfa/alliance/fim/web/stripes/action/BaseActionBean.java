@@ -1,8 +1,13 @@
 package pfa.alliance.fim.web.stripes.action;
 
 import java.util.Date;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.servlet.jsp.jstl.core.Config;
+import javax.servlet.jsp.jstl.fmt.LocalizationContext;
 
 import net.sourceforge.stripes.action.ActionBean;
 import net.sourceforge.stripes.action.ActionBeanContext;
@@ -11,6 +16,7 @@ import net.sourceforge.stripes.action.LocalizableMessage;
 import org.joda.time.Period;
 
 import pfa.alliance.fim.util.DateUtils;
+import pfa.alliance.fim.util.UTF8Control;
 
 /**
  * Base entity for action beans that implements trivial methods.
@@ -20,12 +26,23 @@ import pfa.alliance.fim.util.DateUtils;
 public abstract class BaseActionBean
     implements ActionBean
 {
+    /** This class is used for loading UTF-8 based resources from properties file. */
+    private static final ResourceBundle.Control UTF8_CONTROL = new UTF8Control();
+
     private ActionBeanContext context;
 
     @Override
     public void setContext( ActionBeanContext context )
     {
         this.context = context;
+
+        // configuration for JSTL - FMT
+        HttpServletRequest request = context.getRequest();
+        HttpSession session = request.getSession( true );
+        Locale locale = request.getLocale();
+
+        ResourceBundle bundle = ResourceBundle.getBundle( "StripesResources", locale, UTF8_CONTROL );
+        Config.set( session, Config.FMT_LOCALIZATION_CONTEXT, new LocalizationContext( bundle, locale ) );
     }
 
     @Override
