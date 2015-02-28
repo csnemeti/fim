@@ -6,7 +6,7 @@
 
 	<div class="footer">
 		<p align="center">
-			<fmt:message key="footer.version" /> ${actionBean.version} distributed under <a>Apache License</a>.
+			<fmt:message key="footer.version" /> ${actionBean.version} <fmt:message key="footer.distributed.under.license" />.
 			<fmt:message key="footer.this.site.use.cookies" />, <a>Check here</a>!
 		</p>
 		<p align="center">Contact: .... About: ....</p>

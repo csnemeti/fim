@@ -62,6 +62,28 @@ public abstract class BaseActionBean
     }
 
     /**
+     * Gets the used {@link Locale} for this request.
+     * 
+     * @return the {@link Locale} to use
+     */
+    public Locale getLocale()
+    {
+        return context.getLocale();
+    }
+
+    /**
+     * Gets the language part from the used {@link Locale}.
+     * 
+     * @return the language part from locale
+     * @see #getLocale()
+     * @see Locale#getLanguage()
+     */
+    public String getLocaleLanguage()
+    {
+        return getLocale().getLanguage();
+    }
+
+    /**
      * Gets a localization messages.
      * 
      * @param key the message key

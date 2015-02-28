@@ -12,8 +12,8 @@
     	<div class="form-group">
     		${actionBean.dbOperationResult}
     	</div>
-    	<stripes:submit class="btn btn-default" name="tryForgotPassword" value="Submit..." ></stripes:submit> 
-    	<input type="button" class="btn btn-default" name="reset" value="Clear" onclick="clearFormContent(this.form)"/> 
+    	<stripes:submit class="btn btn-default" name="tryForgotPassword"></stripes:submit> 
+    	<stripes:button class="btn btn-default" name="reset" onclick="clearFormContent(this.form)"></stripes:button> 
 	</div>
 	</div>
 </stripes:form>

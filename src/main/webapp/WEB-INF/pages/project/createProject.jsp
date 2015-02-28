@@ -1,8 +1,10 @@
 <%@ taglib prefix="stripes" uri="http://stripes.sourceforge.net/stripes.tld" %>
-<stripes:layout-render name="/WEB-INF/pages/layout/default.jsp" pageTitle="FIM: Create Project">
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"  %>
+
+<stripes:layout-render name="/WEB-INF/pages/layout/default.jsp" pageTitle="${actionBean.title}">
 	<stripes:layout-component name="header">
 		<script type="text/javascript" src="<stripes:url value="/js/jquery-validation-1.13.0/jquery.validate.min.js" />"></script>
-		<script type="text/javascript" src="<stripes:url value="/js/jquery-validation-1.13.0/localization/messages_en.min.js" />"></script>
+		<script type="text/javascript" src="<stripes:url value="/js/jquery-validation-1.13.0/localization/messages_${actionBean.localeLanguage}.min.js" />"></script>
 		<script type="text/javascript">
 			var specialKeys = new Array();
 	        specialKeys.push(8); //Backspace
@@ -46,10 +48,10 @@
 				// set the placeholder
 				var placeholderSupported = ( 'placeholder' in document.createElement('input') );
 				if(placeholderSupported){
-					document.getElementById("projectName").placeholder = "Enter a name for the project";
-					document.getElementById("projectCode").placeholder = "Enter a code for the project";
-					document.getElementById("projectDescription").placeholder = "Enter a description for the project";
-					document.getElementById("ownerName").placeholder = "Enter the project owner";
+					document.getElementById("projectName").placeholder = "<fmt:message key='project.create.projectName.placeholder' />";
+					document.getElementById("projectCode").placeholder = "<fmt:message key='project.create.projectCode.placeholder' />";
+					document.getElementById("projectDescription").placeholder = "<fmt:message key='project.create.projectDescription.placeholder' />";
+					document.getElementById("ownerName").placeholder = "<fmt:message key='project.create.ownerName.placeholder' />";
 				}
 				$("[data-toggle='tooltip']").tooltip();
 				// validate the comment form when it is submitted
@@ -81,26 +83,26 @@
 	<stripes:form beanclass="pfa.alliance.fim.web.stripes.action.project.CreateProjectActionBean" focus="projectName" id="prjForm" class="form-horizontal">  
 		<div class="">
 			<div class="form-group">
-				<label for="projectName" class="col-sm-2 control-label">Name:</label>
+				<label for="projectName" class="col-sm-2 control-label"><fmt:message key="project.create.projectName" /></label>
 				<stripes:text class="form-control clearable" name="projectName" id="projectName"></stripes:text>
 			</div>
 			<div class="form-group">
-				<label for="projectCode" class="col-sm-6 control-label">Project Code (only letters, numbers and underscore (_)):</label>
+				<label for="projectCode" class="col-sm-6 control-label"><fmt:message key="project.create.projectCode" /></label>
 				<stripes:text class="form-control clearable" name="projectCode" id="projectCode" onkeypress="return isValidForCode(event);"></stripes:text>
 			</div>
 			<div class="form-group">
-				<label for="projectName" class="col-sm-2 control-label">Description:</label>
+				<label for="projectName" class="col-sm-2 control-label"><fmt:message key="project.create.projectDescription" /></label>
 				<stripes:textarea class="form-control clearable" rows="5" cols="40" name="projectDescription" id="projectDescription"></stripes:textarea>
 			</div>
 			<div class="form-group">
-				<label for="ownerName" class="col-sm-2 control-label">Project owner:</label>
+				<label for="ownerName" class="col-sm-2 control-label"><fmt:message key="project.create.ownerName" /></label>
 				<stripes:text class="form-control" name="ownerName" id="ownerName" readonly="readonly"></stripes:text>
 			</div>
 			<div class="form-group">
-				<stripes:checkbox class="" name="hidden" id="hidden"></stripes:checkbox> Make the project <a href="javascript: void(0)" data-toggle="tooltip" title="Hidden project means is not displayed on search.">hidden</a>
+				<stripes:checkbox class="" name="hidden" id="hidden"></stripes:checkbox> <fmt:message key="project.create.projectHidden" />
 			</div>
 			<div class="form-group">
-				<stripes:checkbox class="" name="activate" id="activate"></stripes:checkbox> <a href="javascript: void(0)" data-toggle="tooltip" title="By default projects are created with state IN PREPARATION. If you check this, projects state will be ACTIVE.">Activate</a> project directly
+				<stripes:checkbox class="" name="activate" id="activate"></stripes:checkbox> <fmt:message key="project.create.projectActive" />
 			</div>
 
 			<div class="form-group error">
@@ -109,8 +111,8 @@
      		<div class="form-group">
      			${actionBean.dbOperationResult}
      		</div>
-			<stripes:submit  class="btn btn-default" name="create" value="Submit"></stripes:submit>
-			<input  class="btn btn-default" type="button" name="reset" value="Clear" onclick="clearFormContent(this.form)"/>  
+			<stripes:submit class="btn btn-default" name="create" value="Submit"></stripes:submit>
+			<stripes:button class="btn btn-default" name="reset" onclick="clearFormContent(this.form)"></stripes:button>  
 		</div>
 	</stripes:form>
 	</stripes:layout-component>
