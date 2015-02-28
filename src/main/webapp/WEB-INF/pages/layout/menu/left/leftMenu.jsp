@@ -22,8 +22,8 @@
 				<!-- ISSUES -->
 				<stripes:layout-render name="/WEB-INF/pages/layout/menu/left/issuesItem.jsp"/>
 				
-				<!-- AGILE -->
-				<stripes:layout-render name="/WEB-INF/pages/layout/menu/left/agileItem.jsp"/>
+				<!-- AGILE 
+				<stripes:layout-render name="/WEB-INF/pages/layout/menu/left/agileItem.jsp"/> -->
 				
 				<!-- PROJECT -->
 				<stripes:layout-render name="/WEB-INF/pages/layout/menu/left/projectItem.jsp"/>
@@ -33,7 +33,6 @@
 			</ul>
 			
 		</div>
-		<!-- /.sidebar-collapse -->
 	</div>
 
 </stripes:layout-definition>

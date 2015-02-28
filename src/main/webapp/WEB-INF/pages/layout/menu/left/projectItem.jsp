@@ -11,15 +11,15 @@
 		</a>
 		<ul class="nav nav-second-level collapse">
 			<li>
-				<stripes:link beanclass="pfa.alliance.fim.web.stripes.action.project.CreateProjectActionBean">
-					<i class="fa fa-plus fa-fw"></i>
-					<stripes:label for="createProjectItem" />
+				<stripes:link beanclass="pfa.alliance.fim.web.stripes.action.project.SearchProjectsActionBean">
+					<i class="fa fa-search fa-fw"></i>
+					<stripes:label for="listProjectsItem" />
 				</stripes:link>
 			</li>
 			<li>
 				<stripes:link beanclass="pfa.alliance.fim.web.stripes.action.project.CreateProjectActionBean">
-					<i class="fa fa-list-ol fa-fw"></i>
-					<stripes:label for="listProjectsItem" />
+					<i class="fa fa-plus fa-fw"></i>
+					<stripes:label for="createProjectItem" />
 				</stripes:link>
 			</li>
 		</ul>
