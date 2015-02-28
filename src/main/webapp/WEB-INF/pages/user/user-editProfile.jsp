@@ -1,7 +1,8 @@
 <%@ taglib prefix="stripes" uri="http://stripes.sourceforge.net/stripes.tld" %>
-<%@ taglib  prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>	
+<%@ taglib  prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"  %>	
 
-<stripes:layout-render name="/WEB-INF/pages/layout/default.jsp" pageTitle="FIM: User search">
+<stripes:layout-render name="/WEB-INF/pages/layout/default.jsp" pageTitle="${actionBean.title}">
 	<stripes:layout-component name="header">
 		<style type="text/css">
 			h1 {
@@ -13,7 +14,7 @@
 		
 		<script type="text/javascript" src="<stripes:url value="/js/bootstrap-multiselect/js/bootstrap-multiselect.js" />"></script>		
 		<script type="text/javascript" src="<stripes:url value="/js/jquery-validation-1.13.0/jquery.validate.min.js" />"></script>
-		<script type="text/javascript" src="<stripes:url value="/js/jquery-validation-1.13.0/localization/messages_en.min.js" />"></script>
+		<script type="text/javascript" src="<stripes:url value="/js/jquery-validation-1.13.0/localization/messages_${actionBean.localeLanguage}.min.js" />"></script>
 		
 		<script type="text/javascript">
 			var localeMap = ${actionBean.localizationString};
@@ -95,7 +96,7 @@
 	       	<div class="col-md-8" style="margin-top: 20px; min-width:400px">
 	       		<div class="panel panel-primary">
 	            	<div class="panel-heading">
-	            		<h1>Change User Data</h1>
+	            		<h1><fmt:message key="user.profile.changeUserData"/></h1>
 	              	</div>
 	              	<div class="panel-body">
 				        <stripes:form beanclass="pfa.alliance.fim.web.stripes.action.user.EditOwnProfileActionBean" focus="firstName" id="dataForm">
@@ -151,8 +152,8 @@
 						     	</div>
 							</div>
 				        	<div align="center" style="padding-top: 10px">
-								<stripes:submit class="btn btn-default" name="changeData" value="Change"></stripes:submit>
-								<stripes:reset class="btn btn-default" name="resetEmail" value="Reset"></stripes:reset>
+								<stripes:submit class="btn btn-default" name="changeData"></stripes:submit>
+								<stripes:reset  class="btn btn-default" name="resetData"></stripes:reset>
 				        	</div>	              		
 				        </stripes:form>
 					</div>
@@ -164,7 +165,7 @@
 	       	<div class="col-md-8" style="margin-top: 20px; min-width:400px">
 	       		<div class="panel panel-primary">
 	            	<div class="panel-heading">
-	            		<h1>Change Password</h1>
+	            		<h1><fmt:message key="user.profile.changePassword"/></h1>
 	              	</div>
 	              	<div class="panel-body">
 				        <stripes:form beanclass="pfa.alliance.fim.web.stripes.action.user.EditOwnProfileActionBean" id="passwordForm">
@@ -206,8 +207,8 @@
 						     	</div>
 							</div>
 				        	<div align="center" style="padding-top: 10px">
-								<stripes:submit class="btn btn-default" name="changePassword" value="Change"></stripes:submit>
-								<input class="btn btn-default" type="button" name="reset" value="Clear" onclick="clearFormContent(this.form)"/>  
+								<stripes:submit class="btn btn-default" name="changePassword"></stripes:submit>
+								<stripes:button class="btn btn-default" name="clear" onclick="clearFormContent(this.form)"></stripes:button>  
 				        	</div>
 				        </stripes:form>	
 					</div>
@@ -256,7 +257,7 @@
 	       	<div class="col-md-8" style="margin-top: 20px; min-width:400px">
 	       		<div class="panel panel-primary">
 	            	<div class="panel-heading">
-	            		<h1>Disable account</h1>
+	            		<h1><fmt:message key="user.profile.disableAccount"/></h1>
 	              	</div>
 	              	<div class="panel-body">
 	              		<stripes:form beanclass="pfa.alliance.fim.web.stripes.action.user.EditOwnProfileActionBean" id="disableAccountForm">
@@ -278,7 +279,7 @@
 						     	</div>
 							</div>
 				        	<div align="center" style="padding-top: 10px">
-								<stripes:submit class="btn btn-default" name="disableAccout" value="Disable..."></stripes:submit>
+								<stripes:submit class="btn btn-default" name="disableAccout"></stripes:submit>
 				        	</div>	              		
 	              		</stripes:form>
 					</div>

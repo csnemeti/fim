@@ -1,7 +1,8 @@
 <%@ taglib prefix="stripes" uri="http://stripes.sourceforge.net/stripes.tld" %>
-<%@ taglib  prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>	
+<%@ taglib  prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"  %>	
 
-<stripes:layout-render name="/WEB-INF/pages/layout/default.jsp" pageTitle="FIM: User search">
+<stripes:layout-render name="/WEB-INF/pages/layout/default.jsp" pageTitle="${actionBean.title}">
 	<stripes:layout-component name="header">
 		<link rel="stylesheet" href="<stripes:url value="/js/bootstrap-multiselect/css/bootstrap-multiselect.css" />" type="text/css"/>
 		<link rel="stylesheet" href="<stripes:url value="/js/datatables.net-1.10.4/jquery.dataTables.min.css" />" type="text/css"/>
@@ -25,7 +26,7 @@
 		<script type="text/javascript" src="<stripes:url value="/js/datatables.net-1.10.4/dataTables.jqueryui.js" />"></script>
 		
 		<script type="text/javascript" src="<stripes:url value="/js/jquery-validation-1.13.0/jquery.validate.min.js" />"></script>
-		<script type="text/javascript" src="<stripes:url value="/js/jquery-validation-1.13.0/localization/messages_en.min.js" />"></script>
+		<script type="text/javascript" src="<stripes:url value="/js/jquery-validation-1.13.0/localization/messages_${actionBean.localeLanguage}.min.js" />"></script>
 		
 		<script type="text/javascript">
 			var localeMap = ${actionBean.localizationString};
@@ -44,17 +45,19 @@
 			
 			$().ready(function() {
 				$('#roles').multiselect({
-					numberDisplayed: 1
+					numberDisplayed: 1,
+					nonSelectedText: "<fmt:message key='multiselect.noneSelected' />"
 				});
 				$('#statuses').multiselect({
-					numberDisplayed: 1
+					numberDisplayed: 1,
+					nonSelectedText: "<fmt:message key='multiselect.noneSelected' />"
 				});
 				// set the placeholder
 				var placeholderSupported = ( 'placeholder' in document.createElement('input') );
 				if(placeholderSupported){
-					document.getElementById("firstName").placeholder = "Starts with...";
-					document.getElementById("lastName").placeholder = "Starts with...";
-					document.getElementById("email").placeholder = "Contains...";
+					document.getElementById("firstName").placeholder = "<fmt:message key='userSearch.firstName.placeholder' />";
+					document.getElementById("lastName").placeholder = "<fmt:message key='userSearch.lastName.placeholder' />";
+					document.getElementById("email").placeholder = "<fmt:message key='userSearch.email.placeholder' />";
 				}
 				
 			<c:if test="${actionBean.showResults}">				
@@ -77,16 +80,22 @@
 			        	"url" : "<c:url value="${actionBean.resultsUrl}" />",
 			        	"type": "POST"
 			        },
-			        <%-- Pagination, no localization is necessary. --%>
-			        "oLanguage": 
-				            {"oPaginate": 
+			        <%-- Pagination, and localization. http://legacy.datatables.net/usage/i18n --%>
+			        "oLanguage": {
+			        		"oPaginate": <%-- No localization required. --%>
 				                  {
 				                  "sNext": '&gt;',
 				                  "sLast": '&gt;&gt;',
 				                  "sFirst": '&lt;&lt;',
 				                  "sPrevious": '&lt;'
-				                  }
-	            			},
+				                  },
+				            "sInfoThousands": " ", <%-- thousand separator --%>
+				    		"sLengthMenu": "<fmt:message key='datatables.sLengthMenu' />",
+				    		"sEmptyTable": "<fmt:message key='datatables.search.sEmptyTable' />",
+				    		"sInfoEmpty": "<fmt:message key='datatables.search.sInfoEmpty' />",
+				    		"sLoadingRecords": "<fmt:message key='datatables.sLoadingRecords' />",
+				    		"sInfo": "<fmt:message key='datatables.sInfo' />"
+	            	},
 	            	<%-- Column definition. --%>
 	            	"aoColumns": [
 	                          { "mData" : null, "sWidth":"25px", "bSortable": false, "sClass": "rowIndex", "mRender": function (data) { return data.indexInTotalResults + 1;}},
@@ -118,7 +127,7 @@
         	<div class="row">
         		<div class="col-sm-6">
 					<div class="form-group form-group-sm">
-						<stripes:label class="col-sm-4 control-label" for="userRegistration.firstName"/>
+						<stripes:label class="col-sm-4 control-label" for="userSearch.firstName"/>
 						<div class="col-sm-8">
 		     			<stripes:text class="form-control input-sm" name="userSearch.firstName" id="firstName" maxlength="100"></stripes:text>
 		     			</div>
@@ -126,7 +135,7 @@
 		     	</div>
         		<div class="col-sm-6">
 					<div class="form-group form-group-sm">
-						<stripes:label class="col-sm-4 control-label" for="userRegistration.lastName"/> 
+						<stripes:label class="col-sm-4 control-label" for="userSearch.lastName"/> 
 						<div class="col-sm-8">
 						<stripes:text class="form-control input-sm" name="userSearch.lastName" id="lastName" maxlength="100"></stripes:text>
 						</div>
@@ -136,7 +145,7 @@
 			<div class="row">
         		<div class="col-sm-6">
 					<div class="form-group">
-						<stripes:label class="col-sm-4 control-label" for="userRegistration.email"/> 
+						<stripes:label class="col-sm-4 control-label" for="userSearch.email"/> 
 						<div class="col-sm-8">
 						<stripes:text class="form-control input-sm" name="userSearch.email" id="email" maxlength="200"></stripes:text>
 						</div>
@@ -146,7 +155,7 @@
         	<div class="row">
         		<div class="col-sm-6">
 					<div class="form-group">
-						<stripes:label class="col-sm-4 control-label" for="userProfile.userStatus"/> 
+						<stripes:label class="col-sm-4 control-label" for="userSearch.userStatus"/> 
 						<div class="col-sm-8">
 						<stripes:select multiple="multiple" name="userSearch.statuses" id="statuses">
 							<stripes:options-collection collection="${actionBean.defaultStatuses}" value="id" label="description"/>
@@ -156,7 +165,7 @@
 				</div>
 				<div class="col-sm-6">
 					<div class="form-group">
-						<stripes:label class="col-sm-4 control-label" for="userInvite.defaultRole"/> 
+						<stripes:label class="col-sm-4 control-label" for="userSearch.defaultRole"/> 
 						<div class="col-sm-8">
 						<stripes:select multiple="multiple" name="userSearch.roles" id="roles">
 							<stripes:options-collection collection="${actionBean.defaultRoles}" value="id" label="description"/>
@@ -166,8 +175,8 @@
         		</div>        		
 			</div>
         	<div align="center" style="padding-top: 10px">
-				<stripes:submit class="btn btn-default" name="search" value="Search..."></stripes:submit>
-				<input class="btn btn-default" type="button" name="reset" value="Clear" onclick="clearFormContent(this.form)"/>  
+				<stripes:submit class="btn btn-default" name="search"></stripes:submit>
+				<stripes:button class="btn btn-default" name="reset" onclick="clearFormContent(this.form)"></stripes:button>  
         	</div>
         </stripes:form>	
         </div>
@@ -178,22 +187,22 @@
 		            <tr>
 		                <th></th>
 		                <th></th>
-		                <th>First Name</th>
-		                <th>Last Name</th>
-		                <th>E-mail</th>
-		                <th>Default Role</th>
-		                <th>Actions</th>
+		                <th><fmt:message key="userSearch.firstName" /></th>
+		                <th><fmt:message key="userSearch.lastName" /></th>
+		                <th><fmt:message key="userSearch.email" /></th>
+		                <th><fmt:message key="userSearch.defaultRole" /></th>
+		                <th><fmt:message key="userSearch.actions" /></th>
 		            </tr>
 		        </thead>
        	        <tfoot>
 		            <tr>
 		                <th></th>
 		                <th></th>
-		                <th>First Name</th>
-		                <th>Last Name</th>
-		                <th>E-mail</th>
-		                <th>Default Role</th>
-		                <th>Actions</th>
+		                <th><fmt:message key="userSearch.firstName" /></th>
+		                <th><fmt:message key="userSearch.lastName" /></th>
+		                <th><fmt:message key="userSearch.email" /></th>
+		                <th><fmt:message key="userSearch.defaultRole" /></th>
+		                <th><fmt:message key="userSearch.actions" /></th>
 		            </tr>
 		        </tfoot>
         	</table>
