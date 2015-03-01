@@ -51,6 +51,7 @@ public class SearchUsersActionBean
 
     private List<UserSearchDTO> results;
 
+    /** Flag indicating results table should be displayed. */
     private boolean showResults = false;
 
     /** Used in search result, this is a flag we need to respond with when return results. */
@@ -168,6 +169,11 @@ public class SearchUsersActionBean
         return roles;
     }
 
+    /**
+     * Gets the localized {@link UserStatus} values for a drop-down.
+     * 
+     * @return a list of values to display with status name and corresponding localized value
+     */
     public List<StripesDropDownOption> getDefaultStatuses()
     {
         List<StripesDropDownOption> statuses = new ArrayList<StripesDropDownOption>();

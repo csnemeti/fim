@@ -25,9 +25,6 @@
 		<script type="text/javascript" src="<stripes:url value="/js/datatables.net-1.10.4/jquery.dataTables.min.js" />"></script>
 		<script type="text/javascript" src="<stripes:url value="/js/datatables.net-1.10.4/dataTables.jqueryui.js" />"></script>
 		
-		<script type="text/javascript" src="<stripes:url value="/js/jquery-validation-1.13.0/jquery.validate.min.js" />"></script>
-		<script type="text/javascript" src="<stripes:url value="/js/jquery-validation-1.13.0/localization/messages_${actionBean.localeLanguage}.min.js" />"></script>
-		
 		<script type="text/javascript">
 			var localeMap = ${actionBean.localizationString};
 			function clearFormContent(theForm){
@@ -108,14 +105,7 @@
 	                      ]
 			    	});
 			</c:if>
-				// validate the comment form when it is submitted
-/* 				$("#loginForm").validate({
-					rules: {
-						password: "required",
-						username: "required",
-					}
-				});
- */			});			
+	    		});
 			</script>
 	</stripes:layout-component>
 	<stripes:layout-component name="menu">
