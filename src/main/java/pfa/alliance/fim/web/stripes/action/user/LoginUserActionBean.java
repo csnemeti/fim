@@ -48,11 +48,11 @@ public class LoginUserActionBean
     /** The logger used in this class. */
     private static final Logger LOG = LoggerFactory.getLogger( LoginUserActionBean.class );
 
-    private static final String DB_OPERATION_INVALID_DATA = "LoginUser.InvalidLoginOrPassword";
+    static final String DB_OPERATION_INVALID_DATA = "LoginUser.InvalidLoginOrPassword";
 
-    private static final String DB_OPERATION_USER_NEW = "LoginUser.UserStatusNew";
+    static final String DB_OPERATION_USER_NEW = "LoginUser.UserStatusNew";
 
-    private static final String DB_OPERATION_USER_DISABLED = "LoginUser.UserStatusDisabled";
+    static final String DB_OPERATION_USER_DISABLED = "LoginUser.UserStatusDisabled";
 
     private final UserManagerService userManagerService;
 

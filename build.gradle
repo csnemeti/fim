@@ -118,6 +118,7 @@ dependencies {
     testCompile 'org.mockito:mockito-all:1.9.5'
     testCompile 'org.apache.derby:derby:10.11.1.1'
     testCompile 'org.dbunit:dbunit:2.5.0'
+    testCompile 'javax.servlet:jsp-api:2.0'
     
 }
 task("generateJar", dependsOn: 'classes', type: Jar) {
