@@ -35,7 +35,7 @@ public class LogoutUserActionBean
     {
         HttpSession session = getSession();
         AuthenticatedUserDTO user = SecurityUtil.getUserFromSession( session );
-        LOG.debug( "User logout: {}", user );
+        LOG.debug( "Removing from session (ID = {}) user: {}", session.getId(), user );
         session.invalidate();
         return new RedirectResolution( FimPageURLs.MAIN_PAGE.getURL() );
     }
