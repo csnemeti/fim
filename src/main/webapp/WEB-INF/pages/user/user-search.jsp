@@ -43,11 +43,15 @@
 			$().ready(function() {
 				$('#roles').multiselect({
 					numberDisplayed: 1,
-					nonSelectedText: "<fmt:message key='multiselect.noneSelected' />"
+					nonSelectedText: "<fmt:message key='multiselect.noneSelected' />",
+					nSelectedText:   "<fmt:message key='multiselect.nSelectedText' />",
+					allSelectedText: "<fmt:message key='multiselect.allSelectedText' />"
 				});
 				$('#statuses').multiselect({
 					numberDisplayed: 1,
-					nonSelectedText: "<fmt:message key='multiselect.noneSelected' />"
+					nonSelectedText: "<fmt:message key='multiselect.noneSelected' />",
+					nSelectedText:   "<fmt:message key='multiselect.nSelectedText' />",
+					allSelectedText: "<fmt:message key='multiselect.allSelectedText' />"
 				});
 				// set the placeholder
 				var placeholderSupported = ( 'placeholder' in document.createElement('input') );

@@ -3,10 +3,12 @@
  */
 package pfa.alliance.fim.service;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 import pfa.alliance.fim.dto.ProjectDTO;
+import pfa.alliance.fim.dto.ProjectSearchDTO;
 import pfa.alliance.fim.model.project.Project;
 import pfa.alliance.fim.model.project.ProjectState;
 import pfa.alliance.fim.model.project.UserRoleInsideProject;
@@ -42,4 +44,20 @@ public interface ProjectManagementService
      * @return the Project if found, null if not
      */
     ProjectDTO getProjectDetails( String code );
+
+    /**
+     * Counts the number of results based on the given search criteria.
+     * 
+     * @param criteriaCriteria the search criteria
+     * @return the number of results
+     */
+    long count( ProjectSearchDTO criteriaCriteria );
+
+    /**
+     * Search for projects matching the given search criteria
+     * 
+     * @param criteria the search criteria
+     * @return the results
+     */
+    List<ProjectDTO> search( ProjectSearchDTO criteria );
 }

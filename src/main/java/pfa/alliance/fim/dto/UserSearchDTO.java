@@ -3,7 +3,6 @@
  */
 package pfa.alliance.fim.dto;
 
-import java.io.Serializable;
 import java.util.Arrays;
 
 import org.apache.commons.lang.StringUtils;
@@ -14,9 +13,10 @@ import org.apache.commons.lang.StringUtils;
  * @author Csaba
  */
 public class UserSearchDTO
-    implements Serializable
+    extends AbstractSearchDTO
 {
-    private static final long serialVersionUID = -6241852053045832667L;
+    
+    private static final long serialVersionUID = 2993912235849374701L;
 
     private String firstName;
 
@@ -27,14 +27,6 @@ public class UserSearchDTO
     private String[] roles;
 
     private String[] statuses;
-
-    private int startIndex;
-
-    private int itemsPerPage;
-
-    private String orderBy;
-
-    private boolean ascending = true;
 
     public UserSearchDTO()
     {
@@ -91,59 +83,24 @@ public class UserSearchDTO
         this.statuses = statuses;
     }
 
-    public int getStartIndex()
+    @Override
+    public void setOrderBy( final String orderBy )
     {
-        return startIndex;
-    }
-
-    public void setStartIndex( int startIndex )
-    {
-        this.startIndex = startIndex;
-    }
-
-    public int getItemsPerPage()
-    {
-        return itemsPerPage;
-    }
-
-    public void setItemsPerPage( int itemsPerPage )
-    {
-        this.itemsPerPage = itemsPerPage;
-    }
-
-    public String getOrderBy()
-    {
-        return orderBy;
-    }
-
-    public void setOrderBy( String orderBy )
-    {
+        String oderByValue = orderBy;
         if ( StringUtils.isBlank( orderBy ) )
         {
-            this.orderBy = "lastName";
+            oderByValue = "lastName";
         }
-        else
-        {
-            this.orderBy = orderBy;
-        }
-    }
-
-    public boolean isAscending()
-    {
-        return ascending;
-    }
-
-    public void setAscending( boolean ascending )
-    {
-        this.ascending = ascending;
+        super.setOrderBy( oderByValue );
     }
 
     @Override
     public String toString()
     {
         return "UserSearchDTO [firstName=" + firstName + ", lastName=" + lastName + ", email=" + email
-            + ", startIndex=" + startIndex + ", itemsPerPage=" + itemsPerPage + ", orderBy=" + orderBy + ", ascending="
-            + ascending + ", statuses=" + Arrays.toString( statuses ) + ", roles=" + Arrays.toString( roles ) + "]";
+            + ", startIndex=" + getStartIndex() + ", itemsPerPage=" + getItemsPerPage() + ", orderBy=" + getOrderBy()
+            + ", ascending=" + isAscending() + ", statuses=" + Arrays.toString( statuses ) + ", roles="
+            + Arrays.toString( roles ) + "]";
     }
 
 }

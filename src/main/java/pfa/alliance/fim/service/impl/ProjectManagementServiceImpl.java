@@ -5,6 +5,7 @@ package pfa.alliance.fim.service.impl;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -18,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import pfa.alliance.fim.dao.ProjectRepository;
 import pfa.alliance.fim.dao.UserRepository;
 import pfa.alliance.fim.dto.ProjectDTO;
+import pfa.alliance.fim.dto.ProjectSearchDTO;
 import pfa.alliance.fim.dto.UserDTO;
 import pfa.alliance.fim.model.project.Project;
 import pfa.alliance.fim.model.project.ProjectState;
@@ -286,5 +288,19 @@ public class ProjectManagementServiceImpl
             userDTO.setEmail( user.getEmail() );
         }
         return userDTO;
+    }
+
+    @Override
+    public long count( ProjectSearchDTO criteriaCriteria )
+    {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public List<ProjectDTO> search( ProjectSearchDTO criteria )
+    {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

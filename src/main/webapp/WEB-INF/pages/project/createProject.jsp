@@ -99,10 +99,10 @@
 				<stripes:text class="form-control" name="ownerName" id="ownerName" readonly="readonly"></stripes:text>
 			</div>
 			<div class="form-group">
-				<stripes:checkbox class="" name="hidden" id="hidden"></stripes:checkbox> <fmt:message key="project.create.projectHidden" />
+				<stripes:checkbox class="" name="hidden" id="hidden"></stripes:checkbox>  <label for="hidden"><fmt:message key="project.create.projectHidden" /></label>
 			</div>
 			<div class="form-group">
-				<stripes:checkbox class="" name="activate" id="activate"></stripes:checkbox> <fmt:message key="project.create.projectActive" />
+				<stripes:checkbox class="" name="activate" id="activate"></stripes:checkbox>  <label for="activate"><fmt:message key="project.create.projectActive" /></label>
 			</div>
 
 			<div class="form-group error">

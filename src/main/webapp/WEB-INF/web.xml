@@ -27,6 +27,8 @@
 		<filter-name>DataTablesRequestFilter</filter-name>
 		<url-pattern>/user/search</url-pattern>
 		<url-pattern>/user/search/*</url-pattern>
+		<url-pattern>/project/search</url-pattern>
+		<url-pattern>/project/search/*</url-pattern>
 	</filter-mapping>
 	<filter>
 		<filter-name>guiceFilter</filter-name>

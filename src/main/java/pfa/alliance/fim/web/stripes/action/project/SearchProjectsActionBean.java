@@ -3,26 +3,33 @@
  */
 package pfa.alliance.fim.web.stripes.action.project;
 
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.StreamingResolution;
 import net.sourceforge.stripes.action.UrlBinding;
+import net.sourceforge.stripes.util.UrlBuilder;
 
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pfa.alliance.fim.dto.AbstractSearchDTO;
+import pfa.alliance.fim.dto.ProjectSearchDTO;
+import pfa.alliance.fim.dto.UserSearchResultDTO;
 import pfa.alliance.fim.model.project.ProjectState;
 import pfa.alliance.fim.model.user.UserStatus;
 import pfa.alliance.fim.service.ProjectManagementService;
 import pfa.alliance.fim.web.common.FimPageURLs;
+import pfa.alliance.fim.web.datatables.DatatablesOrder;
 import pfa.alliance.fim.web.security.FimSecurity;
-import pfa.alliance.fim.web.stripes.action.BasePageActionBean;
+import pfa.alliance.fim.web.security.Permission;
+import pfa.alliance.fim.web.security.SecurityUtil;
+import pfa.alliance.fim.web.stripes.action.AbstractDatatablesSearchActionBean;
 import pfa.alliance.fim.web.stripes.action.StripesDropDownOption;
 
 /**
@@ -31,15 +38,14 @@ import pfa.alliance.fim.web.stripes.action.StripesDropDownOption;
  * @author Csaba
  */
 @UrlBinding( "/project/search" )
-@FimSecurity( )
+@FimSecurity( checkIfAny = Permission.PROJECT_LIST_PROJECTS )
 public class SearchProjectsActionBean
-    extends BasePageActionBean
+    extends AbstractDatatablesSearchActionBean
 {
     /** The logger used in this class. */
     private static final Logger LOG = LoggerFactory.getLogger( SearchProjectsActionBean.class );
 
-    /** Flag indicating results table should be displayed. */
-    private boolean showResults = false;
+    private ProjectSearchDTO projectSearch = new ProjectSearchDTO();
 
     /** The instance of {@link ProjectManagementService} to be used. */
     private ProjectManagementService projectManagementService;
@@ -47,15 +53,37 @@ public class SearchProjectsActionBean
     @Inject
     public SearchProjectsActionBean( ProjectManagementService projectManagementService )
     {
+        super( FimPageURLs.PROJECT_SEARCH_JSP );
+
         this.projectManagementService = projectManagementService;
         LOG.debug( "New instance created..." );
     }
 
-    @DefaultHandler
-    public Resolution view()
+    /**
+     * This method is called through AJAX from DataTables in order to fill in the results.
+     * 
+     * @return a JSon with results
+     */
+    public Resolution results()
     {
-        // LOG.debug( "Show search page: {}", userSearch );
-        return new ForwardResolution( FimPageURLs.PROJECT_SEARCH_JSP.getURL() );
+        fillInOrdering();
+        LOG.debug( "Results for: {}, {}", projectSearch, getOrder0() );
+        JSONObject result = new JSONObject();
+        result.put( "draw", getDraw() );
+        long resultsNumber = projectManagementService.count( projectSearch );
+        result.put( "recordsTotal", resultsNumber );
+        List<UserSearchResultDTO> filteredResults = null;
+        if ( resultsNumber != 0L )
+        {
+            // filteredResults = process( userManagerService.search( userSearch ) );
+        }
+        else
+        {
+            filteredResults = new ArrayList<>();
+        }
+        result.put( "recordsFiltered", resultsNumber );
+        result.put( "data", filteredResults );
+        return new StreamingResolution( "application/json", new StringReader( result.toString( 3 ) ) );
     }
 
     /**
@@ -85,9 +113,64 @@ public class SearchProjectsActionBean
         return root.toString();
     }
 
-    public boolean isShowResults()
+    public String getResultsUrl()
     {
-        return showResults;
+        UrlBuilder builder = new UrlBuilder( getContext().getLocale(), getClass(), false );
+        builder.setEvent( "results" );
+        builder.addParameter( "projectSearch.code", getNotNullParameterValue( projectSearch.getCode() ) );
+        builder.addParameter( "projectSearch.name", getNotNullParameterValue( projectSearch.getName() ) );
+        builder.addParameter( "projectSearch.hidden", projectSearch.isHidden() );
+        builder.addParameter( "projectSearch.states", getNotNullParameterValues( projectSearch.getStates() ) );
+        builder.addParameter( "filterDataTablesCall", true );
+        return builder.toString();
+    }
+
+    /**
+     * "Transfer" ordering data from {@link #order0} into {@link #userSearch}.
+     */
+    private void fillInOrdering()
+    {
+        DatatablesOrder order0 = getOrder0();
+        // any value that is not descending will mean ascending
+        projectSearch.setAscending( !"desc".equalsIgnoreCase( order0.getDir() ) );
+        String column = null;
+        switch ( order0.getColumn() )
+        {
+            case 2:
+                column = "code";
+                break;
+            case 3:
+                column = "name";
+                break;
+            case 4:
+                column = "createdAt";
+                break;
+            default:
+                LOG.warn( "Wrong ordering column value (it will use default ordering)): {}", order0.getColumn() );
+                break;
+        }
+        projectSearch.setOrderBy( column );
+    }
+
+    public boolean isShowHiddenProjects()
+    {
+        return SecurityUtil.hasPermission( Permission.PROJECT_SHOW_HIDDEN_PROJECTS, getSession() );
+    }
+
+    public ProjectSearchDTO getProjectSearch()
+    {
+        return projectSearch;
+    }
+
+    public void setProjectSearch( ProjectSearchDTO projectSearch )
+    {
+        this.projectSearch = projectSearch;
+    }
+
+    @Override
+    protected AbstractSearchDTO getSearchObject()
+    {
+        return projectSearch;
     }
 
 }

@@ -67,4 +67,22 @@ public final class SecurityUtil
         LOG.debug( "Putting in session user: {}", user );
         session.setAttribute( USER_DTO_KEY, user );
     }
+
+    /**
+     * Verifies if logged in user has the given {@link Permission}.
+     * 
+     * @param permission the permission to check
+     * @param session the request session where logged in user should be found
+     * @return true if user is logged in and has the permission, false otherwise
+     */
+    public static boolean hasPermission( Permission permission, HttpSession session )
+    {
+        boolean hasPermission = false;
+        AuthenticatedUserDTO userDTO = getUserFromSession( session );
+        if ( userDTO != null )
+        {
+            hasPermission = userDTO.hasPermission( null, permission );
+        }
+        return hasPermission;
+    }
 }
