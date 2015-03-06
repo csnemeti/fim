@@ -36,8 +36,9 @@
 			function localizeText(text){
 				return localeMap[text];
 			}
-			function buildUserStatusImage(userStatus){
-				return "<img class='userState' src='<c:url value="/images/user-state/" />" + userStatus.toLowerCase() + ".png' title='" + localizeText(userStatus) + "' />";
+			function buildProjectState(stateName, stateIcon){
+				var state = localizeText(stateName);
+				return "<i class=\"fa " + stateIcon + "\" title=\"" + state + "\"></i> " + state;
 			}
 			
 			$().ready(function() {
@@ -93,7 +94,7 @@
 	            	<%-- Column definition. --%>
 	            	"aoColumns": [
 	                          { "mData" : null, "sWidth":"25px", "bSortable": false, "sClass": "rowIndex", "mRender": function (data) { return data.indexInTotalResults + 1;}},
-	                          { "mData" : null, "sWidth":"15%", "bSortable": false, "mRender": function (data) {return buildUserState(data.state);}},
+	                          { "mData" : null, "sWidth":"15%", "bSortable": false, "mRender": function (data) {return buildProjectState(data.stateName, data.stateIcon);}},
 	                          { "mData" : "code", "sWidth":"15%"}, 
 	                          { "mData" : "name"}, 
 	                          { "mData" : "createAt", "sWidth":"15%"}, 

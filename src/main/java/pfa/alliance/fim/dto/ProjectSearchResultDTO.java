@@ -3,6 +3,7 @@
  */
 package pfa.alliance.fim.dto;
 
+import pfa.alliance.fim.model.project.ProjectState;
 
 /**
  * This class defines a search result for project.
@@ -18,6 +19,11 @@ public class ProjectSearchResultDTO
     /** This represents the index value of this item in the currently displayed results list. */
     private int indexInCurrentResults;
 
+    /** The textual name of the state. */
+    private String stateName;
+
+    /** The icon corresponding to given state. */
+    private String stateIcon;
 
     /** HTML encoded text for actions to fill in. */
     private String actions = "";
@@ -52,4 +58,21 @@ public class ProjectSearchResultDTO
         this.actions = actions;
     }
 
+    public String getStateName()
+    {
+        return stateName;
+    }
+
+    public String getStateIcon()
+    {
+        return stateIcon;
+    }
+
+    @Override
+    public void setState( ProjectState state )
+    {
+        super.setState( state );
+        stateName = state.name();
+        stateIcon = state.getStateClass();
+    }
 }
