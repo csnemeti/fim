@@ -3,6 +3,10 @@
  */
 package pfa.alliance.fim.dao;
 
+import java.util.List;
+
+import pfa.alliance.fim.dto.ProjectSearchDTO;
+import pfa.alliance.fim.dto.ProjectSearchResultDTO;
 import pfa.alliance.fim.model.project.Project;
 import pfa.alliance.fim.model.user.User;
 
@@ -29,4 +33,20 @@ public interface ProjectRepository extends JpaRepository<Project, Integer>
      * @return the {@link User} representing project owner
      */
     User findOwnerForProject( int id );
+
+    /**
+     * Counts the number of results based on the given search criteria.
+     * 
+     * @param criteriaCriteria the search criteria
+     * @return the number of results
+     */
+    long count( ProjectSearchDTO criteriaCriteria );
+
+    /**
+     * Search for projects matching the given search criteria
+     * 
+     * @param criteria the search criteria
+     * @return the results
+     */
+    List<ProjectSearchResultDTO> search( ProjectSearchDTO criteria );
 }

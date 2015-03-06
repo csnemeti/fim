@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import pfa.alliance.fim.dto.AbstractSearchDTO;
 import pfa.alliance.fim.dto.ProjectSearchDTO;
-import pfa.alliance.fim.dto.UserSearchResultDTO;
+import pfa.alliance.fim.dto.ProjectSearchResultDTO;
 import pfa.alliance.fim.model.project.ProjectState;
 import pfa.alliance.fim.model.user.UserStatus;
 import pfa.alliance.fim.service.ProjectManagementService;
@@ -72,10 +72,10 @@ public class SearchProjectsActionBean
         result.put( "draw", getDraw() );
         long resultsNumber = projectManagementService.count( projectSearch );
         result.put( "recordsTotal", resultsNumber );
-        List<UserSearchResultDTO> filteredResults = null;
+        List<ProjectSearchResultDTO> filteredResults = null;
         if ( resultsNumber != 0L )
         {
-            // filteredResults = process( userManagerService.search( userSearch ) );
+            filteredResults = process( projectManagementService.search( projectSearch ) );
         }
         else
         {
@@ -150,6 +150,18 @@ public class SearchProjectsActionBean
                 break;
         }
         projectSearch.setOrderBy( column );
+    }
+
+    private List<ProjectSearchResultDTO> process( List<ProjectSearchResultDTO> result )
+    {
+        for ( ProjectSearchResultDTO dto : result )
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.append( "<table><tr>" );
+            sb.append( "</tr></table>" );
+            dto.setActions( sb.toString() );
+        }
+        return result;
     }
 
     public boolean isShowHiddenProjects()

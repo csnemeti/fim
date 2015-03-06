@@ -9,6 +9,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
 import pfa.alliance.fim.dao.ProjectRepository;
+import pfa.alliance.fim.dto.ProjectSearchDTO;
+import pfa.alliance.fim.dto.ProjectSearchResultDTO;
 import pfa.alliance.fim.model.project.Project;
 import pfa.alliance.fim.model.project.UserRoleInsideProject;
 import pfa.alliance.fim.model.user.User;
@@ -60,6 +62,20 @@ public class ProjectRepositoryImpl
         query.setParameter( "role", UserRoleInsideProject.OWNER.name() );
         List<User> result = query.getResultList();
         return uniqueResult( result );
+    }
+
+    @Override
+    public long count( ProjectSearchDTO criteriaCriteria )
+    {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public List<ProjectSearchResultDTO> search( ProjectSearchDTO criteria )
+    {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

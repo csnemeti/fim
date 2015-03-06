@@ -9,6 +9,7 @@ import java.util.Map;
 
 import pfa.alliance.fim.dto.ProjectDTO;
 import pfa.alliance.fim.dto.ProjectSearchDTO;
+import pfa.alliance.fim.dto.ProjectSearchResultDTO;
 import pfa.alliance.fim.model.project.Project;
 import pfa.alliance.fim.model.project.ProjectState;
 import pfa.alliance.fim.model.project.UserRoleInsideProject;
@@ -59,5 +60,5 @@ public interface ProjectManagementService
      * @param criteria the search criteria
      * @return the results
      */
-    List<ProjectDTO> search( ProjectSearchDTO criteria );
+    List<ProjectSearchResultDTO> search( ProjectSearchDTO criteria );
 }

@@ -20,6 +20,7 @@ import pfa.alliance.fim.dao.ProjectRepository;
 import pfa.alliance.fim.dao.UserRepository;
 import pfa.alliance.fim.dto.ProjectDTO;
 import pfa.alliance.fim.dto.ProjectSearchDTO;
+import pfa.alliance.fim.dto.ProjectSearchResultDTO;
 import pfa.alliance.fim.dto.UserDTO;
 import pfa.alliance.fim.model.project.Project;
 import pfa.alliance.fim.model.project.ProjectState;
@@ -293,14 +294,14 @@ public class ProjectManagementServiceImpl
     @Override
     public long count( ProjectSearchDTO criteriaCriteria )
     {
-        // TODO Auto-generated method stub
-        return 0;
+        LOG.debug( "Count the projects matching criteria: {}", criteriaCriteria );
+        return projectRepository.count( criteriaCriteria );
     }
 
     @Override
-    public List<ProjectDTO> search( ProjectSearchDTO criteria )
+    public List<ProjectSearchResultDTO> search( ProjectSearchDTO criteria )
     {
-        // TODO Auto-generated method stub
-        return null;
+        LOG.debug( "Getting the projects matching criteria: {}", criteria );
+        return projectRepository.search( criteria );
     }
 }
