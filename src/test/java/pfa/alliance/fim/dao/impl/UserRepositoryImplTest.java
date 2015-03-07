@@ -231,7 +231,7 @@ public class UserRepositoryImplTest
 
         criteriaDto.setFirstName( "first" );
         criteriaDto.setLastName( "last" );
-        criteriaDto.setEmail( ".com" );
+        criteriaDto.setEmail( ".org" );
         criteriaDto.setStatuses( new String[] { "NEW", "ACTIVE" } );
         criteriaDto.setRoles( new String[] { "STATISTICAL", "TEAM", "ADMIN" } );
 
