@@ -23,6 +23,7 @@ import pfa.alliance.fim.dao.ProjectRepository;
 import pfa.alliance.fim.dto.ProjectSearchDTO;
 import pfa.alliance.fim.dto.ProjectSearchResultDTO;
 import pfa.alliance.fim.model.project.Project;
+import pfa.alliance.fim.model.project.ProjectState;
 import pfa.alliance.fim.model.project.UserRoleInsideProject;
 import pfa.alliance.fim.model.user.User;
 
@@ -123,6 +124,11 @@ public class ProjectRepositoryImpl
                               ProjectSearchDTO searchCriteria )
     {
         List<Predicate> whereList = new ArrayList<Predicate>();
+        whereList.add( cb.notEqual( root.get( "state" ), ProjectState.SCHEDULED_FOR_DELETE ) );
+        if ( !searchCriteria.showHidden() )
+        {
+            whereList.add( cb.equal( root.get( "hidden" ), Boolean.FALSE ) );
+        }
         String name = searchCriteria.getName();
         if ( StringUtils.isNotBlank( name ) )
         {

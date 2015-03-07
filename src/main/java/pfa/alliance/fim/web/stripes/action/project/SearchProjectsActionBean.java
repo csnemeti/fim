@@ -125,7 +125,7 @@ public class SearchProjectsActionBean
         builder.setEvent( "results" );
         builder.addParameter( "projectSearch.code", getNotNullParameterValue( projectSearch.getCode() ) );
         builder.addParameter( "projectSearch.name", getNotNullParameterValue( projectSearch.getName() ) );
-        builder.addParameter( "projectSearch.hidden", projectSearch.isHidden() );
+        builder.addParameter( "projectSearch.hidden", projectSearch.showHidden() );
         builder.addParameter( "projectSearch.states", getNotNullParameterValues( projectSearch.getStates() ) );
         builder.addParameter( "filterDataTablesCall", true );
         return builder.toString();

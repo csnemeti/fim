@@ -53,7 +53,7 @@ public class ProjectSearchDTO
         this.states = states;
     }
 
-    public boolean isHidden()
+    public boolean showHidden()
     {
         return hidden;
     }
