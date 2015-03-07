@@ -129,6 +129,12 @@ public class CreateProjectActionBean
         }
     }
 
+    @Override
+    public String getTitle()
+    {
+        return getMessage( "page.title.project.create" );
+    }
+
     public String getProjectName()
     {
         return projectName;

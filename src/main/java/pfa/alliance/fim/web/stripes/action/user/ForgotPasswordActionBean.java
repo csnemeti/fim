@@ -87,6 +87,12 @@ public class ForgotPasswordActionBean
         return new ForwardResolution( FimPageURLs.USER_FORGOT_PASSWORD_JSP.getURL() );
     }
 
+    @Override
+    public String getTitle()
+    {
+        return getMessage( "page.title.user.forgotPassword" );
+    }
+
     /**
      * Check the {@link User} received as parameter and set {@link #dbOperationResult} according to that.
      * 

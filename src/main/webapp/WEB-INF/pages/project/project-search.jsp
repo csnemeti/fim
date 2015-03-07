@@ -42,6 +42,15 @@
 			}
 			
 			$().ready(function() {
+				// block some operations on project code
+				var prjCode = document.getElementById("code");
+				prjCode.onblur = function(){
+					var theValue = prjCode.value;
+					if(theValue != null){
+						prjCode.value = theValue.toUpperCase();
+					}
+				}
+
 				$('#states').multiselect({
 					numberDisplayed: 1,
 					nonSelectedText: "<fmt:message key='multiselect.noneSelected' />",
@@ -98,7 +107,7 @@
 	                          { "mData" : "code", "sWidth":"15%"}, 
 	                          { "mData" : "name"}, 
 	                          { "mData" : "createAt", "sWidth":"15%"}, 
-	                          { "mData" : "actions", "sWidth":"110px", "bSortable": false, "sClass": "noSpacing"} 
+	                          { "mData" : "actions", "sWidth":"90px", "bSortable": false, "sClass": "noSpacing"} 
 	                      ]
 			    	});
 				</c:if>

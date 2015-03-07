@@ -126,12 +126,12 @@ public class ProjectRepositoryImpl
         String name = searchCriteria.getName();
         if ( StringUtils.isNotBlank( name ) )
         {
-            whereList.add( cb.like( root.get( "name" ), "%" + name + "%" ) );
+            whereList.add( cb.like( cb.lower( root.get( "name" ) ), "%" + name.toLowerCase() + "%" ) );
         }
         String code = searchCriteria.getCode();
         if ( StringUtils.isNotBlank( code ) )
         {
-            whereList.add( cb.like( root.get( "code" ), "%" + code + "%" ) );
+            whereList.add( cb.like( root.get( "code" ), "%" + code.toUpperCase() + "%" ) );
         }
         String[] states = searchCriteria.getStates();
         if ( states != null && states.length > 0 )

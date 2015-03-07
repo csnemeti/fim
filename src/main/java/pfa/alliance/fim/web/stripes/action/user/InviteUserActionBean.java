@@ -95,6 +95,12 @@ public class InviteUserActionBean
         return new ForwardResolution( FimPageURLs.USER_INVITE_JSP.getURL() );
     }
 
+    @Override
+    public String getTitle()
+    {
+        return getMessage( "page.title.user.inviteUser" );
+    }
+
     public String getFirstName()
     {
         return firstName;

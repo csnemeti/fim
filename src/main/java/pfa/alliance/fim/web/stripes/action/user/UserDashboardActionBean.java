@@ -44,6 +44,12 @@ public class UserDashboardActionBean
         }
     }
 
+    @Override
+    public String getTitle()
+    {
+        return getMessage( "page.title.user.dashboard" );
+    }
+
     /**
      * Returns the current logged user name or username (if name is missing).
      * 

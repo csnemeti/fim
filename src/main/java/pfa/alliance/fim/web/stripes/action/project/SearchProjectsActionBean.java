@@ -75,7 +75,13 @@ public class SearchProjectsActionBean
         List<ProjectSearchResultDTO> filteredResults = null;
         if ( resultsNumber != 0L )
         {
-            filteredResults = process( projectManagementService.search( projectSearch ) );
+            final boolean canEdit = SecurityUtil.hasPermission( Permission.PROJECT_EDIT_PROJECT, getSession() );
+            String contextPath = getContext().getServletContext().getContextPath();
+            if ( contextPath.equals( "/" ) )
+            {
+                contextPath = null;
+            }
+            filteredResults = process( projectManagementService.search( projectSearch ), canEdit, contextPath );
         }
         else
         {
@@ -125,6 +131,12 @@ public class SearchProjectsActionBean
         return builder.toString();
     }
 
+    @Override
+    public String getTitle()
+    {
+        return getMessage( "page.title.project.search" );
+    }
+
     /**
      * "Transfer" ordering data from {@link #order0} into {@link #userSearch}.
      */
@@ -152,12 +164,33 @@ public class SearchProjectsActionBean
         projectSearch.setOrderBy( column );
     }
 
-    private List<ProjectSearchResultDTO> process( List<ProjectSearchResultDTO> result )
+    /**
+     * Process the result list.
+     * 
+     * @param result the result elements
+     * @param canEdit flag telling us us current user can edit Projects
+     * @return the processed list
+     */
+    private List<ProjectSearchResultDTO> process( List<ProjectSearchResultDTO> result, final boolean canEdit,
+                                                  final String contextPath )
     {
         for ( ProjectSearchResultDTO dto : result )
         {
+            UrlBuilder builder = new UrlBuilder( getContext().getLocale(), ProjectDashboardActionBean.class, true );
+            builder.addParameter( "code", dto.getCode() );
+            String url = builder.toString();
+            if ( contextPath != null )
+            {
+                url = contextPath + url;
+            }
+
             StringBuilder sb = new StringBuilder();
             sb.append( "<table><tr>" );
+            sb.append( "<td class='noSpacing'><a href='" ).append( url ).append( "' title='" ).append( getMessage( "action.view" ) ).append( "'><i class='fa fa-eye fa-2x'></i></a></td>" );
+            if ( canEdit )
+            {
+                sb.append( "<td class='noSpacing'><a href='#' title='" ).append( getMessage( "action.edit" ) ).append( "'><i class='fa fa-pencil-square fa-2x'></i></a></td>" );
+            }
             sb.append( "</tr></table>" );
             dto.setActions( sb.toString() );
         }

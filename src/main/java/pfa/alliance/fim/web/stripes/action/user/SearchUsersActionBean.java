@@ -163,6 +163,12 @@ public class SearchUsersActionBean
         return root.toString();
     }
 
+    @Override
+    public String getTitle()
+    {
+        return getMessage( "page.title.user.search" );
+    }
+
     /**
      * "Transfer" ordering data from {@link #order0} into {@link #userSearch}.
      */

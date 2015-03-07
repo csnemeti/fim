@@ -230,17 +230,17 @@ class UserRepositoryImpl
         String firstName = searchCriteria.getFirstName();
         if ( StringUtils.isNotBlank( firstName ) )
         {
-            whereList.add( cb.like( root.get( "firstName" ), firstName + "%" ) );
+            whereList.add( cb.like( cb.lower( root.get( "firstName" ) ), firstName.toLowerCase() + "%" ) );
         }
         String lastName = searchCriteria.getLastName();
         if ( StringUtils.isNotBlank( lastName ) )
         {
-            whereList.add( cb.like( root.get( "lastName" ), lastName + "%" ) );
+            whereList.add( cb.like( cb.lower( root.get( "lastName" ) ), lastName.toLowerCase() + "%" ) );
         }
         String email = searchCriteria.getEmail();
         if ( StringUtils.isNotBlank( email ) )
         {
-            whereList.add( cb.like( root.get( "email" ), "%" + email + "%" ) );
+            whereList.add( cb.like( cb.lower( root.get( "email" ) ), "%" + email.toLowerCase() + "%" ) );
         }
         String[] roles = searchCriteria.getRoles();
         if ( roles != null && roles.length > 0 )

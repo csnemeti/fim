@@ -1,5 +1,5 @@
 <%@ taglib prefix="stripes" uri="http://stripes.sourceforge.net/stripes.tld" %>
-<stripes:layout-render name="/WEB-INF/pages/layout/default.jsp" pageTitle="FIM: Project dashboard">
+<stripes:layout-render name="/WEB-INF/pages/layout/default.jsp" pageTitle="${actionBean.title}">
 	<stripes:layout-component name="menu">
        <stripes:layout-render name="/WEB-INF/pages/layout/menu/menu.jsp"/>       
     </stripes:layout-component>

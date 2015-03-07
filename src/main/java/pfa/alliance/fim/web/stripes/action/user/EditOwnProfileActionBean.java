@@ -52,4 +52,10 @@ public class EditOwnProfileActionBean
     {
         return true;
     }
+
+    @Override
+    public String getTitle()
+    {
+        return getMessage( "page.title.user.editMyProfile" );
+    }
 }

@@ -99,6 +99,12 @@ public class LoginUserActionBean
         }
     }
 
+    @Override
+    public String getTitle()
+    {
+        return getMessage( "page.title.user.login" );
+    }
+
     /**
      * Check the {@link User} received as parameter and set {@link #dbOperationResult} according to that.
      * 

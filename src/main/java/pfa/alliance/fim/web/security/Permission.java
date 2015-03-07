@@ -10,7 +10,7 @@ package pfa.alliance.fim.web.security;
  */
 public enum Permission
 {
-    PROJECT_CREATE_PROJECT,
+    PROJECT_CREATE_PROJECT, PROJECT_EDIT_PROJECT,
     /** Search for projects. */
     PROJECT_LIST_PROJECTS,
     /** Show hidden projects in search result. */

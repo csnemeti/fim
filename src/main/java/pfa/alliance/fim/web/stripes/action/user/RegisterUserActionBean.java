@@ -90,6 +90,12 @@ public class RegisterUserActionBean
         return new ForwardResolution( FimPageURLs.USER_REGISTER_JSP.getURL() );
     }
 
+    @Override
+    public String getTitle()
+    {
+        return getMessage( "page.title.user.register" );
+    }
+
     public String getFirstName()
     {
         return firstName;

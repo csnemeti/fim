@@ -73,6 +73,12 @@ public class ProjectDashboardActionBean
         }
     }
 
+    @Override
+    public String getTitle()
+    {
+        return getMessage( "page.title.project.dashboard", project.getCode() );
+    }
+
     public String getCode()
     {
         return code;
