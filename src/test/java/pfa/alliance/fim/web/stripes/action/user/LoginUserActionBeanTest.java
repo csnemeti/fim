@@ -19,7 +19,9 @@ import net.sourceforge.stripes.mock.MockRoundtrip;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.mockito.Mockito;
 
 import pfa.alliance.fim.model.project.Project;
@@ -43,6 +45,7 @@ import pfa.alliance.fim.web.stripes.action.ServiceModuleMock;
  * 
  * @author Csaba
  */
+@FixMethodOrder( MethodSorters.NAME_ASCENDING )
 public class LoginUserActionBeanTest
     extends AbstractActionBeanTest
 {
