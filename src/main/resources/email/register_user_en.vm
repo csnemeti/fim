@@ -1,15 +1,16 @@
 <html>
 <head>
 	<title>Welcome to F.I.M.</title>
+	#include( "email/styles.vm" )
 <head>
 <body>
-	<h1>Welcome to F.I.M.</h1>
+	<h1>Welcome to <span class="asimovF">F</span>.I.M.</h1>
 <p>Hello $name,</p>
 <p>We would like to inform you that your account was successfully created in F.I.M. system. In order to log in, first you must activate your account. This can be done by clicking on the link below:</p>
 <a href="$link">Activate account</a>
 <p><b>NOTE:</b> The link is valid only for 24 hours. In case you do not activate your account in time, it will be deleted (with all data you provided).</p>
 
 Regards,<br />
-Free Issue Manager Team
+Free Issue Manager (<span class="asimovF">F</span>.I.M.) Team
 </body>
 </html>
