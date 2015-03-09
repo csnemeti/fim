@@ -17,6 +17,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 
 import pfa.alliance.fim.dao.ProjectRepository;
@@ -140,14 +141,11 @@ public class ProjectRepositoryImpl
             whereList.add( cb.like( root.get( "code" ), "%" + code.toUpperCase() + "%" ) );
         }
         String[] states = searchCriteria.getStates();
-        if ( states != null && states.length > 0 )
+        if ( ArrayUtils.isNotEmpty( states ) )
         {
             whereList.add( root.get( "state" ).in( Arrays.asList( states ) ) );
         }
-        if ( whereList.size() > 0 )
-        {
-            criteria.where( whereList.toArray( new Predicate[whereList.size()] ) );
-        }
+        criteria.where( whereList.toArray( new Predicate[whereList.size()] ) );
     }
 
     /**
@@ -159,7 +157,7 @@ public class ProjectRepositoryImpl
      *         string
      */
     private static List<ProjectSearchResultDTO> convertToUserSearchResultDTO( List<Project> projects,
-                                                                           final int firstItemIndexInTotalResults )
+                                                                              final int firstItemIndexInTotalResults )
     {
         List<ProjectSearchResultDTO> result = new ArrayList<>();
         if ( CollectionUtils.isNotEmpty( projects ) )

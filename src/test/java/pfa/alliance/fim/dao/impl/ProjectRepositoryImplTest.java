@@ -3,11 +3,15 @@
  */
 package pfa.alliance.fim.dao.impl;
 
+import java.util.List;
+
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import pfa.alliance.fim.dto.ProjectSearchDTO;
+import pfa.alliance.fim.dto.ProjectSearchResultDTO;
 import pfa.alliance.fim.model.project.Project;
 import pfa.alliance.fim.model.user.User;
 
@@ -76,6 +80,64 @@ public class ProjectRepositoryImplTest
         User user = projectRepositoryImpl.findOwnerForProject( 1 );
         Assert.assertNotNull( "User should NOT be null", user );
         Assert.assertEquals( "User ID issue", Integer.valueOf( 7 ), user.getId() );
+    }
+
+    @Test
+    public void test_count_noSpecialQuery()
+    {
+        ProjectSearchDTO searchDTO = new ProjectSearchDTO();
+
+        long result = projectRepositoryImpl.count( searchDTO );
+
+        Assert.assertEquals( "Count issues", 3L, result );
+    }
+
+    @Test
+    public void test_count_showHiddenQuery()
+    {
+        ProjectSearchDTO searchDTO = new ProjectSearchDTO();
+        searchDTO.setHidden( true );
+
+        long result = projectRepositoryImpl.count( searchDTO );
+
+        Assert.assertEquals( "Count issues", 4L, result );
+    }
+
+    @Test
+    public void test_search_withCriteriaAndResults()
+    {
+        ProjectSearchDTO searchDTO = new ProjectSearchDTO();
+        searchDTO.setStates( new String[] { "IN_PREPARATION", "ACTIVE" } );
+        searchDTO.setName( "Project" );
+        searchDTO.setCode( "2" );
+        searchDTO.setOrderBy( "id" );
+        searchDTO.setAscending( true );
+        searchDTO.setStartIndex( 0 );
+        searchDTO.setItemsPerPage( 100 );
+
+        List<ProjectSearchResultDTO> result = projectRepositoryImpl.search( searchDTO );
+
+        Assert.assertNotNull( "Result should not be null", result );
+        Assert.assertEquals( "Result size issue", 1, result.size() );
+        Assert.assertEquals( "Result element issue", 2, result.get( 0 ).getId() );
+    }
+
+    @Test
+    public void test_search_withCriteriaNoResults()
+    {
+        ProjectSearchDTO searchDTO = new ProjectSearchDTO();
+        searchDTO.setStates( new String[] { "IN_PREPARATION", "ACTIVE" } );
+        searchDTO.setName( "Project" );
+        searchDTO.setCode( "2" );
+        searchDTO.setOrderBy( "id" );
+        searchDTO.setAscending( false );
+        searchDTO.setStartIndex( 10 );
+        searchDTO.setItemsPerPage( 100 );
+
+        List<ProjectSearchResultDTO> result = projectRepositoryImpl.search( searchDTO );
+
+        Assert.assertNotNull( "Result should not be null", result );
+        Assert.assertEquals( "Result size issue", 0, result.size() );
     }
 
     @AfterClass

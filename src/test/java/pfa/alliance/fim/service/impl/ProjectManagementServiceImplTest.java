@@ -3,6 +3,8 @@
  */
 package pfa.alliance.fim.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import javax.persistence.PersistenceException;
@@ -15,6 +17,8 @@ import org.mockito.Mockito;
 import pfa.alliance.fim.dao.ProjectRepository;
 import pfa.alliance.fim.dao.UserRepository;
 import pfa.alliance.fim.dto.ProjectDTO;
+import pfa.alliance.fim.dto.ProjectSearchDTO;
+import pfa.alliance.fim.dto.ProjectSearchResultDTO;
 import pfa.alliance.fim.model.project.Project;
 import pfa.alliance.fim.model.project.ProjectState;
 import pfa.alliance.fim.model.user.User;
@@ -190,5 +194,30 @@ public class ProjectManagementServiceImplTest
         Assert.assertEquals( "User issue", "First Name ( e@ma.il )", returned.getOwnerInfo() );
         Mockito.verify( projectRepositoryMock, Mockito.atLeastOnce() ).findByCode( Mockito.anyString() );
         Mockito.verify( projectRepositoryMock, Mockito.atLeastOnce() ).findOwnerForProject( Mockito.anyInt() );
+    }
+
+    @Test
+    public void test_count()
+    {
+        Mockito.when( projectRepositoryMock.count( Mockito.any( ProjectSearchDTO.class ) ) ).thenReturn( 4L );
+        ProjectSearchDTO searchDTO = new ProjectSearchDTO();
+        
+        long result = projectManagementServiceImpl.count( searchDTO );
+
+        Assert.assertEquals( "Result issue", 4L, result );
+        Mockito.verify( projectRepositoryMock, Mockito.atLeastOnce() ).count( Mockito.any( ProjectSearchDTO.class ) );
+    }
+
+    @Test
+    public void test_search()
+    {
+        List<ProjectSearchResultDTO> expected = new ArrayList<>();
+        Mockito.when( projectRepositoryMock.search( Mockito.any( ProjectSearchDTO.class ) ) ).thenReturn( expected );
+        ProjectSearchDTO searchDTO = new ProjectSearchDTO();
+
+        List<ProjectSearchResultDTO> result = projectManagementServiceImpl.search( searchDTO );
+
+        Assert.assertSame( "Result issue", expected, result );
+        Mockito.verify( projectRepositoryMock, Mockito.atLeastOnce() ).search( Mockito.any( ProjectSearchDTO.class ) );
     }
 }
