@@ -75,6 +75,16 @@ public interface UserManagerService
     User findById( int id );
 
     /**
+     * Gets the User with given ID.
+     * 
+     * @param id the ID of the user
+     * @param loadLastLogins load the last logins user did
+     * @param loadProjectAssignments loads the project assignments
+     * @return the found user or null if not found
+     */
+    User findById( int id, boolean loadLastLogins, boolean loadProjectAssignments );
+
+    /**
      * Gets the {@link UserOneTimeLink} with {@link User} filled in from database.
      * 
      * @param uuid the link unique identifier (uuid).

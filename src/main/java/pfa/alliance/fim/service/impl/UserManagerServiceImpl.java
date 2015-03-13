@@ -496,7 +496,30 @@ class UserManagerServiceImpl
     @Override
     public User findById( int id )
     {
+        LOG.debug( "Find by ID = {}", id );
         return userRepository.findOne( id );
+    }
+
+    @Override
+    public User findById( int id, boolean loadLastLogins, boolean loadProjectAssignments )
+    {
+        LOG.debug( "Find by ID = {}, loadLastLogins = {}, loadProjectAssignments = {}", id, loadLastLogins,
+                   loadProjectAssignments );
+        User user = userRepository.findOne( id );
+        if ( user != null )
+        {
+            if ( loadLastLogins )
+            {
+                LOG.debug( "Loading last logins for user ID = {}", id );
+                user.getLogins().size();
+            }
+            if ( loadProjectAssignments )
+            {
+                LOG.debug( "Loading project assignments for user ID = {}", id );
+                user.getUserProjectRelation().size();
+            }
+        }
+        return user;
     }
 
     @Transactional

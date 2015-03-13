@@ -5,7 +5,7 @@
 
 
 <stripes:layout-definition>
-       <div class="col-md-3" style="margin-top: 20px">
+       <div class="col-md-3" style="margin-top: 20px; width: 260px">
        		<div class="panel panel-primary">
             	<div class="panel-heading">
                 	<div style="margin-left: 3px ; margin-right: 3px;" class="row">
@@ -15,17 +15,24 @@
                  	</div>
               	</div>
               	<div class="panel-body">
-                	<div style="margin-left: 5px ; margin-right: 5px;" class="row">
-                    	<div style="float:left;">
-                        	<div class="medium" style="float:left;"><fmt:message key="user.cards.basic.name" /></div>
-                        	<div class="medium" style="flow:left;margin-left: 150px">${actionBean.user.name}</div>
-                        </div>
-                 	</div>
+              		<c:forEach items="${actionBean.lastLogins}" var="element" varStatus="loop">
+              			<c:if test="${ loop.index == 4 }" >
+              			<div id="remainingLogins" style="display: none">
+              			</c:if> 
+		                	<div style="margin-left: 5px ; margin-right: 5px;" class="row">
+		                    	<div style="float:left;">
+		                        	<div class="medium" style="float:left;"><c:out value = "${element}" /></div>
+		                        </div>
+		                 	</div>
+              			<c:if test="${ loop.isLast() && loop.index >= 4 }">
+              			</div>
+              			</c:if> 
+                 	</c:forEach>
               	</div>
               	<div class="panel-footer">
-              		<a href="#" title="<fmt:message key="user.cards.lastlogins.showMoreLess" />">
+              		<a id="toogleRemainingLogins" href="#" title="<fmt:message key="user.cards.lastlogins.showMoreLess" />" style="display: none">
 	                   	<span class="pull-right">
-	                       	<i class="fa fa-arrow-circle-down"></i>
+	                       	<i id="remainingLoginsOnOff" class="fa fa-arrow-circle-down"></i>
 	   	                </span>
 	   	            </a>
                     <div class="clearfix"></div>

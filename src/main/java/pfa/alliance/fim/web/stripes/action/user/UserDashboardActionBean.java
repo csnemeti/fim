@@ -77,4 +77,10 @@ public class UserDashboardActionBean
     {
         return true;
     }
+
+    @Override
+    public boolean isShowLastLoginCard()
+    {
+        return true;
+    }
 }
