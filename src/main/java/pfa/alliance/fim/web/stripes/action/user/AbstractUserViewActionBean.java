@@ -3,7 +3,10 @@
  */
 package pfa.alliance.fim.web.stripes.action.user;
 
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -99,11 +102,18 @@ public abstract class AbstractUserViewActionBean
 
     public Collection<String> getLastLogins()
     {
-        SortedSet<String> logins = new TreeSet<>( new ReverseComparator() );
+        // we order the logins in descending order
+        SortedSet<Timestamp> logins = new TreeSet<>( new ReverseComparator() );
         for ( UserLogin login : user.getLogins() )
         {
-            logins.add( DateUtils.formatDate( login.getCreatedAt(), DateUtils.DATETIME_FORMAT_DAY_FIRST ) );
+            logins.add( login.getCreatedAt() );
         }
-        return logins;
+        // we create the formated response
+        List<String> formatedLogins = new ArrayList<>();
+        for ( Timestamp login : logins )
+        {
+            formatedLogins.add( DateUtils.formatDate( login, DateUtils.DATETIME_FORMAT_DAY_FIRST ) );
+        }
+        return formatedLogins;
     }
 }
