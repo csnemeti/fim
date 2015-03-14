@@ -17,9 +17,9 @@ package pfa.alliance.fim.jobs.guartz;
  */
 
 import static com.google.inject.Scopes.SINGLETON;
-import static pfa.alliance.fim.jobs.guartz.Scheduled.DEFAULT;
 import static com.google.inject.multibindings.Multibinder.newSetBinder;
 import static java.util.TimeZone.getTimeZone;
+import static pfa.alliance.fim.jobs.guartz.Scheduled.DEFAULT;
 
 import java.util.TimeZone;
 
@@ -46,9 +46,6 @@ public abstract class QuartzModule extends AbstractModule {
 
 	private SchedulerConfiguration schedulerConfiguration;
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected final void configure() {
 		checkState(jobListeners == null, "Re-entry is not allowed.");
