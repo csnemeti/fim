@@ -16,6 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -191,6 +192,17 @@ public class User
     public void setUserProjectRelation( Set<UserProjectRelation> userProjectRelation )
     {
         this.userProjectRelation = userProjectRelation;
+    }
+
+    /**
+     * Returns the name of the user. In case there is no first name or last name, the e-mail address will be displayed.
+     * 
+     * @return the name of the user or the e-mail if we have no name information
+     */
+    public String getName()
+    {
+        String name = StringUtils.join( new String[] { firstName, lastName }, " " );
+        return name;
     }
 
     @Override

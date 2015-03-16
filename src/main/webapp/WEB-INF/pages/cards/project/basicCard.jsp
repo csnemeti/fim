@@ -10,7 +10,7 @@
                 	<div style="margin-left: 3px ; margin-right: 3px;" class="row">
                     	<div style="float:left;width: 100%">
                     		<i class="fa ${actionBean.project.state.stateClass} fa-2x" title="${actionBean.stateTitle}"></i> &nbsp;
-                        	<span class="medium" title="[localize] project name">${actionBean.project.name}</span>
+                        	<span class="medium" title="<fmt:message key="project.cards.basic.projectName.title" />">${actionBean.project.name}</span>
                         </div>
                  	</div>
               	</div>
@@ -53,15 +53,15 @@
                  	</div>
                  	</c:if>
               	</div>
-                <a href="#">
-                	<div class="panel-footer">
+               	<div class="panel-footer">
+                	<a href="#">
                     	<span class="pull-left"><stripes:label for="projectcard-EditDetails"/></span>
                         	<span class="pull-right">
                         	<i class="fa fa-arrow-circle-right"></i>
                         </span>
                         <div class="clearfix"></div>
-                     </div>
-                </a>
+                	</a>
+                </div>
       	</div>
 	</div>
 </stripes:layout-definition>

@@ -33,6 +33,7 @@ import pfa.alliance.fim.dto.UserSearchResultDTO;
 import pfa.alliance.fim.model.project.UserProjectRelation;
 import pfa.alliance.fim.model.user.OneTimeLinkType;
 import pfa.alliance.fim.model.user.User;
+import pfa.alliance.fim.model.user.UserLogin;
 import pfa.alliance.fim.model.user.UserOneTimeLink;
 import pfa.alliance.fim.model.user.UserRole;
 import pfa.alliance.fim.model.user.UserStatus;
@@ -572,6 +573,59 @@ public class UserManagerServiceImplTest
         verify( userRepositoryMock, Mockito.atLeastOnce() ).findOne( 1 );
         Mockito.verifyZeroInteractions( emailServiceMock, emailGeneratorServiceMock, fimUrlGeneratorServiceMock,
                                         userOneTimeLinkRepositoryMock );
+    }
+
+    @Test
+    public void test_findById2_noUser()
+    {
+        User user = null;
+        when( userRepositoryMock.findOne( 1 ) ).thenReturn( user );
+
+        User result = userManagetServiceImpl.findById( 1, true, true );
+        Assert.assertNull( "Should be no user", result );
+        verify( userRepositoryMock, Mockito.atLeastOnce() ).findOne( 1 );
+        Mockito.verifyZeroInteractions( emailServiceMock, emailGeneratorServiceMock, fimUrlGeneratorServiceMock,
+                                        userOneTimeLinkRepositoryMock );
+    }
+
+    @Test
+    public void test_findById2_validUserLoadLastLogins()
+    {
+        User user = new User();
+        Set<UserLogin> userLoginsMock = Mockito.mock( Set.class );
+        Set<UserProjectRelation> userProjectRelationMock = Mockito.mock( Set.class );
+        user.setLogins( userLoginsMock );
+        user.setUserProjectRelation( userProjectRelationMock );
+        when( userRepositoryMock.findOne( 1 ) ).thenReturn( user );
+
+        User result = userManagetServiceImpl.findById( 1, true, false );
+        Assert.assertNotNull( "Should be NO user", result );
+        Assert.assertSame( "Wrong user", user, result );
+        verify( userRepositoryMock, Mockito.atLeastOnce() ).findOne( 1 );
+        Mockito.verifyZeroInteractions( emailServiceMock, emailGeneratorServiceMock, fimUrlGeneratorServiceMock,
+                                        userOneTimeLinkRepositoryMock );
+        verify( userLoginsMock, Mockito.atLeastOnce() ).size();
+        Mockito.verifyZeroInteractions( userProjectRelationMock );
+    }
+
+    @Test
+    public void test_findById2_validUserLoadProjectAssignments()
+    {
+        User user = new User();
+        Set<UserLogin> userLoginsMock = Mockito.mock( Set.class );
+        Set<UserProjectRelation> userProjectRelationMock = Mockito.mock( Set.class );
+        user.setLogins( userLoginsMock );
+        user.setUserProjectRelation( userProjectRelationMock );
+        when( userRepositoryMock.findOne( 1 ) ).thenReturn( user );
+
+        User result = userManagetServiceImpl.findById( 1, false, true );
+        Assert.assertNotNull( "Should be NO user", result );
+        Assert.assertSame( "Wrong user", user, result );
+        verify( userRepositoryMock, Mockito.atLeastOnce() ).findOne( 1 );
+        Mockito.verifyZeroInteractions( emailServiceMock, emailGeneratorServiceMock, fimUrlGeneratorServiceMock,
+                                        userOneTimeLinkRepositoryMock );
+        verify( userProjectRelationMock, Mockito.atLeastOnce() ).size();
+        Mockito.verifyZeroInteractions( userLoginsMock );
     }
 
     @Test
