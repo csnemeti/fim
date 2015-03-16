@@ -10,9 +10,9 @@
 			<ul id="side-menu" class="nav">
 				<li>
 					<div class="navbar-header" style="height: 84px;">
-						<stripes:link class="navbar-brand" beanclass="pfa.alliance.fim.web.stripes.action.RedirectActionBean" event="goToDashboard">
+						<a class="navbar-brand" href="/fim/user/dashboard">
 							<img class="fim-logo" src="<c:url value="/images/fim-logo.png" />">
-						</stripes:link>
+						</a>
 					</div>
 				</li>
 
@@ -27,6 +27,9 @@
 				
 				<!-- PROJECT -->
 				<stripes:layout-render name="/WEB-INF/pages/layout/menu/left/projectItem.jsp"/>
+				
+				<!-- USER -->
+				<stripes:layout-render name="/WEB-INF/pages/layout/menu/left/userItem.jsp"/>
 				
 				<!-- ADMIN -->
 				<stripes:layout-render name="/WEB-INF/pages/layout/menu/left/adminItem.jsp"/>

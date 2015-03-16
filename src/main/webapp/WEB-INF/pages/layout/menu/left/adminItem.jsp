@@ -11,16 +11,16 @@
 		</a>
 		<ul class="nav nav-second-level collapse">
 			<li>
-				<stripes:link beanclass="pfa.alliance.fim.web.stripes.action.user.SearchUsersActionBean">
-					<i class="fa fa-search fa-fw"></i>
-					<stripes:label for="searchUsersItem" />
-				</stripes:link>				
+				<stripes:link beanclass="pfa.alliance.fim.web.stripes.action.user.EditOwnProfileActionBean">
+					<i class="fa fa-user fa-fw"></i>
+					<stripes:label for="userProfileItem"/>
+				</stripes:link>
 			</li>
 			<li>
-				<stripes:link beanclass="pfa.alliance.fim.web.stripes.action.user.InviteUserActionBean">
-					<i class="fa fa-envelope-o fa-fw"></i>
-					<stripes:label for="inviteUserItem" />
-				</stripes:link>				
+				<a href="#">
+					<i class="fa fa-gear fa-fw"></i>
+					<stripes:label for="userAccountSettings"/>
+				</a>
 			</li>
 		</ul>
 	</li>

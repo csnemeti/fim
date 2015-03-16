@@ -3,7 +3,7 @@
 	uri="http://stripes.sourceforge.net/stripes.tld"%>
 
 <stripes:layout-definition>
-	<li class="sidebar-search">
+	<li class="sidebar-search" style="z-index:-1">
 		<div class="input-group custom-search-form">
 			<input type="text" placeholder="Search issues" class="form-control">
 			<span class="input-group-btn">

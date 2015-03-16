@@ -12,6 +12,7 @@
     		<link rel="stylesheet" href="<c:url value="/plugins/bootstrap/css/bootstrap.min.css" />"/>
     		<link rel="stylesheet" href="<c:url value="/plugins/font-awesome/css/font-awesome.min.css" />"/>
     		<link rel="stylesheet" href="<c:url value="/plugins/metisMenu/css/metisMenu.min.css" />"/>
+    		<link rel="stylesheet" href="<c:url value="/plugins/flags/flags.css" />"/>
     		<link rel="stylesheet" href="<c:url value="/css/menu.css" />"/>
     		<link rel="stylesheet" href="<c:url value="/css/fim-styles.css" />"/>
     	
