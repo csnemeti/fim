@@ -85,6 +85,12 @@
 					</a>
 					<ul class="nav nav-second-level collapse">
 						<li>
+							<stripes:link beanclass="pfa.alliance.fim.web.stripes.action.user.EditOwnProfileActionBean">
+								<i class="fa fa-user fa-fw"></i>
+								<stripes:label for="userProfileItem"/>
+							</stripes:link>
+						</li>
+						<li>
 							<stripes:link beanclass="pfa.alliance.fim.web.stripes.action.user.SearchUsersActionBean">
 								<i class="fa fa-search fa-fw"></i>
 								<stripes:label for="searchUsersItem" />
@@ -106,12 +112,6 @@
 						<span class="fa arrow"></span>
 					</a>
 					<ul class="nav nav-second-level collapse">
-						<li>
-							<stripes:link beanclass="pfa.alliance.fim.web.stripes.action.user.EditOwnProfileActionBean">
-								<i class="fa fa-user fa-fw"></i>
-								<stripes:label for="userProfileItem"/>
-							</stripes:link>
-						</li>
 						<li>
 							<a href="#">
 								<i class="fa fa-gear fa-fw"></i>
