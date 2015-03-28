@@ -197,11 +197,6 @@ public class SearchProjectsActionBean
         return result;
     }
 
-    public boolean isShowHiddenProjects()
-    {
-        return SecurityUtil.hasPermission( Permission.PROJECT_SHOW_HIDDEN_PROJECTS, getSession() );
-    }
-
     public ProjectSearchDTO getProjectSearch()
     {
         return projectSearch;

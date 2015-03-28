@@ -276,7 +276,7 @@ class UserManagerServiceImpl
     public LoggedInUserDTO login( String username, String cleanPassword )
     {
         LOG.debug( "Trying to login: {}", username );
-        LoggedInUserDTO userDto = null;
+        LoggedInUserDTO userDto = new LoggedInUserDTO( null, null );
         User user = userRepository.findBy( username, encryptPassword( cleanPassword ) );
         LOG.debug( "Authentication result... username = {} --> user = {}", username, user );
         if ( user != null )

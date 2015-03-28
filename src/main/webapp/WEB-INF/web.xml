@@ -118,7 +118,14 @@
 		<servlet-name>StripesDispatcher</servlet-name>
 		<url-pattern>/project/*</url-pattern>
 	</servlet-mapping>
- 	
+
+	<jsp-config>
+		<taglib>
+		    <taglib-uri>fimSecurity</taglib-uri>   
+		    <taglib-location>/WEB-INF/tlds/security.tld</taglib-location>      
+		</taglib>		
+	</jsp-config>
+	 	
 	<security-constraint>
 		<web-resource-collection>
 			<web-resource-name>secure</web-resource-name>

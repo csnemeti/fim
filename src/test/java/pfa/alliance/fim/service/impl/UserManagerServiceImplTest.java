@@ -243,7 +243,9 @@ public class UserManagerServiceImplTest
         // call
         LoggedInUserDTO responseUserDto = userManagetServiceImpl.login( "user1", "password1" );
         // verify
-        Assert.assertNull( "LoggedInUserDTO should be null", responseUserDto );
+        Assert.assertNotNull( "LoggedInUserDTO should NOT be null", responseUserDto );
+        Assert.assertNull( "LoggedInUserDTO.user should be null", responseUserDto.getUser() );
+        Assert.assertNull( "LoggedInUserDTO.permissions should be null", responseUserDto.getPermissions() );
         verify( userRepositoryMock, Mockito.atLeastOnce() ).findBy( Mockito.anyString(), Mockito.anyString() );
     }
 
