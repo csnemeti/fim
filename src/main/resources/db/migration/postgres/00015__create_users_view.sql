@@ -1,0 +1,1 @@
+CREATE OR REPLACE VIEW users_view AS SELECT id, login_name, first_name, last_name, email, status, default_role, created_at, modified_at FROM fim_user WHERE status = 'ACTIVE';
