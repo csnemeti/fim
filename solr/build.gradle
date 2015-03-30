@@ -1,0 +1,38 @@
+apply plugin: 'java'
+apply plugin: 'war' 
+apply plugin: 'eclipse'
+//apply plugin: 'distribution'
+//apply plugin: 'jacoco'
+
+buildscript {
+	repositories {    	
+    	mavenCentral()
+  	}
+  	dependencies {
+		// we need this to get git version info
+    	classpath 'org.ajoberstar:gradle-git:0.9.0'
+  	}
+}
+ 
+// This is for dependencies...
+repositories {
+    mavenCentral()
+}
+dependencies {
+	// solr
+	compile ('org.apache.solr:solr-core:3.6.2') {
+		exclude module: 'servlet-api'
+    }
+	compile ('org.apache.solr:solr-dataimporthandler:3.6.2') {
+		exclude module: 'servlet-api'
+    }
+	
+    // logging
+    compile 'ch.qos.logback:logback-core:1.1.2'
+    compile 'ch.qos.logback:logback-classic:1.1.2'
+    
+    // db drivers
+    compile 'org.postgresql:postgresql:9.3-1102-jdbc41'
+    compile 'mysql:mysql-connector-java:5.1.32'
+	
+}

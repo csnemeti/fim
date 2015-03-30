@@ -1,6 +1,5 @@
 apply plugin: 'java'
 apply plugin: 'war' 
-//apply plugin: 'jettyEclipse'
 //apply from: 'https://raw.github.com/akhikhl/gretty/master/pluginScripts/gretty.plugin'
 apply from: 'gretty.plugin'
 apply plugin: 'eclipse'
