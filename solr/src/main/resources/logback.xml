@@ -13,12 +13,12 @@
 		</encoder>
 	</appender>
 	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>../logs/fim-solr.log</file>
+		<file>${fim.log.dir}/fim-solr.log</file>
 		
 		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
 			<fileNamePattern>fim-solr.%i.log.zip</fileNamePattern>
 			<minIndex>1</minIndex>
-			<maxIndex>2</maxIndex>
+			<maxIndex>5</maxIndex>
 		</rollingPolicy>
 		<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
 			<maxFileSize>5MB</maxFileSize>
@@ -29,7 +29,7 @@
 			</pattern>
 		</encoder>
 	</appender>
-
+	<logger name="pfa.alliance" level="DEBUG" />
 	<root level="INFO">
 		<appender-ref ref="FILE" />
 		<appender-ref ref="STDOUT" />

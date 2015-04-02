@@ -121,6 +121,7 @@ dependencies {
     testCompile 'javax.servlet:jsp-api:2.0'
     
 }
+classes.dependsOn ':solr:build'
 task("generateJar", dependsOn: 'classes', type: Jar) {
 	    from('.') {
 	        include 'contributors.txt'
