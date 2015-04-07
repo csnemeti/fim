@@ -366,8 +366,8 @@ public class SolrFilter
     private static void sendResponse( ResultStatus status, String message, HttpServletResponse response )
         throws IOException
     {
-        StringBuilder sb = new StringBuilder( "{\n\tstatus : " );
-        sb.append( status ).append( ";\n\tmessage : " ).append( message ).append( "\n}" );
+        StringBuilder sb = new StringBuilder( "{\n\t\"status\" : \"" );
+        sb.append( status ).append( "\",\n\t\"message\" : \"" ).append( message ).append( "\"\n}" );
 
         response.setCharacterEncoding( "UTF-8" );
         response.setContentLength( sb.length() );
