@@ -366,13 +366,16 @@ public class SolrFilter
     private static void sendResponse( ResultStatus status, String message, HttpServletResponse response )
         throws IOException
     {
-        StringBuilder sb = new StringBuilder( "{\n\t\"status\" : \"" );
-        sb.append( status ).append( "\",\n\t\"message\" : \"" ).append( message ).append( "\"\n}" );
+        if ( response != null )
+        {
+            StringBuilder sb = new StringBuilder( "{\n\t\"status\" : \"" );
+            sb.append( status ).append( "\",\n\t\"message\" : \"" ).append( message ).append( "\"\n}" );
 
-        response.setCharacterEncoding( "UTF-8" );
-        response.setContentLength( sb.length() );
-        response.setContentType( "application/json" );
-        response.getWriter().append( sb );
+            response.setCharacterEncoding( "UTF-8" );
+            response.setContentLength( sb.length() );
+            response.setContentType( "application/json" );
+            response.getWriter().append( sb );
+        }
     }
 
     private static enum ResultStatus

@@ -1,8 +1,7 @@
 apply plugin: 'java'
 apply plugin: 'war' 
 apply plugin: 'eclipse'
-//apply plugin: 'distribution'
-//apply plugin: 'jacoco'
+apply plugin: 'org.akhikhl.gretty'
 
 buildscript {
 	repositories {    	
