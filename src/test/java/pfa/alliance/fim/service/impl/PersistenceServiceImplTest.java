@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import pfa.alliance.fim.service.DatabaseMigrationService;
+import pfa.alliance.fim.service.SolrManager;
 
 import com.google.inject.persist.PersistService;
 
@@ -27,17 +28,21 @@ public class PersistenceServiceImplTest
 
     private Provider<DatabaseMigrationService> databaseMigrationServiceProviderMock;
 
+    private SolrManager solrManagerMock;
+
     private PersistenceServiceImpl persistenceServiceImpl;
 
     @Before
     public void init()
     {
         persistServiceMock = Mockito.mock( PersistService.class );
+        solrManagerMock = Mockito.mock( SolrManager.class );
         databaseMigrationServiceMock = Mockito.mock( DatabaseMigrationService.class );
         databaseMigrationServiceProviderMock = Mockito.mock( Provider.class );
         Mockito.when( databaseMigrationServiceProviderMock.get() ).thenReturn( databaseMigrationServiceMock );
 
-        persistenceServiceImpl = new PersistenceServiceImpl( persistServiceMock, databaseMigrationServiceProviderMock );
+        persistenceServiceImpl =
+            new PersistenceServiceImpl( persistServiceMock, databaseMigrationServiceProviderMock, solrManagerMock );
     }
 
     @Test

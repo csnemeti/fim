@@ -182,11 +182,14 @@ distributions {
     main {
         baseName = 'fim'
         contents {
-            from { 'LICENSE'}
-            from { 'README.md'}
-            //from { 'contributors.txt'}
-            from { 'build/libs/'}
-            
+            from ( 'LICENSE' )
+            from ( 'README.md' )
+            from ( 'build/libs/' ){
+            	include '**/*.war'
+            }
+            from ( 'solr/build/libs/' ){
+            	include '**/*.war'
+            }
         }
     }
 }
