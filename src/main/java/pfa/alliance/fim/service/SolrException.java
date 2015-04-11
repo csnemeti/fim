@@ -20,9 +20,19 @@ public abstract class SolrException
      * @param message a message of exception
      * @param cause the original exception cause
      */
-    public SolrException( String message, Throwable cause )
+    protected SolrException( String message, Throwable cause )
     {
         super( message, cause );
+    }
+
+    /**
+     * Called when instance of this class is created.
+     * 
+     * @param message a message of exception
+     */
+    protected SolrException( String message )
+    {
+        super( message );
     }
 
 }

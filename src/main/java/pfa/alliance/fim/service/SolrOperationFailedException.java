@@ -24,4 +24,14 @@ public class SolrOperationFailedException
         super( message, cause );
     }
 
+    /**
+     * Called when instance of this class is created.
+     * 
+     * @param message a message of exception
+     */
+    public SolrOperationFailedException( String message )
+    {
+        super( message );
+    }
+
 }

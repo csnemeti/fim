@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import pfa.alliance.fim.service.DatabaseMigrationService;
 import pfa.alliance.fim.service.PersistenceService;
+import pfa.alliance.fim.service.SolrManager;
 
 import com.google.inject.persist.PersistService;
 
@@ -31,14 +32,18 @@ class PersistenceServiceImpl
 
     private final Provider<DatabaseMigrationService> databaseMigrationService;
 
+    private final SolrManager solrManager;
+
     /** Flag to indicate the fact that {@link PersistService} is started or not. */
     private boolean running = false;
 
     @Inject
-    PersistenceServiceImpl( PersistService service, Provider<DatabaseMigrationService> databaseMigrationService )
+    PersistenceServiceImpl( PersistService service, Provider<DatabaseMigrationService> databaseMigrationService,
+                            SolrManager solrManager )
     {
         this.service = service;
         this.databaseMigrationService = databaseMigrationService;
+        this.solrManager = solrManager;
     }
 
     @Override
@@ -50,12 +55,21 @@ class PersistenceServiceImpl
         }
         else
         {
-            synchronized ( this )
+            try
             {
-                LOG.info( "Trying to start the service..." );
-                databaseMigrationService.get().upgradeDb();
-                service.start();
-                running = true;
+                synchronized ( this )
+                {
+                    LOG.info( "Trying to start the service..." );
+                    databaseMigrationService.get().upgradeDb();
+                    solrManager.initDb();
+                    service.start();
+                    solrManager.start();
+                    running = true;
+                }
+            }
+            catch ( Exception e )
+            {
+                LOG.error( "Error starting service", e );
             }
         }
     }

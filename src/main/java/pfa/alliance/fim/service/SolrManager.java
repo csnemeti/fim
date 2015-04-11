@@ -14,31 +14,35 @@ public interface SolrManager
      * Method called to perform Solr initialization.
      * 
      * @throws SolrOperationFailedException in case the call failed
+     * @throws SolrConnectException in case it cannot connect to Solr server
      */
     void initDb()
-        throws SolrOperationFailedException;
+        throws SolrOperationFailedException, SolrConnectException;
 
     /**
      * Method called to start Solr server.
      * 
      * @throws SolrOperationFailedException in case the call failed
+     * @throws SolrConnectException in case it cannot connect to Solr server
      */
     void start()
-        throws SolrOperationFailedException;
+        throws SolrOperationFailedException, SolrConnectException;
 
     /**
      * Method called to run full index on Users.
      * 
      * @throws SolrOperationFailedException in case the call failed
+     * @throws SolrConnectException in case it cannot connect to Solr server
      */
     void runUserFullIndex()
-        throws SolrOperationFailedException;
+        throws SolrOperationFailedException, SolrConnectException;
 
     /**
      * Method called to run delta index on Users.
      * 
      * @throws SolrOperationFailedException in case the call failed
+     * @throws SolrConnectException in case it cannot connect to Solr server
      */
     void runUserDeltaIndex()
-        throws SolrOperationFailedException;
+        throws SolrOperationFailedException, SolrConnectException;
 }

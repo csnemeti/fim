@@ -42,11 +42,14 @@ public class FimServiceModule
     private static final String DEFAULT_JPA_CONFIG_FILE = "/env/fim.properties";
 
     private static final String[] JPA_CONFIG_PROPERTIES = { "javax.persistence.jdbc.user",
-        "javax.persistence.jdbc.password", "javax.persistence.jdbc.url", "javax.persistence.jdbc.drive" };
+        "javax.persistence.jdbc.password", "javax.persistence.jdbc.url", "javax.persistence.jdbc.driver" };
 
     private static final String[] EMAIL_CONFIG_PROPERTIES = { "mail.smtp.auth", "mail.smtp.starttls.enable",
         "mail.smtp.host", "mail.smtp.port", "mail.smtp.socketFactory.port", "mail.smtp.socketFactory.class",
         "mail.smtp.username", "mail.smtp.password", "mail.smtp.subjectPrefix", "mail.smtp.from", "mail.debug" };
+
+    private static final String[] SOLR_CONFIG_PROPERTIES = { "solr.url", "solr.users.indexTime.full",
+        "solr.users.indexTime.delta" };
 
     private static final String FIM_HTTPS_URL = "fim.https.url";
 
@@ -85,6 +88,22 @@ public class FimServiceModule
         return filterProperties( props, JPA_CONFIG_PROPERTIES );
     }
 
+    /**
+     * Gets the Solr configuration from environment file.
+     * 
+     * @return the Solr configuration
+     */
+    @Provides
+    @ServiceConfiguration( ServiceConfigurationType.SOLR )
+    public Properties getSolrConfiguration()
+    {
+        LOG.debug( "Reading Solr configuration..." );
+        String fimEnvFileName = getEnvironmentFileName();
+        LOG.debug( "Reading configuration from environment file: {}", fimEnvFileName );
+        Properties props = readConfigurationFrom( fimEnvFileName );
+        LOG.debug( "Read SolrConfiguration: {}", props );
+        return filterProperties( props, SOLR_CONFIG_PROPERTIES );
+    }
     /**
      * Gets the e-mail configuration from environment file.
      * 

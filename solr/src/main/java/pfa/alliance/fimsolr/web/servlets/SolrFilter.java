@@ -13,6 +13,7 @@ import java.nio.charset.StandardCharsets;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -51,7 +52,10 @@ public class SolrFilter
         throws ServletException
     {
         this.filterConfig = filterConfig;
-        filterBasePath = filterConfig.getServletContext().getContextPath() + "/fim-solr/";
+        ServletContext context = filterConfig.getServletContext();
+        filterBasePath = context.getContextPath() + "/fim-solr/";
+        // set Solr home
+        System.setProperty( "solr.solr.home", context.getRealPath( "/WEB-INF/multicore/" ) );
         LOG.debug( "Filter initialized" );
     }
 
@@ -108,8 +112,8 @@ public class SolrFilter
     {
         String pathInfo = request.getRequestURI();
         String command = pathInfo.substring( filterBasePath.length() );
-        LOG.debug( "Local request: command = {}, pathInfo = {}, queryString = {}", command, pathInfo,
-                   request.getQueryString() );
+        LOG.debug( "Local request: command = {}, pathInfo = {}, queryString = {}, user-agent = {}", command, pathInfo,
+                   request.getQueryString(), request.getHeader( "User-Agent" ) );
         switch ( command )
         {
             case "start":
