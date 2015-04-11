@@ -11,7 +11,7 @@ package pfa.alliance.fim.service;
 public interface SolrManager
 {
     /**
-     * Method called to perform initialization.
+     * Method called to perform Solr initialization.
      * 
      * @throws SolrOperationFailedException in case the call failed
      */

@@ -79,7 +79,7 @@ class UserManagerServiceImpl
     private final RoleAndPermissionRepository roleAndPermissionRepository;
 
     @Inject
-    public UserManagerServiceImpl( UserRepository userRepository, EmailService emailService,
+    UserManagerServiceImpl( UserRepository userRepository, EmailService emailService,
                                    EmailGeneratorService emailGeneratorService,
                                    FimUrlGeneratorService fimUrlGeneratorService,
                                    UserOneTimeLinkRepository userOneTimeLinkRepository,

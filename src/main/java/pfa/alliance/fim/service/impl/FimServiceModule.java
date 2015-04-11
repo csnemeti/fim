@@ -21,6 +21,7 @@ import pfa.alliance.fim.service.EmailService;
 import pfa.alliance.fim.service.FimUrlGeneratorService;
 import pfa.alliance.fim.service.PersistenceService;
 import pfa.alliance.fim.service.ProjectManagementService;
+import pfa.alliance.fim.service.SolrManager;
 import pfa.alliance.fim.service.UserManagerService;
 
 import com.google.inject.AbstractModule;
@@ -61,6 +62,7 @@ public class FimServiceModule
         bind( EmailGeneratorService.class ).to( EmailGeneratorServiceImpl.class );
         bind( PersistenceService.class ).to( PersistenceServiceImpl.class );
         bind( FimUrlGeneratorService.class ).to( FimUrlGeneratorServiceImpl.class );
+        bind( SolrManager.class ).to( SolrManagerImpl.class );
 
         bind( UserManagerService.class ).to( UserManagerServiceImpl.class );
         bind( ProjectManagementService.class ).to( ProjectManagementServiceImpl.class );

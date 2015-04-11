@@ -35,7 +35,7 @@ class PersistenceServiceImpl
     private boolean running = false;
 
     @Inject
-    public PersistenceServiceImpl( PersistService service, Provider<DatabaseMigrationService> databaseMigrationService )
+    PersistenceServiceImpl( PersistService service, Provider<DatabaseMigrationService> databaseMigrationService )
     {
         this.service = service;
         this.databaseMigrationService = databaseMigrationService;

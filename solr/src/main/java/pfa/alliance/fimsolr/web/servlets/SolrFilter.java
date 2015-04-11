@@ -35,7 +35,7 @@ public class SolrFilter
     private static final Logger LOG = LoggerFactory.getLogger( SolrFilter.class );
 
     /** The real solr filter. */
-    private SolrDispatchFilter solrFilter = null;
+    private Filter solrFilter = null;
 
     /** The filter original configuration. */
     private FilterConfig filterConfig;
@@ -304,7 +304,7 @@ public class SolrFilter
         {
             if ( dbInitComplete )
             {
-                solrFilter = new SolrDispatchFilter();
+                solrFilter = createSolrDispatchFilter();
                 try
                 {
                     solrFilter.init( filterConfig );
@@ -333,6 +333,16 @@ public class SolrFilter
     }
 
     /**
+     * This method is called in order to create a {@link SolrDispatchFilter} instance.
+     * 
+     * @return the created instance
+     */
+    protected Filter createSolrDispatchFilter()
+    {
+        return new SolrDispatchFilter();
+    }
+
+    /**
      * Stops the filter.
      * 
      * @param response the response object (could be null)
@@ -342,7 +352,7 @@ public class SolrFilter
     {
         if ( solrFilter != null )
         {
-            SolrDispatchFilter filter = this.solrFilter;
+            Filter filter = this.solrFilter;
             this.solrFilter = null;
             filter.destroy();
             LOG.info( "Solr server stopped" );
