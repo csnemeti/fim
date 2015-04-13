@@ -293,7 +293,7 @@ gretty {
   sslKeyStorePassword='33NFcgHVfXeIw3lrhY1mTaMukc0qtJsKJaNMHz6eeHlgy6ZJoxBRLNnA3UVGqY0LoNq9sqQhDEb2nA3SFi139tB8QRCWzJe8UkFEfVwLvBT18UIqqkMp3eaWr8pwptbH'
   sslKeyManagerPassword='jct30I3U4xzkm37zKSY4quNjSaFLw635Ej62dQD7oqL4pCv4oKJ736ne2H5FW3o5TYJn68OE5upLNg9rGH6rDkJ3bt9f45cXJeLF6IgmKLqPmPdtsjBVI1HMGlYklRS5'
   
-  jvmArgs = ['-Dfim.log.dir=./logs']
+  jvmArgs = ['-Dfim.log.dir=./logs','-Dfile.encoding=UTF-8']
 }
 
 
