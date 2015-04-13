@@ -2,7 +2,7 @@
 <%@ taglib prefix="stripes" uri="http://stripes.sourceforge.net/stripes.tld"%>
 
 <stripes:layout-definition>
-<stripes:form beanclass="pfa.alliance.fim.web.stripes.action.user.RegisterUserActionBean" focus="firstName" id="regForm">  
+<stripes:form beanclass="pfa.alliance.fim.web.stripes.action.user.RegisterUserActionBean" focus="firstName" id="regForm" acceptcharset="UTF-8">  
 	<div align="center">
 		<div style="padding-top:15px">
 			<div class="form-group">
