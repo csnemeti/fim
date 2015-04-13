@@ -96,7 +96,7 @@ public class LoginUserActionBeanTest
         Assert.assertEquals( 0, bean.getContext().getValidationErrors().size() );
         Assert.assertEquals( "user", bean.getUsername() );
         Assert.assertEquals( "pass", bean.getPassword() );
-        Assert.assertNotNull( "DB operation should NOT be null", bean.getDbOperationResult() );
+        Assert.assertNotNull( "DB operation should NOT be null", bean.getDbOperationResultValue() );
 
         MockHttpServletRequest request = trip.getRequest();
         Assert.assertNotNull( "Request should not be null", request );

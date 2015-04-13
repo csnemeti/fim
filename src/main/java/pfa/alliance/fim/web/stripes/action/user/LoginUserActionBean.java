@@ -260,4 +260,13 @@ public class LoginUserActionBean
         return result;
     }
 
+    /**
+     * This method is used for testing reasons only.
+     * 
+     * @return the raw value of {@link #dbOperationResult}
+     */
+    String getDbOperationResultValue()
+    {
+        return dbOperationResult;
+    }
 }
