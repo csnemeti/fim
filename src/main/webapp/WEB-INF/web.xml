@@ -16,6 +16,20 @@
 
 
 	<filter>
+		<display-name>Filter used for change character encoding</display-name>
+		<filter-name>SetCharacterEncodingFilter</filter-name>
+		<filter-class>pfa.alliance.fim.servlets.SetCharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>SetCharacterEncodingFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+	</filter-mapping>
+	<filter>
 		<filter-name>DataTablesRequestFilter</filter-name>
 		<filter-class>pfa.alliance.fim.servlets.DataTablesRequestFitler</filter-class>
 		<init-param>
