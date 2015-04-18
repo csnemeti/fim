@@ -39,7 +39,7 @@
   <requestHandler name="/admin/" class="org.apache.solr.handler.admin.AdminHandlers" />
 	<requestHandler name="/dataimport" class="org.apache.solr.handler.dataimport.DataImportHandler">
 		<lst name="defaults">
-			<str name="config">/db-data-config.xml</str>
+			<str name="config">db-data-config.xml</str>
 		</lst>
 	</requestHandler>
       
