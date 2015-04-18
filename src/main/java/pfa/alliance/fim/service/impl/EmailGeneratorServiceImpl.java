@@ -28,7 +28,7 @@ import pfa.alliance.fim.util.UTF8Control;
  * @author Csaba
  */
 @Singleton
-public class EmailGeneratorServiceImpl
+class EmailGeneratorServiceImpl
     implements EmailGeneratorService
 {
     /** The logger used in this class. */

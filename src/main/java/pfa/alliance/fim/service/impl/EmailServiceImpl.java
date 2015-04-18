@@ -31,7 +31,7 @@ import pfa.alliance.fim.service.EmailService;
  * @author Csaba
  */
 @Singleton
-public class EmailServiceImpl
+class EmailServiceImpl
     implements EmailService
 {
     /** The logger used in this class. */
@@ -41,7 +41,7 @@ public class EmailServiceImpl
     private Provider<Properties> emailConfiguration;
 
     @Inject
-    public EmailServiceImpl( @ServiceConfiguration( ServiceConfigurationType.EMAIL ) Provider<Properties> emailConfiguration )
+    EmailServiceImpl( @ServiceConfiguration( ServiceConfigurationType.EMAIL ) Provider<Properties> emailConfiguration )
     {
         this.emailConfiguration = emailConfiguration;
     }
