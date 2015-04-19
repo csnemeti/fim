@@ -139,6 +139,9 @@ public interface UserManagerService
      * @param userId the user ID
      * @param firstName the user new first name
      * @param lastName the user new last name
+     * @param clearTextPassword optional clear text password
+     * @param status optional user status
      */
-    void changeUserData( int userId, final String firstName, final String lastName );
+    void changeUserData( final int userId, final String firstName, final String lastName,
+                         final String clearTextPassword, final UserStatus status );
 }

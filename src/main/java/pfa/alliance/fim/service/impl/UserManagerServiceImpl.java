@@ -19,6 +19,7 @@ import javax.persistence.PersistenceException;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -281,7 +282,7 @@ class UserManagerServiceImpl
         if ( link != null && link.getUser() != null && isLinkValid( link ) )
         {
             // this will invalidate the one time link
-            // link.setExpiresAt( new Timestamp( System.currentTimeMillis() ) );
+            link.setExpiresAt( new Timestamp( System.currentTimeMillis() ) );
             User user = link.getUser();
             Map<UserRole, List<UserPermission>> permissions = null;
             if ( UserStatus.ACTIVE.equals( user.getStatus() ) || UserStatus.NEW.equals( user.getStatus() ) )
@@ -592,7 +593,8 @@ class UserManagerServiceImpl
 
     @Transactional
     @Override
-    public void changeUserData( final int userId, final String firstName, final String lastName )
+    public void changeUserData( final int userId, final String firstName, final String lastName,
+                                final String clearTextPassword, final UserStatus status )
     {
         LOG.debug( "Updating user data user ID = {}, first name = {}, last name = {}", userId, firstName, lastName );
         User user = userRepository.findOne( userId );
@@ -601,6 +603,14 @@ class UserManagerServiceImpl
         {
             user.setFirstName( firstName );
             user.setLastName( lastName );
+            if ( StringUtils.isNotBlank( clearTextPassword ) )
+            {
+                user.setPassword( encryptPassword( clearTextPassword ) );
+            }
+            if ( status != null )
+            {
+                user.setStatus( status );
+            }
             userRepository.save( user );
         }
     }

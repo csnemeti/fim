@@ -179,7 +179,7 @@ public abstract class AbstractUserProfileActionBean
     {
         final int userId = getUserId();
         LOG.debug( "Change user data with ID = {}", userId );
-        userManagerService.changeUserData( userId, firstName, lastName );
+        userManagerService.changeUserData( userId, firstName, lastName, null, null );
         // update the user from session too
         AuthenticatedUserDTO userDto = SecurityUtil.getUserFromSession( getSession() );
         userDto.setFirstName( firstName );
@@ -197,8 +197,8 @@ public abstract class AbstractUserProfileActionBean
     public Resolution changeData2()
     {
         final int userId = getUserId();
-        LOG.debug( "Change user data with ID = {}", userId );
-        userManagerService.changeUserData( userId, firstName, lastName );
+        LOG.debug( "Change user full data with ID = {}", userId );
+        userManagerService.changeUserData( userId, firstName, lastName, password1, UserStatus.ACTIVE );
         // update the user from session too
         AuthenticatedUserDTO userDto = SecurityUtil.getUserFromSession( getSession() );
         userDto.setFirstName( firstName );
@@ -371,7 +371,7 @@ public abstract class AbstractUserProfileActionBean
      */
     public boolean isShouldDisplayChangePassword()
     {
-        return true;
+        return UserStatus.ACTIVE.equals( getStatusValue() );
     }
 
     /**
@@ -381,7 +381,7 @@ public abstract class AbstractUserProfileActionBean
      */
     public boolean isShouldDisplayEmailChange()
     {
-        return true;
+        return UserStatus.ACTIVE.equals( getStatusValue() );
     }
 
     /**
@@ -391,12 +391,12 @@ public abstract class AbstractUserProfileActionBean
      */
     public boolean isShouldDisplayDisableAccount()
     {
-        return true;
+        return UserStatus.ACTIVE.equals( getStatusValue() );
     }
 
     public boolean isShowCompleteChangeDataForm()
     {
-        return false;
+        return UserStatus.NEW.equals( getStatusValue() );
     }
 
     public String getPassword()

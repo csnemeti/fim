@@ -45,6 +45,17 @@
 				// validate the data from forms
  				$("#dataForm").validate({
 					rules: {
+						<c:if test="${actionBean.showCompleteChangeDataForm}">
+						password1: {
+							required: true,
+							minlength: 6
+						},
+						password2: {
+							required: true,
+							minlength: 6,
+							equalTo: "#password1"
+						},
+						</c:if>
 						firstName: "required",
 						lastName: "required"
 					}

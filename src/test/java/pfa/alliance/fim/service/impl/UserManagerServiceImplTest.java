@@ -728,7 +728,7 @@ public class UserManagerServiceImplTest
         User user = null;
         when( userRepositoryMock.findOne( 1 ) ).thenReturn( user );
 
-        userManagetServiceImpl.changeUserData( 1, "First", "Last" );
+        userManagetServiceImpl.changeUserData( 1, "First", "Last", null, null );
         verify( userRepositoryMock, Mockito.atLeastOnce() ).findOne( 1 );
         verify( userRepositoryMock, Mockito.times( 0 ) ).save( any( User.class ) );
         Mockito.verifyZeroInteractions( emailServiceMock, emailGeneratorServiceMock, fimUrlGeneratorServiceMock,
@@ -745,7 +745,7 @@ public class UserManagerServiceImplTest
 
         try
         {
-            userManagetServiceImpl.changeUserData( 1, "First", "Last" );
+            userManagetServiceImpl.changeUserData( 1, "First", "Last", null, null );
         }
         finally
         {
