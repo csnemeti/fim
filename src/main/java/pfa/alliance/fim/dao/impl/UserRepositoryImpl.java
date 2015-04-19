@@ -18,6 +18,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
@@ -163,18 +164,19 @@ class UserRepositoryImpl
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<UserOneTimeLink> criteria = cb.createQuery( UserOneTimeLink.class );
         Root<UserOneTimeLink> root = criteria.from( UserOneTimeLink.class );
-        root.fetch( "user" );
+        root.fetch( "user", JoinType.INNER );
         Predicate[] predicates = null;
         if ( designation != null )
         {
-            predicates = new Predicate[2];
-            predicates[1] = cb.equal( root.get( "designation" ), designation );
+            predicates = new Predicate[3];
+            predicates[2] = cb.equal( root.get( "designation" ), designation );
         }
         else
         {
-            predicates = new Predicate[1];
+            predicates = new Predicate[2];
         }
         predicates[0] = cb.equal( root.get( "uuid" ), uuid );
+        predicates[1] = cb.notEqual( root.get( "user" ).get( "status" ), UserStatus.SCHEDULED_FOR_DELETE );
         criteria.where( predicates );
 
         TypedQuery<UserOneTimeLink> query = em.createQuery( criteria );

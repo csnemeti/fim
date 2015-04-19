@@ -80,10 +80,9 @@ class UserManagerServiceImpl
 
     @Inject
     UserManagerServiceImpl( UserRepository userRepository, EmailService emailService,
-                                   EmailGeneratorService emailGeneratorService,
-                                   FimUrlGeneratorService fimUrlGeneratorService,
-                                   UserOneTimeLinkRepository userOneTimeLinkRepository,
-                                   RoleAndPermissionRepository roleAndPermissionRepository )
+                            EmailGeneratorService emailGeneratorService, FimUrlGeneratorService fimUrlGeneratorService,
+                            UserOneTimeLinkRepository userOneTimeLinkRepository,
+                            RoleAndPermissionRepository roleAndPermissionRepository )
     {
         this.userRepository = userRepository;
         this.emailService = emailService;
@@ -277,6 +276,29 @@ class UserManagerServiceImpl
     {
         LOG.debug( "Trying to login user with uuid: {}", uuid );
         LoggedInUserDTO userDto = new LoggedInUserDTO( null, null );
+        UserOneTimeLink link = userRepository.getOneTimeLinkBy( uuid, null );
+        LOG.debug( "Authentication result... uuid = {} --> link = {}", uuid, link );
+        if ( link != null && link.getUser() != null && isLinkValid( link ) )
+        {
+            // this will invalidate the one time link
+            // link.setExpiresAt( new Timestamp( System.currentTimeMillis() ) );
+            User user = link.getUser();
+            Map<UserRole, List<UserPermission>> permissions = null;
+            if ( UserStatus.ACTIVE.equals( user.getStatus() ) || UserStatus.NEW.equals( user.getStatus() ) )
+            {
+                Set<UserRole> roles = extractDistinctUserRoleInsideProjects( user );
+                LOG.debug( "Roles for user with ID = {}: {}", user.getId(), roles );
+                permissions = roleAndPermissionRepository.findPermissionsFor( roles );
+                LOG.debug( "Permissions for user with ID = {}: {}", user.getId(), permissions );
+            }
+            else
+            {
+                LOG.debug( "User with ID = {} is not NEW or ACTIVE, roles will not be retrived", user.getId() );
+                permissions = new HashMap<>();
+            }
+            userDto = new LoggedInUserDTO( user, permissions );
+            checkUserStatusForLogin( user );
+        }
         return userDto;
     }
 
@@ -461,7 +483,7 @@ class UserManagerServiceImpl
             throw new UserActivationFailException( ActivationFailReason.UUID_NOT_FOUND );
         }
         // check if link is not expired
-        if ( link.getExpiresAt().before( new Timestamp( System.currentTimeMillis() ) ) )
+        if ( !isLinkValid( link ) )
         {
             LOG.info( "Link coresponding to requested UUID is expired: {}", link );
             throw new UserActivationFailException( ActivationFailReason.UUID_EXPIRED );
@@ -473,6 +495,17 @@ class UserManagerServiceImpl
             LOG.info( "User has a status that suggests activation already happened: {}", user );
             throw new UserActivationFailException( ActivationFailReason.USER_ALREADY_ACTIVE );
         }
+    }
+
+    /**
+     * Verifies if {@link UserOneTimeLink} is not expired.
+     * 
+     * @param link a not null link
+     * @return true if link is still valid
+     */
+    private static boolean isLinkValid( UserOneTimeLink link )
+    {
+        return link.getExpiresAt().after( new Timestamp( System.currentTimeMillis() ) );
     }
 
     /**

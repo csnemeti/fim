@@ -10,6 +10,7 @@ import net.sourceforge.stripes.action.UrlBinding;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pfa.alliance.fim.model.user.UserStatus;
 import pfa.alliance.fim.service.UserManagerService;
 import pfa.alliance.fim.web.security.FimSecurity;
 import pfa.alliance.fim.web.security.SecurityUtil;
@@ -51,6 +52,30 @@ public class EditOwnProfileActionBean
     protected boolean shouldDisableRole()
     {
         return true;
+    }
+
+    @Override
+    public boolean isShouldDisplayChangePassword()
+    {
+        return UserStatus.ACTIVE.equals( getStatusValue() );
+    }
+
+    @Override
+    public boolean isShouldDisplayEmailChange()
+    {
+        return UserStatus.ACTIVE.equals( getStatusValue() );
+    }
+
+    @Override
+    public boolean isShouldDisplayDisableAccount()
+    {
+        return UserStatus.ACTIVE.equals( getStatusValue() );
+    }
+
+    @Override
+    public boolean isShowCompleteChangeDataForm()
+    {
+        return UserStatus.NEW.equals( getStatusValue() );
     }
 
     @Override
