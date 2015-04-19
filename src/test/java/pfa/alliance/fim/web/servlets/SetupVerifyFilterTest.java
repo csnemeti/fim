@@ -1,4 +1,4 @@
-package pfa.alliance.fim.servlets;
+package pfa.alliance.fim.web.servlets;
 
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;

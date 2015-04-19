@@ -84,10 +84,10 @@ class UserRepositoryImpl
         LOG.debug( "Getting user with username = {}", username );
         EntityManager em = getEntityManager();
         TypedQuery<User> query =
-            em.createQuery( "SELECT u FROM pfa.alliance.fim.model.user.User u WHERE u.login = :login AND u.status != :status",
+            em.createQuery( "SELECT u FROM pfa.alliance.fim.model.user.User u WHERE u.login = :login AND u.status <> :status",
                             User.class );
         query.setParameter( "login", username );
-        query.setParameter( "status", UserStatus.SCHEDULED_FOR_DELETE );
+        query.setParameter( "status", UserStatus.SCHEDULED_FOR_DELETE.name() );
         List<User> results = query.getResultList();
         LOG.debug( "Returned results: {}", results );
         return uniqueResult( results );
@@ -99,10 +99,10 @@ class UserRepositoryImpl
         LOG.debug( "Getting user with email = {}", email );
         EntityManager em = getEntityManager();
         TypedQuery<User> query =
-            em.createQuery( "SELECT u FROM pfa.alliance.fim.model.user.User u WHERE u.email = :email AND u.status != :status",
+            em.createQuery( "SELECT u FROM pfa.alliance.fim.model.user.User u WHERE u.email = :email AND u.status <> :status",
                             User.class );
         query.setParameter( "email", email );
-        query.setParameter( "status", UserStatus.SCHEDULED_FOR_DELETE );
+        query.setParameter( "status", UserStatus.SCHEDULED_FOR_DELETE.name() );
         List<User> results = query.getResultList();
         LOG.debug( "Returned results: {}", results );
         return uniqueResult( results );
