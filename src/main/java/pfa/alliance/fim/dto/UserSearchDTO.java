@@ -3,6 +3,8 @@
  */
 package pfa.alliance.fim.dto;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.Arrays;
 
 import org.apache.commons.lang.StringUtils;
@@ -58,9 +60,22 @@ public class UserSearchDTO
         return email;
     }
 
-    public void setEmail( String email )
+    public void setEmail( final String email )
     {
         this.email = email;
+        // might be double encoded so we might need double decoding
+        // this is made by checking % in email address
+        if ( email != null && email.contains( "%" ) )
+        {
+            try
+            {
+                this.email = URLDecoder.decode( email, "UTF-8" );
+            }
+            catch ( UnsupportedEncodingException e )
+            {
+                // it should not be thrown
+            }
+        }
     }
 
     public String[] getRoles()

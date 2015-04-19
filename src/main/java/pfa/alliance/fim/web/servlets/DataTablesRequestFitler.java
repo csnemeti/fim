@@ -1,7 +1,7 @@
 /**
  * 
  */
-package pfa.alliance.fim.servlets;
+package pfa.alliance.fim.web.servlets;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
 
+import javax.inject.Singleton;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -87,6 +88,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Csaba
  */
+@Singleton
 public class DataTablesRequestFitler
     implements Filter
 {

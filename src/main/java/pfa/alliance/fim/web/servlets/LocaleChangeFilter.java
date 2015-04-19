@@ -1,7 +1,7 @@
 /**
  * 
  */
-package pfa.alliance.fim.servlets;
+package pfa.alliance.fim.web.servlets;
 
 import java.io.IOException;
 import java.util.Arrays;

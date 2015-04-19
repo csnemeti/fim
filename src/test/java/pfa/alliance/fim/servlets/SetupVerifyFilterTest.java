@@ -19,6 +19,7 @@ import org.mockito.Mockito;
 
 import pfa.alliance.fim.service.ConfigurationService;
 import pfa.alliance.fim.service.PersistenceService;
+import pfa.alliance.fim.web.servlets.SetupVerifyFilter;
 
 /**
  * Test if the {@link SetupVerifyFilter} is redirecting the request properly .

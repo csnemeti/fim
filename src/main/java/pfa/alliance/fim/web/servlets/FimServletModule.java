@@ -1,7 +1,10 @@
 /**
  * 
  */
-package pfa.alliance.fim.servlets;
+package pfa.alliance.fim.web.servlets;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.management.MBeanServer;
 import javax.management.MBeanServerFactory;
@@ -25,5 +28,12 @@ class FimServletModule
         bind( MBeanServer.class ).toInstance( MBeanServerFactory.createMBeanServer() );
         // bind configuration checker filter as singleton
         filter( "/*" ).through( SetupVerifyFilter.class );
+        // changes necessary for DataTables
+        Map<String, String> initParams = new HashMap<>();
+        initParams.put( "transferColumnsParams", "false" );
+        filter( "/user/search", "/user/search/*", "/project/search", "/project/search/*" ).through( DataTablesRequestFitler.class,
+                                                                                                    initParams );
+        // token processing for user profile
+        filter( "/user/profile", "/user/profile/*" ).through( UserProfileFilter.class );
     }
 }

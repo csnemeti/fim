@@ -1,7 +1,7 @@
 /**
  * 
  */
-package pfa.alliance.fim.servlets;
+package pfa.alliance.fim.web.servlets;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;

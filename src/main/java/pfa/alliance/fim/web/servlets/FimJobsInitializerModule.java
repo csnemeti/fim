@@ -1,4 +1,4 @@
-package pfa.alliance.fim.servlets;
+package pfa.alliance.fim.web.servlets;
 
 import pfa.alliance.fim.jobs.CheckRegisterRequestJob;
 import pfa.alliance.fim.jobs.guartz.QuartzModule;

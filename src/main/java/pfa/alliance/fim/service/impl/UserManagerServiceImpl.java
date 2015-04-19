@@ -273,6 +273,15 @@ class UserManagerServiceImpl
 
     @Override
     @Transactional
+    public LoggedInUserDTO login( final String uuid )
+    {
+        LOG.debug( "Trying to login user with uuid: {}", uuid );
+        LoggedInUserDTO userDto = new LoggedInUserDTO( null, null );
+        return userDto;
+    }
+
+    @Override
+    @Transactional
     public LoggedInUserDTO login( String username, String cleanPassword )
     {
         LOG.debug( "Trying to login: {}", username );
