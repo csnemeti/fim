@@ -19,6 +19,7 @@
 
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/blog-post.css" rel="stylesheet">
+    <link href="css/pfa_alliance.css" rel="stylesheet">
     
     <style type="text/css">
     	#productsCarusel div img {
@@ -28,31 +29,34 @@
 
     <script src="js/jquery.js"></script>
     <script src="js/bootstrap.min.js"></script>
+    <script src="js/pfa-pocket-watch-0.1.js"></script>
     <script src="js/jssor.slider.mini.js"></script>
-    <script src="js/clock-1.0.js"></script>
-    <script src="js/progressbar.min.js"></script>
     
     <script type="text/javascript">
-    jssor_slider1_starter = function (containerId) {
-        var options = { $AutoPlay: true };
-        var jssor_slider1 = new $JssorSlider$(containerId, options);
-    };
+		jssor_slider1_starter = function (containerId) {
+			var options = { $AutoPlay: true };
+			var jssor_slider1 = new $JssorSlider$(containerId, options);
+		};
+		
+		function pageLoaded() {
+		  // Handler for .ready() called.
+		  (new pfaAllianceClock('watch', null)).start();
+		  jssor_slider1_starter('productsCarusel');
+		}
     </script>
     
     <script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-  ga('create', 'UA-62149917-1', 'auto');
-  ga('send', 'pageview');
-
-</script>
-
+	  ga('create', 'UA-62149917-1', 'auto');
+	  ga('send', 'pageview');
+	</script>
 </head>
 
-<body>
+<body onload="pageLoaded()">
 
     <nav style="background-color:#f8f8f8" class="navbar navbar-fixed-top" role="navigation">
         <div class="container">
@@ -63,7 +67,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">PFA Alliance</a>
+                <a class="navbar-brand" href=".">PFA Alliance</a>
             </div>
             
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -178,11 +182,11 @@
 				                                <i class="fa fa-cloud fa-stack-1x text-primary"></i>
 				                            </span>
 				                                <h4>
-				                                    <strong>FIM</strong>
+				                                    <strong><span class="asimovF">F</span>IM</strong>
 				                                </h4>
 												<img style="height:50px;weight:50px" src="images/fim-logo.png" alt="Free Issue Manager logo" />
 				                                <p>Free Issue Manager</p>
-				                                <a href="fim_page.html" class="btn btn-light">Learn More</a>
+				                                <a href="fim.html" class="btn btn-light">Learn More</a>
 				                            </div>
 				                        </div>
 				                        <div class="col-md-3 col-sm-6">
@@ -244,13 +248,11 @@
                 	<a href="#">Contact Us</a> | <a href="#">Sitemap</a> | <a href="#">Terms of use</a> | PFA Alliance 2015, version 0.2
                 </div>
                 <div class="col-lg-6" style="text-align: right">
-                	<a href="https://www.facebook.com/sharer/sharer.php?u=pfa-alliance.com" target="_blank" title="Share on Facebook">Facebook</a> | G+ | Twitter
+                	<a href="https://www.facebook.com/sharer/sharer.php?u=www.pfa-alliance.com" target="_blank" title="Share on Facebook">Facebook</a> | G+ | Twitter
                 </div>
             </div>
         </footer>
 
     </div>
 </body>
-	<script>(new pfaAllianceClock('watch', null)).start();</script>
-	<script>jssor_slider1_starter('productsCarusel');</script>
 </html>
