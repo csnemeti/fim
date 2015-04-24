@@ -12,6 +12,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -20,6 +22,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 
 import pfa.alliance.fim.model.GenericModel;
 import pfa.alliance.fim.model.Identifiable;
+import pfa.alliance.fim.model.issue.IssueFlow;
 
 @Entity( name = "project" )
 public class Project
@@ -57,6 +60,10 @@ public class Project
 
     @OneToMany( fetch = FetchType.LAZY, mappedBy = "project", orphanRemoval = true, cascade = CascadeType.ALL )
     private Set<UserProjectRelation> userBoardData;
+	
+    @ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id_issue_flow")
+    private IssueFlow issueFlow;
 
     public Project()
     {
@@ -144,8 +151,18 @@ public class Project
     {
         this.hidden = hidden;
     }
+    
+    
 
-    @Override
+    public IssueFlow getIssueFlow() {
+		return issueFlow;
+	}
+
+	public void setIssueFlow(IssueFlow issueFlow) {
+		this.issueFlow = issueFlow;
+	}
+
+	@Override
     public int hashCode()
     {
         HashCodeBuilder hcb = new HashCodeBuilder();

@@ -3,6 +3,7 @@
  */
 package pfa.alliance.fim.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.persistence.PersistenceException;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,6 +24,11 @@ import pfa.alliance.fim.dto.ProjectDTO;
 import pfa.alliance.fim.dto.ProjectSearchDTO;
 import pfa.alliance.fim.dto.ProjectSearchResultDTO;
 import pfa.alliance.fim.dto.UserDTO;
+import pfa.alliance.fim.dto.issue.IssueFlowDTO;
+import pfa.alliance.fim.dto.issue.IssueStateDTO;
+import pfa.alliance.fim.dto.issue.IssueStateRelationDTO;
+import pfa.alliance.fim.model.issue.IssueFlow;
+import pfa.alliance.fim.model.issue.states.IssueStateRelation;
 import pfa.alliance.fim.model.project.Project;
 import pfa.alliance.fim.model.project.ProjectState;
 import pfa.alliance.fim.model.project.UserProjectRelation;
@@ -267,8 +274,39 @@ public class ProjectManagementServiceImpl
             projectDTO.setHidden( project.isHidden() );
             projectDTO.setState( project.getState() );
             projectDTO.setStateChangedAt( project.getStateChangedAt() );
+            projectDTO.setIssueFlow( convertToIssueFlowDTO( project.getIssueFlow() ) );
+            
+            
         }
         return projectDTO;
+    }
+    
+    private static IssueFlowDTO convertToIssueFlowDTO(IssueFlow issueFlow)
+    {
+    	IssueFlowDTO issueFlowDTO = null;
+    	if( issueFlow != null ){
+    		issueFlowDTO = new IssueFlowDTO();
+    		
+    		if( CollectionUtils.isNotEmpty(issueFlow.getRelations()) ){
+    			
+    			issueFlowDTO.setRelations(new ArrayList<IssueStateRelationDTO>());
+    			for(IssueStateRelation relation : issueFlow.getRelations()){
+    				
+    				IssueStateRelationDTO relationDTO = new IssueStateRelationDTO();
+    				relationDTO.setBidirectional(relation.isBidirectional());
+    				if(relation.getInitialState() != null){
+    					IssueStateDTO initialStateDTO = new IssueStateDTO();
+    					initialStateDTO.setLocalizedName(relation.getInitialState().getLocalizedNamesMap());
+    				}
+    				if(relation.getNextState() != null){
+    					IssueStateDTO nextStateDTO = new IssueStateDTO();
+    					nextStateDTO.setLocalizedName(relation.getInitialState().getLocalizedNamesMap());
+    				}
+    			}
+    		}
+    		
+    	}
+    	return issueFlowDTO;
     }
 
     /**

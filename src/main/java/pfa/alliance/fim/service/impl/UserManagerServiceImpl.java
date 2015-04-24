@@ -83,7 +83,7 @@ class UserManagerServiceImpl
                                    EmailGeneratorService emailGeneratorService,
                                    FimUrlGeneratorService fimUrlGeneratorService,
                                    UserOneTimeLinkRepository userOneTimeLinkRepository,
-                                   RoleAndPermissionRepository roleAndPermissionRepository )
+                                   RoleAndPermissionRepository roleAndPermissionRepository)
     {
         this.userRepository = userRepository;
         this.emailService = emailService;
