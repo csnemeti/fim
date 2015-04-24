@@ -12,8 +12,8 @@
 		<file>logs/fim-test.log</file>
 		<append>false</append>
 		<encoder>
-			<pattern>%date %-5level [%thread{30}] %logger{36} [%file:%line] %msg%n
-			</pattern>
+			<charset>UTF-8</charset>		
+			<pattern>%date %-5level [%thread{30}] %logger{36} [%file:%line] %msg%n</pattern>
 		</encoder>
 	</appender>
 

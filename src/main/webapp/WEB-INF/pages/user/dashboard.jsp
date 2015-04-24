@@ -15,6 +15,11 @@
 				var newClass = ($( "#remainingLogins" ).is(":visible"))? "fa fa-arrow-circle-up" : "fa fa-arrow-circle-down";
 				$( "#remainingLoginsOnOff" ).attr("class", newClass);
 			}
+			<%-- Function called when assigned projects toogle=ing ended. --%>
+			function assignedProjectsToogleListener(){
+				var newClass = ($( "#remainingProjects" ).is(":visible"))? "fa fa-arrow-circle-up" : "fa fa-arrow-circle-down";
+				$( "#remainingProjectsOnOff" ).attr("class", newClass);
+			}
 			$(document).ready(function(){
 				<%-- If we have the DIV with additional logins (remaining logins from 4 - 10) 
 				we should the toogle link and set-up the toogle. --%>
@@ -22,6 +27,14 @@
 			    	$( "#toogleRemainingLogins" ).show();
 				    $("#toogleRemainingLogins").click(function(){
 				        $("#remainingLogins").slideToggle("slow", lastLoginToogleListener);
+				    });
+			    }
+				<%-- If we have the DIV with additional projects (remaining logins from 4+) 
+				we should the toogle link and set-up the toogle. --%>
+			    if ( $( "#remainingProjects" ).length ) {
+			    	$( "#toogleRemainingProjects" ).show();
+				    $("#toogleRemainingProjects").click(function(){
+				        $("#remainingProjects").slideToggle("slow", assignedProjectsToogleListener);
 				    });
 			    }
 			});
@@ -34,6 +47,9 @@
        <stripes:layout-render name="/WEB-INF/pages/cards/user/basicCard.jsp"/>    
        <c:if test="${actionBean.showLastLoginCard}">	    	
        		<stripes:layout-render name="/WEB-INF/pages/cards/user/user-lastLoginsCard.jsp"/>
+       </c:if>        	
+       <c:if test="${actionBean.showLastLoginCard}">	    	
+       		<stripes:layout-render name="/WEB-INF/pages/cards/user/user-assignProjectsCard.jsp"/>
        </c:if>        	
     </stripes:layout-component>
 </stripes:layout-render>

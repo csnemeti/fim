@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.persistence.PersistenceException;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -47,7 +48,8 @@ import com.google.inject.persist.Transactional;
  * 
  * @author Csaba
  */
-public class ProjectManagementServiceImpl
+@Singleton
+class ProjectManagementServiceImpl
     implements ProjectManagementService
 {
     /** The logger used in this class. */

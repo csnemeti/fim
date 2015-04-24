@@ -17,7 +17,7 @@ public class UserStatusTest
     public void testUserStatues()
     {
         // If this is changed, do not forget to update the Db table: enum_user_status
-        Assert.assertEquals( "The UserStatus number is incorrect", 3, UserStatus.values().length );
+        Assert.assertEquals( "The UserStatus number is incorrect", 4, UserStatus.values().length );
     }
 
     @Test

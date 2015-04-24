@@ -1,6 +1,7 @@
-<%@ taglib prefix="stripes" uri="http://stripes.sourceforge.net/stripes.tld" %>
-<%@ taglib  prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"  %>	
+<%@ taglib prefix="stripes" 	uri="http://stripes.sourceforge.net/stripes.tld" %>
+<%@ taglib prefix="security" 	uri="fimSecurity" %>
+<%@ taglib prefix="c" 			uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" 		uri="http://java.sun.com/jsp/jstl/fmt"  %>	
 
 <stripes:layout-render name="/WEB-INF/pages/layout/default.jsp" pageTitle="${actionBean.title}">
 	<stripes:layout-component name="header">
@@ -150,11 +151,11 @@
 					</div>
 				</div>
 				<div class="col-sm-8">
-					<c:if test="${actionBean.showHiddenProjects}">
+					<security:security checkIfAny="PROJECT_SHOW_HIDDEN_PROJECTS">
 					<div class="form-group">
 						<stripes:checkbox name="projectSearch.hidden" id="hidden"></stripes:checkbox> <label for="hidden"><fmt:message key="projectSearch.showHidden" /></label>			
 					</div>
-					</c:if>
+					</security:security>
         		</div>        		
 			</div>
         	<div align="center" style="padding-top: 10px">

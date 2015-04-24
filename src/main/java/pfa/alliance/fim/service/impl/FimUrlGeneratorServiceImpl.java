@@ -19,7 +19,7 @@ import pfa.alliance.fim.service.FimUrlGeneratorService;
  * @author Csaba
  */
 @Singleton
-public class FimUrlGeneratorServiceImpl
+class FimUrlGeneratorServiceImpl
     implements FimUrlGeneratorService
 {
     /** The logger used in this class. */
@@ -34,7 +34,7 @@ public class FimUrlGeneratorServiceImpl
      * @param fimBaseUrl the F.I.M. base URL
      */
     @Inject
-    public FimUrlGeneratorServiceImpl( @FimUrlConfiguration Provider<String> fimBaseUrl )
+    FimUrlGeneratorServiceImpl( @FimUrlConfiguration Provider<String> fimBaseUrl )
     {
         this.fimBaseUrl = fimBaseUrl;
         LOG.info( "FIM base URL: {}", fimBaseUrl.get() );

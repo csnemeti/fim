@@ -6,6 +6,10 @@
 	<!DOCTYPE html>
     <html>
         <head>
+        	<meta charset="UTF-8">
+        	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+        	<meta name="viewport" content="width=device-width, initial-scale=1">
+
         	<link rel="shortcut icon" type="image/png" href="<c:url value="/images/favicon.ico" />"/>
         
             <!-- PLUGINS -->
@@ -21,11 +25,7 @@
     		<script type="text/javascript" src="<c:url value="/plugins/bootstrap/js/bootstrap.min.js" />"></script>
     		<script type="text/javascript" src="<c:url value="/plugins/metisMenu/js/metisMenu.min.js" />"></script>
         	<script type="text/javascript" src="<c:url value="/js/menu/menu.js" />"></script>
-        
-        	<meta charset="utf-8">
-        	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-        	<meta name="viewport" content="width=device-width, initial-scale=1">
-        	
+                	
         	<title>${pageTitle}</title>
         	
         	<stripes:layout-component name="header"/>

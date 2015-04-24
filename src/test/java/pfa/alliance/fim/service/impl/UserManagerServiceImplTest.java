@@ -243,7 +243,9 @@ public class UserManagerServiceImplTest
         // call
         LoggedInUserDTO responseUserDto = userManagetServiceImpl.login( "user1", "password1" );
         // verify
-        Assert.assertNull( "LoggedInUserDTO should be null", responseUserDto );
+        Assert.assertNotNull( "LoggedInUserDTO should NOT be null", responseUserDto );
+        Assert.assertNull( "LoggedInUserDTO.user should be null", responseUserDto.getUser() );
+        Assert.assertNull( "LoggedInUserDTO.permissions should be null", responseUserDto.getPermissions() );
         verify( userRepositoryMock, Mockito.atLeastOnce() ).findBy( Mockito.anyString(), Mockito.anyString() );
     }
 
@@ -726,7 +728,7 @@ public class UserManagerServiceImplTest
         User user = null;
         when( userRepositoryMock.findOne( 1 ) ).thenReturn( user );
 
-        userManagetServiceImpl.changeUserData( 1, "First", "Last" );
+        userManagetServiceImpl.changeUserData( 1, "First", "Last", null, null );
         verify( userRepositoryMock, Mockito.atLeastOnce() ).findOne( 1 );
         verify( userRepositoryMock, Mockito.times( 0 ) ).save( any( User.class ) );
         Mockito.verifyZeroInteractions( emailServiceMock, emailGeneratorServiceMock, fimUrlGeneratorServiceMock,
@@ -743,7 +745,7 @@ public class UserManagerServiceImplTest
 
         try
         {
-            userManagetServiceImpl.changeUserData( 1, "First", "Last" );
+            userManagetServiceImpl.changeUserData( 1, "First", "Last", null, null );
         }
         finally
         {

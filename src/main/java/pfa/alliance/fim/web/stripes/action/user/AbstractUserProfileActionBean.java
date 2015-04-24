@@ -42,10 +42,10 @@ public abstract class AbstractUserProfileActionBean
     /** The instance of {@link UserManagerService} to be used. */
     private final UserManagerService userManagerService;
 
-    @Validate( required = true, trim = true, on = "changeData" )
+    @Validate( required = true, trim = true, on = { "changeData", "changeData2" } )
     private String firstName;
 
-    @Validate( required = true, trim = true, on = "changeData" )
+    @Validate( required = true, trim = true, on = { "changeData", "changeData2" } )
     private String lastName;
 
     @Validate( required = true, trim = true, converter = EmailTypeConverter.class, on = "changeEmail" )
@@ -61,13 +61,15 @@ public abstract class AbstractUserProfileActionBean
     @Validate( required = true, trim = true, on = "changePassword" )
     private String password0;
 
-    @Validate( required = true, trim = true, minlength = 6, on = "changePassword" )
+    @Validate( required = true, trim = true, minlength = 6, on = { "changeData2", "changePassword" } )
     private String password1;
 
-    @Validate( required = true, trim = true, minlength = 6, expression = "this eq password1", on = "changePassword" )
+    @Validate( required = true, trim = true, minlength = 6, expression = "this eq password1", on = { "changeData2",
+        "changePassword" } )
     private String password2;
 
     private final static String USER_DATA_UPDATED = "EditProfileActionBean.UserDataUpdated";
+
     private final static String INVALID_PASSWORD = "EditProfileActionBean.InvalidPassword";
 
     private final static String PASSWORD_CHANGED = "EditProfileActionBean.PasswordChanged";
@@ -177,7 +179,26 @@ public abstract class AbstractUserProfileActionBean
     {
         final int userId = getUserId();
         LOG.debug( "Change user data with ID = {}", userId );
-        userManagerService.changeUserData( userId, firstName, lastName );
+        userManagerService.changeUserData( userId, firstName, lastName, null, null );
+        // update the user from session too
+        AuthenticatedUserDTO userDto = SecurityUtil.getUserFromSession( getSession() );
+        userDto.setFirstName( firstName );
+        userDto.setLastName( lastName );
+        updateDataDbOperation = USER_DATA_UPDATED;
+        // do the same thing as you would do when access the page for view
+        return view();
+    }
+
+    /**
+     * Update user data.
+     * 
+     * @return the page where to go next
+     */
+    public Resolution changeData2()
+    {
+        final int userId = getUserId();
+        LOG.debug( "Change user full data with ID = {}", userId );
+        userManagerService.changeUserData( userId, firstName, lastName, password1, UserStatus.ACTIVE );
         // update the user from session too
         AuthenticatedUserDTO userDto = SecurityUtil.getUserFromSession( getSession() );
         userDto.setFirstName( firstName );
@@ -288,6 +309,11 @@ public abstract class AbstractUserProfileActionBean
         return statuses;
     }
 
+    protected UserStatus getStatusValue()
+    {
+        return status;
+    }
+
     public String getStatus()
     {
         return status.name();
@@ -336,6 +362,41 @@ public abstract class AbstractUserProfileActionBean
     public String getRoleDisabled()
     {
         return ( shouldDisableRole() ) ? "disabled" : "";
+    }
+
+    /**
+     * This method returns the change password card.
+     * 
+     * @return true if change password should be displayed
+     */
+    public boolean isShouldDisplayChangePassword()
+    {
+        return UserStatus.ACTIVE.equals( getStatusValue() );
+    }
+
+    /**
+     * This method returns the email change card.
+     * 
+     * @return true if e-mail change should be displayed
+     */
+    public boolean isShouldDisplayEmailChange()
+    {
+        return UserStatus.ACTIVE.equals( getStatusValue() );
+    }
+
+    /**
+     * This method returns the disable account card.
+     * 
+     * @return true if disable account should be displayed
+     */
+    public boolean isShouldDisplayDisableAccount()
+    {
+        return UserStatus.ACTIVE.equals( getStatusValue() );
+    }
+
+    public boolean isShowCompleteChangeDataForm()
+    {
+        return UserStatus.NEW.equals( getStatusValue() );
     }
 
     public String getPassword()

@@ -56,6 +56,15 @@ public interface UserManagerService
     LoggedInUserDTO login( String username, String cleanPassword );
 
     /**
+     * Authenticate a {@link User}.
+     * 
+     * @param uuid the user one time identifier
+     * @return a DTO containing the the authenticated {@link User} or null if there's no such {@link User} and a map
+     *         with permissions based on each project
+     */
+    LoggedInUserDTO login( String uuid );
+
+    /**
      * Generates a One time link that allows user to set a new password.
      * 
      * @param username the username of user that forgot his / her password
@@ -130,6 +139,9 @@ public interface UserManagerService
      * @param userId the user ID
      * @param firstName the user new first name
      * @param lastName the user new last name
+     * @param clearTextPassword optional clear text password
+     * @param status optional user status
      */
-    void changeUserData( int userId, final String firstName, final String lastName );
+    void changeUserData( final int userId, final String firstName, final String lastName,
+                         final String clearTextPassword, final UserStatus status );
 }

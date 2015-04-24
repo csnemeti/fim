@@ -16,5 +16,10 @@ public enum UserStatus
     /** Status for active users. */
     ACTIVE,
     /** Status reserved for users that were disabled or close their account. */
-    DISABLED
+    DISABLED,
+    /**
+     * This status means user account should be deleted OR modified beyound repairs (so that user should not be
+     * identified anymore.
+     */
+    SCHEDULED_FOR_DELETE
 }

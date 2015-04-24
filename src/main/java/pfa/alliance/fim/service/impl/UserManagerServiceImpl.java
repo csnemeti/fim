@@ -19,6 +19,7 @@ import javax.persistence.PersistenceException;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -79,11 +80,18 @@ class UserManagerServiceImpl
     private final RoleAndPermissionRepository roleAndPermissionRepository;
 
     @Inject
+<<<<<<< HEAD
     public UserManagerServiceImpl( UserRepository userRepository, EmailService emailService,
                                    EmailGeneratorService emailGeneratorService,
                                    FimUrlGeneratorService fimUrlGeneratorService,
                                    UserOneTimeLinkRepository userOneTimeLinkRepository,
                                    RoleAndPermissionRepository roleAndPermissionRepository)
+=======
+    UserManagerServiceImpl( UserRepository userRepository, EmailService emailService,
+                            EmailGeneratorService emailGeneratorService, FimUrlGeneratorService fimUrlGeneratorService,
+                            UserOneTimeLinkRepository userOneTimeLinkRepository,
+                            RoleAndPermissionRepository roleAndPermissionRepository )
+>>>>>>> 34a9da97cb6496266dac80f29d171ca33e79a82b
     {
         this.userRepository = userRepository;
         this.emailService = emailService;
@@ -273,10 +281,42 @@ class UserManagerServiceImpl
 
     @Override
     @Transactional
+    public LoggedInUserDTO login( final String uuid )
+    {
+        LOG.debug( "Trying to login user with uuid: {}", uuid );
+        LoggedInUserDTO userDto = new LoggedInUserDTO( null, null );
+        UserOneTimeLink link = userRepository.getOneTimeLinkBy( uuid, null );
+        LOG.debug( "Authentication result... uuid = {} --> link = {}", uuid, link );
+        if ( link != null && link.getUser() != null && isLinkValid( link ) )
+        {
+            // this will invalidate the one time link
+            link.setExpiresAt( new Timestamp( System.currentTimeMillis() ) );
+            User user = link.getUser();
+            Map<UserRole, List<UserPermission>> permissions = null;
+            if ( UserStatus.ACTIVE.equals( user.getStatus() ) || UserStatus.NEW.equals( user.getStatus() ) )
+            {
+                Set<UserRole> roles = extractDistinctUserRoleInsideProjects( user );
+                LOG.debug( "Roles for user with ID = {}: {}", user.getId(), roles );
+                permissions = roleAndPermissionRepository.findPermissionsFor( roles );
+                LOG.debug( "Permissions for user with ID = {}: {}", user.getId(), permissions );
+            }
+            else
+            {
+                LOG.debug( "User with ID = {} is not NEW or ACTIVE, roles will not be retrived", user.getId() );
+                permissions = new HashMap<>();
+            }
+            userDto = new LoggedInUserDTO( user, permissions );
+            checkUserStatusForLogin( user );
+        }
+        return userDto;
+    }
+
+    @Override
+    @Transactional
     public LoggedInUserDTO login( String username, String cleanPassword )
     {
         LOG.debug( "Trying to login: {}", username );
-        LoggedInUserDTO userDto = null;
+        LoggedInUserDTO userDto = new LoggedInUserDTO( null, null );
         User user = userRepository.findBy( username, encryptPassword( cleanPassword ) );
         LOG.debug( "Authentication result... username = {} --> user = {}", username, user );
         if ( user != null )
@@ -452,7 +492,7 @@ class UserManagerServiceImpl
             throw new UserActivationFailException( ActivationFailReason.UUID_NOT_FOUND );
         }
         // check if link is not expired
-        if ( link.getExpiresAt().before( new Timestamp( System.currentTimeMillis() ) ) )
+        if ( !isLinkValid( link ) )
         {
             LOG.info( "Link coresponding to requested UUID is expired: {}", link );
             throw new UserActivationFailException( ActivationFailReason.UUID_EXPIRED );
@@ -464,6 +504,17 @@ class UserManagerServiceImpl
             LOG.info( "User has a status that suggests activation already happened: {}", user );
             throw new UserActivationFailException( ActivationFailReason.USER_ALREADY_ACTIVE );
         }
+    }
+
+    /**
+     * Verifies if {@link UserOneTimeLink} is not expired.
+     * 
+     * @param link a not null link
+     * @return true if link is still valid
+     */
+    private static boolean isLinkValid( UserOneTimeLink link )
+    {
+        return link.getExpiresAt().after( new Timestamp( System.currentTimeMillis() ) );
     }
 
     /**
@@ -550,7 +601,8 @@ class UserManagerServiceImpl
 
     @Transactional
     @Override
-    public void changeUserData( final int userId, final String firstName, final String lastName )
+    public void changeUserData( final int userId, final String firstName, final String lastName,
+                                final String clearTextPassword, final UserStatus status )
     {
         LOG.debug( "Updating user data user ID = {}, first name = {}, last name = {}", userId, firstName, lastName );
         User user = userRepository.findOne( userId );
@@ -559,6 +611,14 @@ class UserManagerServiceImpl
         {
             user.setFirstName( firstName );
             user.setLastName( lastName );
+            if ( StringUtils.isNotBlank( clearTextPassword ) )
+            {
+                user.setPassword( encryptPassword( clearTextPassword ) );
+            }
+            if ( status != null )
+            {
+                user.setStatus( status );
+            }
             userRepository.save( user );
         }
     }
