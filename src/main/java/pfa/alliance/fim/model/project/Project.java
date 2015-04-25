@@ -57,6 +57,10 @@ public class Project
 
     @OneToMany( fetch = FetchType.LAZY, mappedBy = "project", orphanRemoval = true, cascade = CascadeType.ALL )
     private Set<UserProjectRelation> userBoardData;
+	
+   /* @ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id_issue_flow")
+    private IssueFlow issueFlow;*/
 
     public Project()
     {
@@ -145,7 +149,7 @@ public class Project
         this.hidden = hidden;
     }
 
-    @Override
+	@Override
     public int hashCode()
     {
         HashCodeBuilder hcb = new HashCodeBuilder();

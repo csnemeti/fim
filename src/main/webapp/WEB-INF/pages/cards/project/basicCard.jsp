@@ -45,6 +45,12 @@
                         	<div class="medium" style="flow:left;margin-left: 150px">${actionBean.formatedCreateAt} (${actionBean.formatedCreatePeriod})</div>
                         </div>
                  	</div>
+                 	<div style="margin-left: 5px ; margin-right: 5px;" class="row">
+                    	<div style="float:left;">
+                        	<div class="medium" style="float:left;"><fmt:message key="project.cards.basic.created" /></div>
+                        	<div class="medium" style="flow:left;margin-left: 150px">${actionBean.project.issueFlow.diagram}</div>
+                        </div>
+                 	</div>
                  	<c:if test="${actionBean.project.hidden}">
                 	<div style="margin-left: 5px ; margin-right: 5px;" class="row">
                     	<div style="float:left;">

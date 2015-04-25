@@ -8,6 +8,7 @@ import java.sql.Timestamp;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
+import pfa.alliance.fim.dto.issue.IssueFlowDTO;
 import pfa.alliance.fim.model.project.ProjectState;
 
 /**
@@ -31,6 +32,8 @@ public class ProjectDTO
 
 
     private String description;
+    
+    private IssueFlowDTO issueFlow;
 
     private UserDTO owner;
 
@@ -126,7 +129,15 @@ public class ProjectDTO
         this.createAt = createAt;
     }
 
-    public String getOwnerInfo()
+    public IssueFlowDTO getIssueFlow() {
+		return issueFlow;
+	}
+
+	public void setIssueFlow(IssueFlowDTO issueFlow) {
+		this.issueFlow = issueFlow;
+	}
+
+	public String getOwnerInfo()
     {
         StringBuilder sb = new StringBuilder();
         if ( owner != null )

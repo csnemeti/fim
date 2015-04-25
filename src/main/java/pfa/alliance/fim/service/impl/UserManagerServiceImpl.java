@@ -80,10 +80,11 @@ class UserManagerServiceImpl
     private final RoleAndPermissionRepository roleAndPermissionRepository;
 
     @Inject
-    UserManagerServiceImpl( UserRepository userRepository, EmailService emailService,
-                            EmailGeneratorService emailGeneratorService, FimUrlGeneratorService fimUrlGeneratorService,
-                            UserOneTimeLinkRepository userOneTimeLinkRepository,
-                            RoleAndPermissionRepository roleAndPermissionRepository )
+    public UserManagerServiceImpl( UserRepository userRepository, EmailService emailService,
+                                   EmailGeneratorService emailGeneratorService,
+                                   FimUrlGeneratorService fimUrlGeneratorService,
+                                   UserOneTimeLinkRepository userOneTimeLinkRepository,
+                                   RoleAndPermissionRepository roleAndPermissionRepository)
     {
         this.userRepository = userRepository;
         this.emailService = emailService;
