@@ -48,6 +48,7 @@
                  	</c:if>
               	</div>
               	<div class="panel-footer">
+              		<span style="font-weight: bold"><fmt:message key="user.cards.projects.assigned.total" />: ${actionBean.assignedProjectsNumber}</span>
               		<a id="toogleRemainingProjects" href="#" title="<fmt:message key="user.cards.projects.assigned.showMoreLess" />" style="display: none">
 	                   	<span class="pull-right">
 	                       	<i id="remainingProjectsOnOff" class="fa fa-arrow-circle-down"></i>
