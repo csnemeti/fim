@@ -15,19 +15,35 @@
                  	</div>
               	</div>
               	<div class="panel-body">
-              		<c:forEach items="${actionBean.lastLogins}" var="element" varStatus="loop">
+              		<c:if test="${actionBean.assignedProjectsNumber == 0}">
+              			<p>No projects assignment!!!!</p>
+              		</c:if>
+              		<c:if test="${actionBean.assignedProjectsNumber > 0}">
+              		<table style="width: 100%" class="assignedProjects">
+              			<tr style="margin-left: 5px ; margin-right: 5px;" class="row">
+              				<th class="medium">Code</th>
+              				<th class="medium" style="padding-left: 5px">Name</th>
+              				<th class="medium" style="padding-left: 5px">Role</th>
+              			</tr>
+              		<c:forEach items="${actionBean.assignedProjects}" var="element" varStatus="loop">
               			<c:if test="${ loop.index == 4 }" >
-              			<div id="remainingProjects" style="display: none">
+              			</table>
+              			<div id="remainingProjects" style="display: none; width: 100%" class="assignedProjects">
+              			<table style="width: 100%">
               			</c:if> 
-		                	<div style="margin-left: 5px ; margin-right: 5px;" class="row">
-		                    	<div style="float:left;">
-		                        	<div class="medium" style="float:left;"><c:out value = "${element}" /></div>
-		                        </div>
-		                 	</div>
-              			<c:if test="${ loop.isLast() && loop.index >= 4 }">
+		                	<tr style="margin-left: 5px ; margin-right: 5px;" class="row">
+		                    	<td class="medium" style="width: 200px; "><i class="fa ${element.stateIcon}" title="${element.stateName}"></i> ${element.code}</td>
+		                    	<td class="medium" style="padding-left: 5px">${element.name}</td>
+		                    	<td class="medium" style="width: 170px; padding-left: 5px">${element.roleName}</td>
+		                 	</tr>
+              			<c:if test="${ loop.isLast()}">
+                 	</table>
+              			<c:if test="${ loop.index >= 4 }">
               			</div>
               			</c:if> 
+              			</c:if>
                  	</c:forEach>
+                 	</c:if>
               	</div>
               	<div class="panel-footer">
               		<a id="toogleRemainingProjects" href="#" title="<fmt:message key="user.cards.projects.assigned.showMoreLess" />" style="display: none">

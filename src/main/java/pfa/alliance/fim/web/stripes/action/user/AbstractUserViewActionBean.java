@@ -18,6 +18,9 @@ import org.apache.commons.collections.comparators.ReverseComparator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pfa.alliance.fim.dto.UserAssignedProjectDTO;
+import pfa.alliance.fim.model.project.Project;
+import pfa.alliance.fim.model.project.UserProjectRelation;
 import pfa.alliance.fim.model.user.User;
 import pfa.alliance.fim.model.user.UserLogin;
 import pfa.alliance.fim.service.UserManagerService;
@@ -51,7 +54,7 @@ public abstract class AbstractUserViewActionBean
     {
         int userId = getUserId();
         LOG.debug( "Getting data for User ID = {}", userId );
-        user = userManagerService.findById( userId, isShowLastLoginCard(), false );
+        user = userManagerService.findById( userId, isShowLastLoginCard(), isShowProjectAssignments() );
         // TODO handle the case that ID is not valid
         return new ForwardResolution( FimPageURLs.USER_DASBOARD_JSP.getURL() );
     }
@@ -69,6 +72,13 @@ public abstract class AbstractUserViewActionBean
      * @return true if the information should be displayed
      */
     public abstract boolean isShowLastLoginAndSessionAge();
+
+    /**
+     * Gets the flag value that decides if project assignments should be displayed or not.
+     * 
+     * @return true if the information should be displayed
+     */
+    public abstract boolean isShowProjectAssignments();
 
     /**
      * Gets the flag value that decides if last logins card should be displayed.
@@ -115,5 +125,31 @@ public abstract class AbstractUserViewActionBean
             formatedLogins.add( DateUtils.formatDate( login, DateUtils.DATETIME_FORMAT_DAY_FIRST ) );
         }
         return formatedLogins;
+    }
+
+    public int getAssignedProjectsNumber()
+    {
+        return user.getUserProjectRelation().size();
+    }
+
+    public Collection<UserAssignedProjectDTO> getAssignedProjects()
+    {
+        List<UserAssignedProjectDTO> assignments = new ArrayList<>();
+        for ( UserProjectRelation relation : user.getUserProjectRelation() )
+        {
+            UserAssignedProjectDTO dto = new UserAssignedProjectDTO();
+            dto.setRole( relation.getUserRole() );
+            dto.setRoleName( getEnumMessage( relation.getUserRole() ) );
+
+            Project project = relation.getProject();
+            dto.setProjectId( project.getId() );
+            dto.setCode( project.getCode() );
+            dto.setName( project.getName() );
+            dto.setState( project.getState() );
+            dto.setStateName( getEnumMessage( project.getState() ) );
+
+            assignments.add( dto );
+        }
+        return assignments;
     }
 }

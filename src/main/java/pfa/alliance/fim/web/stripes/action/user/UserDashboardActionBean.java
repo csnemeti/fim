@@ -83,4 +83,10 @@ public class UserDashboardActionBean
     {
         return true;
     }
+
+    @Override
+    public boolean isShowProjectAssignments()
+    {
+        return true;
+    }
 }
