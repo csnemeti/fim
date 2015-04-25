@@ -9,7 +9,7 @@ import javax.persistence.ManyToOne;
 import pfa.alliance.fim.model.localized.AbstractLocalizedModel;
 
 @Entity(name = "issue_state_ml")
-public class IssueStateLocalized extends AbstractLocalizedModel<IssueStateLocalizedPk>{
+public class IssueStateLocalized extends AbstractLocalizedModel{
 	private static final long serialVersionUID = 8740714265309750234L;
 	
 	@Column(name = "id_issue_state")

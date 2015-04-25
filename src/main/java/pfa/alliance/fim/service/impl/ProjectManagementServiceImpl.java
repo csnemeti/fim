@@ -276,14 +276,15 @@ class ProjectManagementServiceImpl
             projectDTO.setHidden( project.isHidden() );
             projectDTO.setState( project.getState() );
             projectDTO.setStateChangedAt( project.getStateChangedAt() );
-            projectDTO.setIssueFlow( convertToIssueFlowDTO( project.getIssueFlow() ) );
+           /* projectDTO.setIssueFlow( convertToIssueFlowDTO( project.getIssueFlow() ) );*/
             
             
         }
         return projectDTO;
     }
     
-    private static IssueFlowDTO convertToIssueFlowDTO(IssueFlow issueFlow)
+    @SuppressWarnings("unused")
+	private static IssueFlowDTO convertToIssueFlowDTO(IssueFlow issueFlow)
     {
     	IssueFlowDTO issueFlowDTO = null;
     	if( issueFlow != null ){

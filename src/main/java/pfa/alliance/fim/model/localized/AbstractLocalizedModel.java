@@ -7,7 +7,7 @@ import javax.persistence.Transient;
 import pfa.alliance.fim.model.GenericModel;
 
 @MappedSuperclass
-public abstract class AbstractLocalizedModel<ID extends AbstractLocalizedPk<?>> extends GenericModel {
+public abstract class AbstractLocalizedModel extends GenericModel {
 	private static final long serialVersionUID = 4465242012629572128L;
 	
 	@Column(name = "idlanguage")
@@ -24,5 +24,7 @@ public abstract class AbstractLocalizedModel<ID extends AbstractLocalizedPk<?>> 
      */    
     public Integer getLanguageId() {
         return languageId;
-    }        
+    }   
+    
+    
 }
