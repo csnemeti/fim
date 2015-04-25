@@ -25,6 +25,8 @@
         <class>pfa.alliance.fim.model.project.UserProjectRelation</class> 
         <class>pfa.alliance.fim.model.project.Project</class> 
 
+        <class>pfa.alliance.fim.model.issue.IssuePriority</class> 
+
         <validation-mode>AUTO</validation-mode>
 		<!--  We suppose to provide these values on-the-fly -->
     	<properties>
