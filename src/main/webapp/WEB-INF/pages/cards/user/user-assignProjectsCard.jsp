@@ -16,14 +16,15 @@
               	</div>
               	<div class="panel-body">
               		<c:if test="${actionBean.assignedProjectsNumber == 0}">
-              			<p>No projects assignment!!!!</p>
+              			<p class="medium"><fmt:message key="user.cards.projects.assigned.none" /></p>
               		</c:if>
               		<c:if test="${actionBean.assignedProjectsNumber > 0}">
               		<table style="width: 100%" class="assignedProjects">
               			<tr style="margin-left: 5px ; margin-right: 5px;" class="row">
-              				<th class="medium">Code</th>
-              				<th class="medium" style="padding-left: 5px">Name</th>
-              				<th class="medium" style="padding-left: 5px">Role</th>
+              				<th class="medium" style="padding-left: 5px; padding-right: 5px"><fmt:message key="user.cards.projects.assigned.code" /></th>
+              				<th class="medium" style="padding-left: 5px; padding-right: 5px"><fmt:message key="user.cards.projects.assigned.name" /></th>
+              				<th class="medium" style="padding-left: 5px; padding-right: 5px"><fmt:message key="user.cards.projects.assigned.role" /></th>
+              				<th style="padding-left: 5px; padding-right: 5px"></th>
               			</tr>
               		<c:forEach items="${actionBean.assignedProjects}" var="element" varStatus="loop">
               			<c:if test="${ loop.index == 4 }" >
@@ -32,9 +33,10 @@
               			<table style="width: 100%">
               			</c:if> 
 		                	<tr style="margin-left: 5px ; margin-right: 5px;" class="row">
-		                    	<td class="medium" style="width: 200px; "><i class="fa ${element.stateIcon}" title="${element.stateName}"></i> ${element.code}</td>
-		                    	<td class="medium" style="padding-left: 5px">${element.name}</td>
-		                    	<td class="medium" style="width: 170px; padding-left: 5px">${element.roleName}</td>
+		                    	<td class="medium" style="width: 200px; padding-left: 5px; padding-right: 5px"><i class="fa ${element.stateIcon}" title="${element.stateName}"></i> ${element.code}</td>
+		                    	<td class="medium" style="padding-left: 5px; padding-right: 5px">${element.name}</td>
+		                    	<td class="medium" style="width: 170px; padding-left: 5px; padding-right: 5px">${element.roleName}</td>
+		                    	<td class="medium" style="width: 25px; padding-left: 5px; padding-right: 5px">${element.actions}</td>
 		                 	</tr>
               			<c:if test="${ loop.isLast()}">
                  	</table>

@@ -13,6 +13,7 @@ import java.util.TreeSet;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.util.UrlBuilder;
 
 import org.apache.commons.collections.comparators.ReverseComparator;
 import org.slf4j.Logger;
@@ -27,6 +28,7 @@ import pfa.alliance.fim.service.UserManagerService;
 import pfa.alliance.fim.util.DateUtils;
 import pfa.alliance.fim.web.common.FimPageURLs;
 import pfa.alliance.fim.web.stripes.action.BasePageActionBean;
+import pfa.alliance.fim.web.stripes.action.project.ProjectDashboardActionBean;
 
 /**
  * This class is used for base class in user profile view.
@@ -134,6 +136,12 @@ public abstract class AbstractUserViewActionBean
 
     public Collection<UserAssignedProjectDTO> getAssignedProjects()
     {
+        String contextPath = getContext().getServletContext().getContextPath();
+        if ( contextPath.equals( "/" ) )
+        {
+            contextPath = null;
+        }
+
         List<UserAssignedProjectDTO> assignments = new ArrayList<>();
         for ( UserProjectRelation relation : user.getUserProjectRelation() )
         {
@@ -147,6 +155,17 @@ public abstract class AbstractUserViewActionBean
             dto.setName( project.getName() );
             dto.setState( project.getState() );
             dto.setStateName( getEnumMessage( project.getState() ) );
+
+            UrlBuilder builder = new UrlBuilder( getContext().getLocale(), ProjectDashboardActionBean.class, true );
+            builder.addParameter( "code", dto.getCode() );
+            String url = builder.toString();
+            if ( contextPath != null )
+            {
+                url = contextPath + url;
+            }
+            StringBuilder sb = new StringBuilder();
+            sb.append( "<a href='" ).append( url ).append( "' title='" ).append( getMessage( "action.view" ) ).append( "'><i class='fa fa-eye'></i></a>" );
+            dto.setActions( sb.toString() );
 
             assignments.add( dto );
         }

@@ -19,7 +19,7 @@ import pfa.alliance.fim.model.project.UserRoleInsideProject;
 public class UserAssignedProjectDTO
     implements Serializable
 {
-    private static final long serialVersionUID = 154942171844443294L;
+    private static final long serialVersionUID = 154942171844443291L;
 
     private int projectId;
 
@@ -34,6 +34,8 @@ public class UserAssignedProjectDTO
     private UserRoleInsideProject role;
 
     private String roleName;
+
+    private String actions;
 
     public int getProjectId()
     {
@@ -108,6 +110,16 @@ public class UserAssignedProjectDTO
     public void setRoleName( String roleName )
     {
         this.roleName = roleName;
+    }
+
+    public String getActions()
+    {
+        return actions;
+    }
+
+    public void setActions( String actions )
+    {
+        this.actions = actions;
     }
 
     @Override
