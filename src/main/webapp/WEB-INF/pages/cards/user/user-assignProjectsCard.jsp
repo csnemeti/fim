@@ -15,21 +15,40 @@
                  	</div>
               	</div>
               	<div class="panel-body">
-              		<c:forEach items="${actionBean.lastLogins}" var="element" varStatus="loop">
+              		<c:if test="${actionBean.assignedProjectsNumber == 0}">
+              			<p class="medium"><fmt:message key="user.cards.projects.assigned.none" /></p>
+              		</c:if>
+              		<c:if test="${actionBean.assignedProjectsNumber > 0}">
+              		<table style="width: 100%" class="assignedProjects">
+              			<tr style="margin-left: 5px ; margin-right: 5px;" class="row">
+              				<th class="medium" style="padding-left: 5px; padding-right: 5px"><fmt:message key="user.cards.projects.assigned.code" /></th>
+              				<th class="medium" style="padding-left: 5px; padding-right: 5px"><fmt:message key="user.cards.projects.assigned.name" /></th>
+              				<th class="medium" style="padding-left: 5px; padding-right: 5px"><fmt:message key="user.cards.projects.assigned.role" /></th>
+              				<th style="padding-left: 5px; padding-right: 5px"></th>
+              			</tr>
+              		<c:forEach items="${actionBean.assignedProjects}" var="element" varStatus="loop">
               			<c:if test="${ loop.index == 4 }" >
-              			<div id="remainingProjects" style="display: none">
+              			</table>
+              			<div id="remainingProjects" style="display: none; width: 100%" class="assignedProjects">
+              			<table style="width: 100%">
               			</c:if> 
-		                	<div style="margin-left: 5px ; margin-right: 5px;" class="row">
-		                    	<div style="float:left;">
-		                        	<div class="medium" style="float:left;"><c:out value = "${element}" /></div>
-		                        </div>
-		                 	</div>
-              			<c:if test="${ loop.isLast() && loop.index >= 4 }">
+		                	<tr style="margin-left: 5px ; margin-right: 5px;" class="row">
+		                    	<td class="medium" style="width: 200px; padding-left: 5px; padding-right: 5px"><i class="fa ${element.stateIcon}" title="${element.stateName}"></i> ${element.code}</td>
+		                    	<td class="medium" style="padding-left: 5px; padding-right: 5px">${element.name}</td>
+		                    	<td class="medium" style="width: 170px; padding-left: 5px; padding-right: 5px">${element.roleName}</td>
+		                    	<td class="medium" style="width: 25px; padding-left: 5px; padding-right: 5px">${element.actions}</td>
+		                 	</tr>
+              			<c:if test="${ loop.isLast()}">
+                 	</table>
+              			<c:if test="${ loop.index >= 4 }">
               			</div>
               			</c:if> 
+              			</c:if>
                  	</c:forEach>
+                 	</c:if>
               	</div>
               	<div class="panel-footer">
+              		<span style="font-weight: bold"><fmt:message key="user.cards.projects.assigned.total" />: ${actionBean.assignedProjectsNumber}</span>
               		<a id="toogleRemainingProjects" href="#" title="<fmt:message key="user.cards.projects.assigned.showMoreLess" />" style="display: none">
 	                   	<span class="pull-right">
 	                       	<i id="remainingProjectsOnOff" class="fa fa-arrow-circle-down"></i>

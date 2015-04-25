@@ -8,6 +8,9 @@
 				width:  25px;
 				height: 25px;
 			}
+			.secondRow {
+				background-color: #CFCFCF;
+			}
 		</style>
 		<script type="text/javascript">
 			<%-- Function called when last login toogle=ing ended. --%>
@@ -21,6 +24,7 @@
 				$( "#remainingProjectsOnOff" ).attr("class", newClass);
 			}
 			$(document).ready(function(){
+				$(".assignedProjects tr:odd").addClass("secondRow");
 				<%-- If we have the DIV with additional logins (remaining logins from 4 - 10) 
 				we should the toogle link and set-up the toogle. --%>
 			    if ( $( "#remainingLogins" ).length ) {
