@@ -4,6 +4,7 @@
 package pfa.alliance.fim.model.project;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 
 import org.batoo.common.log.ToStringBuilder;
 
@@ -12,6 +13,7 @@ import org.batoo.common.log.ToStringBuilder;
  * 
  * @author Csaba
  */
+@Entity( name = "project_component" )
 public class ProjectComponent
     extends ProjectTag
 {

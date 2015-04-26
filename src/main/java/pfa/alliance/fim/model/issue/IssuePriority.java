@@ -7,6 +7,8 @@ import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import pfa.alliance.fim.model.Identifiable;
@@ -18,28 +20,32 @@ import pfa.alliance.fim.model.Identifiable;
  */
 @Entity( name = "issue_priority" )
 public class IssuePriority
-    implements Identifiable<String>
+    implements Identifiable<Long>
 {
     /** The name of the priority. */
     @Id
+    @GeneratedValue( strategy = GenerationType.IDENTITY )
     @Column( name = "id" )
-    private String id;
+    private Long id;
+
+    @Column( name = "priority_name", nullable = false, length = 50 )
+    private String name;
 
     /** The ordering value. */
-    @Column( name = "order_value", nullable = false, length = 50 )
+    @Column( name = "order_value", nullable = false )
     private int order;
 
     @Column( name = "default_option", nullable = false )
     private boolean defaultOption;
 
     @Override
-    public String getId()
+    public Long getId()
     {
         return id;
     }
 
     @Override
-    public void setId( String id )
+    public void setId( Long id )
     {
         this.id = id;
     }
@@ -59,10 +65,30 @@ public class IssuePriority
         this.order = order;
     }
 
+    public String getName()
+    {
+        return name;
+    }
+
+    public void setName( String name )
+    {
+        this.name = name;
+    }
+
+    public boolean isDefaultOption()
+    {
+        return defaultOption;
+    }
+
+    public void setDefaultOption( boolean defaultOption )
+    {
+        this.defaultOption = defaultOption;
+    }
+
     @Override
     public int hashCode()
     {
-        return Objects.hash( id );
+        return Objects.hash( name );
     }
 
     @Override
@@ -73,12 +99,12 @@ public class IssuePriority
             return false;
         }
         IssuePriority priority = (IssuePriority) obj;
-        return Objects.equals( id, priority.id );
+        return Objects.equals( name, priority.name );
     }
 
     @Override
     public String toString()
     {
-        return "IssuePriority[" + id + "]";
+        return "IssuePriority[" + id + ", " + name + "]";
     }
 }

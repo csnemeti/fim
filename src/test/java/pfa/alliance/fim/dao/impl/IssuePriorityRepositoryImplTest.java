@@ -10,6 +10,7 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import pfa.alliance.fim.dao.Sort;
 import pfa.alliance.fim.model.issue.IssuePriority;
 
 /**
@@ -32,7 +33,7 @@ public class IssuePriorityRepositoryImplTest
     @Test
     public void test_findAll()
     {
-        List<IssuePriority> priorities = issuePriorityRepositoryImpl.findAll();
+        List<IssuePriority> priorities = issuePriorityRepositoryImpl.findAll( 1 );
         Assert.assertNotNull( "Priorities should not be null", priorities );
         Assert.assertEquals( "Priorities size issue", 5, priorities.size() );
 
@@ -52,18 +53,25 @@ public class IssuePriorityRepositoryImplTest
     }
 
     @Test
-    public void test_findAllIds()
+    public void test_findAll_withSorting()
     {
-        List<String> priorities = issuePriorityRepositoryImpl.findAllIds();
+        Sort sort = new Sort( "id", true );
+        List<IssuePriority> priorities = issuePriorityRepositoryImpl.findAll( 1, sort );
         Assert.assertNotNull( "Priorities should not be null", priorities );
         Assert.assertEquals( "Priorities size issue", 5, priorities.size() );
 
-        // Order of the priority IDs should be the same as for IssuePriority objects
-        List<IssuePriority> priorityObjects = issuePriorityRepositoryImpl.findAll();
-        Assert.assertEquals( "Priorities size vs. Priorities objects issue", priorities.size(), priorityObjects.size() );
-        for ( int i = 0; i < priorities.size(); i++ )
+        // order of the priorities should be ascending
+        long current = Long.MIN_VALUE;
+        for ( IssuePriority priority : priorities )
         {
-            Assert.assertEquals( "Priority ID problem", priorityObjects.get( i ).getId(), priorities.get( i ) );
+            if ( current >= priority.getId() )
+            {
+                Assert.fail( "Wrong order for: " + priority + " in list: " + priorities );
+            }
+            else
+            {
+                current = priority.getId();
+            }
         }
     }
 

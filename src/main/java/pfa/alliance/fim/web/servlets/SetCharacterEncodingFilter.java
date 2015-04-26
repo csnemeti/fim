@@ -58,6 +58,7 @@ public class SetCharacterEncodingFilter
      * initialization parameter for this filter.
      *
      * @param request The servlet request we are processing
+     * @return the encoding given in web.xml as filter parameter
      */
     protected String selectEncoding( ServletRequest request )
     {
@@ -71,7 +72,7 @@ public class SetCharacterEncodingFilter
         String characterEncoding = filterConfig.getInitParameter( "encoding" );
         if ( StringUtils.isNotBlank( characterEncoding ) )
         {
-            this.encoding = characterEncoding;
+            setEncoding( characterEncoding );
         }
         LOG.info( "Character encoding set to: {}", characterEncoding );
     }
@@ -82,13 +83,13 @@ public class SetCharacterEncodingFilter
         // nothing to do
     }
 
-    public void setEncoding( String encoding )
+    /**
+     * This is a convenient method used for setting character encoding while testing.
+     * 
+     * @param encoding the encoding to have
+     */
+    void setEncoding( String encoding )
     {
         this.encoding = encoding;
-    }
-
-    public String getEncoding()
-    {
-        return encoding;
     }
 }

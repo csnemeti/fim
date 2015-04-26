@@ -26,6 +26,25 @@ public class Sort
     private LinkedHashMap<String, Boolean> sorting = new LinkedHashMap<String, Boolean>();
 
     /**
+     * Called when instance of this object is created.
+     */
+    public Sort()
+    {
+    }
+
+    /**
+     * Called when instance of this object is created.
+     * 
+     * @param filedName the name of the field that should be ordered
+     * @param ascending true if ordering should be ascending
+     */
+    public Sort( String filedName, boolean ascending )
+    {
+        this();
+        add( filedName, ascending );
+    }
+
+    /**
      * Adds a new sorting criteria.
      * 
      * @param filedName the name of the field that should be ordered
