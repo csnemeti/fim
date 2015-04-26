@@ -4,12 +4,16 @@
 package pfa.alliance.fim.model.issue;
 
 import java.util.Objects;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 import pfa.alliance.fim.model.Identifiable;
 
@@ -37,6 +41,9 @@ public class IssuePriority
 
     @Column( name = "default_option", nullable = false )
     private boolean defaultOption;
+
+    @OneToMany( mappedBy = "record", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE } )
+    private Set<IssuePriorityLocalized> localizations;
 
     @Override
     public Long getId()
@@ -83,6 +90,16 @@ public class IssuePriority
     public void setDefaultOption( boolean defaultOption )
     {
         this.defaultOption = defaultOption;
+    }
+
+    public Set<IssuePriorityLocalized> getLocalizations()
+    {
+        return localizations;
+    }
+
+    public void setLocalizations( Set<IssuePriorityLocalized> localizations )
+    {
+        this.localizations = localizations;
     }
 
     @Override

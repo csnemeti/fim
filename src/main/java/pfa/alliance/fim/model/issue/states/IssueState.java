@@ -1,7 +1,5 @@
 package pfa.alliance.fim.model.issue.states;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -18,7 +16,7 @@ import pfa.alliance.fim.model.Identifiable;
 
 @Entity(name = "issue_state")
 public class IssueState extends GenericModel implements Identifiable<Integer> {
-	private static final long serialVersionUID = -6815173726653278343L;
+    private static final long serialVersionUID = -6815173726653278341L;
 
 	@Id
 	@GeneratedValue( strategy = GenerationType.IDENTITY )
@@ -27,35 +25,53 @@ public class IssueState extends GenericModel implements Identifiable<Integer> {
 	
 	@Column(name = "code")
 	private String code;
-	
-    @OneToMany(mappedBy = "issueState", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-    private Set<IssueStateLocalized> localizedNames;
 
-	@Override
-	public Integer getId() {
-		return id;
-	}
+    @Column( name = "state_name", nullable = false, length = 50 )
+    private String name;
 
-	@Override
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    @OneToMany( mappedBy = "record", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE } )
+    private Set<IssueStateLocalized> localizations;
 
-	public Set<IssueStateLocalized> getLocalizedNames() {
-		return localizedNames;
-	}
-	
-	public Map<String, String> getLocalizedNamesMap() {
-		Map<String, String> localizedNames = new HashMap<String, String>();
-		for(IssueStateLocalized issueStateLocalized : this.localizedNames){
-			localizedNames.put(issueStateLocalized.getLanguageId().toString(), issueStateLocalized.getName());
-		}
-		return localizedNames;
-	}
+    @Override
+    public Integer getId()
+    {
+        return id;
+    }
 
-	public void setLocalizedNames(Set<IssueStateLocalized> localizedNames) {
-		this.localizedNames = localizedNames;
-	}
-	
+    @Override
+    public void setId( Integer id )
+    {
+        this.id = id;
+    }
+
+    public String getCode()
+    {
+        return code;
+    }
+
+    public void setCode( String code )
+    {
+        this.code = code;
+    }
+
+    public Set<IssueStateLocalized> getLocalizations()
+    {
+        return localizations;
+    }
+
+    public void setLocalizations( Set<IssueStateLocalized> localizations )
+    {
+        this.localizations = localizations;
+    }
+
+    public String getName()
+    {
+        return name;
+    }
+
+    public void setName( String name )
+    {
+        this.name = name;
+    }
 	
 }

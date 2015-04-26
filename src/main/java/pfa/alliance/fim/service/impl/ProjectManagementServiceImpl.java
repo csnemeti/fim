@@ -299,11 +299,13 @@ class ProjectManagementServiceImpl
     				relationDTO.setBidirectional(relation.isBidirectional());
     				if(relation.getInitialState() != null){
     					IssueStateDTO initialStateDTO = new IssueStateDTO();
-    					initialStateDTO.setLocalizedName(relation.getInitialState().getLocalizedNamesMap());
+                        // TODO fix this
+                        // initialStateDTO.setLocalizedName(relation.getInitialState().getLocalizedNamesMap());
     				}
     				if(relation.getNextState() != null){
     					IssueStateDTO nextStateDTO = new IssueStateDTO();
-    					nextStateDTO.setLocalizedName(relation.getInitialState().getLocalizedNamesMap());
+                        // TODO fix this
+                        // nextStateDTO.setLocalizedName(relation.getInitialState().getLocalizedNamesMap());
     				}
     			}
     		}
