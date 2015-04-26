@@ -27,7 +27,7 @@ public interface IssuePriorityRepository
      * Find all {@link IssuePriority}s belonging to a given Project.
      * 
      * @param projectId the ID of the project
-     * @param the ordering criteria
+     * @param sort the ordering criteria
      * @return the list of priorities
      */
     List<IssuePriority> findAll( int projectId, Sort sort );
