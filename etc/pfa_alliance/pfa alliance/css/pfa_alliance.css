@@ -44,3 +44,7 @@ body {
         margin-right: 25px;
     }
 }
+
+#productsCarusel div img {
+	height: 400px;
+}

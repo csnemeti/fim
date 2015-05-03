@@ -25,13 +25,6 @@
     <link href="http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
     <link href="http://fonts.googleapis.com/css?family=Josefin+Slab:100,300,400,600,700,100italic,300italic,400italic,600italic,700italic" rel="stylesheet" type="text/css">
 
-	
-    <style type="text/css">
-    	#productsCarusel div img {
-    		height: 400px;
-    	}
-    </style>
-
     <script src="js/jquery.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/pfa-pocket-watch-0.1.js"></script>
@@ -170,7 +163,6 @@
         <hr>
 
 		
-        <footer>
             <div class="row">
                 <div class="col-lg-12">
                    <section id="services" class="services" style="background-color:#f5f5f5">
@@ -191,7 +183,7 @@
 				                                </h4>
 												<img style="height:50px;weight:50px" src="images/fim-logo.png" alt="Free Issue Manager logo" />
 				                                <p>Free Issue Manager</p>
-				                                <a href="fim.html" class="btn btn-light">Learn More</a>
+				                                <a href="fim.php" class="btn btn-light">Learn More</a>
 				                            </div>
 				                        </div>
 				                        <div class="col-md-3 col-sm-6">
@@ -248,18 +240,7 @@
                 </div>
             </div>
 			
-            <div class="row" style="margin-top: 20px">
-                <div class="col-lg-6">
-                	<a href="#">Contact Us</a> | <a href="#">Sitemap</a> | <a href="#">Terms of use</a> | &copy; PFA Alliance 2015, version 0.3
-                </div>
-                <div class="col-lg-6" style="text-align: right">
-                	<a href="https://www.facebook.com/sharer/sharer.php?u=www.pfa-alliance.com" target="fb" title="Share on Facebook"><img src="images/FB-f-Logo__blue_29.png" style="width: 20px; height: 20px" alt="Share on Facebook"/></a> | 
-					<a href="https://plus.google.com/share?url=www.pfa-allicance.com" title="Share on Google+" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"><img src="https://www.gstatic.com/images/icons/gplus-32.png" style="width: 20px; height: 20px" alt="Share on Google+"/></a> | 
-					<a href="http://twitter.com/home/?status=Website with usefull free application: Free Issue Manager, Playing cards and games, 2D Geometry, Pocket Size Watch. www.pfa-alliance.com" title="Tweet this" target="twitter"><img src="images/twitter-icon.png" style="width: 20px; height: 20px" alt="Tweet this"/></a>
-                </div>
-            </div>
-        </footer>
-
+<?php include './includes/footer.php';?>
     </div>
 </body>
 </html>
