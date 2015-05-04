@@ -26,6 +26,7 @@ public enum FimPageURLs
     CREATE_PROJECT_JSP("/WEB-INF/pages/project/createProject.jsp"),
     PROJECT_SEARCH_JSP( "/WEB-INF/pages/project/project-search.jsp" ),
     PROJECT_DASHBOARD_JSP( "/WEB-INF/pages/project/dashboard.jsp" ),
+    EDIT_PROJECT_JSP( "/WEB-INF/pages/project/editProject.jsp" ),
     EDIT_PROJECT_USERS_PAGE("/project/edit/users"),
     EDIT_PROJECT_USERS_JSP("/WEB-INF/pages/project/editProjectUsers.jsp");
 

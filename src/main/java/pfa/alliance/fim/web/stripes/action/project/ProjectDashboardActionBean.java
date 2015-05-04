@@ -7,6 +7,7 @@ import net.sourceforge.stripes.action.ErrorResolution;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.UrlBinding;
+import net.sourceforge.stripes.util.UrlBuilder;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -143,5 +144,22 @@ public class ProjectDashboardActionBean
     public String getFormatedLastStateChangePeriod()
     {
         return getFormatedUntilNowPeriod( project.getStateChangedAt() );
+    }
+
+    public String getEditUrl()
+    {
+        UrlBuilder builder = new UrlBuilder( getContext().getLocale(), EditProjectActionBean.class, true );
+        builder.addParameter( "code", code );
+        String url = builder.toString();
+        String contextPath = getContext().getServletContext().getContextPath();
+        if ( contextPath.equals( "/" ) )
+        {
+            contextPath = null;
+        }
+        if ( contextPath != null )
+        {
+            url = contextPath + url;
+        }
+        return url;
     }
 }

@@ -256,6 +256,12 @@ class ProjectManagementServiceImpl
         }
     }
 
+    @Override
+    public Project findByCode( String code )
+    {
+        return projectRepository.findByCode( code );
+    }
+
     /**
      * Convert {@link Project} into {@link ProjectDTO}
      * 
@@ -276,42 +282,46 @@ class ProjectManagementServiceImpl
             projectDTO.setHidden( project.isHidden() );
             projectDTO.setState( project.getState() );
             projectDTO.setStateChangedAt( project.getStateChangedAt() );
-           /* projectDTO.setIssueFlow( convertToIssueFlowDTO( project.getIssueFlow() ) );*/
-            
-            
+            /* projectDTO.setIssueFlow( convertToIssueFlowDTO( project.getIssueFlow() ) ); */
+
         }
         return projectDTO;
     }
-    
-    @SuppressWarnings("unused")
-	private static IssueFlowDTO convertToIssueFlowDTO(IssueFlow issueFlow)
+
+    @SuppressWarnings( "unused" )
+    private static IssueFlowDTO convertToIssueFlowDTO( IssueFlow issueFlow )
     {
-    	IssueFlowDTO issueFlowDTO = null;
-    	if( issueFlow != null ){
-    		issueFlowDTO = new IssueFlowDTO();
-    		
-    		if( CollectionUtils.isNotEmpty(issueFlow.getRelations()) ){
-    			
-    			issueFlowDTO.setRelations(new ArrayList<IssueStateRelationDTO>());
-    			for(IssueStateRelation relation : issueFlow.getRelations()){
-    				
-    				IssueStateRelationDTO relationDTO = new IssueStateRelationDTO();
-    				relationDTO.setBidirectional(relation.isBidirectional());
-    				if(relation.getInitialState() != null){
-    					IssueStateDTO initialStateDTO = new IssueStateDTO();
+        IssueFlowDTO issueFlowDTO = null;
+        if ( issueFlow != null )
+        {
+            issueFlowDTO = new IssueFlowDTO();
+
+            if ( CollectionUtils.isNotEmpty( issueFlow.getRelations() ) )
+            {
+
+                issueFlowDTO.setRelations( new ArrayList<IssueStateRelationDTO>() );
+                for ( IssueStateRelation relation : issueFlow.getRelations() )
+                {
+
+                    IssueStateRelationDTO relationDTO = new IssueStateRelationDTO();
+                    relationDTO.setBidirectional( relation.isBidirectional() );
+                    if ( relation.getInitialState() != null )
+                    {
+                        IssueStateDTO initialStateDTO = new IssueStateDTO();
                         // TODO fix this
                         // initialStateDTO.setLocalizedName(relation.getInitialState().getLocalizedNamesMap());
-    				}
-    				if(relation.getNextState() != null){
-    					IssueStateDTO nextStateDTO = new IssueStateDTO();
+                    }
+                    if ( relation.getNextState() != null )
+                    {
+                        IssueStateDTO nextStateDTO = new IssueStateDTO();
                         // TODO fix this
                         // nextStateDTO.setLocalizedName(relation.getInitialState().getLocalizedNamesMap());
-    				}
-    			}
-    		}
-    		
-    	}
-    	return issueFlowDTO;
+                    }
+                }
+            }
+
+        }
+        return issueFlowDTO;
     }
 
     /**

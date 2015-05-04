@@ -39,6 +39,14 @@ public interface ProjectManagementService
                     int creatorUserId, Map<Integer, UserRoleInsideProject> additionalUsers, Locale locale );
 
     /**
+     * Gets a project based on the given code.
+     * 
+     * @param code the code of the project
+     * @return the Project if found, null if not
+     */
+    Project findByCode( String code );
+
+    /**
      * Gets a project details based on the given code.
      * 
      * @param code the code of the project

@@ -189,7 +189,14 @@ public class SearchProjectsActionBean
             sb.append( "<td class='noSpacing'><a href='" ).append( url ).append( "' title='" ).append( getMessage( "action.view" ) ).append( "'><i class='fa fa-eye fa-2x'></i></a></td>" );
             if ( canEdit )
             {
-                sb.append( "<td class='noSpacing'><a href='#' title='" ).append( getMessage( "action.edit" ) ).append( "'><i class='fa fa-pencil-square fa-2x'></i></a></td>" );
+                builder = new UrlBuilder( getContext().getLocale(), EditProjectActionBean.class, true );
+                builder.addParameter( "code", dto.getCode() );
+                url = builder.toString();
+                if ( contextPath != null )
+                {
+                    url = contextPath + url;
+                }
+                sb.append( "<td class='noSpacing'><a href='" ).append( url ).append( "' title='" ).append( getMessage( "action.edit" ) ).append( "'><i class='fa fa-pencil-square fa-2x'></i></a></td>" );
             }
             sb.append( "</tr></table>" );
             dto.setActions( sb.toString() );
