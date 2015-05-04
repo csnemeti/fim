@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import pfa.alliance.fim.model.project.Project;
 import pfa.alliance.fim.service.ProjectManagementService;
 import pfa.alliance.fim.web.common.FimPageURLs;
+import pfa.alliance.fim.web.security.FimSecurity;
 import pfa.alliance.fim.web.stripes.action.BasePageActionBean;
 
 /**
@@ -26,6 +27,7 @@ import pfa.alliance.fim.web.stripes.action.BasePageActionBean;
  * @author Csaba
  */
 @UrlBinding( value = "/project/edit/{code}" )
+@FimSecurity
 public class EditProjectActionBean
     extends BasePageActionBean
 
@@ -82,4 +84,9 @@ public class EditProjectActionBean
         this.code = code;
     }
 
+    @Override
+    public String getTitle()
+    {
+        return getMessage( "page.title.project.edit", code );
+    }
 }

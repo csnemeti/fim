@@ -146,10 +146,21 @@ public class ProjectDashboardActionBean
         return getFormatedUntilNowPeriod( project.getStateChangedAt() );
     }
 
-    public String getEditUrl()
+    public String getBasicEditUrl()
+    {
+        return buildEditUrl( "basic" );
+    }
+
+    public String getUserEditUrl()
+    {
+        return buildEditUrl( "users" );
+    }
+
+    private String buildEditUrl( String anchor )
     {
         UrlBuilder builder = new UrlBuilder( getContext().getLocale(), EditProjectActionBean.class, true );
         builder.addParameter( "code", code );
+        builder.setAnchor( anchor );
         String url = builder.toString();
         String contextPath = getContext().getServletContext().getContextPath();
         if ( contextPath.equals( "/" ) )

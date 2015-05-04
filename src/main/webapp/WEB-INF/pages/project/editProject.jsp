@@ -9,20 +9,24 @@
 	    <div class="row">
 	        <div class="span12">
 	            <ul class="nav nav-pills" id="projectTabs">
-	              <li class="active"><a id="tab-1" href="#one" data-toggle="tab">TAB #1</a></li>
-	              <li><a href="#two" id="tab-2" data-toggle="tab">TAB #2</a></li>
-	              <li><a href="#three" id="tab-3" data-toggle="tab">TAB #3</a></li>
+	              <li class="active"><a id="tab-basic" href="#basic" data-toggle="tab">Basic</a></li>
+	              <li><a href="#states" id="tab-states" data-toggle="tab">Issue states</a></li>
+	              <li><a href="#labels" id="tab-labels" data-toggle="tab">Components & Labels</a></li>
+	              <li><a href="#users" id="tab-users" data-toggle="tab">Users</a></li>
 	            </ul>
 	            
 	            <div class="tab-content">
-	              <div class="tab-pane active" id="one">
-	                  <p>You're in Tab #1</p>
+	              	<div class="tab-pane active" id="basic">
+	                	<p>You're in basic data</p>
+                	</div>
+	              	<div class="tab-pane" id="states">
+	                  	<p>You're on issue states</p> 
 	                </div>
-	              <div class="tab-pane" id="two">
-	                  <p>You're on #2</p> 
+	              	<div class="tab-pane" id="labels">
+	                  	<p>Now on components & labels.</p>
 	                </div>
-	              <div class="tab-pane" id="three">
-	                  <p>Now #3.</p>
+	              	<div class="tab-pane" id="users">
+	                  	<p>Now users</p>
 	                </div>
 	            </div>
 	        </div>

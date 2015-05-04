@@ -15,7 +15,7 @@
               	<div class="panel-body">
               	Details here...
               	</div>
-                <a href="#">
+                <a href="${actionBean.userEditUrl}">
                 	<div class="panel-footer">
                     	<span class="pull-left"><stripes:label for="projectcard-ViewDetails"/></span>
                         	<span class="pull-right">

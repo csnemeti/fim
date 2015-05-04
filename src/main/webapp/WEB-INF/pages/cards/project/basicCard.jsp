@@ -60,7 +60,7 @@
                  	</c:if>
               	</div>
                	<div class="panel-footer">
-                	<a href="${actionBean.editUrl}">
+                	<a href="${actionBean.basicEditUrl}">
                     	<span class="pull-left"><stripes:label for="projectcard-EditDetails"/></span>
                         	<span class="pull-right">
                         	<i class="fa fa-arrow-circle-right"></i>
