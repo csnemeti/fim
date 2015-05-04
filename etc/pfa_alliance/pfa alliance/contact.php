@@ -7,8 +7,8 @@
     <title>PFA Alliance contact us</title>
 
 <?php include './includes/css-js.php';?>
-    <script src="js/pfa-pocket-watch-0.1.js"></script>
     <script src="js/jssor.slider.mini.js"></script>
+	<script src="js/jquery.validate.min.js"></script>
     
     <script type="text/javascript">
 		jssor_slider1_starter = function (containerId) {
@@ -22,6 +22,37 @@
 		  jssor_slider1_starter('productsCarusel');
 		}
     </script>
+	
+	<script>
+	$.validator.setDefaults({
+		submitHandler: function() {
+			alert("submitted!");
+		}
+	});
+
+	$().ready(function() {
+		// validate signup form on keyup and submit
+		$("#contactUsForm").validate({
+			rules: {
+				email: {
+					required: true,
+					email: true
+				},
+				name: {
+					required: true
+				}
+				message: {
+					required: true
+				}
+			},
+			messages: {
+				email: "Please enter a valid email address",
+				name: "Please provide your name",
+				message: "Please provide a message",
+			}
+		});
+	});
+	</script>
 </head>
 
 <body onload="pageLoaded()">
@@ -37,24 +68,24 @@
                     </h1>
                     <hr>
                     <p>Ready to start your next project with us? That's great! Give us a call or send us an email and we will get back to you as soon as possible!</p>
-                    <form role="form" method="POST">
+                    <form role="form" method="POST" id="contactUsForm">
                         <div class="row">
                             <div class="form-group col-lg-4">
                                 <label>Name (*)</label>
-                                <input type="text" name="name" class="form-control">
+                                <input type="text" name="name" class="form-control" required>
                             </div>
                             <div class="form-group col-lg-4">
                                 <label>Email Address (*)</label>
-                                <input type="email" name="email" class="form-control">
+                                <input type="email" name="email" class="form-control" required>
                             </div>
                             <div class="form-group col-lg-4">
                                 <label>Phone Number</label>
-                                <input type="tel" name="tel" class="form-control">
+                                <input type="tel" name="tel" class="form-control" >
                             </div>
                             <div class="clearfix"></div>
                             <div class="form-group col-lg-12">
                                 <label>Message (*)</label>
-                                <textarea class="form-control" rows="12" name="text"></textarea>
+                                <textarea class="form-control" rows="12" name="message" required></textarea>
                             </div>
                             <div class="form-group col-lg-12">
                                 <input type="hidden" name="save" value="contact">
