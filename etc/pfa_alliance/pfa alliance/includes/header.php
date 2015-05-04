@@ -17,7 +17,7 @@
                         <a href="#">About</a>
                     </li>
                     <li>
-                        <a href="#">Products</a>
+                        <a href="index.php#products">Products</a>
                     </li>
                     <li>
                         <a href="#">Terms of Use</a>

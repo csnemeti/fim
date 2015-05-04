@@ -2,31 +2,11 @@
 <html lang="en">
 
 <head>
-
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Website where you can find information and builds regarding PFA Alliance free products">
-    <meta name="keywords" content="PFA Alliance, FIM, Playing cards, Cards, Pocket watch, watch, JavaScript watch">
-    <meta name="author" content="PFA Alliance">
-    <meta property="og:title" content="Website where you can find information and builds regarding PFA Alliance free products" />
-	<meta property="og:site_name" content="My Favorite completly free products site"/>
-	<meta property="og:url" content="http://www.pfa-alliance.com" />
-	<meta property="og:description" content="PFA Alliance represents a group of developers that intend to provide you good and reliable software for free. Right now they are focused on some products only but they are open to any ssugestions. Currently they develop an Issue Manager, a playing card package for games, 2D geometry tool and other." />
-	<meta property="og:locale" content="en_US" />	
+<?php include './includes/meta.php';?>
 
     <title>PFA Alliance</title>
 
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/blog-post.css" rel="stylesheet">
-    <link href="css/pfa_alliance.css" rel="stylesheet">
-    
-		<!-- Fonts -->
-    <link href="http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
-    <link href="http://fonts.googleapis.com/css?family=Josefin+Slab:100,300,400,600,700,100italic,300italic,400italic,600italic,700italic" rel="stylesheet" type="text/css">
-
-    <script src="js/jquery.js"></script>
-    <script src="js/bootstrap.min.js"></script>
+<?php include './includes/css-js.php';?>
     <script src="js/pfa-pocket-watch-0.1.js"></script>
     <script src="js/jssor.slider.mini.js"></script>
     
@@ -42,51 +22,10 @@
 		  jssor_slider1_starter('productsCarusel');
 		}
     </script>
-    
-    <script>
-	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-	  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-	  ga('create', 'UA-62149917-1', 'auto');
-	  ga('send', 'pageview');
-	</script>
 </head>
 
 <body onload="pageLoaded()">
-
-    <nav style="background-color:#f8f8f8" class="navbar navbar-fixed-top" role="navigation">
-        <div class="container">
-			<div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href=".">PFA Alliance</a>
-            </div>
-            
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav">
-                    <li>
-                        <a href="#">About</a>
-                    </li>
-                    <li>
-                        <a href="#">Products</a>
-                    </li>
-                    <li>
-                        <a href="#">Terms of Use</a>
-                    </li>
-                    <li>
-                        <a href="contact.html">Contact</a>
-                    </li>
-                </ul>
-            </div>
-           
-        </div>
-    </nav>
+<?php include './includes/header.php';?>
 
     <div class="container">
         <div class="row">
@@ -162,7 +101,7 @@
 		
         <hr>
 
-		
+			<a name="products"></a>
             <div class="row">
                 <div class="col-lg-12">
                    <section id="services" class="services" style="background-color:#f5f5f5">
