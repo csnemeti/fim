@@ -1,5 +1,5 @@
 
-    <nav style="background-color:#f8f8f8" class="navbar navbar-fixed-top" role="navigation">
+    <nav style="background-color:#f8f8f8" class="fimBorder navbar navbar-fixed-top" role="navigation">
         <div class="container">
 			<div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
@@ -23,7 +23,7 @@
                         <a href="#">Terms of Use</a>
                     </li>
                     <li>
-                        <a href="contact.html">Contact</a>
+                        <a href="contact.php">Contact</a>
                     </li>
                 </ul>
             </div>
