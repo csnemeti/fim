@@ -9,27 +9,21 @@
 	    <div class="row">
 	        <div class="span12">
 	            <ul class="nav nav-pills" id="projectTabs">
-	              <li class="active"><a id="tab-basic" href="#basic" data-toggle="tab">Basic</a></li>
-	              <li><a href="#states" id="tab-states" data-toggle="tab">Issue states</a></li>
-	              <li><a href="#labels" id="tab-labels" data-toggle="tab">Components & Labels</a></li>
-	              <li><a href="#users" id="tab-users" data-toggle="tab">Users</a></li>
+	              <li${actionBean.basicClass}>
+	              	<a href="${actionBean.basicLink}" id="tab-basic"><fmt:message key="page.title.project.edit.tab.basic" /></a>
+	              </li>
+	              <li${actionBean.statesClass}>
+	              	<a href="${actionBean.statesLink}" id="tab-states"><fmt:message key="page.title.project.edit.tab.states" /></a>
+	              </li>
+	              <li${actionBean.labelsClass}>
+	              	<a href="${actionBean.labelsLink}" id="tab-labels"><fmt:message key="page.title.project.edit.tab.labels" /></a>
+	              </li>
+	              <li${actionBean.usersClass}>
+	              	<a href="${actionBean.usersLink}" id="tab-users"><fmt:message key="page.title.project.edit.tab.users" /></a>
+	              </li>
 	            </ul>
-	            
-	            <div class="tab-content">
-	              	<div class="tab-pane active" id="basic">
-	                	<p>You're in basic data</p>
-                	</div>
-	              	<div class="tab-pane" id="states">
-	                  	<p>You're on issue states</p> 
-	                </div>
-	              	<div class="tab-pane" id="labels">
-	                  	<p>Now on components & labels.</p>
-	                </div>
-	              	<div class="tab-pane" id="users">
-	                  	<p>Now users</p>
-	                </div>
-	            </div>
 	        </div>
 	    </div>
+	    <stripes:layout-render name="/WEB-INF/pages/cards/project/editProject-${actionBean.focus}.jsp"/>
 	</stripes:layout-component>
 </stripes:layout-render>

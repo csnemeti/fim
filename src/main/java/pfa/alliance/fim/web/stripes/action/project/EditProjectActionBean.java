@@ -10,6 +10,7 @@ import net.sourceforge.stripes.action.ErrorResolution;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.UrlBinding;
+import net.sourceforge.stripes.util.UrlBuilder;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -26,7 +27,7 @@ import pfa.alliance.fim.web.stripes.action.BasePageActionBean;
  * 
  * @author Csaba
  */
-@UrlBinding( value = "/project/edit/{code}" )
+@UrlBinding( value = "/project/edit/{code}/{focus}" )
 @FimSecurity
 public class EditProjectActionBean
     extends BasePageActionBean
@@ -39,6 +40,9 @@ public class EditProjectActionBean
 
     /** The code of the project. */
     private String code;
+
+    /** Tells us what tab to focus on. */
+    private String focus = "basic";
 
     private final ProjectManagementService projectManagementService;
 
@@ -74,6 +78,70 @@ public class EditProjectActionBean
         }
     }
 
+    public String getBasicLink()
+    {
+        return buildTabLink( "basic" );
+    }
+
+    public String getBasicClass()
+    {
+        return buildTabCssClass( "basic" );
+    }
+
+    public String getStatesLink()
+    {
+        return buildTabLink( "states" );
+    }
+
+    public String getStatesClass()
+    {
+        return buildTabCssClass( "states" );
+    }
+
+    public String getLabelsLink()
+    {
+        return buildTabLink( "labels" );
+    }
+
+    public String getLabelsClass()
+    {
+        return buildTabCssClass( "labels" );
+    }
+
+    public String getUsersLink()
+    {
+        return buildTabLink( "users" );
+    }
+
+    public String getUsersClass()
+    {
+        return buildTabCssClass( "users" );
+    }
+
+    private String buildTabLink( final String expectedTab )
+    {
+        UrlBuilder builder = new UrlBuilder( getLocale(), getClass(), true );
+        builder.addParameter( "code", code );
+        builder.addParameter( "focus", expectedTab );
+        String url = builder.toString();
+        String contextPath = getContext().getServletContext().getContextPath();
+        if ( contextPath != null )
+        {
+            url = contextPath + url;
+        }
+        return url;
+    }
+    /**
+     * Verifies if the tab name given as parameter is the selected one and returns corresponding CSS class
+     * 
+     * @param expectedTab the expected tab name
+     * @return the CSS class or empty string if class should not be applied
+     */
+    private String buildTabCssClass( final String expectedTab )
+    {
+        return expectedTab.equalsIgnoreCase( focus ) ? " class=\"active\"" : "";
+    }
+
     public String getCode()
     {
         return code;
@@ -82,6 +150,16 @@ public class EditProjectActionBean
     public void setCode( String code )
     {
         this.code = code;
+    }
+
+    public String getFocus()
+    {
+        return focus;
+    }
+
+    public void setFocus( String focus )
+    {
+        this.focus = focus;
     }
 
     @Override
