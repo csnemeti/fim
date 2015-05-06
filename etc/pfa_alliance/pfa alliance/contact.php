@@ -4,24 +4,10 @@
 <head>
 <?php include './includes/meta.php';?>
 
-    <title>PFA Alliance contact us</title>
+    <title>PFA Alliance: Contact us</title>
 
 <?php include './includes/css-js.php';?>
-    <script src="js/jssor.slider.mini.js"></script>
 	<script src="js/jquery.validate.min.js"></script>
-    
-    <script type="text/javascript">
-		jssor_slider1_starter = function (containerId) {
-			var options = { $AutoPlay: true };
-			var jssor_slider1 = new $JssorSlider$(containerId, options);
-		};
-		
-		function pageLoaded() {
-		  // Handler for .ready() called.
-		  (new pfaAllianceClock('watch', null)).start();
-		  jssor_slider1_starter('productsCarusel');
-		}
-    </script>
 	
 	<script>
 	$.validator.setDefaults({
@@ -40,7 +26,7 @@
 				},
 				name: {
 					required: true
-				}
+				},
 				message: {
 					required: true
 				}
@@ -55,7 +41,7 @@
 	</script>
 </head>
 
-<body onload="pageLoaded()">
+<body>
 <?php include './includes/header.php';?>
 
 
@@ -109,5 +95,4 @@
 <?php include './includes/footer.php';?>
     </div>
 </body>
-<script>jssor_slider1_starter('productsCarusel');</script>
 </html>
