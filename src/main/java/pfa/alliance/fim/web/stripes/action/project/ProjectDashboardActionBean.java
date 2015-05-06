@@ -160,7 +160,7 @@ public class ProjectDashboardActionBean
     {
         UrlBuilder builder = new UrlBuilder( getContext().getLocale(), EditProjectActionBean.class, true );
         builder.addParameter( "code", code );
-        builder.setAnchor( anchor );
+        builder.addParameter( "focus", anchor );
         String url = builder.toString();
         String contextPath = getContext().getServletContext().getContextPath();
         if ( contextPath.equals( "/" ) )
