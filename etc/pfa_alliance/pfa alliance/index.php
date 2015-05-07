@@ -4,6 +4,8 @@
 <head>
 <?php include './includes/meta.php';?>
 
+    <meta name="description" content="Website where you can find information and builds regarding PFA Alliance free products: FIM, Cards, MoGeo, Pocket Watch">
+    <meta name="keywords" content="PFA Alliance, FIM, Playing cards, Cards, Pocket watch, watch, JavaScript watch">
     <title>PFA Alliance</title>
 
 <?php include './includes/css-js.php';?>
@@ -59,6 +61,9 @@
 								<div><img u="image" src="./images/products/fim-user-dashboard.jpg" /></div>
 								<div><img u="image" src="./images/products/fim-project-search.jpg" /></div>
 								<div><img u="image" src="./images/products/fim-user-search.jpg" /></div>
+								<div><img u="image" src="./images/products/pocket-watch-full-version.jpg" /></div>
+								<div><img u="image" src="./images/products/pocket-watch-simple-version.jpg" /></div>
+								<div><img u="image" src="./images/products/pocket-watch-localized-version.jpg" /></div>
 							</div>
 					</div>
 				</div>
@@ -162,15 +167,15 @@
 				                                <h4>
 				                                    <strong>PocketWatch</strong>
 				                                </h4>
-												<img style="height:50px;weight:50px" src="images/no4-logo.png" alt="Pocket Watch logo" />
+												<img style="height:50px;weight:50px" src="images/pocket-watch.jpg" alt="Pocket Watch logo" />
 				                                <p>Pocket Size Watch</p>
-				                                <a href="#" class="btn btn-light">Learn More</a>
+				                                <a href="pw.php" class="btn btn-light">Learn More</a>
 				                            </div>
 				                        </div>
 				                    </div>
 				                    <hr style="border-top:1px solid black" class="small">
 									<div class="row">
-										<p>Didn't find what you are looking for? You may <a href="#">suggest</a> what would you like.
+										<p>Didn't find what you are looking for? You may <a href="contact.php?s=suggest">suggest</a> what would you like.
 									</div>
 				                </div>
 				            </div>

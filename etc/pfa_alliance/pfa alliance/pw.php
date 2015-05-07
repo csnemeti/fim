@@ -3,10 +3,10 @@
 
 <head>
 <?php include './includes/meta.php';?>
-    <meta name="description" content="Website where you can find information and builds regarding FIM (Free Issue Manager) by PFA Alliance">
-    <meta name="keywords" content="FIM, free issue manager, issue manager, bugtracker, issue trackier, PFA Alliance">
 
-    <title>FIM by PFA Alliance</title>
+    <meta name="description" content="Website where you can find information and builds regarding Pocket Watch by PFA Alliance">
+    <meta name="keywords" content="Pocket Watch, watch, JavaScript watch, free watch, PFA Alliance">
+    <title>Pocket Watch by PFA Alliance</title>
 
 <?php include './includes/css-js.php';?>
 
@@ -28,9 +28,8 @@
         <div class="row">
 			<div class="col-lg-8">
 				<h1 style="margin-left: 20px;">
-					<img style="height:50px;weight:50px" src="images/fim-logo.png" alt="FIM logo" />
-					FIM (Free Issue Manager)
-					<button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false" onclick="alert('Comming soon')">Try it for free</button>
+					<img style="height:50px;weight:50px" src="images/pocket-watch.jpg" alt="Pocket Watch logo" />
+					Pocket Watch
 				</h1>
 			</div>
 			<div class="col-md-12" style="margin-top: 0px">
@@ -41,14 +40,14 @@
 				<div id="productsCarusel" class="col-lg-12" style="height: 300px; padding: 0px; text-align: center">
 							<!-- Loading Screen -->
 							<div u="loading" style="width: 600px; height: 300px;">
-								FIM<br />
+								Pocket Watch<br />
 								Loading... Please Wait!
 							</div>
 							<!-- Slides Container -->
 							<div u="slides" style="cursor: move; position: absolute; overflow: hidden; left: 0px; top: 0px; width: 600px; height: 300px;">
-								<div><img u="image" src="./images/products/fim-user-dashboard.jpg" /></div>
-								<div><img u="image" src="./images/products/fim-project-search.jpg" /></div>
-								<div><img u="image" src="./images/products/fim-user-search.jpg" /></div>
+								<div><img u="image" src="./images/products/pocket-watch-full-version.jpg" /></div>
+								<div><img u="image" src="./images/products/pocket-watch-simple-version.jpg" /></div>
+								<div><img u="image" src="./images/products/pocket-watch-localized-version.jpg" /></div>
 							</div>
 					</div>	
 				</div>
