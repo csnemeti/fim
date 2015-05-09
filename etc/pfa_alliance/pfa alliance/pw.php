@@ -230,11 +230,17 @@
 				<h2>How to use Pocket Watch?</h2>
 				<p>Embedding Pocket Watch into a web page is very easy... and free. All you have to do is follow the next staps.</p>
 				<h3>1. Download...</h3>
-				<h3>2. Copy into your project</h3>
+				<p>You may download the latest version and all it's dependencies from <a href="/pw/pocket-watch-0.2.zip">this</a> link.
+				The ZIP file contains the JavaScript library (<strong>lib</strong> directory) and all it's dependencies plus some examples (<strong>examples</strong> directory) regarding how to use it.
+				</p>
+				<h3>2. Copy content into your project</h3>
+				<p>You should copy all the files from <i>lib</i> directory into your project. This contains all the necessary elements to make the watch running in your web page. 
+				Do not modify the structure of the files! In case you do that, the watch might not work.</p>
 				<h3>3. Modify Web page</h3>				
 				<h4>3.1. Create DIV</h4>				
 				<h4>3.2. Define JavaScript function</h4>				
-				<h4>3.3. Call the JavaScript function</h4>				
+				<h4>3.3. Call the JavaScript function</h4>	
+				<h2>What do you think?</h2>				
             </div>
         </div>
 		
