@@ -38,7 +38,7 @@
 					<div class="col-lg-4">
 						<img style="width: 200px; height: 300px;" src="./images/watch/nowis.png" alt="Now is: Monday, February 9, 2015, 19:41:37 GMT." />
 					</div>
-					<div id="watch" class="col-lg-4">
+					<div id="watch" class="col-lg-4" style="height: 360px;">
 					</div>
 				</div>
 				<div class="col-lg-12">
