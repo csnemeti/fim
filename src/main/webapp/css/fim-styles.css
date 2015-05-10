@@ -12,27 +12,46 @@
 .labelWrapperEditor {
 	display: inline;
 	float: left;
-	margin-top: 30px;
+	margin-top: 10px;
 	margin-left: 10px;
 	border: 1px solid transparent;
-	padding: 10px;
+	border-radius: 10px;
+	padding: 5px;
 }
 .labelWrapperEditor .actions {
 	text-align: right;
 	height: 30px;
-	margin-bottom: 3px;
 	color: white;
+	padding: 0px 5px 0px 5px;
 	visibility: hidden;
+}
+.labelWrapperEditor.active .actions {
+	visibility: visible;
+}
+.labelWrapperEditor .actions a i {
+	color: white;
 }
 .labelWrapperEditor:hover {
 	background-color: #428bca;
 	border: 1px solid #428bca;
 }
-.component {
+.fimComponent {
 	display: inline;
 	border-size: 1px;
 	border-style: solid;
+	border-radius: 10px;
 	background-color: white;
+	padding: 5px;
+	font-weight: bold;
+}
+.fimLabel {
+	display: inline;
+	border-size: 1px;
+	border-style: solid;
+	border-radius: 10px;
+	border-color: red;
+	color: white;
+	background-color: red;
 	padding: 5px;
 	font-weight: bold;
 }
