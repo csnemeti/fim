@@ -56,6 +56,7 @@ public class UserDashboardActionBean
         return DurationFormatUtils.formatDuration( durationInMillis, "H:mm:ss", true );
     }
 
+    @Override
     public String getEditUserProfileTitle()
     {
         return getMessage( "usercard-EditDetails.title" );
@@ -86,6 +87,12 @@ public class UserDashboardActionBean
 
     @Override
     public boolean isShowProjectAssignments()
+    {
+        return true;
+    }
+
+    @Override
+    public boolean isShowEditUserProfileLink()
     {
         return true;
     }

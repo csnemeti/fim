@@ -52,7 +52,7 @@
        <c:if test="${actionBean.showLastLoginCard}">	    	
        		<stripes:layout-render name="/WEB-INF/pages/cards/user/user-lastLoginsCard.jsp"/>
        </c:if>        	
-       <c:if test="${actionBean.showLastLoginCard}">	    	
+       <c:if test="${actionBean.showAssignedProjectsCard}">	    	
        		<stripes:layout-render name="/WEB-INF/pages/cards/user/user-assignProjectsCard.jsp"/>
        </c:if>        	
     </stripes:layout-component>

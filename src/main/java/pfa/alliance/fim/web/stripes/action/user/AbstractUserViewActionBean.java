@@ -11,6 +11,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.ErrorResolution;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.util.UrlBuilder;
@@ -24,6 +25,7 @@ import pfa.alliance.fim.model.project.Project;
 import pfa.alliance.fim.model.project.UserProjectRelation;
 import pfa.alliance.fim.model.user.User;
 import pfa.alliance.fim.model.user.UserLogin;
+import pfa.alliance.fim.model.user.UserStatus;
 import pfa.alliance.fim.service.UserManagerService;
 import pfa.alliance.fim.util.DateUtils;
 import pfa.alliance.fim.web.common.FimPageURLs;
@@ -41,6 +43,12 @@ public abstract class AbstractUserViewActionBean
     /** The logger used in this class. */
     private static final Logger LOG = LoggerFactory.getLogger( AbstractUserViewActionBean.class );
 
+    /** Error code returned when user is not found. */
+    private static final int USER_NOT_FOUND = 404;
+
+    /** Error code returned when user is deleted. */
+    private static final int USER_DELETED = 410;
+
     /** The instance of {@link UserManagerService} to be used. */
     private final UserManagerService userManagerService;
 
@@ -57,10 +65,34 @@ public abstract class AbstractUserViewActionBean
         int userId = getUserId();
         LOG.debug( "Getting data for User ID = {}", userId );
         user = userManagerService.findById( userId, isShowLastLoginCard(), isShowProjectAssignments() );
-        // TODO handle the case that ID is not valid
-        return new ForwardResolution( FimPageURLs.USER_DASBOARD_JSP.getURL() );
+        // handle the case that ID is not valid
+        if ( user == null )
+        {
+            LOG.info( "User with ID {} was not found", userId );
+            return new ErrorResolution( USER_NOT_FOUND, "User was not found" );
+        }
+        else if ( userCanBeDisplayed( user ) )
+        {
+            LOG.info( "Displaying user with ID: {}", userId );
+            return new ForwardResolution( FimPageURLs.USER_DASBOARD_JSP.getURL() );
+        }
+        else
+        {
+            LOG.info( "User with ID {} was deleted, status: {}", userId, user.getStatus() );
+            return new ErrorResolution( USER_DELETED, "User was deleted" );
+        }
     }
 
+    /**
+     * Verifies if user can be displayed.
+     * 
+     * @param user the user to display
+     * @return true if user was not deleted already
+     */
+    private static boolean userCanBeDisplayed( User user )
+    {
+        return !UserStatus.SCHEDULED_FOR_DELETE.equals( user.getStatus() );
+    }
     /**
      * Gets the ID of the user we should display.
      * 
@@ -92,6 +124,17 @@ public abstract class AbstractUserViewActionBean
         return false;
     }
 
+    /**
+     * Gets the flag value that decides if assigned projects card should be displayed.
+     * 
+     * @return true if the information should be displayed.
+     * @see #isShowProjectAssignments()
+     */
+    public boolean isShowAssignedProjectsCard()
+    {
+        return isShowProjectAssignments();
+    }
+
     public User getUser()
     {
         return user;
@@ -116,9 +159,12 @@ public abstract class AbstractUserViewActionBean
     {
         // we order the logins in descending order
         SortedSet<Timestamp> logins = new TreeSet<>( new ReverseComparator() );
-        for ( UserLogin login : user.getLogins() )
+        if ( isShowLastLoginAndSessionAge() )
         {
-            logins.add( login.getCreatedAt() );
+            for ( UserLogin login : user.getLogins() )
+            {
+                logins.add( login.getCreatedAt() );
+            }
         }
         // we create the formated response
         List<String> formatedLogins = new ArrayList<>();
@@ -134,13 +180,19 @@ public abstract class AbstractUserViewActionBean
         return user.getUserProjectRelation().size();
     }
 
+    public String getEditUserProfileTitle()
+    {
+        return "";
+    }
+
+    public boolean isShowEditUserProfileLink()
+    {
+        return false;
+    }
+
     public Collection<UserAssignedProjectDTO> getAssignedProjects()
     {
-        String contextPath = getContext().getServletContext().getContextPath();
-        if ( contextPath.equals( "/" ) )
-        {
-            contextPath = null;
-        }
+        final String contextPath = findContextPath();
 
         List<UserAssignedProjectDTO> assignments = new ArrayList<>();
         for ( UserProjectRelation relation : user.getUserProjectRelation() )
@@ -158,11 +210,7 @@ public abstract class AbstractUserViewActionBean
 
             UrlBuilder builder = new UrlBuilder( getContext().getLocale(), ProjectDashboardActionBean.class, true );
             builder.addParameter( "code", dto.getCode() );
-            String url = builder.toString();
-            if ( contextPath != null )
-            {
-                url = contextPath + url;
-            }
+            String url = contextPath + builder.toString();
             StringBuilder sb = new StringBuilder();
             sb.append( "<a href='" ).append( url ).append( "' title='" ).append( getMessage( "action.view" ) ).append( "'><i class='fa fa-eye'></i></a>" );
             dto.setActions( sb.toString() );

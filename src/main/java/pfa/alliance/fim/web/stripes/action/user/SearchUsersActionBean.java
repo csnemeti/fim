@@ -198,11 +198,18 @@ public class SearchUsersActionBean
 
     private List<UserSearchResultDTO> process( List<UserSearchResultDTO> result )
     {
+        final String contextPath = findContextPath();
         for ( UserSearchResultDTO dto : result )
         {
             StringBuilder sb = new StringBuilder();
             sb.append( "<table><tr>" );
-            sb.append( "<td class='noSpacing'><a href='#' title='" ).append( getMessage( "action.view" ) ).append( "'><i class='fa fa-eye fa-2x'></i></a></td>" );
+
+            // view user link
+            UrlBuilder builder = new UrlBuilder( getContext().getLocale(), ShowUserProfileActionBean.class, false );
+            builder.addParameter( "userId", dto.getId() );
+            String url = contextPath + builder.toString();
+
+            sb.append( "<td class='noSpacing'><a href='" ).append( url ).append( "' title='" ).append( getMessage( "action.view" ) ).append( "'><i class='fa fa-eye fa-2x'></i></a></td>" );
             sb.append( "<td class='noSpacing'><a href='#' title='" ).append( getMessage( "action.edit" ) ).append( "'><i class='fa fa-pencil-square fa-2x'></i></a></td>" );
             if ( UserStatus.ACTIVE.equals( dto.getUserStatus() ) )
             {

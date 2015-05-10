@@ -38,4 +38,18 @@ public class BasePageActionBean
         return "F.I.M.";
     }
 
+    /**
+     * Gets the context path for URL builder.
+     * 
+     * @return the path (if any) or empty string if path is root.
+     */
+    public String findContextPath()
+    {
+        String contextPath = getContext().getServletContext().getContextPath();
+        if ( contextPath.equals( "/" ) )
+        {
+            contextPath = "";
+        }
+        return contextPath;
+    }
 }

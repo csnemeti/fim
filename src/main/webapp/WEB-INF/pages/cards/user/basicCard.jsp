@@ -61,6 +61,7 @@
                  	</div>
                  	</c:if>
               	</div>
+              	<c:if test="${actionBean.showEditUserProfileLink}">	
               	<div class="panel-footer">
                 <stripes:link beanclass="pfa.alliance.fim.web.stripes.action.user.EditOwnProfileActionBean" title="${actionBean.editUserProfileTitle}">
                     	<span class="pull-left"><stripes:label for="usercard-EditDetails"/></span>
@@ -70,6 +71,7 @@
                         <div class="clearfix"></div>
                 </stripes:link>
             	</div>
+            	</c:if>
       	</div>
 	</div>
 </stripes:layout-definition>

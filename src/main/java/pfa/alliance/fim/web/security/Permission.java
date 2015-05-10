@@ -15,4 +15,6 @@ public enum Permission
     PROJECT_LIST_PROJECTS,
     /** Show hidden projects in search result. */
     PROJECT_SHOW_HIDDEN_PROJECTS, ADMIN_INVITE_USER, ADMIN_SEARCH_USERS,
+    /** Show assigned projects for given user. */
+    ADMIN_SHOW_ASSIGNED_PROJECTS,
 }
