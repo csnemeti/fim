@@ -12,18 +12,23 @@ import javax.inject.Inject;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ErrorResolution;
 import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.UrlBinding;
 import net.sourceforge.stripes.util.UrlBuilder;
+import net.sourceforge.stripes.validation.Validate;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pfa.alliance.fim.model.project.Project;
+import pfa.alliance.fim.model.project.ProjectComponent;
+import pfa.alliance.fim.model.project.ProjectLabel;
 import pfa.alliance.fim.service.ProjectManagementService;
 import pfa.alliance.fim.web.common.FimPageURLs;
 import pfa.alliance.fim.web.security.FimSecurity;
+import pfa.alliance.fim.web.security.Permission;
 import pfa.alliance.fim.web.stripes.action.BasePageActionBean;
 import pfa.alliance.fim.web.stripes.action.StripesDropDownOption;
 
@@ -33,7 +38,7 @@ import pfa.alliance.fim.web.stripes.action.StripesDropDownOption;
  * @author Csaba
  */
 @UrlBinding( value = "/project/edit/{code}/{focus}" )
-@FimSecurity
+@FimSecurity( checkIfAny = Permission.PROJECT_EDIT_PROJECT )
 public class EditProjectActionBean
     extends BasePageActionBean
 
@@ -49,7 +54,19 @@ public class EditProjectActionBean
     /** Tells us what tab to focus on. */
     private String focus = "basic";
 
+    /** The name of a new Label. */
+    @Validate( required = true, trim = true, on = "{createLabel, createComponent}", maxlength = 40 )
+    private String labelName;
+
+    /** The chosen color for a new Label. */
+    @Validate( required = true, trim = true, on = "{createLabel, createComponent}", maxlength = 40 )
+    private String labelColor;
+
     private final ProjectManagementService projectManagementService;
+
+    private Project project;
+    private List<ProjectLabel> labelList;
+    private List<ProjectComponent> componentList;
 
     private static final List<StripesDropDownOption> COLORS;
 
@@ -93,7 +110,7 @@ public class EditProjectActionBean
     @DefaultHandler
     public Resolution goToPage()
     {
-        Project project = null;
+        project = null;
         LOG.debug( "Show project with code: {}", code );
         if ( StringUtils.isNotBlank( code ) )
         {
@@ -109,6 +126,58 @@ public class EditProjectActionBean
             // redirect to JSP
             return new ForwardResolution( FimPageURLs.EDIT_PROJECT_JSP.getURL() );
         }
+    }
+
+    public Resolution createLabel()
+    {
+        // process
+        projectManagementService.createLabel( code, labelName, "#FFFFFF", labelColor );
+        // redirect to this page again
+        return redirectBackHere();
+    }
+
+    public Resolution createComponent()
+    {
+        // process
+        projectManagementService.createComponent( code, labelName, labelColor, "#FFFFFF" );
+        // redirect to this page again
+        return redirectBackHere();
+    }
+
+    private Resolution redirectBackHere()
+    {
+        RedirectResolution resolution = new RedirectResolution( getClass() );
+        resolution.addParameter( "code", code );
+        resolution.addParameter( "focus", focus );
+        return resolution;
+    }
+
+    public int getLabelsNumber()
+    {
+        return getLabels().size();
+    }
+
+    public synchronized List<ProjectLabel> getLabels()
+    {
+        if ( labelList == null )
+        {
+            labelList = projectManagementService.findLabelsByProjectId( project.getId() );
+        }
+        return labelList;
+    }
+
+    public int getComponentsNumber()
+    {
+        return getComponents().size();
+    }
+
+    public synchronized List<ProjectComponent> getComponents()
+    {
+        if ( componentList == null )
+        {
+            componentList = projectManagementService.findComponentsByProjectCode( project.getId() );
+        }
+        return componentList;
     }
 
     public List<StripesDropDownOption> getColors()
@@ -199,6 +268,26 @@ public class EditProjectActionBean
     public void setFocus( String focus )
     {
         this.focus = focus;
+    }
+
+    public String getLabelName()
+    {
+        return labelName;
+    }
+
+    public void setLabelName( String labelName )
+    {
+        this.labelName = labelName;
+    }
+
+    public String getLabelColor()
+    {
+        return labelColor;
+    }
+
+    public void setLabelColor( String labelColor )
+    {
+        this.labelColor = labelColor;
     }
 
     @Override

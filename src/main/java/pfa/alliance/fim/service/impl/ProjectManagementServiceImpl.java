@@ -19,6 +19,8 @@ import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pfa.alliance.fim.dao.ProjectComponentRepository;
+import pfa.alliance.fim.dao.ProjectLabelRepository;
 import pfa.alliance.fim.dao.ProjectRepository;
 import pfa.alliance.fim.dao.UserRepository;
 import pfa.alliance.fim.dto.ProjectDTO;
@@ -31,6 +33,8 @@ import pfa.alliance.fim.dto.issue.IssueStateRelationDTO;
 import pfa.alliance.fim.model.issue.IssueFlow;
 import pfa.alliance.fim.model.issue.states.IssueStateRelation;
 import pfa.alliance.fim.model.project.Project;
+import pfa.alliance.fim.model.project.ProjectComponent;
+import pfa.alliance.fim.model.project.ProjectLabel;
 import pfa.alliance.fim.model.project.ProjectState;
 import pfa.alliance.fim.model.project.UserProjectRelation;
 import pfa.alliance.fim.model.project.UserRoleInsideProject;
@@ -61,6 +65,12 @@ class ProjectManagementServiceImpl
     /** The User repository to use in this class. */
     private final UserRepository userRepository;
 
+    /** The {@link ProjectComponentRepository} to be used by this service. */
+    private final ProjectComponentRepository componentRepository;
+
+    /** The {@link ProjectLabelRepository} to be used by this service. */
+    private final ProjectLabelRepository labelRepository;
+
     /** E-mail service, used for sending e-mails. */
     private final EmailService emailService;
 
@@ -74,17 +84,23 @@ class ProjectManagementServiceImpl
      * 
      * @param projectRepository the instance of Project repository to use in this class
      * @param userRepository the instance of User repository to use in this class
+     * @param componentRepository the instance of Component repository to be used here
+     * @param labelRepository the instance of Label repository to be used here
      * @param emailService the instance of service used for sending e-mails
      * @param emailGeneratorService the instance of service used for generating e-mails
      * @param fimUrlGeneratorService the instance of service used for generating full URLs inside FIM
      */
     @Inject
     ProjectManagementServiceImpl( ProjectRepository projectRepository, UserRepository userRepository,
+                                  ProjectComponentRepository componentRepository,
+                                  ProjectLabelRepository labelRepository,
                                   EmailService emailService, EmailGeneratorService emailGeneratorService,
                                   FimUrlGeneratorService fimUrlGeneratorService )
     {
         this.projectRepository = projectRepository;
         this.userRepository = userRepository;
+        this.componentRepository = componentRepository;
+        this.labelRepository = labelRepository;
 
         this.emailService = emailService;
         this.emailGeneratorService = emailGeneratorService;
@@ -356,5 +372,47 @@ class ProjectManagementServiceImpl
     {
         LOG.debug( "Getting the projects matching criteria: {}", criteria );
         return projectRepository.search( criteria );
+    }
+
+    @Transactional
+    @Override
+    public ProjectComponent createComponent( String projectCode, String component, String textColor, String bgColor )
+    {
+        Project project = projectRepository.findByCode( projectCode );
+
+        ProjectComponent projectComponent = new ProjectComponent();
+        projectComponent.setBackgroundColor( bgColor );
+        projectComponent.setTextColor( textColor );
+        projectComponent.setTagValue( component );
+        projectComponent.setProject( project );
+
+        return componentRepository.save( projectComponent );
+    }
+
+    @Transactional
+    @Override
+    public ProjectLabel createLabel( String projectCode, String label, String textColor, String bgColor )
+    {
+        Project project = projectRepository.findByCode( projectCode );
+
+        ProjectLabel projectLabel = new ProjectLabel();
+        projectLabel.setBackgroundColor( bgColor );
+        projectLabel.setTextColor( textColor );
+        projectLabel.setTagValue( label );
+        projectLabel.setProject( project );
+
+        return labelRepository.save( projectLabel );
+    }
+
+    @Override
+    public List<ProjectComponent> findComponentsByProjectCode( final int projectId )
+    {
+        return componentRepository.findAllByProject( projectId );
+    }
+
+    @Override
+    public List<ProjectLabel> findLabelsByProjectId( final int projectId )
+    {
+        return labelRepository.findAllByProject( projectId );
     }
 }

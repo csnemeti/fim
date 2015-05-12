@@ -11,6 +11,8 @@ import pfa.alliance.fim.dto.ProjectDTO;
 import pfa.alliance.fim.dto.ProjectSearchDTO;
 import pfa.alliance.fim.dto.ProjectSearchResultDTO;
 import pfa.alliance.fim.model.project.Project;
+import pfa.alliance.fim.model.project.ProjectComponent;
+import pfa.alliance.fim.model.project.ProjectLabel;
 import pfa.alliance.fim.model.project.ProjectState;
 import pfa.alliance.fim.model.project.UserRoleInsideProject;
 
@@ -69,4 +71,44 @@ public interface ProjectManagementService
      * @return the results
      */
     List<ProjectSearchResultDTO> search( ProjectSearchDTO criteria );
+
+    /**
+     * Creates a {@link ProjectComponent}.
+     * 
+     * @param projectCode the {@link Project} that will use this component.
+     * @param component the name of the component
+     * @param textColor the HEXA color of the text
+     * @param bgColor the HEXA color of the background
+     * @return the created component
+     */
+    ProjectComponent createComponent( final String projectCode, final String component, final String textColor,
+                                      final String bgColor );
+
+    /**
+     * Gets the list of {@link ProjectComponent}s belonging to project with given code.
+     * 
+     * @param projectId the ID of the {@link Project}
+     * @return the list of {@link ProjectComponent}s ordered by name
+     */
+    List<ProjectComponent> findComponentsByProjectCode( final int projectId );
+
+    /**
+     * Creates a {@link ProjectLabel}.
+     * 
+     * @param projectCode the {@link Project} that will use this label.
+     * @param label the name of the label
+     * @param textColor the HEXA color of the text
+     * @param bgColor the HEXA color of the background
+     * @return the created label
+     */
+    ProjectLabel createLabel( final String projectCode, final String label, final String textColor, final String bgColor );
+
+    /**
+     * Gets the list of {@link ProjectLabel}s belonging to project with given code.
+     * 
+     * @param projectId the ID of the {@link Project}
+     * @return the list of {@link ProjectLabel}s ordered by name
+     */
+    List<ProjectLabel> findLabelsByProjectId( final int projectId );
+
 }

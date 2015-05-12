@@ -9,8 +9,35 @@
     </stripes:layout-component>
 	<stripes:layout-component name="header">
 		<link rel="stylesheet" href="<c:url value="/js/jquery.simplecolorpicker/jquery.simplecolorpicker.css" />">
+		<link rel="stylesheet" href="<c:url value="/plugins/bootstrap/css/bootstrap-dialog.min.css" />"/>
+		
+   		<script type="text/javascript" src="<c:url value="/plugins/bootstrap/js/bootstrap-dialog.min.js" />"></script>
 		<script src="<c:url value="/js/jquery.simplecolorpicker/jquery.simplecolorpicker.js" />"></script>
+		
 		<script type="text/javascript">
+			function deleteComponent(labelId, labelType){
+				var message = "<fmt:message key="page.title.project.edit.lables.confirmDelete"/>";
+				message = message.replace("{}", document.getElementById("fim" + labelType + labelId).innerHTML);
+				BootstrapDialog.confirm({
+		            title: '<fmt:message key="action.delete.title"/>',
+		            message: message,
+		            type: BootstrapDialog.TYPE_INFO, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
+		            closable: true, // <-- Default value is false
+		            draggable: false, // <-- Default value is false
+		            btnCancelLabel: 'No', // <-- Default value is 'Cancel',
+		            btnOKLabel: 'Yes', // <-- Default value is 'OK',
+		            callback: function(result) {
+		                // result will be true if button was click, while it will be false if users close the dialog directly.
+		                if(result) {
+		                    alert('Delete ' + labelId);
+		                }
+		            }
+		        });
+				
+			}
+			function editComponent(labelId, labelType, labelColor){
+				alert(labelId);
+			}
 			$().ready(function() {
 				$(".component").css('margin-top',"10px");
 				$(".labelWrapperEditor").hover(
@@ -21,7 +48,7 @@
 					   $(this).removeClass("active");
 					}
 				);
-				$('select[name="colorpicker"]').simplecolorpicker({picker: true, theme: 'glyphicons'});
+				$('select[name="labelColor"]').simplecolorpicker({picker: true, theme: 'glyphicons'});
 				// set the placeholder
 				var placeholderSupported = ( 'placeholder' in document.createElement('input') );
 				if(placeholderSupported){
