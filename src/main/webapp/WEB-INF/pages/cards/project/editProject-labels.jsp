@@ -41,7 +41,7 @@
 					<div style="width: 10px; height: 10px; float: left;"></div>
 					<stripes:hidden name="code" value="${actionBean.code}" />
 					<stripes:hidden name="focus" value="${actionBean.focus}" />
-					<stripes:submit class="btn btn-default" name="createComponent" value="Submit"></stripes:submit>
+					<stripes:submit class="btn btn-default" name="createComponent"><fmt:message key="page.title.project.edit.lables.createComponent"/></stripes:submit>
 				</stripes:form>
 			</div>
 		</div>
@@ -84,18 +84,47 @@
 					<div style="width: 10px; height: 10px; float: left;"></div>
 					<stripes:hidden name="code" value="${actionBean.code}" />
 					<stripes:hidden name="focus" value="${actionBean.focus}" />
-					<stripes:submit class="btn btn-default" name="createLabel" value="Submit"></stripes:submit>
+					<stripes:submit class="btn btn-default" name="createLabel"><fmt:message key="page.title.project.edit.lables.createLabel"/></stripes:submit>
 				</stripes:form>
 			</div>
 		</div>
 	</div>
-	<div>
+	<div style="display: none">
 		<stripes:form beanclass="pfa.alliance.fim.web.stripes.action.project.EditProjectActionBean" id="deleteForm" class="form-vertical">  
-			<stripes:hidden name="labelType" id="labelType" value="" />
-			<stripes:hidden name="labelId" id="labelId" value="" />
+			<stripes:hidden name="labelType" id="deleteLabelType" value="" />
+			<stripes:hidden name="labelId" id="deleteLabelId" value="" />
 			<stripes:hidden name="code" value="${actionBean.code}" />
 			<stripes:hidden name="focus" value="${actionBean.focus}" />
-			<stripes:submit class="btn btn-default" name="deleteLabel" id="deleteLabel" value="Submit"></stripes:submit>
+			<stripes:submit class="btn btn-default" name="deleteLabel" id="deleteLabel"><fmt:message key="action.delete" /></stripes:submit>
 		</stripes:form>
 	</div>
+	<div id="editLabel" class="modal fade">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+			<stripes:form beanclass="pfa.alliance.fim.web.stripes.action.project.EditProjectActionBean" id="editForm" class="form-vertical">  
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        <h4 class="modal-title" id="editTitle">Modal title</h4>
+		      </div>
+		      <div class="modal-body">
+					<stripes:text class="form-control clearable" name="labelName" id="editLabelName" value="" maxlength="40" />
+					<div style="width: 10px; height: 5px;"></div>
+					<div style="width: 20px; height: 30px; padding-top: 5px;">
+					<stripes:select name="labelColor" id="editLabelColor">
+						 <stripes:options-collection collection="${actionBean.colors}" value="id" label="description" />
+					</stripes:select> 
+					</div>
+					<stripes:hidden name="labelType" id="editLabelType" value="" />
+					<stripes:hidden name="labelId" id="editLabelId" value="" />
+					<stripes:hidden name="code" value="${actionBean.code}" />
+					<stripes:hidden name="focus" value="${actionBean.focus}" />
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-default" data-dismiss="modal"><fmt:message key="action.close"/></button>
+				<stripes:submit class="btn btn-primary" name="editLabel"><fmt:message key="action.update"/></stripes:submit>
+		      </div>
+			</stripes:form>
+	    </div><!-- /.modal-content -->
+	  </div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
 </stripes:layout-definition>

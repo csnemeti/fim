@@ -30,16 +30,26 @@
 		            callback: function(result) {
 		                <%-- result will be true if button was click, while it will be false if users close the dialog directly. --%>
 		                if(result) {
-		                	$("#labelId").val(labelId);
-		                	$("#labelType").val(labelType.toLowerCase());
-		                	$( "#deleteLabel" ).trigger( "click" );
+		                	$("#deleteLabelId").val(labelId);
+		                	$("#deleteLabelType").val(labelType.toLowerCase());
+		                	$("#deleteLabel" ).trigger( "click" );
 		                }
 		            }
 		        });
 				
 			}
 			function editComponent(labelId, labelType, labelColor){
-				alert(labelId);
+				var message = "<fmt:message key="page.title.project.edit.lables.editTitle"/>";
+				var label = document.getElementById("fim" + labelType + labelId).innerHTML;
+				message = message.replace("{}", label);
+            	$("#editLabelId").val(labelId);
+            	$("#editLabelType").val(labelType.toLowerCase());
+				$('#editLabelName').val(label);
+				$('#editTitle').html(message);
+				//setTimeout(function() {
+					$('#editLabelColor').simplecolorpicker('selectColor', labelColor);
+				//}, 1000);	
+				$('#editLabel').modal('show');
 			}
 			$().ready(function() {
 				$(".component").css('margin-top',"10px");

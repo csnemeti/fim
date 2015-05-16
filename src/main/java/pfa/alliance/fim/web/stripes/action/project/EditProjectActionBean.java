@@ -4,7 +4,6 @@
 package pfa.alliance.fim.web.stripes.action.project;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -26,6 +25,8 @@ import pfa.alliance.fim.model.project.Project;
 import pfa.alliance.fim.model.project.ProjectComponent;
 import pfa.alliance.fim.model.project.ProjectLabel;
 import pfa.alliance.fim.service.ProjectManagementService;
+import pfa.alliance.fim.util.ColorUtils;
+import pfa.alliance.fim.util.ColorUtils.ColorWithName;
 import pfa.alliance.fim.web.common.FimPageURLs;
 import pfa.alliance.fim.web.security.FimSecurity;
 import pfa.alliance.fim.web.security.Permission;
@@ -55,17 +56,17 @@ public class EditProjectActionBean
     private String focus = "basic";
 
     /** The name of a new Label. */
-    @Validate( required = true, trim = true, on = "{createLabel, createComponent, deleteLabel}", maxlength = 40 )
+    @Validate( required = true, trim = true, on = "{createLabel, createComponent, editLabel, deleteLabel}", maxlength = 40 )
     private String labelName;
 
     /** The chosen color for a new Label. */
-    @Validate( required = true, trim = true, on = "{createLabel, createComponent, deleteLabel}", maxlength = 40 )
+    @Validate( required = true, trim = true, on = "{createLabel, createComponent, editLabel, deleteLabel}", maxlength = 40 )
     private String labelColor;
 
-    @Validate( required = true, trim = true, on = "{deleteLabel}", maxlength = 20 )
+    @Validate( required = true, trim = true, on = "{editLabel, deleteLabel}", maxlength = 20 )
     private String labelType;
 
-    @Validate( required = true, on = "{deleteLabel}" )
+    @Validate( required = true, on = "{editLabel, deleteLabel}" )
     private Long labelId;
 
     private final ProjectManagementService projectManagementService;
@@ -74,32 +75,20 @@ public class EditProjectActionBean
     private List<ProjectLabel> labelList;
     private List<ProjectComponent> componentList;
 
-    private static final List<StripesDropDownOption> COLORS;
+    /** The list of all supported colors. */
+    private List<StripesDropDownOption> colors = new ArrayList<>();
+
 
     static
     {
-        String[] colorCodes =
-            new String[] { "#000000", "#1f497d", "#4f81bd", "#c0504d", "#9bbb59", "#8064a2", "#4bacc6", "#f79646",
-                "#ffff00", "#7f7f7f", "#ddd9c3", "#595959", "#c4bd97", "#8db3e2", "#b8cce4", "#e5b9b7", "#ffe694",
-                "#bfbfbf", "#3f3f3f", "#938953", "#548dd4", "#95b3d7", "#d99694", "#c3d69b", "#b2a2c7", "#a5d0e0",
-                "#fac08f", "#f2c314", "#a5a5a5", "#262626", "#494429", "#17365d", "#366092", "#953734", "#76923c",
-                "#5f497a", "#92cddc", "#e36c09", "#c09100", "#7f7f7f", "#0c0c0c", "#1d1b10", "#0f243e", "#244061",
-                "#632423", "#4f6128", "#3f3151", "#31859b", "#974806", "#7f6000", "#ff0000" };
-        List<StripesDropDownOption> colors = new ArrayList<StripesDropDownOption>();
-        for ( String colorCode : colorCodes )
-        {
-            colors.add( new StripesDropDownOption( colorCode, colorCode ) );
-        }
-        COLORS = Collections.unmodifiableList( colors );
-        colorCodes =
-            new String[] { "#ffffff", "#000000", "#eeece1", "#1f497d", "#4f81bd", "#c0504d", "#9bbb59", "#8064a2",
-                "#4bacc6", "#f79646", "#ffff00", "#f2f2f2", "#7f7f7f", "#ddd9c3", "#c6d9f0", "#dbe5f1", "#f2dcdb",
-                "#ebf1dd", "#e5e0ec", "#dbeef3", "#fdeada", "#fff2ca", "#d8d8d8", "#595959", "#c4bd97", "#8db3e2",
-                "#b8cce4", "#e5b9b7", "#d7e3bc", "#ccc1d9", "#b7dde8", "#fbd5b5", "#ffe694", "#bfbfbf", "#3f3f3f",
-                "#938953", "#548dd4", "#95b3d7", "#d99694", "#c3d69b", "#b2a2c7", "#a5d0e0", "#fac08f", "#f2c314",
-                "#a5a5a5", "#262626", "#494429", "#17365d", "#366092", "#953734", "#76923c", "#5f497a", "#92cddc",
-                "#e36c09", "#c09100", "#7f7f7f", "#0c0c0c", "#1d1b10", "#0f243e", "#244061", "#632423", "#4f6128",
-                "#3f3151", "#31859b", "#974806", "#7f6000", "#ff0000" };
+        // new String[] { "#ffffff", "#000000", "#eeece1", "#1f497d", "#4f81bd", "#c0504d", "#9bbb59", "#8064a2",
+        // "#4bacc6", "#f79646", "#ffff00", "#f2f2f2", "#7f7f7f", "#ddd9c3", "#c6d9f0", "#dbe5f1", "#f2dcdb",
+        // "#ebf1dd", "#e5e0ec", "#dbeef3", "#fdeada", "#fff2ca", "#d8d8d8", "#595959", "#c4bd97", "#8db3e2",
+        // "#b8cce4", "#e5b9b7", "#d7e3bc", "#ccc1d9", "#b7dde8", "#fbd5b5", "#ffe694", "#bfbfbf", "#3f3f3f",
+        // "#938953", "#548dd4", "#95b3d7", "#d99694", "#c3d69b", "#b2a2c7", "#a5d0e0", "#fac08f", "#f2c314",
+        // "#a5a5a5", "#262626", "#494429", "#17365d", "#366092", "#953734", "#76923c", "#5f497a", "#92cddc",
+        // "#e36c09", "#c09100", "#7f7f7f", "#0c0c0c", "#1d1b10", "#0f243e", "#244061", "#632423", "#4f6128",
+        // "#3f3151", "#31859b", "#974806", "#7f6000", "#ff0000" };
     }
 
     /**
@@ -134,6 +123,23 @@ public class EditProjectActionBean
         }
     }
 
+    public Resolution editLabel()
+    {
+        switch ( labelType )
+        {
+            case "label":
+                projectManagementService.updateLabel( labelId, code, labelName, labelColor );
+                break;
+            case "component":
+                projectManagementService.updateComponent( labelId, code, labelName, labelColor );
+                break;
+            default:
+                LOG.warn( "Unknown label type: {}, nothing will be updated", labelType );
+                break;
+        }
+        // redirect to this page again
+        return redirectBackHere();
+    }
     public Resolution deleteLabel()
     {
         switch ( labelType )
@@ -155,7 +161,7 @@ public class EditProjectActionBean
     public Resolution createLabel()
     {
         // process
-        projectManagementService.createLabel( code, labelName, "#FFFFFF", labelColor );
+        projectManagementService.createLabel( code, labelName, labelColor );
         // redirect to this page again
         return redirectBackHere();
     }
@@ -163,7 +169,7 @@ public class EditProjectActionBean
     public Resolution createComponent()
     {
         // process
-        projectManagementService.createComponent( code, labelName, labelColor, "#FFFFFF" );
+        projectManagementService.createComponent( code, labelName, labelColor );
         // redirect to this page again
         return redirectBackHere();
     }
@@ -206,7 +212,17 @@ public class EditProjectActionBean
 
     public List<StripesDropDownOption> getColors()
     {
-        return COLORS;
+        synchronized ( colors )
+        {
+            if ( colors.isEmpty() )
+            {
+                for ( ColorWithName color : ColorUtils.getColors() )
+                {
+                    colors.add( new StripesDropDownOption( color.getHexCode(), getMessage( "color." + color.getName() ) ) );
+                }
+            }
+        }
+        return colors;
     }
 
     public String getBasicLink()

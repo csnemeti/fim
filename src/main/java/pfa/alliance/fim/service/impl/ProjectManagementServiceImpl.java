@@ -36,6 +36,7 @@ import pfa.alliance.fim.model.project.Project;
 import pfa.alliance.fim.model.project.ProjectComponent;
 import pfa.alliance.fim.model.project.ProjectLabel;
 import pfa.alliance.fim.model.project.ProjectState;
+import pfa.alliance.fim.model.project.ProjectTag;
 import pfa.alliance.fim.model.project.UserProjectRelation;
 import pfa.alliance.fim.model.project.UserRoleInsideProject;
 import pfa.alliance.fim.model.user.User;
@@ -44,6 +45,7 @@ import pfa.alliance.fim.service.EmailService;
 import pfa.alliance.fim.service.EmailType;
 import pfa.alliance.fim.service.FimUrlGeneratorService;
 import pfa.alliance.fim.service.ProjectManagementService;
+import pfa.alliance.fim.util.ColorUtils;
 
 import com.google.inject.persist.Transactional;
 
@@ -93,8 +95,8 @@ class ProjectManagementServiceImpl
     @Inject
     ProjectManagementServiceImpl( ProjectRepository projectRepository, UserRepository userRepository,
                                   ProjectComponentRepository componentRepository,
-                                  ProjectLabelRepository labelRepository,
-                                  EmailService emailService, EmailGeneratorService emailGeneratorService,
+                                  ProjectLabelRepository labelRepository, EmailService emailService,
+                                  EmailGeneratorService emailGeneratorService,
                                   FimUrlGeneratorService fimUrlGeneratorService )
     {
         this.projectRepository = projectRepository;
@@ -376,15 +378,15 @@ class ProjectManagementServiceImpl
 
     @Transactional
     @Override
-    public ProjectComponent createComponent( String projectCode, String component, String textColor, String bgColor )
+    public ProjectComponent createComponent( String projectCode, String component, String textColor )
     {
-        LOG.debug( "Creating component: name = {}, textColor = {}, bgColor = {}, project code = {}", component,
-                   textColor, bgColor, projectCode );
+        LOG.debug( "Creating component: name = {}, textColor = {}, project code = {}", component, textColor,
+                   projectCode );
 
         Project project = projectRepository.findByCode( projectCode );
 
         ProjectComponent projectComponent = new ProjectComponent();
-        projectComponent.setBackgroundColor( bgColor );
+        projectComponent.setBackgroundColor( getOppositeColor( textColor ) );
         projectComponent.setTextColor( textColor );
         projectComponent.setTagValue( component );
         projectComponent.setProject( project );
@@ -394,15 +396,15 @@ class ProjectManagementServiceImpl
 
     @Transactional
     @Override
-    public ProjectLabel createLabel( String projectCode, String label, String textColor, String bgColor )
+    public ProjectLabel createLabel( String projectCode, String label, String bgColor )
     {
-        LOG.debug( "Creating label: name = {}, textColor = {}, bgColor = {}, project code = {}", label, textColor,
+        LOG.debug( "Creating label: name = {}, bgColor = {}, project code = {}", label,
                    bgColor, projectCode );
         Project project = projectRepository.findByCode( projectCode );
 
         ProjectLabel projectLabel = new ProjectLabel();
         projectLabel.setBackgroundColor( bgColor );
-        projectLabel.setTextColor( textColor );
+        projectLabel.setTextColor( getOppositeColor( bgColor ) );
         projectLabel.setTagValue( label );
         projectLabel.setProject( project );
 
@@ -419,6 +421,58 @@ class ProjectManagementServiceImpl
     public List<ProjectLabel> findLabelsByProjectId( final int projectId )
     {
         return labelRepository.findAllByProject( projectId );
+    }
+
+    @Override
+    @Transactional
+    public boolean updateComponent( long id, String projectCode, String labelName, String labelColor )
+    {
+        LOG.debug( "Update component (id = {}, component = {}, color = {} ) IF belongs to Project with code: {}", id,
+                   labelName, labelColor, projectCode );
+        Project project = projectRepository.findByCode( projectCode );
+        ProjectComponent component = componentRepository.findOne( id );
+        boolean deleted = false;
+        if ( isValidForUpdate( component, project.getId() ) )
+        {
+            component.setTagValue( labelName );
+            component.setTextColor( labelColor );
+            component.setBackgroundColor( getOppositeColor( labelColor ) );
+            componentRepository.save( component );
+            deleted = true;
+        }
+        return deleted;
+    }
+
+    @Override
+    @Transactional
+    public boolean updateLabel( long id, String projectCode, String labelName, String labelColor )
+    {
+        LOG.debug( "Update label (id = {}, label = {}, bg.color = {} ) IF belongs to Project with code: {}", id,
+                   labelName, labelColor, projectCode );
+        Project project = projectRepository.findByCode( projectCode );
+        ProjectLabel label = labelRepository.findOne( id );
+        boolean deleted = false;
+        if ( isValidForUpdate( label, project.getId() ) )
+        {
+            label.setTagValue( labelName );
+            label.setBackgroundColor( labelColor );
+            label.setTextColor( getOppositeColor( labelColor ) );
+            labelRepository.save( label );
+            deleted = true;
+        }
+        return deleted;
+    }
+
+    /**
+     * This method verifies if update is safe.
+     * 
+     * @param tag the {@link ProjectTag} (component or label) instance to check
+     * @param projectId the ID of the project
+     * @return true if update is safe
+     */
+    private static boolean isValidForUpdate( ProjectTag tag, final Integer projectId )
+    {
+        return tag != null && tag.getProject().getId().equals( projectId );
     }
 
     @Override
@@ -447,5 +501,10 @@ class ProjectManagementServiceImpl
             deleted = labelRepository.deleteLabelBy( id, project.getId() );
         }
         return deleted;
+    }
+
+    private String getOppositeColor( String color )
+    {
+        return ColorUtils.isDarkColor( color ) ? "#FFFFFF" : "#000000";
     }
 }

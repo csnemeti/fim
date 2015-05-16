@@ -78,11 +78,9 @@ public interface ProjectManagementService
      * @param projectCode the {@link Project} that will use this component.
      * @param component the name of the component
      * @param textColor the HEXA color of the text
-     * @param bgColor the HEXA color of the background
      * @return the created component
      */
-    ProjectComponent createComponent( final String projectCode, final String component, final String textColor,
-                                      final String bgColor );
+    ProjectComponent createComponent( final String projectCode, final String component, final String textColor );
 
     /**
      * Gets the list of {@link ProjectComponent}s belonging to project with given code.
@@ -97,11 +95,10 @@ public interface ProjectManagementService
      * 
      * @param projectCode the {@link Project} that will use this label.
      * @param label the name of the label
-     * @param textColor the HEXA color of the text
      * @param bgColor the HEXA color of the background
      * @return the created label
      */
-    ProjectLabel createLabel( final String projectCode, final String label, final String textColor, final String bgColor );
+    ProjectLabel createLabel( final String projectCode, final String label, final String bgColor );
 
     /**
      * Gets the list of {@link ProjectLabel}s belonging to project with given code.
@@ -111,6 +108,27 @@ public interface ProjectManagementService
      */
     List<ProjectLabel> findLabelsByProjectId( final int projectId );
 
+    /**
+     * Updates a {@link ProjectComponent}.
+     * 
+     * @param id the component ID
+     * @param projectCode the code of the project
+     * @param labelName the name of the component
+     * @param labelColor the color to be used
+     * @return true if update was successful
+     */
+    boolean updateComponent( long id, String projectCode, String labelName, String labelColor );
+
+    /**
+     * Updates a {@link ProjectLabel}.
+     * 
+     * @param id the label ID
+     * @param projectCode the code of the project
+     * @param labelName the name of the label
+     * @param labelColor the color to be used
+     * @return true if update was successful
+     */
+    boolean updateLabel( long id, String projectCode, String labelName, String labelColor );
     /**
      * Deletes the {@link ProjectComponent} with given ID if it belongs to given project.
      * 
