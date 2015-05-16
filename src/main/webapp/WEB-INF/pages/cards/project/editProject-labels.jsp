@@ -89,4 +89,13 @@
 			</div>
 		</div>
 	</div>
+	<div>
+		<stripes:form beanclass="pfa.alliance.fim.web.stripes.action.project.EditProjectActionBean" id="deleteForm" class="form-vertical">  
+			<stripes:hidden name="labelType" id="labelType" value="" />
+			<stripes:hidden name="labelId" id="labelId" value="" />
+			<stripes:hidden name="code" value="${actionBean.code}" />
+			<stripes:hidden name="focus" value="${actionBean.focus}" />
+			<stripes:submit class="btn btn-default" name="deleteLabel" id="deleteLabel" value="Submit"></stripes:submit>
+		</stripes:form>
+	</div>
 </stripes:layout-definition>

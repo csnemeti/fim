@@ -111,4 +111,21 @@ public interface ProjectManagementService
      */
     List<ProjectLabel> findLabelsByProjectId( final int projectId );
 
+    /**
+     * Deletes the {@link ProjectComponent} with given ID if it belongs to given project.
+     * 
+     * @param id the ID of the component
+     * @param projectCode the code of the project
+     * @return true if component was deleted
+     */
+    boolean deleteComponent( final long id, final String projectCode );
+
+    /**
+     * Deletes the {@link ProjectLabel} with given ID if it belongs to given project.
+     * 
+     * @param id the ID of the label
+     * @param projectCode the code of the project
+     * @return true if label was deleted
+     */
+    boolean deleteLabel( final long id, final String projectCode );
 }

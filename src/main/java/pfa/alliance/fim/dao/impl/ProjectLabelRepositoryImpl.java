@@ -28,4 +28,10 @@ class ProjectLabelRepositoryImpl
     {
         return ProjectLabel.class;
     }
+
+    @Override
+    public boolean deleteLabelBy( final long id, final int projectId )
+    {
+        return deleteBy( id, projectId );
+    }
 }

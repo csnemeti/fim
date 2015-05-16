@@ -55,12 +55,18 @@ public class EditProjectActionBean
     private String focus = "basic";
 
     /** The name of a new Label. */
-    @Validate( required = true, trim = true, on = "{createLabel, createComponent}", maxlength = 40 )
+    @Validate( required = true, trim = true, on = "{createLabel, createComponent, deleteLabel}", maxlength = 40 )
     private String labelName;
 
     /** The chosen color for a new Label. */
-    @Validate( required = true, trim = true, on = "{createLabel, createComponent}", maxlength = 40 )
+    @Validate( required = true, trim = true, on = "{createLabel, createComponent, deleteLabel}", maxlength = 40 )
     private String labelColor;
+
+    @Validate( required = true, trim = true, on = "{deleteLabel}", maxlength = 20 )
+    private String labelType;
+
+    @Validate( required = true, on = "{deleteLabel}" )
+    private Long labelId;
 
     private final ProjectManagementService projectManagementService;
 
@@ -126,6 +132,24 @@ public class EditProjectActionBean
             // redirect to JSP
             return new ForwardResolution( FimPageURLs.EDIT_PROJECT_JSP.getURL() );
         }
+    }
+
+    public Resolution deleteLabel()
+    {
+        switch ( labelType )
+        {
+            case "label":
+                projectManagementService.deleteLabel( labelId, code );
+                break;
+            case "component":
+                projectManagementService.deleteComponent( labelId, code );
+                break;
+            default:
+                LOG.warn( "Unknown label type: {}, nothing will be deleted", labelType );
+                break;
+        }
+        // redirect to this page again
+        return redirectBackHere();
     }
 
     public Resolution createLabel()
@@ -288,6 +312,26 @@ public class EditProjectActionBean
     public void setLabelColor( String labelColor )
     {
         this.labelColor = labelColor;
+    }
+
+    public String getLabelType()
+    {
+        return labelType;
+    }
+
+    public void setLabelType( String labelType )
+    {
+        this.labelType = labelType;
+    }
+
+    public Long getLabelId()
+    {
+        return labelId;
+    }
+
+    public void setLabelId( Long labelId )
+    {
+        this.labelId = labelId;
     }
 
     @Override

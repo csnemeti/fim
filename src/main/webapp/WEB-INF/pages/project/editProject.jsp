@@ -15,21 +15,24 @@
 		<script src="<c:url value="/js/jquery.simplecolorpicker/jquery.simplecolorpicker.js" />"></script>
 		
 		<script type="text/javascript">
+			<%-- http://nakupanda.github.io/bootstrap3-dialog/ --%>
 			function deleteComponent(labelId, labelType){
 				var message = "<fmt:message key="page.title.project.edit.lables.confirmDelete"/>";
 				message = message.replace("{}", document.getElementById("fim" + labelType + labelId).innerHTML);
 				BootstrapDialog.confirm({
 		            title: '<fmt:message key="action.delete.title"/>',
 		            message: message,
-		            type: BootstrapDialog.TYPE_INFO, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
-		            closable: true, // <-- Default value is false
-		            draggable: false, // <-- Default value is false
-		            btnCancelLabel: 'No', // <-- Default value is 'Cancel',
-		            btnOKLabel: 'Yes', // <-- Default value is 'OK',
+		            type: BootstrapDialog.TYPE_INFO, <%-- Default value is BootstrapDialog.TYPE_PRIMARY --%>
+		            closable: true, <%-- Default value is false --%>
+		            draggable: false, <%-- Default value is false --%>
+		            btnCancelLabel: 'No', <%-- Default value is 'Cancel', --%>
+		            btnOKLabel: 'Yes', <%-- Default value is 'OK', --%>
 		            callback: function(result) {
-		                // result will be true if button was click, while it will be false if users close the dialog directly.
+		                <%-- result will be true if button was click, while it will be false if users close the dialog directly. --%>
 		                if(result) {
-		                    alert('Delete ' + labelId);
+		                	$("#labelId").val(labelId);
+		                	$("#labelType").val(labelType.toLowerCase());
+		                	$( "#deleteLabel" ).trigger( "click" );
 		                }
 		            }
 		        });

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -82,5 +83,23 @@ abstract class ProjectTagRepositoryImpl<T extends ProjectTag>
     protected Class<Long> getIdClass()
     {
         return Long.class;
+    }
+
+    /**
+     * Deletes the entity that has given ID and belongs to project with given ID.
+     * 
+     * @param id the ID of entity to delete
+     * @param projectId the ID of project
+     * @return true if entity was deleted
+     */
+    public boolean deleteBy( long id, int projectId )
+    {
+        EntityManager em = getEntityManager();
+        Query query =
+            em.createQuery( "DELETE From " + getEntityClass().getName()
+                + " p WHERE p.id = :id AND p.project.id = :projectId" );
+        query.setParameter( "id", id );
+        query.setParameter( "projectId", projectId );
+        return query.executeUpdate() > 0;
     }
 }

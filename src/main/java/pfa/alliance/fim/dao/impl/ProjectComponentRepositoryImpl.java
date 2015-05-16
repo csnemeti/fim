@@ -29,4 +29,10 @@ class ProjectComponentRepositoryImpl
         return ProjectComponent.class;
     }
 
+    @Override
+    public boolean deleteComponentBy( long id, int projectId )
+    {
+        return deleteBy( id, projectId );
+    }
+
 }

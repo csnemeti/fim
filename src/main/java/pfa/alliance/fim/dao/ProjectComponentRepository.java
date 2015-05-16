@@ -32,4 +32,13 @@ public interface ProjectComponentRepository
      * @return the list of {@link ProjectComponent}s
      */
     List<ProjectComponent> findAllByProject( int projectId, Sort sort );
+
+    /**
+     * Deletes a {@link ProjectComponent} if belongs to a given Project.
+     * 
+     * @param id the id of the component
+     * @param projectId the id of the project
+     * @return true if component was deleted
+     */
+    boolean deleteComponentBy( final long id, final int projectId );
 }

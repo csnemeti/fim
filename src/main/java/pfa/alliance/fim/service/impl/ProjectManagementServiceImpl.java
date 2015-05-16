@@ -378,6 +378,9 @@ class ProjectManagementServiceImpl
     @Override
     public ProjectComponent createComponent( String projectCode, String component, String textColor, String bgColor )
     {
+        LOG.debug( "Creating component: name = {}, textColor = {}, bgColor = {}, project code = {}", component,
+                   textColor, bgColor, projectCode );
+
         Project project = projectRepository.findByCode( projectCode );
 
         ProjectComponent projectComponent = new ProjectComponent();
@@ -393,6 +396,8 @@ class ProjectManagementServiceImpl
     @Override
     public ProjectLabel createLabel( String projectCode, String label, String textColor, String bgColor )
     {
+        LOG.debug( "Creating label: name = {}, textColor = {}, bgColor = {}, project code = {}", label, textColor,
+                   bgColor, projectCode );
         Project project = projectRepository.findByCode( projectCode );
 
         ProjectLabel projectLabel = new ProjectLabel();
@@ -414,5 +419,33 @@ class ProjectManagementServiceImpl
     public List<ProjectLabel> findLabelsByProjectId( final int projectId )
     {
         return labelRepository.findAllByProject( projectId );
+    }
+
+    @Override
+    @Transactional
+    public boolean deleteComponent( long id, String projectCode )
+    {
+        LOG.debug( "Delete component (id = {} ) IF belongs to Project with code: {}", id, projectCode );
+        Project project = projectRepository.findByCode( projectCode );
+        boolean deleted = false;
+        if ( project != null )
+        {
+            deleted = componentRepository.deleteComponentBy( id, project.getId() );
+        }
+        return deleted;
+    }
+
+    @Override
+    @Transactional
+    public boolean deleteLabel( long id, String projectCode )
+    {
+        LOG.debug( "Delete label (id = {} ) IF belongs to Project with code: {}", id, projectCode );
+        Project project = projectRepository.findByCode( projectCode );
+        boolean deleted = false;
+        if ( project != null )
+        {
+            deleted = labelRepository.deleteLabelBy( id, project.getId() );
+        }
+        return deleted;
     }
 }

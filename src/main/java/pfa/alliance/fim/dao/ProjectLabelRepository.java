@@ -32,4 +32,13 @@ public interface ProjectLabelRepository
      * @return the list of {@link ProjectLabel}s
      */
     List<ProjectLabel> findAllByProject( int projectId, Sort sort );
+
+    /**
+     * Deletes a {@link ProjectLabel} if belongs to a given Project.
+     * 
+     * @param id the id of the label
+     * @param projectId the id of the project
+     * @return true if label was deleted
+     */
+    boolean deleteLabelBy( final long id, final int projectId );
 }
