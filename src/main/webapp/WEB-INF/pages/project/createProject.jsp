@@ -82,36 +82,57 @@
     <stripes:layout-component name="content">             	
 	<stripes:form beanclass="pfa.alliance.fim.web.stripes.action.project.CreateProjectActionBean" focus="projectName" id="prjForm" class="form-horizontal">  
 		<div class="">
-			<div class="form-group">
-				<label for="projectName" class="col-sm-2 control-label"><fmt:message key="project.create.projectName" /></label>
-				<stripes:text class="form-control clearable" name="projectName" id="projectName"></stripes:text>
+			<h1><fmt:message key="page.title.project.edit.basic.title" /></h1>
+			<div class="row form-group">
+				<div class="col-sm-1">
+					<label for="projectName" class="control-label"><fmt:message key="project.create.projectName" /></label>
+				</div>
+				<div class="col-sm-9">
+					<stripes:text class="form-control clearable" name="projectName" id="projectName"></stripes:text>
+				</div>
 			</div>
-			<div class="form-group">
-				<label for="projectCode" class="col-sm-6 control-label"><fmt:message key="project.create.projectCode" /></label>
-				<stripes:text class="form-control clearable" name="projectCode" id="projectCode" onkeypress="return isValidForCode(event);"></stripes:text>
+			<div class="row form-group">
+				<div class="col-sm-4">
+					<label for="projectCode" class="control-label"><fmt:message key="project.create.projectCode" /></label>
+				</div>
+				<div class="col-sm-6">
+					<stripes:text class="form-control clearable" name="projectCode" id="projectCode" onkeypress="return isValidForCode(event);"></stripes:text>
+				</div>
 			</div>
-			<div class="form-group">
-				<label for="projectName" class="col-sm-2 control-label"><fmt:message key="project.create.projectDescription" /></label>
-				<stripes:textarea class="form-control clearable" rows="5" cols="40" name="projectDescription" id="projectDescription"></stripes:textarea>
+			<div class="row form-group">
+				<div class="col-sm-1">
+					<label for="projectName" class="control-label"><fmt:message key="project.create.projectDescription" /></label>
+				</div>
+				<div class="col-sm-9">
+					<stripes:textarea class="form-control clearable" rows="5" cols="40" name="projectDescription" id="projectDescription"></stripes:textarea>
+				</div>
 			</div>
-			<div class="form-group">
-				<label for="ownerName" class="col-sm-2 control-label"><fmt:message key="project.create.ownerName" /></label>
-				<stripes:text class="form-control" name="ownerName" id="ownerName" readonly="readonly"></stripes:text>
+			<div class="row form-group">
+				<div class="col-sm-1">
+					<label for="ownerName" class="control-label"><fmt:message key="project.create.ownerName" /></label>
+				</div>
+				<div class="col-sm-9">
+					<stripes:text class="form-control" name="ownerName" id="ownerName" readonly="readonly"></stripes:text>
+				</div>
 			</div>
-			<div class="form-group">
-				<stripes:checkbox class="" name="hidden" id="hidden"></stripes:checkbox>  <label for="hidden"><fmt:message key="project.create.projectHidden" /></label>
+			<div class="row form-group">
+				<div class="col-sm-12">
+					<stripes:checkbox class="" name="hidden" id="hidden"></stripes:checkbox>  <label for="hidden"><fmt:message key="project.create.projectHidden" /></label>
+				</div>
 			</div>
-			<div class="form-group">
-				<stripes:checkbox class="" name="activate" id="activate"></stripes:checkbox>  <label for="activate"><fmt:message key="project.create.projectActive" /></label>
+			<div class="row form-group">
+				<div class="col-sm-12">
+					<stripes:checkbox class="" name="activate" id="activate"></stripes:checkbox>  <label for="activate"><fmt:message key="project.create.projectActive" /></label>
+				</div>					
 			</div>
 
-			<div class="form-group error">
+			<div class="row form-group error">
  				<stripes:errors></stripes:errors>
 			</div>
-     		<div class="form-group">
+			<div class="row form-group">
      			${actionBean.dbOperationResult}
      		</div>
-			<stripes:submit class="btn btn-default" name="create" value="Submit"></stripes:submit>
+			<stripes:submit class="btn btn-default" name="create"><fmt:message key="action.submit" /></stripes:submit>
 			<stripes:button class="btn btn-default" name="reset" onclick="clearFormContent(this.form)"></stripes:button>  
 		</div>
 	</stripes:form>
