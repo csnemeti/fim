@@ -3,8 +3,8 @@
 
 <head>
 <?php include './includes/meta.php';?>
-    <meta name="description" content="Website where you can find information and builds regarding FIM (Free Issue Manager) by PFA Alliance">
-    <meta name="keywords" content="FIM, free issue manager, issue manager, bugtracker, issue trackier, PFA Alliance">
+    <meta name="description" content="Website where you can find information and builds regarding FIM (Free Issue Manager) Software by PFA Alliance">
+    <meta name="keywords" content="FIM, FIM Software, free issue manager, issue manager, bugtracker, issue trackier, PFA Alliance, PFA Alliance Software">
 
     <title>FIM by PFA Alliance</title>
 

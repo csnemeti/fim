@@ -4,12 +4,12 @@
 <head>
 <?php include './includes/meta.php';?>
 
-    <meta name="description" content="Website where you can find information and builds regarding PFA Alliance free products: FIM, Cards, MoGeo, Pocket Watch">
-    <meta name="keywords" content="PFA Alliance, FIM, Playing cards, Cards, Pocket watch, watch, JavaScript watch">
+    <meta name="description" content="Website where you can find information and builds regarding PFA Alliance free software products: FIM, Cards, MoGeo, Pocket Watch">
+    <meta name="keywords" content="PFA Alliance, PFA Alliance Software, FIM, FIM Software, Playing cards, Cards, Pocket watch, watch, JavaScript watch, Software">
     <title>PFA Alliance</title>
 
 <?php include './includes/css-js.php';?>
-    <script src="js/pfa-pocket-watch-0.1.js"></script>
+    <script src="js/pfa-pocket-watch-0.2.js"></script>
     <script src="js/jssor.slider.mini.js"></script>
     
     <script type="text/javascript">
@@ -93,7 +93,21 @@
 				
 				<div class="well">
                     <h4>Daily photos</h4>
-						 <img class="img-responsive" src="images/daily/1-wtf.png" alt="" />
+<?php
+	$all_files_from_daily = scandir('./images/daily/');
+	$daily_images = array();
+	foreach ($all_files_from_daily as $file) {
+        if(($file != ".") and ($file != "..")) {
+                $daily_images[] = $file; // put in array.
+        }   
+ 	}	
+ 	$day_of_year = date('z') + 1;
+ 	$images_number = count($daily_images);
+ 	$index = $day_of_year % $images_number;
+ 	
+	echo "<img class='img-responsive' src='images/daily/$daily_images[$index]' alt='' />";
+?>                    
+						 
                 </div>
 
                 <div class="well">

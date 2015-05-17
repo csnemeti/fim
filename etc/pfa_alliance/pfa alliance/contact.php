@@ -4,8 +4,8 @@
 <head>
 <?php include './includes/meta.php';?>
 
-    <meta name="description" content="Website where you can find information and builds regarding PFA Alliance free products">
-    <meta name="keywords" content="Contact, Feedback, Suggestion, PFA Alliance, FIM, Playing cards, Cards, Pocket watch">
+    <meta name="description" content="Website where you can find information and builds regarding PFA Alliance free software products">
+    <meta name="keywords" content="Contact, Feedback, Suggestion, PFA Alliance, PFA Alliance Software, FIM, FIM Software Contact, Playing cards, Cards, Pocket watch">
     <title>PFA Alliance: Contact us</title>
 
 <?php include './includes/css-js.php';?>

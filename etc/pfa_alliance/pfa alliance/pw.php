@@ -5,7 +5,7 @@
 <?php include './includes/meta.php';?>
 
     <meta name="description" content="Website where you can find information and builds regarding Pocket Watch by PFA Alliance">
-    <meta name="keywords" content="Pocket Watch, watch, JavaScript watch, free watch, PFA Alliance">
+    <meta name="keywords" content="Pocket Watch, watch, JavaScript watch, free watch, PFA Alliance, PFA Alliance Software">
     <title>Pocket Watch by PFA Alliance</title>
 
 <?php include './includes/css-js.php';?>
@@ -234,13 +234,68 @@
 				The ZIP file contains the JavaScript library (<strong>lib</strong> directory) and all it's dependencies plus some examples (<strong>examples</strong> directory) regarding how to use it.
 				</p>
 				<h3>2. Copy content into your project</h3>
-				<p>You should copy all the files from <i>lib</i> directory into your project. This contains all the necessary elements to make the watch running in your web page. 
+				<p>You should copy all the files from <i>lib</i> directory into your project (<i>examples</i> directory is not required, 
+				it's there only to show you some running examples). 
+				This contains all the necessary elements to make the watch running in your web page. 
 				Do not modify the structure of the files! In case you do that, the watch might not work.</p>
 				<h3>3. Modify Web page</h3>				
-				<h4>3.1. Create DIV</h4>				
+				<h4>3.0. Import main JavaScript file</h4>
+				<p>In order to use the watch, first you must import the main JavaScript file. The main file import depends on the relative
+				path of the HTML file where are you using it and the <i>pfa-pocket-watch...js</i> file. In our example we will assume
+				that we use the watch in <i>index.html</i> and the JavaScript file is named <i>pfa-pocket-watch-0.1.js</i> and located in 
+				<i>js</i> directory (in time, the 0.1 number will increase).<br />
+				<code>&lt;script type="text/javascript" src="js/pfa-pocket-watch-0.1.js">&lt;/script></code> <br />
+				Please make sure the path you are using is correct and the file is found and loaded! 
+				In case the path is incorrect, the watch will not work.
+				</p>
+				<h4>3.1. Create DIV</h4>
+				<p>You should create a <b>DIV</b> in whitch the watch will be placed. You can do that by putting the following line into HTML: <br />
+				<code>&lt;DIV id="watch">&lt;/DIV></code> <br />
+				<b>NOTES</b>
+				<ul> 
+					<li><i>id</i> value represents a unique identifier of the DIV. For this reason try to keep it unique.
+					Web browsers do not complain if <i>id</i> is not unique but this can be the source of several problems later.</li>
+					<li>You may have several watches incorporated into page. Each will require a <i>DIV</i> with unique <i>id</i> 
+					like in the following example: <br />
+					<code>&lt;DIV id="watch1">&lt;/DIV> <br />
+						&lt;DIV id="watch2">&lt;/DIV> <br />
+						&lt;DIV id="watch3">&lt;/DIV></code>
+					</li>
+				</ul>
+				</p>
+				<p>
+				</p>			
 				<h4>3.2. Define JavaScript function</h4>				
+				<p>You should define a JavaScript function that contains code for initializing and starting the watch. 
+				The simples way to do that looks like this: <br />
+				<code>function startWatch() {<br />
+				&nbsp;&nbsp;&nbsp;&nbsp;(new pfaAllianceClock('watch', null)).start();<br />
+				}</code><br />
+				Please note we were assuming the id of the DIV that was created at previous step has the value <i>watch</i>. 
+				If you have more watches, you will have to initialize and start all of them, like in the following code:<br />
+				<code>function startWatch() {<br />
+				&nbsp;&nbsp;&nbsp;&nbsp;(new pfaAllianceClock('watch1', null)).start();<br />
+				&nbsp;&nbsp;&nbsp;&nbsp;(new pfaAllianceClock('watch2', null)).start();<br />
+				&nbsp;&nbsp;&nbsp;&nbsp;(new pfaAllianceClock('watch3', null)).start();<br />
+				}</code><br />
+				In case you would like to have more control over the watch, you can keep the watch reference and start / stop it, 
+				when you want.<br />				
+				<code>var fimWatch = null;<br />
+				function startWatch() {<br />
+				&nbsp;&nbsp;&nbsp;&nbsp;fimWatch = new pfaAllianceClock('watch', null);<br />
+				&nbsp;&nbsp;&nbsp;&nbsp;fimWatch.start();{<br />
+				}</code><br />
+				For more examples and customizations please check the <i>examples</i> directory.
+				</p>				
 				<h4>3.3. Call the JavaScript function</h4>	
-				<h2>What do you think?</h2>				
+				<p>You need to call the watch function (created at previous point) when all resorces were loaded. 
+				I suggest using the <b>body onload</b> function to initialize the watch (JQuery ready might not work).<br />
+				<code>&lt;body onload="startWatch()"></code>  	
+				</p>				
+				<h2>What do you think?</h2>
+				<p>In case you would like to leave us a feedback or you have something to share (a possible feature, a bug, an
+				enhancement of what we already did) you may <a href="contact.php?s=pwfeedback">contact us</a>.						
+				</p>				
             </div>
         </div>
 		
