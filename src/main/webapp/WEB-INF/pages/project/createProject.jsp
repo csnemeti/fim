@@ -82,7 +82,7 @@
     <stripes:layout-component name="content">             	
 	<stripes:form beanclass="pfa.alliance.fim.web.stripes.action.project.CreateProjectActionBean" focus="projectName" id="prjForm" class="form-horizontal">  
 		<div class="">
-			<h1><fmt:message key="page.title.project.edit.basic.title" /></h1>
+			<h1><fmt:message key="project.create.title" /></h1>
 			<div class="row form-group">
 				<div class="col-sm-1">
 					<label for="projectName" class="control-label"><fmt:message key="project.create.projectName" /></label>
