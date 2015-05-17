@@ -13,6 +13,8 @@
 		
    		<script type="text/javascript" src="<c:url value="/plugins/bootstrap/js/bootstrap-dialog.min.js" />"></script>
 		<script src="<c:url value="/js/jquery.simplecolorpicker/jquery.simplecolorpicker.js" />"></script>
+		<script type="text/javascript" src="<stripes:url value="/js/jquery-validation-1.13.0/jquery.validate.min.js" />"></script>
+		<script type="text/javascript" src="<stripes:url value="/js/jquery-validation-1.13.0/localization/messages_${actionBean.localeLanguage}.min.js" />"></script>
 		
 		<script type="text/javascript">
 			<%-- http://nakupanda.github.io/bootstrap3-dialog/ --%>
@@ -65,9 +67,17 @@
 				// set the placeholder
 				var placeholderSupported = ( 'placeholder' in document.createElement('input') );
 				if(placeholderSupported){
+					<%-- basic --%>
+					$("#projectName").attr('placeholder', "<fmt:message key='project.create.projectName.placeholder' />");
+					$("#projectCode").attr('placeholder', "<fmt:message key='project.create.projectCode.placeholder' />");
+					$("#projectDescription").attr('placeholder', "<fmt:message key='project.create.projectDescription.placeholder' />");
+					$("#ownerName").attr('placeholder', "<fmt:message key='project.create.ownerName.placeholder' />");
+					
+					<%-- Labels --%>
 					$("#componentName").attr('placeholder', "<fmt:message key='page.title.project.edit.lables.newComponent.placeholder' />");
 					$("#labelName").attr('placeholder', "<fmt:message key='page.title.project.edit.lables.newLabel.placeholder' />");
 				}
+				$("[data-toggle='tooltip']").tooltip();
 			});
 		</script>
 	</stripes:layout-component>    

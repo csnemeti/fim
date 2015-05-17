@@ -38,7 +38,7 @@
 		    	<div class="form-group">
 		    		${actionBean.dbOperationResult}
 		    	</div>
-		    	<stripes:submit class="btn btn-default" name="tryLogin"></stripes:submit> 
+		    	<stripes:submit class="btn btn-primary" name="tryLogin"></stripes:submit> 
 		    	<stripes:button class="btn btn-default" name="reset" onclick="clearFormContent(this.form)"></stripes:button> 
 			</div>
 			<stripes:link beanclass="pfa.alliance.fim.web.stripes.action.user.ForgotPasswordActionBean">

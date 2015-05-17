@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import pfa.alliance.fim.model.project.Project;
 import pfa.alliance.fim.model.project.ProjectComponent;
 import pfa.alliance.fim.model.project.ProjectLabel;
+import pfa.alliance.fim.model.project.ProjectState;
 import pfa.alliance.fim.service.ProjectManagementService;
 import pfa.alliance.fim.util.ColorUtils;
 import pfa.alliance.fim.util.ColorUtils.ColorWithName;
@@ -348,6 +349,42 @@ public class EditProjectActionBean
     public void setLabelId( Long labelId )
     {
         this.labelId = labelId;
+    }
+
+    public Project getProject()
+    {
+        if ( project == null )
+        {
+            project = new Project();
+        }
+        return project;
+    }
+
+    public List<StripesDropDownOption> getStates()
+    {
+        boolean isColosed = ProjectState.CLOSED.equals( getProject().getState() );
+        List<StripesDropDownOption> states = new ArrayList<>();
+        for ( ProjectState state : ProjectState.values() )
+        {
+            if ( ProjectState.SCHEDULED_FOR_DELETE != state || isColosed )
+            {
+                states.add( new StripesDropDownOption( state, getEnumMessage( state ) ) );
+            }
+        }
+        return states;
+    }
+
+    public String getProjectState()
+    {
+        Project project = getProject();
+        return project.getState().name();
+    }
+
+    public void setProjectState( String stateName )
+    {
+        Project project = getProject();
+        ProjectState state = ProjectState.valueOf( stateName );
+        project.setState( state );
     }
 
     @Override

@@ -41,7 +41,7 @@
 					<div style="width: 10px; height: 10px; float: left;"></div>
 					<stripes:hidden name="code" value="${actionBean.code}" />
 					<stripes:hidden name="focus" value="${actionBean.focus}" />
-					<stripes:submit class="btn btn-default" name="createComponent"><fmt:message key="page.title.project.edit.lables.createComponent"/></stripes:submit>
+					<stripes:submit class="btn btn-primary" name="createComponent"><fmt:message key="page.title.project.edit.lables.createComponent"/></stripes:submit>
 				</stripes:form>
 			</div>
 		</div>

@@ -70,7 +70,7 @@
 		     			${actionBean.dbOperationResult}
 		     		</div>
 		
-					<stripes:submit class="btn btn-default" name="tryRegister" value="Send..."></stripes:submit>
+					<stripes:submit class="btn btn-primary" name="tryRegister" value="Send..."></stripes:submit>
 					<stripes:button class="btn btn-default" name="reset" onclick="clearFormContent(this.form)"></stripes:button>  
 				</div>
 			</div>

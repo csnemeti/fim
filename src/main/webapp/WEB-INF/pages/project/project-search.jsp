@@ -159,7 +159,7 @@
         		</div>        		
 			</div>
         	<div align="center" style="padding-top: 10px">
-				<stripes:submit class="btn btn-default" name="search"></stripes:submit>
+				<stripes:submit class="btn btn-primary" name="search"></stripes:submit>
 				<stripes:button class="btn btn-default" name="reset" onclick="clearFormContent(this.form)"></stripes:button>  
         	</div>
         </stripes:form>	

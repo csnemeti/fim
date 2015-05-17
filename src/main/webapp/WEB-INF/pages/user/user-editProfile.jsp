@@ -187,10 +187,10 @@
 				        	<div align="center" style="padding-top: 10px">
 				        		<c:choose>
 					        		<c:when test="${actionBean.showCompleteChangeDataForm}">
-									<stripes:submit class="btn btn-default" name="changeData2"></stripes:submit>
+									<stripes:submit class="btn btn-primary" name="changeData2"></stripes:submit>
 									</c:when>
 									<c:otherwise>
-									<stripes:submit class="btn btn-default" name="changeData"></stripes:submit>
+									<stripes:submit class="btn btn-primary" name="changeData"></stripes:submit>
 									</c:otherwise>
 								</c:choose>
 								<stripes:reset  class="btn btn-default" name="resetData"></stripes:reset>
@@ -248,7 +248,7 @@
 						     	</div>
 							</div>
 				        	<div align="center" style="padding-top: 10px">
-								<stripes:submit class="btn btn-default" name="changePassword"></stripes:submit>
+								<stripes:submit class="btn btn-primary" name="changePassword"></stripes:submit>
 								<stripes:button class="btn btn-default" name="clear" onclick="clearFormContent(this.form)"></stripes:button>  
 				        	</div>
 				        </stripes:form>	
@@ -322,7 +322,7 @@
 						     	</div>
 							</div>
 				        	<div align="center" style="padding-top: 10px">
-								<stripes:submit class="btn btn-default" name="disableAccout"></stripes:submit>
+								<stripes:submit class="btn btn-primary" name="disableAccout"></stripes:submit>
 				        	</div>	              		
 	              		</stripes:form>
 					</div>

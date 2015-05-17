@@ -48,10 +48,10 @@
 				// set the placeholder
 				var placeholderSupported = ( 'placeholder' in document.createElement('input') );
 				if(placeholderSupported){
-					document.getElementById("projectName").placeholder = "<fmt:message key='project.create.projectName.placeholder' />";
-					document.getElementById("projectCode").placeholder = "<fmt:message key='project.create.projectCode.placeholder' />";
-					document.getElementById("projectDescription").placeholder = "<fmt:message key='project.create.projectDescription.placeholder' />";
-					document.getElementById("ownerName").placeholder = "<fmt:message key='project.create.ownerName.placeholder' />";
+					$("#projectName").attr('placeholder', "<fmt:message key='project.create.projectName.placeholder' />");
+					$("#projectCode").attr('placeholder', "<fmt:message key='project.create.projectCode.placeholder' />");
+					$("#projectDescription").attr('placeholder', "<fmt:message key='project.create.projectDescription.placeholder' />");
+					$("#ownerName").attr('placeholder', "<fmt:message key='project.create.ownerName.placeholder' />");
 				}
 				$("[data-toggle='tooltip']").tooltip();
 				// validate the comment form when it is submitted
@@ -132,7 +132,7 @@
 			<div class="row form-group">
      			${actionBean.dbOperationResult}
      		</div>
-			<stripes:submit class="btn btn-default" name="create"><fmt:message key="action.submit" /></stripes:submit>
+			<stripes:submit class="btn btn-primary" name="create"><fmt:message key="action.submit" /></stripes:submit>
 			<stripes:button class="btn btn-default" name="reset" onclick="clearFormContent(this.form)"></stripes:button>  
 		</div>
 	</stripes:form>
