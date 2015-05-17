@@ -84,7 +84,7 @@
 					<div style="width: 10px; height: 10px; float: left;"></div>
 					<stripes:hidden name="code" value="${actionBean.code}" />
 					<stripes:hidden name="focus" value="${actionBean.focus}" />
-					<stripes:submit class="btn btn-default" name="createLabel"><fmt:message key="page.title.project.edit.lables.createLabel"/></stripes:submit>
+					<stripes:submit class="btn btn-primary" name="createLabel"><fmt:message key="page.title.project.edit.lables.createLabel"/></stripes:submit>
 				</stripes:form>
 			</div>
 		</div>
@@ -95,7 +95,7 @@
 			<stripes:hidden name="labelId" id="deleteLabelId" value="" />
 			<stripes:hidden name="code" value="${actionBean.code}" />
 			<stripes:hidden name="focus" value="${actionBean.focus}" />
-			<stripes:submit class="btn btn-default" name="deleteLabel" id="deleteLabel"><fmt:message key="action.delete" /></stripes:submit>
+			<stripes:submit class="btn btn-primary" name="deleteLabel" id="deleteLabel"><fmt:message key="action.delete" /></stripes:submit>
 		</stripes:form>
 	</div>
 	<div id="editLabel" class="modal fade">
