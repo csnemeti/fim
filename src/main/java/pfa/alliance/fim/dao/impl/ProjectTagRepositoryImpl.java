@@ -91,7 +91,9 @@ abstract class ProjectTagRepositoryImpl<T extends ProjectTag>
      * @param id the ID of entity to delete
      * @param projectId the ID of project
      * @return true if entity was deleted
+     * @deprecated the query that generates is incorrect. It puts: WHERE id = ID1 AND id = ID2
      */
+    @Deprecated
     public boolean deleteBy( long id, int projectId )
     {
         EntityManager em = getEntityManager();

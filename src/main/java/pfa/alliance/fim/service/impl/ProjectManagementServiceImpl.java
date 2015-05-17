@@ -432,7 +432,7 @@ class ProjectManagementServiceImpl
         Project project = projectRepository.findByCode( projectCode );
         ProjectComponent component = componentRepository.findOne( id );
         boolean deleted = false;
-        if ( isValidForUpdate( component, project.getId() ) )
+        if ( isTagBelongingToProject( component, project ) )
         {
             component.setTagValue( labelName );
             component.setTextColor( labelColor );
@@ -452,7 +452,7 @@ class ProjectManagementServiceImpl
         Project project = projectRepository.findByCode( projectCode );
         ProjectLabel label = labelRepository.findOne( id );
         boolean deleted = false;
-        if ( isValidForUpdate( label, project.getId() ) )
+        if ( isTagBelongingToProject( label, project ) )
         {
             label.setTagValue( labelName );
             label.setBackgroundColor( labelColor );
@@ -463,28 +463,18 @@ class ProjectManagementServiceImpl
         return deleted;
     }
 
-    /**
-     * This method verifies if update is safe.
-     * 
-     * @param tag the {@link ProjectTag} (component or label) instance to check
-     * @param projectId the ID of the project
-     * @return true if update is safe
-     */
-    private static boolean isValidForUpdate( ProjectTag tag, final Integer projectId )
-    {
-        return tag != null && tag.getProject().getId().equals( projectId );
-    }
-
     @Override
     @Transactional
     public boolean deleteComponent( long id, String projectCode )
     {
         LOG.debug( "Delete component (id = {} ) IF belongs to Project with code: {}", id, projectCode );
         Project project = projectRepository.findByCode( projectCode );
+        ProjectComponent component = componentRepository.findOne( id );
         boolean deleted = false;
-        if ( project != null )
+        if ( isTagBelongingToProject( component, project ) )
         {
-            deleted = componentRepository.deleteComponentBy( id, project.getId() );
+            componentRepository.delete( component );
+            deleted = true;
         }
         return deleted;
     }
@@ -495,10 +485,12 @@ class ProjectManagementServiceImpl
     {
         LOG.debug( "Delete label (id = {} ) IF belongs to Project with code: {}", id, projectCode );
         Project project = projectRepository.findByCode( projectCode );
+        ProjectLabel label = labelRepository.findOne( id );
         boolean deleted = false;
-        if ( project != null )
+        if ( isTagBelongingToProject( label, project ) )
         {
-            deleted = labelRepository.deleteLabelBy( id, project.getId() );
+            labelRepository.delete( label );
+            deleted = false;
         }
         return deleted;
     }
@@ -506,5 +498,17 @@ class ProjectManagementServiceImpl
     private String getOppositeColor( String color )
     {
         return ColorUtils.isDarkColor( color ) ? "#FFFFFF" : "#000000";
+    }
+
+    /**
+     * This method verifies if update is safe.
+     * 
+     * @param tag the {@link ProjectTag} (component or label) instance to check
+     * @param projectId the ID of the project
+     * @return true if update is safe
+     */
+    private static boolean isTagBelongingToProject( ProjectTag tag, Project project )
+    {
+        return tag != null && project != null && tag.getProject().getId().equals( project.getId() );
     }
 }
