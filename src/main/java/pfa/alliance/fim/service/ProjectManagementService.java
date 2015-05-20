@@ -41,6 +41,22 @@ public interface ProjectManagementService
                     int creatorUserId, Map<Integer, UserRoleInsideProject> additionalUsers, Locale locale );
 
     /**
+     * Updates a existing {@link Project}.
+     * 
+     * @param oldCode the old code of the Project
+     * @param name the name of the project
+     * @param code the code of the project
+     * @param description project description
+     * @param hidden flag indicating project is hidden (not visible on search)
+     * @param state the initial state of the project (Accepted values are {@link ProjectState#ACTIVE} and the default
+     *            value {@link ProjectState#IN_PREPARATION}.)
+     * @param locale the current request {@link Locale} (for e-mail sending)
+     * @return the created project
+     */
+    Project update( String oldCode, String name, String code, String description, boolean hidden, ProjectState state,
+                    Locale locale );
+
+    /**
      * Gets a project based on the given code.
      * 
      * @param code the code of the project

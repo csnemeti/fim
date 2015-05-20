@@ -11,6 +11,7 @@
 		<link rel="stylesheet" href="<c:url value="/js/jquery.simplecolorpicker/jquery.simplecolorpicker.css" />">
 		<link rel="stylesheet" href="<c:url value="/plugins/bootstrap/css/bootstrap-dialog.min.css" />"/>
 		
+		<script type="text/javascript" src="<stripes:url value="/js/project-code.js" />"></script>
    		<script type="text/javascript" src="<c:url value="/plugins/bootstrap/js/bootstrap-dialog.min.js" />"></script>
 		<script src="<c:url value="/js/jquery.simplecolorpicker/jquery.simplecolorpicker.js" />"></script>
 		<script type="text/javascript" src="<stripes:url value="/js/jquery-validation-1.13.0/jquery.validate.min.js" />"></script>
@@ -54,7 +55,12 @@
 				$('#editLabel').modal('show');
 			}
 			$().ready(function() {
-				$(".component").css('margin-top',"10px");
+				var prjCode = document.getElementById("projectCode");
+				if (prjCode) {
+ 					preventCopyPasteOnProjectCode(prjCode);
+				}
+
+ 				$(".component").css('margin-top',"10px");
 				$(".labelWrapperEditor").hover(
 					function () {
 					   $(this).addClass("active");
@@ -78,6 +84,39 @@
 					$("#labelName").attr('placeholder', "<fmt:message key='page.title.project.edit.lables.newLabel.placeholder' />");
 				}
 				$("[data-toggle='tooltip']").tooltip();
+				
+				$("#compForm").validate({
+					rules: {
+						labelName: {
+							required: true,
+							maxlength: 40
+						}
+					}
+				});
+				$("#labelForm").validate({
+					rules: {
+						labelName: {
+							required: true,
+							maxlength: 40
+						}
+					}
+				});								
+				$("#prjForm").validate({
+					rules: {
+						projectName: {
+							required: true,
+							maxlength: 50
+						},
+						projectCode: {
+							required: true,
+							minlength: 2,
+							maxlength: 20
+						},
+						projectDescription: {
+							maxlength: 2000
+						}
+					}
+				});				
 			});
 		</script>
 	</stripes:layout-component>    

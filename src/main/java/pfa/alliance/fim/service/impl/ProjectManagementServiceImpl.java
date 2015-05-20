@@ -16,6 +16,7 @@ import javax.inject.Singleton;
 import javax.persistence.PersistenceException;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -139,6 +140,76 @@ class ProjectManagementServiceImpl
 
         }
         return project;
+    }
+
+    @Override
+    @Transactional
+    public Project update( final String oldCode, final String name, final String code, final String description, final boolean hidden,
+                           final ProjectState state, final Locale locale )
+    {
+        LOG.debug( "Updating project with code = {}, name = {}, code = {}, description = {}, hidden = {}, state = {}, locale = {}",
+                   oldCode, name, code, description, hidden, state, locale );
+        Project project = projectRepository.findByCode( oldCode );
+        if ( project != null )
+        {
+            updateProject( project, name, code, description, hidden, state );
+            try
+            {
+                project = projectRepository.save( project );
+            }
+            catch ( PersistenceException e )
+            {
+                if ( isDuplicateInfoRelatedException( e ) )
+                {
+                    LOG.warn( "Duplicate data for project: {}", project, e );
+                    throw new DuplicateDataException( "Duplicate project data", e );
+                }
+                else
+                {
+                    LOG.error( "Could not update the project: {}", project, e );
+                    throw e;
+                }
+
+            }
+        }
+        return project;
+    }
+
+    /**
+     * Updates the project with new information.
+     * 
+     * @param project the project that must be updated
+     * @param name the new name of the project
+     * @param code the new code of the project
+     * @param description the new description of the project
+     * @param hidden the new hidden flag of the project
+     * @param state the new state of the project
+     */
+    private void updateProject( Project project, final String name, final String code, final String description,
+                                final boolean hidden, final ProjectState state )
+    {
+        final String oldCode = project.getCode();
+        project.setHidden( hidden );
+        if ( StringUtils.isNotBlank( name ) )
+        {
+            LOG.debug( "Setting name = {} for code = {}", name, oldCode );
+            project.setName( name );
+        }
+        if ( StringUtils.isNotBlank( code ) )
+        {
+            LOG.debug( "Setting code = {} for code = {}", code, oldCode );
+            project.setCode( code );
+        }
+        if ( StringUtils.isNotBlank( description ) )
+        {
+            LOG.debug( "Setting description = {} for code = {}", description, oldCode );
+            project.setDescription( description );
+        }
+        if ( state != null )
+        {
+            LOG.debug( "Setting state = {} for code = {}", state, oldCode );
+            project.setState( state );
+        }
     }
 
     /**
@@ -398,8 +469,7 @@ class ProjectManagementServiceImpl
     @Override
     public ProjectLabel createLabel( String projectCode, String label, String bgColor )
     {
-        LOG.debug( "Creating label: name = {}, bgColor = {}, project code = {}", label,
-                   bgColor, projectCode );
+        LOG.debug( "Creating label: name = {}, bgColor = {}, project code = {}", label, bgColor, projectCode );
         Project project = projectRepository.findByCode( projectCode );
 
         ProjectLabel projectLabel = new ProjectLabel();

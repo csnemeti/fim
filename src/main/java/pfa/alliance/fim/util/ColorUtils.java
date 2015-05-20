@@ -27,6 +27,8 @@ public final class ColorUtils
     static
     {
         List<ColorWithName> colors = new ArrayList<>();
+        colors.add( new ColorWithName( "Black", 0x00, 0x00, 0x00 ) );
+
         colors.add( new ColorWithName( "AliceBlue", 0xF0, 0xF8, 0xFF ) );
         colors.add( new ColorWithName( "AntiqueWhite", 0xFA, 0xEB, 0xD7 ) );
         colors.add( new ColorWithName( "Aqua", 0x00, 0xFF, 0xFF ) );
@@ -35,7 +37,6 @@ public final class ColorUtils
 
         colors.add( new ColorWithName( "Beige", 0xF5, 0xF5, 0xDC ) );
         colors.add( new ColorWithName( "Bisque", 0xFF, 0xE4, 0xC4 ) );
-        colors.add( new ColorWithName( "Black", 0x00, 0x00, 0x00 ) );
         colors.add( new ColorWithName( "BlanchedAlmond", 0xFF, 0xEB, 0xCD ) );
         colors.add( new ColorWithName( "Blue", 0x00, 0x00, 0xFF ) );
         colors.add( new ColorWithName( "BlueViolet", 0x8A, 0x2B, 0xE2 ) );

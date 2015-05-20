@@ -51,46 +51,34 @@ public class EditProjectActionBean
     private static final int PROJECT_NOT_FOUND = 410;
 
     /** The code of the project. */
+    @Validate( required = true, trim = true )
     private String code;
 
     /** Tells us what tab to focus on. */
     private String focus = "basic";
 
     /** The name of a new Label. */
-    @Validate( required = true, trim = true, on = "{createLabel, createComponent, editLabel, deleteLabel}", maxlength = 40 )
+    @Validate( required = true, trim = true, on = { "createLabel", "createComponent", "editLabel" }, maxlength = 40 )
     private String labelName;
 
     /** The chosen color for a new Label. */
-    @Validate( required = true, trim = true, on = "{createLabel, createComponent, editLabel, deleteLabel}", maxlength = 40 )
+    @Validate( required = true, trim = true, on = { "createLabel", "createComponent", "editLabel" }, maxlength = 40 )
     private String labelColor;
 
-    @Validate( required = true, trim = true, on = "{editLabel, deleteLabel}", maxlength = 20 )
+    @Validate( required = true, trim = true, on = { "editLabel", "deleteLabel" }, maxlength = 20 )
     private String labelType;
 
-    @Validate( required = true, on = "{editLabel, deleteLabel}" )
+    @Validate( required = true, on = { "editLabel", "deleteLabel" } )
     private Long labelId;
 
     private final ProjectManagementService projectManagementService;
 
-    private Project project;
+    private Project project = null;
     private List<ProjectLabel> labelList;
     private List<ProjectComponent> componentList;
 
     /** The list of all supported colors. */
     private List<StripesDropDownOption> colors = new ArrayList<>();
-
-
-    static
-    {
-        // new String[] { "#ffffff", "#000000", "#eeece1", "#1f497d", "#4f81bd", "#c0504d", "#9bbb59", "#8064a2",
-        // "#4bacc6", "#f79646", "#ffff00", "#f2f2f2", "#7f7f7f", "#ddd9c3", "#c6d9f0", "#dbe5f1", "#f2dcdb",
-        // "#ebf1dd", "#e5e0ec", "#dbeef3", "#fdeada", "#fff2ca", "#d8d8d8", "#595959", "#c4bd97", "#8db3e2",
-        // "#b8cce4", "#e5b9b7", "#d7e3bc", "#ccc1d9", "#b7dde8", "#fbd5b5", "#ffe694", "#bfbfbf", "#3f3f3f",
-        // "#938953", "#548dd4", "#95b3d7", "#d99694", "#c3d69b", "#b2a2c7", "#a5d0e0", "#fac08f", "#f2c314",
-        // "#a5a5a5", "#262626", "#494429", "#17365d", "#366092", "#953734", "#76923c", "#5f497a", "#92cddc",
-        // "#e36c09", "#c09100", "#7f7f7f", "#0c0c0c", "#1d1b10", "#0f243e", "#244061", "#632423", "#4f6128",
-        // "#3f3151", "#31859b", "#974806", "#7f6000", "#ff0000" };
-    }
 
     /**
      * Called when instance of this class is created.
@@ -106,12 +94,8 @@ public class EditProjectActionBean
     @DefaultHandler
     public Resolution goToPage()
     {
-        project = null;
         LOG.debug( "Show project with code: {}", code );
-        if ( StringUtils.isNotBlank( code ) )
-        {
-            project = projectManagementService.findByCode( code );
-        }
+        loadProjectFromDb();
         if ( project == null )
         {
             // redirect to error page
@@ -122,6 +106,21 @@ public class EditProjectActionBean
             // redirect to JSP
             return new ForwardResolution( FimPageURLs.EDIT_PROJECT_JSP.getURL() );
         }
+    }
+
+    public Resolution update()
+    {
+        LOG.debug( "Updating project with code = {}: {}", code, project );
+        projectManagementService.update( code, project.getName(), project.getCode(), project.getDescription(),
+                                         project.isHidden(), project.getState(), getLocale() );
+        // if update succeeds project code might be changed
+        if ( StringUtils.isNotBlank( project.getCode() ) )
+        {
+            this.code = project.getCode();
+        }
+
+        // redirect to this page again
+        return redirectBackHere();
     }
 
     public Resolution editLabel()
@@ -143,6 +142,7 @@ public class EditProjectActionBean
     }
     public Resolution deleteLabel()
     {
+        LOG.debug( "Deleting {} with ID = {} for project with code = {}", labelType, labelId, code );
         switch ( labelType )
         {
             case "label":
@@ -192,7 +192,9 @@ public class EditProjectActionBean
     {
         if ( labelList == null )
         {
-            labelList = projectManagementService.findLabelsByProjectId( project.getId() );
+            // we might not have project id so we load the project from DB
+            loadProjectFromDb();
+            labelList = projectManagementService.findLabelsByProjectId( getProject().getId() );
         }
         return labelList;
     }
@@ -206,7 +208,9 @@ public class EditProjectActionBean
     {
         if ( componentList == null )
         {
-            componentList = projectManagementService.findComponentsByProjectCode( project.getId() );
+            // we might not have project id so we load the project from DB
+            loadProjectFromDb();
+            componentList = projectManagementService.findComponentsByProjectCode( getProject().getId() );
         }
         return componentList;
     }
@@ -351,8 +355,20 @@ public class EditProjectActionBean
         this.labelId = labelId;
     }
 
+    /**
+     * Loads the {@link Project} from DB.
+     */
+    private void loadProjectFromDb()
+    {
+        if ( project == null && StringUtils.isNotBlank( code ) )
+        {
+            project = projectManagementService.findByCode( code );
+        }
+    }
+
     public Project getProject()
     {
+        // loadProjectFromDb();
         if ( project == null )
         {
             project = new Project();

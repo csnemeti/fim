@@ -6,6 +6,8 @@
 <stripes:layout-definition>
 	<h1><fmt:message key="page.title.project.edit.basic.title" /></h1>
 		<stripes:form beanclass="pfa.alliance.fim.web.stripes.action.project.EditProjectActionBean" focus="projectName" id="compForm" class="form-vertical">
+			<stripes:hidden name="code" value="${actionBean.code}" />
+			<stripes:hidden name="focus" value="${actionBean.focus}" />
 			<div class="row form-group">
 				<div class="col-sm-1">
 					<label for="projectName" class="control-label"><fmt:message key="project.create.projectName" /></label>
