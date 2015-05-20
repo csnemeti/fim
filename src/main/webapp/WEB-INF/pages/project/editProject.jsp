@@ -101,18 +101,18 @@
 						}
 					}
 				});								
-				$("#prjForm").validate({
+				$("#basicForm").validate({
 					rules: {
-						projectName: {
+						"project.name": {
 							required: true,
 							maxlength: 50
 						},
-						projectCode: {
+						"project.code": {
 							required: true,
 							minlength: 2,
 							maxlength: 20
 						},
-						projectDescription: {
+						"project.description": {
 							maxlength: 2000
 						}
 					}
