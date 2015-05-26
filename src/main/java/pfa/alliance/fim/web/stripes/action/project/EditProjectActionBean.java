@@ -31,6 +31,7 @@ import pfa.alliance.fim.util.ColorUtils.ColorWithName;
 import pfa.alliance.fim.web.common.FimPageURLs;
 import pfa.alliance.fim.web.security.FimSecurity;
 import pfa.alliance.fim.web.security.Permission;
+import pfa.alliance.fim.web.security.ProjectSensibleActionBean;
 import pfa.alliance.fim.web.stripes.action.BasePageActionBean;
 import pfa.alliance.fim.web.stripes.action.StripesDropDownOption;
 
@@ -43,6 +44,7 @@ import pfa.alliance.fim.web.stripes.action.StripesDropDownOption;
 @FimSecurity( checkIfAny = Permission.PROJECT_EDIT_PROJECT )
 public class EditProjectActionBean
     extends BasePageActionBean
+    implements ProjectSensibleActionBean
 
 {
     private static final Logger LOG = LoggerFactory.getLogger( EditProjectActionBean.class );
@@ -89,6 +91,13 @@ public class EditProjectActionBean
     public EditProjectActionBean( ProjectManagementService projectManagementService )
     {
         this.projectManagementService = projectManagementService;
+    }
+
+    @Override
+    public Integer getProjectId()
+    {
+        loadProjectFromDb();
+        return ( project == null ) ? null : project.getId();
     }
 
     @DefaultHandler

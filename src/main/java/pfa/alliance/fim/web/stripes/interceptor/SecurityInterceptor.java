@@ -22,6 +22,7 @@ import pfa.alliance.fim.web.common.FimPageURLs;
 import pfa.alliance.fim.web.security.AuthenticatedUserDTO;
 import pfa.alliance.fim.web.security.FimSecurity;
 import pfa.alliance.fim.web.security.Permission;
+import pfa.alliance.fim.web.security.ProjectSensibleActionBean;
 import pfa.alliance.fim.web.security.SecurityUtil;
 
 /**
@@ -30,7 +31,8 @@ import pfa.alliance.fim.web.security.SecurityUtil;
  * 
  * @author Csaba
  */
-@Intercepts( { LifecycleStage.ActionBeanResolution, LifecycleStage.HandlerResolution } )
+@Intercepts( { LifecycleStage.ActionBeanResolution, LifecycleStage.HandlerResolution,
+    LifecycleStage.BindingAndValidation } )
 public class SecurityInterceptor
     implements Interceptor
 {
@@ -58,19 +60,40 @@ public class SecurityInterceptor
                 LOG.info( "A page was found that requires authenticated user, redirecting user to login..." );
                 resolution = handleUserNotAuthenticated( context );
             }
-            else if ( arePrivilegesSatisfied( securityAnnotation, context.getActionBean(), userDTO ) )
+            else if ( canVerifyPermission( context ) )
             {
-                // everything is OK, you may proceed
-                LOG.debug( "Found security constraints, and they are satisfied by the logged in user role" );
+                if ( arePrivilegesSatisfied( securityAnnotation, context.getActionBean(), userDTO ) )
+                {
+                    // everything is OK, you may proceed
+                    LOG.debug( "Found security constraints, and they are satisfied by the logged in user role" );
+                }
+                else
+                {
+                    // there's a logged in user but doesn't have the required permission(s), redirect to access denied
+                    LOG.info( "Insufficient privileges were found for user, redirect to access deny page" );
+                    resolution = handleAccessDenied( context );
+                }
             }
             else
             {
-                // there's a logged in user but doesn't have the required permission(s), redirect to access denied
-                LOG.info( "Insufficient privileges were found for user, redirect to access deny page" );
-                resolution = handleAccessDenied( context );
+                LOG.debug( "Permission checking is not appropriate yet..." );
             }
         }
         return resolution;
+    }
+
+    /**
+     * This method verifies if permission checking should be made of not. We have 2 cases: IF {@link ActionBean} is not
+     * Project sensitive, permission checking can be made any time. In the other cases we can make permission checking
+     * after property Bind and Validation. This way we can ensure project ID can be retrieved.
+     * 
+     * @param context the execution context containing all we need for validate if permission checking can be made
+     * @return true if permission checking is appropriate false if not
+     */
+    private boolean canVerifyPermission( ExecutionContext context )
+    {
+        ActionBean actionBean = context.getActionBean();
+        return ( !( actionBean instanceof ProjectSensibleActionBean ) || LifecycleStage.BindingAndValidation.equals( context.getLifecycleStage() ) );
     }
 
     /**
@@ -123,7 +146,7 @@ public class SecurityInterceptor
                                             final AuthenticatedUserDTO userDTO )
     {
         return checkIfAll( securityAnnotation.checkIfAll(), action, userDTO )
-            && checkIfAny( securityAnnotation.checkIfAll(), action, userDTO );
+            && checkIfAny( securityAnnotation.checkIfAny(), action, userDTO );
 
     }
 
@@ -197,8 +220,14 @@ public class SecurityInterceptor
     private boolean doesUserHavePermission( final Permission permission, final ActionBean action,
                                             final AuthenticatedUserDTO userDTO )
     {
-        // TODO get the project ID later
+        // get the project ID
         Integer projectId = null;
+        if ( action instanceof ProjectSensibleActionBean )
+        {
+            projectId = ( (ProjectSensibleActionBean) action ).getProjectId();
+            LOG.debug( "Validating permission {} againts project (ID = {}) for user: {}", permission, projectId,
+                       userDTO );
+        }
         return userDTO.hasPermission( projectId, permission );
     }
 
