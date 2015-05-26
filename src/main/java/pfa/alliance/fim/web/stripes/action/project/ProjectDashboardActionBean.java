@@ -19,6 +19,8 @@ import pfa.alliance.fim.service.ProjectManagementService;
 import pfa.alliance.fim.util.DateUtils;
 import pfa.alliance.fim.web.common.FimPageURLs;
 import pfa.alliance.fim.web.security.FimSecurity;
+import pfa.alliance.fim.web.security.Permission;
+import pfa.alliance.fim.web.security.ProjectSensibleActionBean;
 import pfa.alliance.fim.web.stripes.action.BasePageActionBean;
 
 /**
@@ -27,9 +29,10 @@ import pfa.alliance.fim.web.stripes.action.BasePageActionBean;
  * @author Csaba
  */
 @UrlBinding( value = "/project/show/{code}" )
-@FimSecurity
+@FimSecurity( checkIfAny = Permission.PROJECT_SHOW_PROJECT )
 public class ProjectDashboardActionBean
     extends BasePageActionBean
+    implements ProjectSensibleActionBean
 {
     private static final Logger LOG = LoggerFactory.getLogger( ProjectDashboardActionBean.class );
 
@@ -54,14 +57,18 @@ public class ProjectDashboardActionBean
         this.projectManagementService = projectManagementService;
     }
 
+    @Override
+    public Integer getProjectId()
+    {
+        loadProjectIfNull();
+        return ( project == null ) ? null : project.getId();
+    }
+
     @DefaultHandler
     public Resolution goToPage()
     {
         LOG.debug( "Show project with code: {}", code );
-        if ( StringUtils.isNotBlank( code ) )
-        {
-            project = projectManagementService.getProjectDetails( code );
-        }
+        loadProjectIfNull();
         if ( project == null )
         {
             // redirect to error page
@@ -71,6 +78,17 @@ public class ProjectDashboardActionBean
         {
             // redirect to JSP
             return new ForwardResolution( FimPageURLs.PROJECT_DASHBOARD_JSP.getURL() );
+        }
+    }
+
+    /**
+     * Loads the project IF null.
+     */
+    private void loadProjectIfNull()
+    {
+        if ( project == null && StringUtils.isNotBlank( code ) )
+        {
+            project = projectManagementService.getProjectDetails( code );
         }
     }
 

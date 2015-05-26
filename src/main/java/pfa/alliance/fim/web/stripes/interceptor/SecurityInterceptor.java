@@ -6,8 +6,11 @@ package pfa.alliance.fim.web.stripes.interceptor;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
+import javax.servlet.http.HttpServletResponse;
+
 import net.sourceforge.stripes.action.ActionBean;
 import net.sourceforge.stripes.action.ActionBeanContext;
+import net.sourceforge.stripes.action.ErrorResolution;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.controller.ExecutionContext;
@@ -250,6 +253,6 @@ public class SecurityInterceptor
      */
     private Resolution handleAccessDenied( ExecutionContext context )
     {
-        return null;
+        return new ErrorResolution( HttpServletResponse.SC_FORBIDDEN );
     }
 }

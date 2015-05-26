@@ -8,6 +8,7 @@ package pfa.alliance.fim.model.user;
 public enum UserPermission
 {
     PROJECT_CREATE_PROJECT,
+    PROJECT_SHOW_PROJECT,
     PROJECT_EDIT_PROJECT,
     PROJECT_LIST_PROJECTS,
     PROJECT_SHOW_HIDDEN_PROJECTS,
