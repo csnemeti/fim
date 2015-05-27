@@ -25,25 +25,27 @@
     </stripes:layout-component>
     <stripes:layout-component name="content">
 		<stripes:form beanclass="pfa.alliance.fim.web.stripes.action.user.LoginUserActionBean" focus="username" id="loginForm"> 
-			<div align="center">
-			<div style="padding-top:15px">
-				<div class="form-group">
-		    		<stripes:label for="userLogin.username"/>
-		        	<stripes:text class="form-control" name="username"></stripes:text>
+			<div class="col-md-6" style="padding-top: 50px">
+				<div class="row form-group">
+					<div class="col-md-3" style="text-align: right"><stripes:label for="userLogin.username"/></div>
+		        	<div class="col-md-9"><stripes:text class="form-control" name="username"></stripes:text></div>
 		    	</div>
-		    	<div class="form-group">
-		    		<stripes:label for="userLogin.password"/>
-		    	   	<stripes:password class="form-control" name="password"></stripes:password>  
+		    	<div class="row form-group">
+		    		<div class="col-md-3" style="text-align: right"><stripes:label for="userLogin.password"/></div>
+		    	   	<div class="col-md-9"><stripes:password class="form-control" name="password"></stripes:password></div>
 		    	</div>
-		    	<div class="form-group">
+		    	<div class="row" style="text-align: center">
 		    		${actionBean.dbOperationResult}
 		    	</div>
-		    	<stripes:submit class="btn btn-primary" name="tryLogin"></stripes:submit> 
-		    	<stripes:button class="btn btn-default" name="reset" onclick="clearFormContent(this.form)"></stripes:button> 
-			</div>
-			<stripes:link beanclass="pfa.alliance.fim.web.stripes.action.user.ForgotPasswordActionBean">
-				<stripes:label for="forgotPassword" />
-			</stripes:link>	
+		    	<div class="row form-group" style="text-align: center">
+			    	<stripes:submit class="btn btn-primary" name="tryLogin"></stripes:submit> 
+			    	<stripes:button class="btn btn-default" name="reset" onclick="clearFormContent(this.form)"></stripes:button> 
+		    	</div>
+		    	<div class="row" style="text-align: center">
+					<stripes:link beanclass="pfa.alliance.fim.web.stripes.action.user.ForgotPasswordActionBean">
+						<stripes:label for="forgotPassword" />
+					</stripes:link>	
+		    	</div>
 			</div>
 		</stripes:form>
     </stripes:layout-component>    

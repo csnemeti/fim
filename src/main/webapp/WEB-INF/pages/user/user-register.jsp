@@ -1,4 +1,5 @@
 <%@ taglib prefix="stripes" uri="http://stripes.sourceforge.net/stripes.tld" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"  %>
 <stripes:layout-render name="/WEB-INF/pages/layout/default.jsp" pageTitle="${actionBean.title}">
 	<stripes:layout-component name="header">
 		<script type="text/javascript" src="<stripes:url value="/js/jquery-validation-1.13.0/jquery.validate.min.js" />"></script>
@@ -41,38 +42,40 @@
 	</stripes:layout-component>
 	<stripes:layout-component name="content">
 		<stripes:form beanclass="pfa.alliance.fim.web.stripes.action.user.RegisterUserActionBean" focus="firstName" id="regForm">  
-			<div align="center">
-				<div style="padding-top:15px">
-					<div class="form-group">
-						<stripes:label for="userRegistration.firstName"/>
-		     			<stripes:text class="form-control" name="firstName" id="firstName"></stripes:text>
-		     		</div>
-					<div class="form-group">
-						<stripes:label for="userRegistration.lastName"/> 
-						<stripes:text class="form-control" name="lastName" id="lastName"></stripes:text>
-					</div>
-					<div class="form-group">
-						<stripes:label for="userRegistration.email"/> 
-						<stripes:text class="form-control" name="email" id="email"></stripes:text>
-					</div>
-					<div class="form-group">
-						<stripes:label for="userRegistration.password"/>  
-						<stripes:password class="form-control" name="password" id="password"></stripes:password>
-					</div>
-					<div class="form-group">
-						<stripes:label for="userRegistration.confirmPassword"/>  
-						<stripes:password class="form-control" name="password2" id="password2"></stripes:password>
-					</div>
-					<div class="form-group">
-		 				<stripes:errors></stripes:errors>
-					</div>
-		     		<div class="form-group">
-		     			${actionBean.dbOperationResult}
-		     		</div>
-		
-					<stripes:submit class="btn btn-primary" name="tryRegister" value="Send..."></stripes:submit>
-					<stripes:button class="btn btn-default" name="reset" onclick="clearFormContent(this.form)"></stripes:button>  
+			<div class="col-md-6" style="padding-top: 30px">
+				<div class="row form-group">
+					<h1><fmt:message key="register.user.title" /></h1>
 				</div>
+				<div class="row form-group">
+					<div class="col-md-3" style="text-align: right"><stripes:label for="userRegistration.firstName"/></div>
+	     			<div class="col-md-9"><stripes:text class="form-control" name="firstName" id="firstName"></stripes:text></div>
+	     		</div>
+				<div class="row form-group">
+					<div class="col-md-3" style="text-align: right"><stripes:label for="userRegistration.lastName"/></div> 
+					<div class="col-md-9"><stripes:text class="form-control" name="lastName" id="lastName"></stripes:text></div>
+				</div>
+				<div class="row form-group">
+					<div class="col-md-3" style="text-align: right"><stripes:label for="userRegistration.email"/></div> 
+					<div class="col-md-9"><stripes:text class="form-control" name="email" id="email"></stripes:text></div>
+				</div>
+				<div class="row form-group">
+					<div class="col-md-3" style="text-align: right"><stripes:label for="userRegistration.password"/></div>  
+					<div class="col-md-9"><stripes:password class="form-control" name="password" id="password"></stripes:password></div>
+				</div>
+				<div class="row form-group">
+					<div class="col-md-3" style="text-align: right"><stripes:label for="userRegistration.confirmPassword"/></div>  
+					<div class="col-md-9"><stripes:password class="form-control" name="password2" id="password2"></stripes:password></div>
+				</div>
+				<div class="row form-group">
+	 				<div class="col-md-12" style="text-align: right"><stripes:errors></stripes:errors></div>
+				</div>
+	     		<div class="row form-group" style="text-align: center">
+	     			${actionBean.dbOperationResult}
+	     		</div>
+				<div class="row form-group" style="text-align: center">
+					<stripes:submit class="btn btn-primary" name="tryRegister"><fmt:message key="action.send" /></stripes:submit>
+					<stripes:button class="btn btn-default" name="reset" onclick="clearFormContent(this.form)"></stripes:button>
+				</div>  
 			</div>
 		</stripes:form>       
 	</stripes:layout-component>
