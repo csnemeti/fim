@@ -224,7 +224,8 @@ public class SolrFilter
     {
         LOG.debug( "DB parameters: driver = {}, url = {}, username = {}, passweord = {}", driver, url, username,
                    password );
-        String[] fileLocations = new String[] { "WEB-INF/multicore/users/conf/" };
+        String[] fileLocations =
+            new String[] { "WEB-INF/multicore/users/conf/", "WEB-INF/multicore/active_users/conf/" };
         for ( String location : fileLocations )
         {
             String templateContent = readTemplateFromLocation( location );

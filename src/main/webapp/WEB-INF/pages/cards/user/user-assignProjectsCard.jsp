@@ -56,5 +56,6 @@
 	   	            </a>
                     <div class="clearfix"></div>
             	</div>
+            </div>
       	</div>
 </stripes:layout-definition>

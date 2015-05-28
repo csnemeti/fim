@@ -30,6 +30,6 @@
   -->
   <cores adminPath="/admin/cores">
     <core name="users" instanceDir="users" />
-    <core name="core1" instanceDir="core1" />
+    <core name="active_users" instanceDir="active_users" />
   </cores>
 </solr>

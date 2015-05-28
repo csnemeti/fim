@@ -16,7 +16,7 @@
  limitations under the License.
 -->
 
-<schema name="users schema" version="1.1">
+<schema name="Active users schema" version="1.1">
   <types>
    <fieldtype name="string"  class="solr.StrField" sortMissingLast="true" omitNorms="true"/>
    <fieldType name="integer" class="solr.IntField" omitNorms="true"/>
@@ -28,12 +28,11 @@
   <field name="id"      		type="integer"   indexed="true"  stored="true"  multiValued="false" required="true"/>
   <field name="firstName"    	type="string"    indexed="true"  stored="true"  multiValued="false" /> 
   <field name="lastName"    	type="string"    indexed="true"  stored="true"  multiValued="false" /> 
-  <field name="username"   		type="string"    indexed="true"  stored="true"  multiValued="false" /> 
-  <field name="email"   		type="string"    indexed="true"  stored="true"  multiValued="false" /> 
-  <field name="status"   		type="string"    indexed="true"  stored="true"  multiValued="false" /> 
-  <field name="defaultRole"   	type="string"    indexed="true"  stored="true"  multiValued="false" /> 
+  <field name="email"   		type="string"    indexed="true"  stored="true"  multiValued="false" required="true"/>
+  <field name="status"   		type="string"    indexed="true"  stored="true"  multiValued="false" required="true"/>
+  <field name="defaultRole"   	type="string"    indexed="true"  stored="true"  multiValued="false" required="true"/>
   <field name="createdAt"   	type="timestamp" indexed="true"  stored="true"  multiValued="false" /> 
-  <field name="modifiedAt"   	type="string"    indexed="true"  stored="true"  multiValued="false" /> 
+  <field name="modifiedAt"   	type="timestamp" indexed="true"  stored="true"  multiValued="false" /> 
  </fields>
 
  <!-- field to use to determine and enforce document uniqueness. -->

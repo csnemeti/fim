@@ -3,11 +3,13 @@
     <document>
         <entity name="user" query="select * from users_view"
                 deltaQuery="select id from users_view where modified_at > '${dataimporter.last_index_time}'"
-				deletedPkQuery="select id from fim_user where status = 'DISABLED'">
+				deletedPkQuery="select id from fim_user where status = 'SCHEDULED_FOR_DELETE'">
 
-            <field name="firstName" 	column="first_column" />
-            <field name="lastcolumn" 	column="last_column" />
-            <field name="usercolumn" 	column="login_column" />
+            <field name="id" 			column="id" />
+            <field name="firstName" 	column="first_name" />
+            <field name="lastName" 		column="last_name" />
+            <field name="email" 		column="email" />
+            <field name="status" 		column="status" />
             <field name="defaultRole" 	column="default_role" />
             <field name="createdAt" 	column="created_at" />
             <field name="modifiedAt" 	column="modified_at" />
