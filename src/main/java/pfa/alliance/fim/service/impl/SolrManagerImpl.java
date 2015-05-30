@@ -177,6 +177,22 @@ class SolrManagerImpl
         runIndex( url );
     }
 
+    @Override
+    public void runActiveUserFullIndex()
+        throws SolrOperationFailedException, SolrConnectException
+    {
+        String url = this.solrUrl + "/active_users/dataimport?command=full-import";
+        runIndex( url );
+    }
+
+    @Override
+    public void runActiveUserDeltaIndex()
+        throws SolrOperationFailedException, SolrConnectException
+    {
+        String url = this.solrUrl + "/active_users/dataimport?command=full-import";
+        runIndex( url );
+    }
+
     /**
      * Runs an Solr core index.
      * 

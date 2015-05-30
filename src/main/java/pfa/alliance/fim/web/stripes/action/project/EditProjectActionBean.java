@@ -25,6 +25,7 @@ import pfa.alliance.fim.model.project.Project;
 import pfa.alliance.fim.model.project.ProjectComponent;
 import pfa.alliance.fim.model.project.ProjectLabel;
 import pfa.alliance.fim.model.project.ProjectState;
+import pfa.alliance.fim.model.user.UserRole;
 import pfa.alliance.fim.service.ProjectManagementService;
 import pfa.alliance.fim.util.ColorUtils;
 import pfa.alliance.fim.util.ColorUtils.ColorWithName;
@@ -76,8 +77,12 @@ public class EditProjectActionBean
     private final ProjectManagementService projectManagementService;
 
     private Project project = null;
+
     private List<ProjectLabel> labelList;
+
     private List<ProjectComponent> componentList;
+
+    private UserRole newUserRole = UserRole.TEAM;
 
     /** The list of all supported colors. */
     private List<StripesDropDownOption> colors = new ArrayList<>();
@@ -149,6 +154,7 @@ public class EditProjectActionBean
         // redirect to this page again
         return redirectBackHere();
     }
+
     public Resolution deleteLabel()
     {
         LOG.debug( "Deleting {} with ID = {} for project with code = {}", labelType, labelId, code );
@@ -410,6 +416,30 @@ public class EditProjectActionBean
         Project project = getProject();
         ProjectState state = ProjectState.valueOf( stateName );
         project.setState( state );
+    }
+
+    public String getNewUserRole()
+    {
+        return newUserRole.name();
+    }
+
+    public void setNewUserRole( String defaultRole )
+    {
+        this.newUserRole = UserRole.valueOf( defaultRole );
+    }
+
+    public List<StripesDropDownOption> getUserRoles()
+    {
+        List<StripesDropDownOption> roles = new ArrayList<StripesDropDownOption>();
+        UserRole[] orderedRoles =
+            new UserRole[] { UserRole.ADMIN, UserRole.PROJECT_ADMIN, UserRole.PRODUCT_OWNER, UserRole.SCRUM_MASTER,
+                UserRole.TEAM, UserRole.STATISTICAL };
+        for ( UserRole role : orderedRoles )
+        {
+            roles.add( new StripesDropDownOption( role, getMessage( role.getDeclaringClass().getName() + "."
+                + role.name() ) ) );
+        }
+        return roles;
     }
 
     @Override

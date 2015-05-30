@@ -13,7 +13,8 @@
 		
 		<script type="text/javascript" src="<stripes:url value="/js/project-code.js" />"></script>
    		<script type="text/javascript" src="<c:url value="/plugins/bootstrap/js/bootstrap-dialog.min.js" />"></script>
-		<script src="<c:url value="/js/jquery.simplecolorpicker/jquery.simplecolorpicker.js" />"></script>
+		<script type="text/javascript" src="<c:url value="/js/jquery.simplecolorpicker/jquery.simplecolorpicker.js" />"></script>
+		<script type="text/javascript" src="<c:url value="/js/bootstrap3-typeahead.min.js" />"></script>
 		<script type="text/javascript" src="<stripes:url value="/js/jquery-validation-1.13.0/jquery.validate.min.js" />"></script>
 		<script type="text/javascript" src="<stripes:url value="/js/jquery-validation-1.13.0/localization/messages_${actionBean.localeLanguage}.min.js" />"></script>
 		
@@ -53,6 +54,14 @@
 					$('#editLabelColor').simplecolorpicker('selectColor', labelColor);
 				//}, 1000);	
 				$('#editLabel').modal('show');
+			}
+			function openAddUser(){
+				$('#addUser').modal('show');
+			}
+			function suggestUser(query, process){
+				//return ['Amsterdam', 'Washington', 'Sydney', 'Beijing', 'Cairo'];
+				process([{id: "someId1", name: "Display name 1"}, 
+            	{id: "someId2", name: "Display name 2"}]);
 			}
 			$().ready(function() {
 				var prjCode = document.getElementById("projectCode");
@@ -116,7 +125,19 @@
 							maxlength: 2000
 						}
 					}
-				});				
+				});
+				//$('#userSuggestion').typeahead({ source: ['Amsterdam', 'Washington', 'Sydney', 'Beijing', 'Cairo']});
+				$('#userSuggestion').typeahead({ source: suggestUser});
+				/*
+				$('#userSuggestion').typeahead(
+						//{ source: function(query, process) {
+						{ 
+							source: function(query) {						
+				      			return ['Amsterdam', 'Washington', 'Sydney', 'Beijing', 'Cairo'];
+			    			}
+						}
+				);
+				*/
 			});
 		</script>
 	</stripes:layout-component>    

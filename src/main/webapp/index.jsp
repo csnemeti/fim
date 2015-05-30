@@ -16,6 +16,12 @@
 <a href="/fim/project/edit/users">Edit project users</a><br/>
 <a href="/fim/project/show/P1">P1 Project dashboard</a><br/>
 
+<h1>Solr</h1>
+<a href="/solr/" target="solr">Home</a><br/>
+<a href="/solr/active_users/dataimport?command=full-import" target="aufi">FULL index Active users</a><br />
+<a href="/solr/active_users/dataimport?command=delta-import" target="audi">DELTA index Active users</a><br />
+<a href="/solr/users/dataimport?command=full-import" target="ufi">FULL index Users</a><br />
+<a href="/solr/users/dataimport?command=delta-import" target="udi">DELTA index Users</a><br />
 
 <h2>FIM Manifest</h2>
 <table style="border: 1px solid black">

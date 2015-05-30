@@ -45,4 +45,22 @@ public interface SolrManager
      */
     void runUserDeltaIndex()
         throws SolrOperationFailedException, SolrConnectException;
+
+    /**
+     * Method called to run full index on Active Users.
+     * 
+     * @throws SolrOperationFailedException in case the call failed
+     * @throws SolrConnectException in case it cannot connect to Solr server
+     */
+    void runActiveUserFullIndex()
+        throws SolrOperationFailedException, SolrConnectException;
+
+    /**
+     * Method called to run delta index on Active Users.
+     * 
+     * @throws SolrOperationFailedException in case the call failed
+     * @throws SolrConnectException in case it cannot connect to Solr server
+     */
+    void runActiveUserDeltaIndex()
+        throws SolrOperationFailedException, SolrConnectException;
 }
