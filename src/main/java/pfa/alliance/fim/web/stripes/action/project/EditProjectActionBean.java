@@ -35,6 +35,7 @@ import pfa.alliance.fim.web.security.Permission;
 import pfa.alliance.fim.web.security.ProjectSensibleActionBean;
 import pfa.alliance.fim.web.stripes.action.BasePageActionBean;
 import pfa.alliance.fim.web.stripes.action.StripesDropDownOption;
+import pfa.alliance.fim.web.stripes.action.user.UserAutocompleteActionBean;
 
 /**
  * This is the base class for editing a specific project.
@@ -383,7 +384,6 @@ public class EditProjectActionBean
 
     public Project getProject()
     {
-        // loadProjectFromDb();
         if ( project == null )
         {
             project = new Project();
@@ -440,6 +440,22 @@ public class EditProjectActionBean
                 + role.name() ) ) );
         }
         return roles;
+    }
+
+    public String getUsersAutocompleteUrl()
+    {
+        Project project = getProject();
+        UrlBuilder builder = new UrlBuilder( getLocale(), UserAutocompleteActionBean.class, false );
+        builder.addParameter( "id", project.getId() );
+        builder.addParameter( "query", "abc" );
+        builder.setEvent( "project" );
+        String url = builder.toString();
+        String contextPath = getContext().getServletContext().getContextPath();
+        if ( contextPath != null )
+        {
+            url = contextPath + url;
+        }
+        return url;
     }
 
     @Override

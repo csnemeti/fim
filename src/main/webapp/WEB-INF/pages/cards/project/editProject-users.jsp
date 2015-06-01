@@ -35,14 +35,16 @@
 		      </div>
 		      <div class="modal-body">
 		      	<div class="row form-group">
-		      		<div class="col-sm-3">
+		      		<div class="col-sm-3" style="text-align: right">
+		      			<label><fmt:message key="page.title.project.edit.lables.users.newName"/></label>
 		      		</div>
 		      		<div class="col-sm-9">
 						<stripes:text class="form-control typeahead clearable" name="userSuggestion" id="userSuggestion" value=""  />
 					</div>
 				</div>
 				<div class="row form-group">
-		      		<div class="col-sm-3">
+		      		<div class="col-sm-3" style="text-align: right">
+		      			<label><fmt:message key="page.title.project.edit.lables.users.newRole"/></label>
 		      		</div>
 		      		<div class="col-sm-9">
 						<stripes:select name="newUserRole" id="newUserRole" class="form-control">
@@ -55,7 +57,7 @@
 		      </div>
 		      <div class="modal-footer">
 		        <button type="button" class="btn btn-default" data-dismiss="modal"><fmt:message key="action.close"/></button>
-				<stripes:submit class="btn btn-primary" name="editLabel"><fmt:message key="action.add"/></stripes:submit>
+				<stripes:submit class="btn btn-primary" name="addUser"><fmt:message key="action.add"/></stripes:submit>
 		      </div>
 			</stripes:form>
 	    </div><!-- /.modal-content -->

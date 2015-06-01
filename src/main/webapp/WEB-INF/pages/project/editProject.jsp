@@ -56,12 +56,8 @@
 				$('#editLabel').modal('show');
 			}
 			function openAddUser(){
+				document.getElementById("addUserForm").reset();
 				$('#addUser').modal('show');
-			}
-			function suggestUser(query, process){
-				//return ['Amsterdam', 'Washington', 'Sydney', 'Beijing', 'Cairo'];
-				process([{id: "someId1", name: "Display name 1"}, 
-            	{id: "someId2", name: "Display name 2"}]);
 			}
 			$().ready(function() {
 				var prjCode = document.getElementById("projectCode");
@@ -126,18 +122,22 @@
 						}
 					}
 				});
-				//$('#userSuggestion').typeahead({ source: ['Amsterdam', 'Washington', 'Sydney', 'Beijing', 'Cairo']});
-				$('#userSuggestion').typeahead({ source: suggestUser});
-				/*
-				$('#userSuggestion').typeahead(
-						//{ source: function(query, process) {
-						{ 
-							source: function(query) {						
-				      			return ['Amsterdam', 'Washington', 'Sydney', 'Beijing', 'Cairo'];
-			    			}
+				$('#userSuggestion').typeahead({
+						minLength : 2,
+						source: function(query, process) {
+							var url = "${actionBean.usersAutocompleteUrl}";
+							url = url.replace("abc", encodeURIComponent(query));
+							$.get( url, function( data ) {
+								process(data.result);
+							}, 'json');
+						}, 
+						displayText: function (item) {
+							return item.name;
+						},
+						matcher : function(item) {
+							return true;
 						}
-				);
-				*/
+				});
 			});
 		</script>
 	</stripes:layout-component>    
