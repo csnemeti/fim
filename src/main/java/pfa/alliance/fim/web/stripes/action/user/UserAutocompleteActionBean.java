@@ -15,6 +15,7 @@ import net.sourceforge.stripes.action.StreamingResolution;
 import net.sourceforge.stripes.action.UrlBinding;
 import net.sourceforge.stripes.validation.Validate;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +44,7 @@ public class UserAutocompleteActionBean
     /** The ID of the project we're interested on. */
     @Validate( required = true )
     private Integer id;
-    
+
     private SearchService searchService;
 
     private static final Map<Integer, String> names = new HashMap<Integer, String>();
@@ -78,16 +79,45 @@ public class UserAutocompleteActionBean
         LOG.debug( "Get project autocomplete for id = {}, query = {}", id, query );
         List<UserDTO> searchResult = searchService.findActiveUsersNotAssignedToProject( id, query );
         LOG.debug( "Search results: {}", searchResult );
-        StringBuilder results = new StringBuilder( "{\"result\": [" );
-
-        for ( Map.Entry<Integer, String> enntry : names.entrySet() )
+        /*
+         * StringBuilder results = new StringBuilder( "{\"result\": [" ); for ( Map.Entry<Integer, String> enntry :
+         * names.entrySet() ) { results.append( "\n\t{\"id\" : " ).append( enntry.getKey() ).append( ", \"name\":  \""
+         * ).append( enntry.getValue() ).append( "\"}," ); } results.deleteCharAt( results.length() - 1 );
+         * results.append( "\n]}" ); return ( new StreamingResolution( "application/jsonn", results.toString() )
+         * ).setFilename( "users.json" ).setLength( results.length() );
+         */
+        StringBuilder sb = new StringBuilder( "autocompleteRes = [" );
+        String separator = "";
+        for ( UserDTO user : searchResult )
         {
-            results.append( "\n\t{\"id\" : " ).append( enntry.getKey() ).append( ", \"name\":  \"" ).append( enntry.getValue() ).append( "\"}," );
+            sb.append( separator ).append( "{id : " ).append( user.getId() ).append( ", name : \"" );
+            appendNameAndEmailForUser( user, sb ).append( "\"}" );
+            separator = ", ";
         }
-        results.deleteCharAt( results.length() - 1 );
-        results.append( "\n]}" );
+        sb.append( "];" );
+        return ( new StreamingResolution( "text/javascript", sb.toString() ) ).setFilename( "users.js" ).setLength( sb.length() );
+    }
 
-        return ( new StreamingResolution( "application/jsonn", results.toString() ) ).setFilename( "users.json" ).setLength( results.length() );
+    private static StringBuilder appendNameAndEmailForUser( UserDTO user, StringBuilder sb )
+    {
+        String firstName = user.getFirstName();
+        String separator = "";
+        if ( StringUtils.isNotBlank( firstName ) )
+        {
+            sb.append( firstName );
+            separator = " ";
+        }
+
+        String lastName = user.getLastName();
+        if ( StringUtils.isNotBlank( firstName ) )
+        {
+            sb.append( separator ).append( lastName );
+            separator = " ";
+        }
+
+        sb.append( separator ).append( "<" ).append( user.getEmail() ).append( ">" );
+
+        return sb;
     }
 
     public void setQuery( String query )

@@ -127,9 +127,11 @@
 						source: function(query, process) {
 							var url = "${actionBean.usersAutocompleteUrl}";
 							url = url.replace("abc", encodeURIComponent(query));
-							$.get( url, function( data ) {
-								process(data.result);
-							}, 'json');
+							$.get( url, function( data, textStatus, jqXHR  ) {
+								//console.log(textStatus);
+								eval(data);
+								process(autocompleteRes);
+							}, 'script');
 						}, 
 						displayText: function (item) {
 							return item.name;
