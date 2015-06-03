@@ -3,9 +3,7 @@
  */
 package pfa.alliance.fim.web.stripes.action.user;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -47,16 +45,6 @@ public class UserAutocompleteActionBean
 
     private SearchService searchService;
 
-    private static final Map<Integer, String> names = new HashMap<Integer, String>();
-
-    static
-    {
-        names.put( 1, "Csaba" );
-        names.put( 2, "Monika" );
-        names.put( 3, "Denis" );
-        names.put( 4, "Sergiu" );
-    }
-
     /**
      * Called when instance of this class is created.
      */
@@ -91,6 +79,14 @@ public class UserAutocompleteActionBean
         return ( new StreamingResolution( "text/javascript", sb.toString() ) ).setFilename( "users.js" ).setLength( sb.length() );
     }
 
+    /**
+     * Appends to given {@link StringBuilder} the following content: first_name last_name <email>. Components that are
+     * null or empty String will not be added.
+     * 
+     * @param user the user with content
+     * @param sb the place where to append
+     * @return the received parameter
+     */
     private static StringBuilder appendNameAndEmailForUser( UserDTO user, StringBuilder sb )
     {
         String firstName = user.getFirstName();
@@ -102,7 +98,7 @@ public class UserAutocompleteActionBean
         }
 
         String lastName = user.getLastName();
-        if ( StringUtils.isNotBlank( firstName ) )
+        if ( StringUtils.isNotBlank( lastName ) )
         {
             sb.append( separator ).append( lastName );
             separator = " ";

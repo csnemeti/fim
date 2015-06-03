@@ -159,13 +159,30 @@ class SolrManagerImpl
             LOG.error( "Error while trying to start Solr server", e );
             throw new SolrOperationFailedException( "Error while calling Solr#start", e );
         }
+        // start indexing
+        ( new Thread()
+        {
+            @Override
+            public void run()
+            {
+                try
+                {
+                    runUserFullIndex();
+                    runActiveUserFullIndex();
+                }
+                catch ( Exception e )
+                {
+                    LOG.error( "Error while running index after start", e );
+                }
+            }
+        } ).start();
     }
 
     @Override
     public void runUserFullIndex()
         throws SolrOperationFailedException, SolrConnectException
     {
-        String url = this.solrUrl + "/users/dataimport?command=full-import";
+        String url = this.solrUrl + "/users/dataimport?command=full-import&wt=json";
         runIndex( url );
     }
 
@@ -173,7 +190,7 @@ class SolrManagerImpl
     public void runUserDeltaIndex()
         throws SolrOperationFailedException, SolrConnectException
     {
-        String url = this.solrUrl + "/users/dataimport?command=full-import";
+        String url = this.solrUrl + "/users/dataimport?command=full-import&wt=json";
         runIndex( url );
     }
 
@@ -181,7 +198,7 @@ class SolrManagerImpl
     public void runActiveUserFullIndex()
         throws SolrOperationFailedException, SolrConnectException
     {
-        String url = this.solrUrl + "/active_users/dataimport?command=full-import";
+        String url = this.solrUrl + "/active_users/dataimport?command=full-import&wt=json";
         runIndex( url );
     }
 
@@ -189,7 +206,7 @@ class SolrManagerImpl
     public void runActiveUserDeltaIndex()
         throws SolrOperationFailedException, SolrConnectException
     {
-        String url = this.solrUrl + "/active_users/dataimport?command=full-import";
+        String url = this.solrUrl + "/active_users/dataimport?command=full-import&wt=json";
         runIndex( url );
     }
 
@@ -206,14 +223,14 @@ class SolrManagerImpl
         try
         {
             String response = makeGetCall( url );
+            LOG.debug( "Index response: {}", response );
             JSONObject responseJSon = parseResonse( response );
-            if ( "ERROR".equalsIgnoreCase( responseJSon.getString( "status" ) ) )
-            {
-                LOG.error( "Solr#index respond with error: {}", response );
-
-                throw new SolrOperationFailedException( "Solr respond with error on index: "
-                    + responseJSon.getString( "message" ) );
-            }
+            // if ( responseJSon == null || "ERROR".equalsIgnoreCase( responseJSon.getString( "status" ) ) )
+            // {
+            // LOG.error( "Solr#index respond with error: {}", response );
+            // String message = ( responseJSon == null ) ? "<<null>>" : responseJSon.getString( "message" );
+            // throw new SolrOperationFailedException( "Solr respond with error on index: " + message );
+            // }
         }
         catch ( MalformedURLException | ProtocolException | ConnectException e )
         {
