@@ -47,7 +47,7 @@ class SolrSearchServiceImpl
     {
         LOG.debug( "Find active users not assigned to project (ID = {}) and having in name: {}", projectId, contains );
         SolrQuery query = new SolrQuery();
-        query.setQuery( "nameAndEmail:*" + contains + "*" );
+        query.setQuery( "nameAndEmail:*" + contains + "* AND -projectsAndRoles:*\\ " + projectId + "\\(*" );
         List<UserDTO> results = new ArrayList<UserDTO>();
         try
         {

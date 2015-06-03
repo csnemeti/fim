@@ -52,6 +52,7 @@
 						</stripes:select>
 					</div> 
 				</div>
+					<stripes:hidden name="userId" id="addUserId" value="" />
 					<stripes:hidden name="code" value="${actionBean.code}" />
 					<stripes:hidden name="focus" value="${actionBean.focus}" />
 		      </div>

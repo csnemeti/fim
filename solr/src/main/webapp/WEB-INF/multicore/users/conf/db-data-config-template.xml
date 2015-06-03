@@ -1,7 +1,8 @@
 <dataConfig>
-    <dataSource driver="${jdbc.driver}" url="${jdbc.url}" user="${jdbc.username}" password="${jdbc.password}" />
+    <dataSource driver="${jdbc.driver}" url="${jdbc.url}" user="${jdbc.username}" password="${jdbc.password}" readOnly="true" batchSize="100" />
     <document>
         <entity name="user" query="select * from users_view"
+				deltaImportQuery="select * from users_view where ID=${dih.delta.id}"
                 deltaQuery="select id from users_view where modified_at > '${dataimporter.last_index_time}'"
 				deletedPkQuery="select id from fim_user where status = 'SCHEDULED_FOR_DELETE'">
 

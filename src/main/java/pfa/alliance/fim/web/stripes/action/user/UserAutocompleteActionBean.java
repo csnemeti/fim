@@ -79,13 +79,6 @@ public class UserAutocompleteActionBean
         LOG.debug( "Get project autocomplete for id = {}, query = {}", id, query );
         List<UserDTO> searchResult = searchService.findActiveUsersNotAssignedToProject( id, query );
         LOG.debug( "Search results: {}", searchResult );
-        /*
-         * StringBuilder results = new StringBuilder( "{\"result\": [" ); for ( Map.Entry<Integer, String> enntry :
-         * names.entrySet() ) { results.append( "\n\t{\"id\" : " ).append( enntry.getKey() ).append( ", \"name\":  \""
-         * ).append( enntry.getValue() ).append( "\"}," ); } results.deleteCharAt( results.length() - 1 );
-         * results.append( "\n]}" ); return ( new StreamingResolution( "application/jsonn", results.toString() )
-         * ).setFilename( "users.json" ).setLength( results.length() );
-         */
         StringBuilder sb = new StringBuilder( "autocompleteRes = [" );
         String separator = "";
         for ( UserDTO user : searchResult )

@@ -140,6 +140,12 @@
 							return true;
 						}
 				});
+				$('#userSuggestion').change(function() {
+					var selectedItem = $('#userSuggestion').typeahead("getActive");
+					if(selectedItem){
+						$('#addUserId').val(selectedItem.id);
+					}
+				});
 			});
 		</script>
 	</stripes:layout-component>    
