@@ -21,7 +21,7 @@ import pfa.alliance.fim.service.SolrOperationFailedException;
  * 
  * @author Csaba
  */
-@Scheduled( cronExpression = "0 56 * * * ?" )
+@Scheduled( cronExpression = "0 1 * * * ?" )
 public class UserFullImportJob
     implements Job
 {
