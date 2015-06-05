@@ -25,6 +25,7 @@ import pfa.alliance.fim.model.project.Project;
 import pfa.alliance.fim.model.project.ProjectComponent;
 import pfa.alliance.fim.model.project.ProjectLabel;
 import pfa.alliance.fim.model.project.ProjectState;
+import pfa.alliance.fim.model.project.UserRoleInsideProject;
 import pfa.alliance.fim.model.user.UserRole;
 import pfa.alliance.fim.service.ProjectManagementService;
 import pfa.alliance.fim.util.ColorUtils;
@@ -75,6 +76,14 @@ public class EditProjectActionBean
     @Validate( required = true, on = { "editLabel", "deleteLabel" } )
     private Long labelId;
 
+    /**
+     * The ID of the user to be added to project. In theory this should be required butit's difficult to control from
+     * front-end. This means you should expect null values and treat them nicely in back-end. <br />
+     * Also, it can be the ID of a user who will have his / hers role modified OR id of a user who is unassigned from
+     * Project.
+     */
+    private Integer userId;
+
     private final ProjectManagementService projectManagementService;
 
     private Project project = null;
@@ -83,6 +92,7 @@ public class EditProjectActionBean
 
     private List<ProjectComponent> componentList;
 
+    /** The role a user should have. For example role of a new user, new role of an existing user, etc. */
     private UserRole newUserRole = UserRole.TEAM;
 
     /** The list of all supported colors. */
@@ -187,6 +197,18 @@ public class EditProjectActionBean
     {
         // process
         projectManagementService.createComponent( code, labelName, labelColor );
+        // redirect to this page again
+        return redirectBackHere();
+    }
+
+    public Resolution addUser()
+    {
+        LOG.debug( "Assignning user: {} in role {} to project {}", userId, newUserRole, code );
+        UserRoleInsideProject userRole = UserRoleInsideProject.findByUserRole( newUserRole );
+        if ( userId != null && userRole != null )
+        {
+            projectManagementService.assignUser( userId, code, userRole );
+        }
         // redirect to this page again
         return redirectBackHere();
     }
@@ -389,6 +411,11 @@ public class EditProjectActionBean
             project = new Project();
         }
         return project;
+    }
+
+    public void setUserId( Integer userId )
+    {
+        this.userId = userId;
     }
 
     public List<StripesDropDownOption> getStates()

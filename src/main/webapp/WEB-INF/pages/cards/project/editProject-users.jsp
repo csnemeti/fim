@@ -28,7 +28,7 @@
 	<div id="addUser" class="modal fade">
 	  <div class="modal-dialog">
 	    <div class="modal-content">
-			<stripes:form beanclass="pfa.alliance.fim.web.stripes.action.project.EditProjectActionBean" id="addUserForm" class="form-vertical">  
+			<stripes:form beanclass="pfa.alliance.fim.web.stripes.action.project.EditProjectActionBean" id="addUserForm" class="form-vertical" focus="userSuggestion">  
 		      <div class="modal-header">
 		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 		        <h4 class="modal-title" id="addUserTitle"><fmt:message key="page.title.project.edit.lables.users.addModalTitle" /></h4>

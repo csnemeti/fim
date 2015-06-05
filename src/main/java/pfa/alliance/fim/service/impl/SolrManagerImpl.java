@@ -40,6 +40,9 @@ class SolrManagerImpl
 
     private final Map<String, String> dbConfig;
 
+    /** Flag indicating start command was sent to Solr. */
+    private static boolean started = false;
+
     /**
      * Called when instance of this class is created.
      * 
@@ -148,6 +151,7 @@ class SolrManagerImpl
                 throw new SolrOperationFailedException( "Solr respond with error on start: "
                     + responseJSon.getString( "message" ) );
             }
+            started = true;
         }
         catch ( MalformedURLException | ProtocolException | ConnectException e )
         {
@@ -195,6 +199,26 @@ class SolrManagerImpl
     }
 
     @Override
+    public void runQuiteUserDeltaIndexInSeparateThread()
+    {
+        ( new Thread()
+        {
+            @Override
+            public void run()
+            {
+                try
+                {
+                    runUserDeltaIndex();
+                }
+                catch ( SolrOperationFailedException | SolrConnectException e )
+                {
+                    LOG.error( "Could not send DELTA index command for Users", e );
+                }
+            }
+        } ).start();
+    }
+
+    @Override
     public void runActiveUserFullIndex()
         throws SolrOperationFailedException, SolrConnectException
     {
@@ -220,6 +244,10 @@ class SolrManagerImpl
     private void runIndex( String url )
         throws SolrOperationFailedException, SolrConnectException
     {
+        if ( !started )
+        {
+            return;
+        }
         try
         {
             String response = makeGetCall( url );

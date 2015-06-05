@@ -47,6 +47,11 @@ public interface SolrManager
         throws SolrOperationFailedException, SolrConnectException;
 
     /**
+     * Method called to run delta index on Users in a separate thread without notifying about any problem.
+     */
+    void runQuiteUserDeltaIndexInSeparateThread();
+
+    /**
      * Method called to run full index on Active Users.
      * 
      * @throws SolrOperationFailedException in case the call failed

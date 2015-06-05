@@ -565,6 +565,20 @@ class ProjectManagementServiceImpl
         return deleted;
     }
 
+    @Override
+    @Transactional
+    public boolean assignUser( final int userId, final String projectCode, UserRoleInsideProject role )
+    {
+        LOG.debug( "Assigning user {} to project {} in role {}", userId, projectCode, role );
+        return true;
+    }
+
+    /**
+     * Gets the opposite color to our color.
+     * 
+     * @param color the hexa value of our color
+     * @return a matching color, the code for black or white
+     */
     private String getOppositeColor( String color )
     {
         return ColorUtils.isDarkColor( color ) ? "#FFFFFF" : "#000000";
