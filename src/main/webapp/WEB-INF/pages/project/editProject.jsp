@@ -87,6 +87,9 @@
 					<%-- Labels --%>
 					$("#componentName").attr('placeholder', "<fmt:message key='page.title.project.edit.lables.newComponent.placeholder' />");
 					$("#labelName").attr('placeholder', "<fmt:message key='page.title.project.edit.lables.newLabel.placeholder' />");
+
+					<%-- Users --%>
+					$("#userSuggestion").attr('placeholder', "<fmt:message key='page.title.project.edit.lables.users.nameOrEmail' />");
 				}
 				$('#userSuggestion').attr("autocomplete", "off");
 				$("[data-toggle='tooltip']").tooltip();
