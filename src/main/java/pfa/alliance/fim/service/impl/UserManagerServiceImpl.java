@@ -643,4 +643,14 @@ class UserManagerServiceImpl
         }
         return user;
     }
+
+    @Transactional
+    @Override
+    public int deleteExpiredOneTimeLinks()
+    {
+        LOG.debug( "Deleting expired one time links..." );
+        final int links = userOneTimeLinkRepository.deleteExpiredLinks();
+        LOG.info( "User one time links delete. Deleted links number: {}", links );
+        return links;
+    }
 }

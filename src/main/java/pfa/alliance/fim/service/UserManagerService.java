@@ -144,4 +144,11 @@ public interface UserManagerService
      */
     void changeUserData( final int userId, final String firstName, final String lastName,
                          final String clearTextPassword, final UserStatus status );
+
+    /**
+     * Deletes all expired one time user links.
+     * 
+     * @return the expired one time link
+     */
+    int deleteExpiredOneTimeLinks();
 }

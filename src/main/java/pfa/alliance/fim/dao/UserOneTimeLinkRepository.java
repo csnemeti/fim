@@ -13,5 +13,10 @@ import pfa.alliance.fim.model.user.UserOneTimeLink;
 public interface UserOneTimeLinkRepository
     extends JpaRepository<UserOneTimeLink, Long>
 {
-
+    /**
+     * Delete all expired one time links.
+     * 
+     * @return the number of deleted records
+     */
+    int deleteExpiredLinks();
 }

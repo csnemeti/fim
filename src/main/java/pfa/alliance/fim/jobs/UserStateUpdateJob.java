@@ -8,8 +8,8 @@ import pfa.alliance.fim.jobs.guartz.Scheduled;
 
 
 
-@Scheduled(cronExpression = "0/2 * * * * ?")
-public class CheckRegisterRequestJob implements Job {
+@Scheduled( cronExpression = "0 15 4 * * ?" )
+public class UserStateUpdateJob implements Job {
 
 	@Override
 	public void execute(JobExecutionContext context) throws JobExecutionException {

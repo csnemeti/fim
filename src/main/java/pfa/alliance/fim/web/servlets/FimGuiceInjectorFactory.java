@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 
+import pfa.alliance.fim.jmx.FimJmxModule;
 import pfa.alliance.fim.service.impl.FimServiceModule;
 
 import com.google.inject.Guice;
@@ -56,7 +57,9 @@ public class FimGuiceInjectorFactory
         JpaPersistModule jpaPersistModule = new JpaPersistModule( "fimJpaUnit" );
         jpaPersistModule.properties( fimServiceModule.getJpaConfiguration() );
         FimJobsInitializerModule fimJobsModule = new FimJobsInitializerModule();
-        return Guice.createInjector( jpaPersistModule, fimServiceModule, fimJobsModule , new FimServletModule() );
+        FimJmxModule jmxModule = new FimJmxModule();
+        return Guice.createInjector( jpaPersistModule, fimServiceModule, fimJobsModule, jmxModule,
+                                     new FimServletModule() );
     }
 
     private Properties readConfiguration()

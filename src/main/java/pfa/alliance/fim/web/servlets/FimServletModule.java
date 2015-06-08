@@ -6,9 +6,6 @@ package pfa.alliance.fim.web.servlets;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.management.MBeanServer;
-import javax.management.MBeanServerFactory;
-
 import com.google.inject.servlet.ServletModule;
 
 /**
@@ -24,8 +21,6 @@ class FimServletModule
     {
         super.configureServlets();
 
-        // binding MBean Server if necessary in future
-        bind( MBeanServer.class ).toInstance( MBeanServerFactory.createMBeanServer() );
         // bind configuration checker filter as singleton
         filter( "/*" ).through( SetupVerifyFilter.class );
         // changes necessary for DataTables
