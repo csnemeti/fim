@@ -653,4 +653,14 @@ class UserManagerServiceImpl
         LOG.info( "User one time links delete. Deleted links number: {}", links );
         return links;
     }
+
+    @Transactional
+    @Override
+    public int markDeleteNotActivatedUserAccounts()
+    {
+        LOG.debug( "Marking SCHEDULED_FOR_DELETE User accounts that are NOT ACTIVated..." );
+        final int links = userRepository.markDeleteNotActivatedUserAccounts();
+        LOG.info( "Accounts marked SCHEDULED_FOR_DELETE: {}", links );
+        return links;
+    }
 }

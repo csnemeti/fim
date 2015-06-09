@@ -151,4 +151,13 @@ public interface UserManagerService
      * @return the expired one time link
      */
     int deleteExpiredOneTimeLinks();
+
+    /**
+     * Mark all user accounts with {@link UserStatus#NEW} that were not confirmed in time as
+     * {@link UserStatus#SCHEDULED_FOR_DELETE}.
+     * 
+     * @return the amount of accounts marked.
+     */
+    int markDeleteNotActivatedUserAccounts();
+
 }

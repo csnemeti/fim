@@ -15,6 +15,7 @@ import java.util.Set;
 
 import javax.inject.Singleton;
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -263,6 +264,23 @@ class UserRepositoryImpl
         {
             criteria.where( whereList.toArray( new Predicate[whereList.size()] ) );
         }
+    }
+
+    @Override
+    public int markDeleteNotActivatedUserAccounts()
+    {
+        EntityManager em = getEntityManager();
+        TypedQuery<Integer> idQuery =
+            em.createQuery( "SELECT u.id FROM " + getEntityClass().getName()
+                                                + " u WHERE u.status = 'NEW' AND u.oneTimeLinks IS EMPTY",
+                                            Integer.class );
+        List<Integer> ids = idQuery.getResultList();
+        LOG.debug( "User IDs to delete: {}", ids );
+        if ( CollectionUtils.isNotEmpty( ids ) )
+        {
+            Query deleteQuery = em.createQuery( "DELETE " );
+        }
+        return 0;
     }
 
     @Override

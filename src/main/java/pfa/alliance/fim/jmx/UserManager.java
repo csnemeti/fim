@@ -56,7 +56,22 @@ class UserManager
         catch ( RuntimeException e )
         {
             LOG.error( "Error while calling service", e );
-            throw e;
+            return -1;
+        }
+    }
+
+    @Override
+    public int markDeleteNotActivatedUserAccounts()
+    {
+        try
+        {
+            LOG.debug( "Mark as deleted all NOT ACTIVated User accounts" );
+            return userManagerService.markDeleteNotActivatedUserAccounts();
+        }
+        catch ( RuntimeException e )
+        {
+            LOG.error( "Error while calling service", e );
+            return -1;
         }
     }
 

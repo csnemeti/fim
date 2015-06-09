@@ -10,6 +10,7 @@ import pfa.alliance.fim.dto.UserSearchResultDTO;
 import pfa.alliance.fim.model.user.OneTimeLinkType;
 import pfa.alliance.fim.model.user.User;
 import pfa.alliance.fim.model.user.UserOneTimeLink;
+import pfa.alliance.fim.model.user.UserStatus;
 
 /**
  * This interface defines the {@link User} repository methods.
@@ -81,4 +82,11 @@ public interface UserRepository
      */
     List<UserSearchResultDTO> search( UserSearchDTO criteria );
 
+    /**
+     * Mark all user accounts with {@link UserStatus#NEW} that were not confirmed in time as
+     * {@link UserStatus#SCHEDULED_FOR_DELETE}.
+     * 
+     * @return the amount of accounts marked.
+     */
+    int markDeleteNotActivatedUserAccounts();
 }
