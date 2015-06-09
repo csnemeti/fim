@@ -269,18 +269,29 @@ class UserRepositoryImpl
     @Override
     public int markDeleteNotActivatedUserAccounts()
     {
+        int updated = 0;
         EntityManager em = getEntityManager();
         TypedQuery<Integer> idQuery =
             em.createQuery( "SELECT u.id FROM " + getEntityClass().getName()
-                                                + " u WHERE u.status = 'NEW' AND u.oneTimeLinks IS EMPTY",
-                                            Integer.class );
+                + " u WHERE u.status = 'NEW' AND u.oneTimeLinks IS EMPTY", Integer.class );
         List<Integer> ids = idQuery.getResultList();
         LOG.debug( "User IDs to delete: {}", ids );
         if ( CollectionUtils.isNotEmpty( ids ) )
         {
-            Query deleteQuery = em.createQuery( "DELETE " );
+            // native query doesn't work, bulk update doesn't work with List of IDs
+            // I'm lost in ideas
+            Query updateQuery =
+                em.createQuery( "UPDATE " + getEntityClass().getName()
+                    + " u SET u.status = :status, u.lastModified = :now WHERE u.id = :id" );
+            updateQuery.setParameter( "status", UserStatus.SCHEDULED_FOR_DELETE.name() );
+            for ( Integer id : ids )
+            {
+                updateQuery.setParameter( "now", new Timestamp( System.currentTimeMillis() ) );
+                updateQuery.setParameter( "id", id );
+                updated += updateQuery.executeUpdate();
+            }
         }
-        return 0;
+        return updated;
     }
 
     @Override
