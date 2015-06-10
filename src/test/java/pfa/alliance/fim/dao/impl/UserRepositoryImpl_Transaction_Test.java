@@ -3,12 +3,7 @@
  */
 package pfa.alliance.fim.dao.impl;
 
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.persistence.EntityTransaction;
-import javax.persistence.NonUniqueResultException;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.junit.After;
@@ -21,10 +16,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pfa.alliance.fim.model.user.OneTimeLinkType;
 import pfa.alliance.fim.model.user.User;
-import pfa.alliance.fim.model.user.UserOneTimeLink;
-import pfa.alliance.fim.model.user.UserStatus;
 
 /**
  * This class is used for testing {@link UserRepositoryImpl}.

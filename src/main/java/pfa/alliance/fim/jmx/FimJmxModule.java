@@ -21,17 +21,7 @@ public class FimJmxModule
     @Override
     protected void configure()
     {
-        // binding MBean Server if necessary in future
-        //bind( MBeanServer.class ).toInstance( MBeanServerFactory.createMBeanServer() );
-
-        bind( MBeanServer.class ).toInstance( getMbeanServer() );
+        bind( MBeanServer.class ).toInstance( ManagementFactory.getPlatformMBeanServer() );
         bind( UserManagerMBean.class ).to( UserManager.class ).asEagerSingleton();
     }
-
-    private static MBeanServer getMbeanServer()
-    {
-        MBeanServer server = ManagementFactory.getPlatformMBeanServer();
-        return server;
-    }
-
 }

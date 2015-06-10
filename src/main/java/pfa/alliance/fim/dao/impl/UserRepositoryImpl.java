@@ -26,6 +26,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -251,12 +252,12 @@ class UserRepositoryImpl
             whereList.add( cb.like( cb.lower( root.get( "email" ) ), "%" + email.toLowerCase() + "%" ) );
         }
         String[] roles = searchCriteria.getRoles();
-        if ( roles != null && roles.length > 0 )
+        if ( ArrayUtils.isNotEmpty( roles ) )
         {
             whereList.add( root.get( "defaultRole" ).in( Arrays.asList( roles ) ) );
         }
         String[] statuses = searchCriteria.getStatuses();
-        if ( statuses != null && statuses.length > 0 )
+        if ( ArrayUtils.isNotEmpty( statuses ) )
         {
             whereList.add( root.get( "status" ).in( Arrays.asList( statuses ) ) );
         }
