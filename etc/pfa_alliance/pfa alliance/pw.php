@@ -211,7 +211,22 @@
 			</div>
 			<div class="col-md-9" style="margin-top: 0px">
 				<p>With HTML 5 features, this watch idea seems to reborn, but this time into analog watches. This is probably amplified by the <i>Smartwatch</i> concept also that is surrounding us during these days. 
-				Now we can do something nicer and fancier like this:</p>
+				Now we can do something nicer and fancier like this (see image from right, please):</p>
+				<p style="margin-top: 30px"><b>Pocket Watch</b> represents such an effort but taken to what we consider <i>the next level</i>. 
+				<ul>
+					<li>Who said a watch can only show the time?</li> 
+					<li>Why cannot show also the date? Why cannot play a song?</li> 
+					<li>Why if it looks like a regular watch it cannot be exactly like a regular watch?</li> 
+				</ul>
+				The answer to all of this is: <span class="italic">it can... <span class="strong">use Pocket Watch</span>!</span></p>
+				<h2>Live examples</h2>
+				<p>You can see here different instances of <i>PocketWatch</i>. We recommend using the production version but if you want
+				to use test (beta) or nightly build version, there should be no one stopping you. </p>
+				<ul>
+					<li><a href="./pw/" title="PocketWatch, production version">Production</a></li> 
+					<li><a href="./pw-test/" title="PocketWatch, test (beta) version">Test (beta)</a></li> 
+					<li><a href="./pw-dev/" title="PocketWatch, nightly build (development) version">Nightly build</a></li> 
+				</ul> 
 			</div>
 			<div class="col-md-3" style="margin-top: 0px; padding: 0px;">
 				<div id="analogWatchWrapper" style="margin-top: 0px; padding: 0px;">
@@ -220,13 +235,6 @@
 				</div>
 			</div>
 			<div class="col-md-12" style="margin-top: 0px">
-				<p><b>Pocket Watch</b> represents such an effort but taken to what we consider <i>the next level</i>. 
-				<ul>
-					<li>Who said a watch can only show the time?</li> 
-					<li>Why cannot show also the date? Why cannot play a song?</li> 
-					<li>Why if it looks like a regular watch it cannot be exactly like a regular watch?</li> 
-				</ul>
-				The answer to all of this is: <span class="italic">it can... <span class="strong">use Pocket Watch</span>!</span></p>
 				<h2>How to use Pocket Watch?</h2>
 				<p>Embedding Pocket Watch into a web page is very easy... and free. All you have to do is follow the next staps.</p>
 				<h3>1. Download...</h3>

@@ -71,7 +71,6 @@
 						<li>Project label management</li>
 						<li>Assigned users management</li>
 						<li>Issue state and flow customization</li>
-						<li>Issue state and flow customization</li>
 					</ul>
 					<li>Agile (in preparation)</li>
 					<ul>
@@ -86,10 +85,10 @@
 				Of course, it would make us very happy and proud if we find out that somebody is using our product but that is entirely up to you. 
 				Second: there are many products like this on the market but none of them has the simplicity and power of FIM in a cost free "flavor". 
 				Third: these applications intend to start from something simple and easy, and become so complex and so big… Our goal was from beginning to provide a compact but very robust application…</p>
-				<h3>Why letter F is turned?</h3>
-				<p>I have to admin the original idea is not mine. I don't know if anybody else came with idea of turning letter F but I read about this in a book written by Isaac Asimov (I think it was Foundation and Earth). 
-				There was an experimental ship there called Far Star. There was nothing special about this ship name until those who were using it didn't meet some people presumed to be descendants of the last people 
-				who left Earth before becoming totally uninhabitable. They were surprised to see that letter F is not written correct...</p>
+				<h3>Why letter F is reversed?</h3>
+				<p>I have to admit the original idea is not mine... I don't know if anybody else came with idea of reversing letter F but I read about this in a book written by <i><b>Isaac Asimov</b></i> (I think it was <i>Foundation and Earth</i>). 
+				There was an experimental ship there called <i><b>Far Star</b></i>. There was nothing special about the name of this ship, until those who were using it didn't meet some people, presumed to be descendants of the last humans 
+				who left Earth before becoming totally uninhabitable. They were surprised to see that letter <b>F</b> is not written correct... it's reversed</p>
             </div>
 
         </div>
