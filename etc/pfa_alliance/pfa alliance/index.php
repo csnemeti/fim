@@ -43,7 +43,7 @@
 				</div>
 				<div class="col-lg-12">
 					<hr>
-					<p class="bg-info">This site contains builds for the software products developed under PFA Alliance name.
+					<p class="bg-info" style="text-align: justify">This site contains builds for the software products developed under PFA Alliance name.
 						PFA Alliance and / or any of its developers <b>cannot be hold responsible</b> in case you loose data for / by any of the developed applications and under any circumstances.<br />
 						We recommend you to back-up data frequently because this is the only way to keep data safe.
 					</p>

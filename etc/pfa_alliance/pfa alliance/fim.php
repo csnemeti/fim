@@ -55,7 +55,7 @@
 			</div>
 			
             <div class="col-md-4" style="margin-top: 0px">
-				<h3>What does <span class="asimovF">F</span>IM?</h3>
+				<h2>What does <span class="asimovF">F</span>IM?</h2>
                 <p><span class="asimovF">F</span>IM represents an Issue Manager we develop and give it to use for free.</p>
                 <h3>What can you do with <span class="asimovF">F</span>IM ?</h3>
                 <ul>
@@ -80,15 +80,17 @@
                 </ul>
 			</div>
 			<div class="col-md-12" style="margin-top: 0px">
-				<h3>Why (to use) <span class="asimovF">F</span>IM?</h3>
-				<p>Well… it is a difficult question. First: I would like to say we do not intend to put any pressure on you to use any of our products, <span class="asimovF">F</span>IM included. 
+				<h2>Why (to use) <span class="asimovF">F</span>IM?</h2>
+				<p style="text-align: justify">Well… it is a difficult question. First: I would like to say we do not intend to put any pressure on you to use any of our products, <span class="asimovF">F</span>IM included. 
 				Of course, it would make us very happy and proud if we find out that somebody is using our product but that is entirely up to you. 
-				Second: there are many products like this on the market but none of them has the simplicity and power of FIM in a cost free "flavor". 
+				Second: there are many products like this on the market but none of them has the simplicity and power of <span class="asimovF">F</span>IM in a cost free "flavor". 
 				Third: these applications intend to start from something simple and easy, and become so complex and so big… Our goal was from beginning to provide a compact but very robust application…</p>
 				<h3>Why letter F is reversed?</h3>
-				<p>I have to admit the original idea is not mine... I don't know if anybody else came with idea of reversing letter F but I read about this in a book written by <i><b>Isaac Asimov</b></i> (I think it was <i>Foundation and Earth</i>). 
+				<p style="text-align: justify">I have to admit the original idea is not mine... I don't know if anybody else came with idea of reversing letter F but I read about this in a book written by <i><b>Isaac Asimov</b></i> (I think it was <i>Foundation and Earth</i>). 
 				There was an experimental ship there called <i><b>Far Star</b></i>. There was nothing special about the name of this ship, until those who were using it didn't meet some people, presumed to be descendants of the last humans 
 				who left Earth before becoming totally uninhabitable. They were surprised to see that letter <b>F</b> is not written correct... it's reversed</p>
+				<h2>Versions of <span class="asimovF">F</span>IM</h2>
+				<h3>Installing <span class="asimovF">F</span>IM</h3>
             </div>
 
         </div>

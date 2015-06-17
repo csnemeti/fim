@@ -146,6 +146,29 @@
 		}
     </script>
 </head>
+<?php
+	function endsWith($haystack, $needle) {
+	    // search forward starting from end minus needle length characters
+	    return $needle === "" || (($temp = strlen($haystack) - strlen($needle)) >= 0 && strpos($haystack, $needle, $temp) !== FALSE);
+	}
+	function getLinkToFirstFileFrom($directory, $extension) {
+		$foundFile = NULL;
+	    $h = opendir($directory); 
+	    $extension = $extension.strtolower();
+		while (false !== ($entry = readdir($h))) {
+			// Skips over . and .. unwanted files
+		    if($entry != '.' && $entry != '..' && endsWith($entry.strtolower(), $extension)) { 
+		        $foundFile = $entry; 
+		        break;
+		    }
+		}
+		$link = '';
+		if ($foundFile != NULL){
+			$link = '<a href="' . $directory . $entry . '">' . $entry . '</a>';
+		}
+		return $link;
+	}
+?>
 <body onload="initWatches()">
 
 <?php include './includes/header.php';?>
@@ -210,9 +233,9 @@
 				</div>
 			</div>
 			<div class="col-md-9" style="margin-top: 0px">
-				<p>With HTML 5 features, this watch idea seems to reborn, but this time into analog watches. This is probably amplified by the <i>Smartwatch</i> concept also that is surrounding us during these days. 
+				<p style="text-align: justify">With HTML 5 features, this watch idea seems to reborn, but this time into analog watches. This is probably amplified by the <i>Smartwatch</i> concept also that is surrounding us during these days. 
 				Now we can do something nicer and fancier like this (see image from right, please):</p>
-				<p style="margin-top: 30px"><b>Pocket Watch</b> represents such an effort but taken to what we consider <i>the next level</i>. 
+				<p style="margin-top: 30px; text-align: justify"><b>Pocket Watch</b> represents such an effort but taken to what we consider <i>the next level</i>. 
 				<ul>
 					<li>Who said a watch can only show the time?</li> 
 					<li>Why cannot show also the date? Why cannot play a song?</li> 
@@ -220,12 +243,12 @@
 				</ul>
 				The answer to all of this is: <span class="italic">it can... <span class="strong">use Pocket Watch</span>!</span></p>
 				<h2>Live examples</h2>
-				<p>You can see here different instances of <i>PocketWatch</i>. We recommend using the production version but if you want
+				<p style="text-align: justify">You can see here different instances of <i>PocketWatch</i>. We recommend using the production version but if you want
 				to use test (beta) or nightly build version, there should be no one stopping you. </p>
 				<ul>
-					<li><a href="./pw/" title="PocketWatch, production version">Production</a></li> 
-					<li><a href="./pw-test/" title="PocketWatch, test (beta) version">Test (beta)</a></li> 
-					<li><a href="./pw-dev/" title="PocketWatch, nightly build (development) version">Nightly build</a></li> 
+					<li><a href="./pw/" title="PocketWatch, production version">Production</a> - <?php echo getLinkToFirstFileFrom('./pw/dist/', '.zip') ?></li>
+					<li><a href="./pw-test/" title="PocketWatch, test (beta) version">Test (beta)</a> - <?php echo getLinkToFirstFileFrom('./pw-test/dist/', '.zip') ?></li> 
+					<li><a href="./pw-dev/" title="PocketWatch, nightly build (development) version">Nightly build</a> - <?php echo getLinkToFirstFileFrom('./pw-dev/dist/', '.zip') ?></li> 
 				</ul> 
 			</div>
 			<div class="col-md-3" style="margin-top: 0px; padding: 0px;">
@@ -238,17 +261,17 @@
 				<h2>How to use Pocket Watch?</h2>
 				<p>Embedding Pocket Watch into a web page is very easy... and free. All you have to do is follow the next staps.</p>
 				<h3>1. Download...</h3>
-				<p>You may download the latest version and all it's dependencies from <a href="/pw/pocket-watch-0.2.zip">this</a> link.
+				<p style="text-align: justify">You may download the latest version and all it's dependencies from <?php echo getLinkToFirstFileFrom('./pw/dist/', '.zip') ?> link.
 				The ZIP file contains the JavaScript library (<strong>lib</strong> directory) and all it's dependencies plus some examples (<strong>examples</strong> directory) regarding how to use it.
 				</p>
 				<h3>2. Copy content into your project</h3>
-				<p>You should copy all the files from <i>lib</i> directory into your project (<i>examples</i> directory is not required, 
+				<p style="text-align: justify">You should copy all the files from <i>lib</i> directory into your project (<i>examples</i> directory is not required, 
 				it's there only to show you some running examples). 
 				This contains all the necessary elements to make the watch running in your web page. 
 				Do not modify the structure of the files! In case you do that, the watch might not work.</p>
 				<h3>3. Modify Web page</h3>				
 				<h4>3.0. Import main JavaScript file</h4>
-				<p>In order to use the watch, first you must import the main JavaScript file. The main file import depends on the relative
+				<p style="text-align: justify">In order to use the watch, first you must import the main JavaScript file. The main file import depends on the relative
 				path of the HTML file where are you using it and the <i>pfa-pocket-watch...js</i> file. In our example we will assume
 				that we use the watch in <i>index.html</i> and the JavaScript file is named <i>pfa-pocket-watch-0.1.js</i> and located in 
 				<i>js</i> directory (in time, the 0.1 number will increase).<br />
@@ -257,7 +280,7 @@
 				In case the path is incorrect, the watch will not work.
 				</p>
 				<h4>3.1. Create DIV</h4>
-				<p>You should create a <b>DIV</b> in whitch the watch will be placed. You can do that by putting the following line into HTML: <br />
+				<p style="text-align: justify">You should create a <b>DIV</b> in whitch the watch will be placed. You can do that by putting the following line into HTML: <br />
 				<code>&lt;DIV id="watch">&lt;/DIV></code> <br />
 				<b>NOTES</b>
 				<ul> 
@@ -271,10 +294,8 @@
 					</li>
 				</ul>
 				</p>
-				<p>
-				</p>			
 				<h4>3.2. Define JavaScript function</h4>				
-				<p>You should define a JavaScript function that contains code for initializing and starting the watch. 
+				<p style="text-align: justify">You should define a JavaScript function that contains code for initializing and starting the watch. 
 				The simples way to do that looks like this: <br />
 				<code>function startWatch() {<br />
 				&nbsp;&nbsp;&nbsp;&nbsp;(new pfaAllianceClock('watch', null)).start();<br />
@@ -296,12 +317,12 @@
 				For more examples and customizations please check the <i>examples</i> directory.
 				</p>				
 				<h4>3.3. Call the JavaScript function</h4>	
-				<p>You need to call the watch function (created at previous point) when all resorces were loaded. 
+				<p style="text-align: justify">You need to call the watch function (created at previous point) when all resorces were loaded. 
 				I suggest using the <b>body onload</b> function to initialize the watch (JQuery ready might not work).<br />
 				<code>&lt;body onload="startWatch()"></code>  	
 				</p>				
 				<h2>What do you think?</h2>
-				<p>In case you would like to leave us a feedback or you have something to share (a possible feature, a bug, an
+				<p style="text-align: justify">In case you would like to leave us a feedback or you have something to share (a possible feature, a bug, an
 				enhancement of what we already did) you may <a href="contact.php?s=pwfeedback">contact us</a>.						
 				</p>				
             </div>
