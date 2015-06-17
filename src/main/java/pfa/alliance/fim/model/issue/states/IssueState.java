@@ -15,13 +15,16 @@ import pfa.alliance.fim.model.GenericModel;
 import pfa.alliance.fim.model.Identifiable;
 
 @Entity(name = "issue_state")
-public class IssueState extends GenericModel implements Identifiable<Integer> {
+public class IssueState
+    extends GenericModel
+    implements Identifiable<Long>
+{
     private static final long serialVersionUID = -6815173726653278341L;
 
 	@Id
 	@GeneratedValue( strategy = GenerationType.IDENTITY )
 	@Column( name = "id" )
-	private Integer id;
+    private Long id;
 	
 	@Column(name = "code")
 	private String code;
@@ -33,13 +36,13 @@ public class IssueState extends GenericModel implements Identifiable<Integer> {
     private Set<IssueStateLocalized> localizations;
 
     @Override
-    public Integer getId()
+    public Long getId()
     {
         return id;
     }
 
     @Override
-    public void setId( Integer id )
+    public void setId( Long id )
     {
         this.id = id;
     }

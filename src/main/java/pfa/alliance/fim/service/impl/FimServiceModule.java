@@ -19,6 +19,7 @@ import pfa.alliance.fim.service.DatabaseMigrationService;
 import pfa.alliance.fim.service.EmailGeneratorService;
 import pfa.alliance.fim.service.EmailService;
 import pfa.alliance.fim.service.FimUrlGeneratorService;
+import pfa.alliance.fim.service.IssueManagerService;
 import pfa.alliance.fim.service.PersistenceService;
 import pfa.alliance.fim.service.ProjectManagementService;
 import pfa.alliance.fim.service.SolrManager;
@@ -69,6 +70,7 @@ public class FimServiceModule
 
         bind( UserManagerService.class ).to( UserManagerServiceImpl.class );
         bind( ProjectManagementService.class ).to( ProjectManagementServiceImpl.class );
+        bind( IssueManagerService.class ).to( IssueManagerServiceImpl.class );
     }
 
     /**

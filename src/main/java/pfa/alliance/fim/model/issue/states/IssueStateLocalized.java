@@ -15,7 +15,7 @@ import pfa.alliance.fim.model.issue.IssuePriorityLocalized;
  */
 @Entity( name = "issue_state_localized" )
 public class IssueStateLocalized
-    extends GenericLocalizedModel<Integer, IssueState>
+    extends GenericLocalizedModel<Long, IssueState>
 {
     private static final long serialVersionUID = 253859477759207415L;
 
