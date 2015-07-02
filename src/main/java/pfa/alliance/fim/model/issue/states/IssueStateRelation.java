@@ -25,8 +25,8 @@ public class IssueStateRelation implements Identifiable<Integer> {
 	private IssueFlow flow;
 	
 	@ManyToOne(fetch = FetchType.EAGER, optional = false)
-	@JoinColumn(name = "initial_state")
-	private IssueState initialState;
+	@JoinColumn(name = "from_state")
+	private IssueState fromState;
 
 	@ManyToOne(fetch = FetchType.EAGER, optional = false)
 	@JoinColumn(name = "next_state")
@@ -35,37 +35,45 @@ public class IssueStateRelation implements Identifiable<Integer> {
 	@Column(name = "bidirectional_flag")
 	private boolean bidirectional;
 
-	public IssueState getInitialState() {
-		return initialState;
+	public IssueState getFromState() 
+	{
+		return fromState;
 	}
 
-	public void setInitialState(IssueState initialState) {
-		this.initialState = initialState;
+	public void setFromState(IssueState fromState) 
+	{
+		this.fromState = fromState;
 	}
 
-	public IssueState getNextState() {
+	public IssueState getNextState() 
+	{
 		return nextState;
 	}
 
-	public void setNextState(IssueState nextState) {
+	public void setNextState(IssueState nextState) 
+	{
 		this.nextState = nextState;
 	}
 
-	public boolean isBidirectional() {
+	public boolean isBidirectional() 
+	{
 		return bidirectional;
 	}
 
-	public void setBidirectional(boolean bidirectional) {
+	public void setBidirectional(boolean bidirectional) 
+	{
 		this.bidirectional = bidirectional;
 	}
 
 	@Override
-	public Integer getId() {
+	public Integer getId() 
+	{
 		return id;
 	}
 
 	@Override
-	public void setId(Integer id) {
+	public void setId(Integer id) 
+	{
 		this.id = id;
 	}
 

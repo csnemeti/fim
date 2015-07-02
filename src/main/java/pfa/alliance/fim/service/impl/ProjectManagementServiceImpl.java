@@ -394,17 +394,19 @@ class ProjectManagementServiceImpl
 
                     IssueStateRelationDTO relationDTO = new IssueStateRelationDTO();
                     relationDTO.setBidirectional( relation.isBidirectional() );
-                    if ( relation.getInitialState() != null )
+                    if ( relation.getFromState() != null )
                     {
                         IssueStateDTO initialStateDTO = new IssueStateDTO();
-                        // TODO fix this
-                        // initialStateDTO.setLocalizedName(relation.getInitialState().getLocalizedNamesMap());
+                        initialStateDTO.setFinalState(relation.getFromState().isFinalState());
+                        initialStateDTO.setInitialState(relationDTO.getFromState().isInitialState());
+                        initialStateDTO.setName(relation.getFromState().getName());
                     }
                     if ( relation.getNextState() != null )
                     {
                         IssueStateDTO nextStateDTO = new IssueStateDTO();
-                        // TODO fix this
-                        // nextStateDTO.setLocalizedName(relation.getInitialState().getLocalizedNamesMap());
+                        nextStateDTO.setFinalState(relation.getNextState().isFinalState());
+                        nextStateDTO.setInitialState(relationDTO.getNextState().isInitialState());
+                        nextStateDTO.setName(relation.getFromState().getName());
                     }
                 }
             }

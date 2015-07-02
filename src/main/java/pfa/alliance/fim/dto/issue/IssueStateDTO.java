@@ -1,17 +1,36 @@
 package pfa.alliance.fim.dto.issue;
 
-import java.util.Map;
 
 public class IssueStateDTO {
 
-	private Map<String, String> localizedName;
+	private String name;
+	
+	private boolean initialState;
 
-	public Map<String, String> getLocalizedName() {
-		return localizedName;
+	private boolean finalState;
+
+	public boolean isInitialState() {
+		return initialState;
 	}
 
-	public void setLocalizedName(Map<String, String> localizedName) {
-		this.localizedName = localizedName;
+	public void setInitialState(boolean initialState) {
+		this.initialState = initialState;
+	}
+
+	public boolean isFinalState() {
+		return finalState;
+	}
+
+	public void setFinalState(boolean finalState) {
+		this.finalState = finalState;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }

@@ -2,18 +2,18 @@ package pfa.alliance.fim.dto.issue;
 
 public class IssueStateRelationDTO {
 
-	private IssueStateDTO initialState;
+	private IssueStateDTO fromState;
 
 	private IssueStateDTO nextState;
 
 	private boolean bidirectional;
 
-	public IssueStateDTO getInitialState() {
-		return initialState;
+	public IssueStateDTO getFromState() {
+		return fromState;
 	}
 
-	public void setInitialState(IssueStateDTO initialState) {
-		this.initialState = initialState;
+	public void setFromState(IssueStateDTO fromStateDTO) {
+		this.fromState = fromStateDTO;
 	}
 
 	public IssueStateDTO getNextState() {

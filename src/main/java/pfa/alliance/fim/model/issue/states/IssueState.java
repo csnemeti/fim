@@ -1,15 +1,10 @@
 package pfa.alliance.fim.model.issue.states;
 
-import java.util.Set;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 
 import pfa.alliance.fim.model.GenericModel;
 import pfa.alliance.fim.model.Identifiable;
@@ -29,8 +24,11 @@ public class IssueState extends GenericModel implements Identifiable<Integer> {
     @Column( name = "state_name", nullable = false, length = 50 )
     private String name;
 
-    @OneToMany( mappedBy = "record", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE } )
-    private Set<IssueStateLocalized> localizations;
+    @Column( name = "initial_state" )
+    private boolean initialState;
+    
+    @Column( name = "final_state")
+    private boolean finalState;
 
     @Override
     public Integer getId()
@@ -54,16 +52,6 @@ public class IssueState extends GenericModel implements Identifiable<Integer> {
         this.code = code;
     }
 
-    public Set<IssueStateLocalized> getLocalizations()
-    {
-        return localizations;
-    }
-
-    public void setLocalizations( Set<IssueStateLocalized> localizations )
-    {
-        this.localizations = localizations;
-    }
-
     public String getName()
     {
         return name;
@@ -73,5 +61,24 @@ public class IssueState extends GenericModel implements Identifiable<Integer> {
     {
         this.name = name;
     }
-	
+
+	public boolean isInitialState() 
+	{
+		return initialState;
+	}
+
+	public void setInitialState(boolean initialState) 
+	{
+		this.initialState = initialState;
+	}
+
+	public boolean isFinalState() 
+	{
+		return finalState;
+	}
+
+	public void setFinalState(boolean finalState) 
+	{
+		this.finalState = finalState;
+	}
 }

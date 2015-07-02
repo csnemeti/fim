@@ -54,5 +54,4 @@ public class IssueFlow extends GenericModel implements Identifiable<Integer> {
 		this.name = name;
 	}
 	
-	
 }
