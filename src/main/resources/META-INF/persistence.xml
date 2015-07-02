@@ -29,7 +29,6 @@
          
          
         <class>pfa.alliance.fim.model.issue.states.IssueState</class>
-        <class>pfa.alliance.fim.model.issue.states.IssueStateLocalized</class>
         
         <class>pfa.alliance.fim.model.issue.states.IssueStateRelation</class>
         <class>pfa.alliance.fim.model.issue.IssueFlow</class>
