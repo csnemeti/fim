@@ -411,6 +411,23 @@ public class EditProjectActionBean
         ProjectState state = ProjectState.valueOf( stateName );
         project.setState( state );
     }
+    
+    
+    public List<StripesDropDownOption> getIssueStates()
+    {
+        List<StripesDropDownOption> states = new ArrayList<>();
+        StripesDropDownOption chDownOption = new StripesDropDownOption("id", "test");
+        states.add(chDownOption);
+        return states;
+    }
+    
+    public String getSelectedIssueFlow(){
+        /*if(project.getIssueFlow() != null){
+            return project.getIssueFlow().getName();
+        }*/
+        return "Not selected";
+    }
+
 
     @Override
     public String getTitle()
