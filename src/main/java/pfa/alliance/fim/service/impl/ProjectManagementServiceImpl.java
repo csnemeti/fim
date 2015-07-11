@@ -20,6 +20,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pfa.alliance.fim.dao.IssueStateRepository;
 import pfa.alliance.fim.dao.ProjectComponentRepository;
 import pfa.alliance.fim.dao.ProjectLabelRepository;
 import pfa.alliance.fim.dao.ProjectRepository;
@@ -31,7 +32,7 @@ import pfa.alliance.fim.dto.UserDTO;
 import pfa.alliance.fim.dto.issue.IssueFlowDTO;
 import pfa.alliance.fim.dto.issue.IssueStateDTO;
 import pfa.alliance.fim.dto.issue.IssueStateRelationDTO;
-import pfa.alliance.fim.model.issue.IssueFlow;
+import pfa.alliance.fim.model.issue.states.IssueFlow;
 import pfa.alliance.fim.model.issue.states.IssueStateRelation;
 import pfa.alliance.fim.model.project.Project;
 import pfa.alliance.fim.model.project.ProjectComponent;
@@ -74,6 +75,9 @@ class ProjectManagementServiceImpl
     /** The {@link ProjectLabelRepository} to be used by this service. */
     private final ProjectLabelRepository labelRepository;
 
+    /** The used {@link IssueStateRepository} in this class. */
+    private final IssueStateRepository issueStateRepository;
+
     /** E-mail service, used for sending e-mails. */
     private final EmailService emailService;
 
@@ -97,6 +101,7 @@ class ProjectManagementServiceImpl
     ProjectManagementServiceImpl( ProjectRepository projectRepository, UserRepository userRepository,
                                   ProjectComponentRepository componentRepository,
                                   ProjectLabelRepository labelRepository, EmailService emailService,
+                                  IssueStateRepository issueStateRepository,
                                   EmailGeneratorService emailGeneratorService,
                                   FimUrlGeneratorService fimUrlGeneratorService )
     {
@@ -104,6 +109,7 @@ class ProjectManagementServiceImpl
         this.userRepository = userRepository;
         this.componentRepository = componentRepository;
         this.labelRepository = labelRepository;
+        this.issueStateRepository = issueStateRepository;
 
         this.emailService = emailService;
         this.emailGeneratorService = emailGeneratorService;
@@ -144,8 +150,8 @@ class ProjectManagementServiceImpl
 
     @Override
     @Transactional
-    public Project update( final String oldCode, final String name, final String code, final String description, final boolean hidden,
-                           final ProjectState state, final Locale locale )
+    public Project update( final String oldCode, final String name, final String code, final String description,
+                           final boolean hidden, final ProjectState state, final Locale locale )
     {
         LOG.debug( "Updating project with code = {}, name = {}, code = {}, description = {}, hidden = {}, state = {}, locale = {}",
                    oldCode, name, code, description, hidden, state, locale );
@@ -397,16 +403,16 @@ class ProjectManagementServiceImpl
                     if ( relation.getFromState() != null )
                     {
                         IssueStateDTO initialStateDTO = new IssueStateDTO();
-                        initialStateDTO.setFinalState(relation.getFromState().isFinalState());
-                        initialStateDTO.setInitialState(relationDTO.getFromState().isInitialState());
-                        initialStateDTO.setName(relation.getFromState().getName());
+                        initialStateDTO.setFinalState( relation.getFromState().isFinalState() );
+                        initialStateDTO.setInitialState( relationDTO.getFromState().isInitialState() );
+                        initialStateDTO.setName( relation.getFromState().getName() );
                     }
                     if ( relation.getNextState() != null )
                     {
                         IssueStateDTO nextStateDTO = new IssueStateDTO();
-                        nextStateDTO.setFinalState(relation.getNextState().isFinalState());
-                        nextStateDTO.setInitialState(relationDTO.getNextState().isInitialState());
-                        nextStateDTO.setName(relation.getFromState().getName());
+                        nextStateDTO.setFinalState( relation.getNextState().isFinalState() );
+                        nextStateDTO.setInitialState( relationDTO.getNextState().isInitialState() );
+                        nextStateDTO.setName( relation.getFromState().getName() );
                     }
                 }
             }
@@ -582,5 +588,31 @@ class ProjectManagementServiceImpl
     private static boolean isTagBelongingToProject( ProjectTag tag, Project project )
     {
         return tag != null && project != null && tag.getProject().getId().equals( project.getId() );
+    }
+
+    @Override
+    public List<IssueFlow> getAllValidFlows()
+    {
+        return issueStateRepository.findAllFlows();
+    }
+
+    @Override
+    @Transactional
+    public void updateProjectFlow( String projectCode, int flowId )
+    {
+        LOG.debug( "Updateing IssueFlow on Project with code: {} to {}", projectCode, flowId );
+        boolean updated = false;
+        Project project = projectRepository.findByCode( projectCode );
+        if ( project != null && project.getIssueFlow().getId() != flowId )
+        {
+            IssueFlow flow = issueStateRepository.findFlowById( flowId );
+            if ( flow != null )
+            {
+                project.setIssueFlow( flow );
+                projectRepository.save( project );
+                updated = true;
+            }
+        }
+        LOG.debug( "IssueFlow update on Project with code: {} to {}, updated = {}", projectCode, flowId, updated );
     }
 }

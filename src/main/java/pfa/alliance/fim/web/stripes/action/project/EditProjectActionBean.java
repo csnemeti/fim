@@ -21,6 +21,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pfa.alliance.fim.model.issue.states.IssueFlow;
 import pfa.alliance.fim.model.project.Project;
 import pfa.alliance.fim.model.project.ProjectComponent;
 import pfa.alliance.fim.model.project.ProjectLabel;
@@ -72,6 +73,9 @@ public class EditProjectActionBean
 
     @Validate( required = true, on = { "editLabel", "deleteLabel" } )
     private Long labelId;
+
+    @Validate( required = true, on = { "updateFlow" } )
+    private Integer flowId;
 
     private final ProjectManagementService projectManagementService;
 
@@ -180,6 +184,14 @@ public class EditProjectActionBean
     {
         // process
         projectManagementService.createComponent( code, labelName, labelColor );
+        // redirect to this page again
+        return redirectBackHere();
+    }
+
+    public Resolution updateFlow()
+    {
+        // process
+        projectManagementService.updateProjectFlow( code, flowId );
         // redirect to this page again
         return redirectBackHere();
     }
@@ -413,21 +425,27 @@ public class EditProjectActionBean
     }
     
     
-    public List<StripesDropDownOption> getIssueStates()
+    public List<StripesDropDownOption> getIssueFlows()
     {
         List<StripesDropDownOption> states = new ArrayList<>();
-        StripesDropDownOption chDownOption = new StripesDropDownOption("id", "test");
-        states.add(chDownOption);
+        List<IssueFlow> flows = projectManagementService.getAllValidFlows();
+        for ( IssueFlow flow : flows )
+        {
+            states.add( new StripesDropDownOption( flow.getId().toString(), flow.getName() ) );
+        }
         return states;
     }
     
-    public String getSelectedIssueFlow(){
-        /*if(project.getIssueFlow() != null){
-            return project.getIssueFlow().getName();
-        }*/
-        return "Not selected";
+    public Integer getIssueFlow()
+    {
+        IssueFlow flow = project.getIssueFlow();
+        return ( flow != null ) ? flow.getId() : null;
     }
 
+    public void setIssueFlow( Integer flowId )
+    {
+        this.flowId = flowId;
+    }
 
     @Override
     public String getTitle()

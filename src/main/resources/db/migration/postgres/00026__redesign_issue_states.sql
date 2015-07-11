@@ -1,4 +1,10 @@
-DROP TABLE issue_state;
+DROP TABLE IF EXISTS issue_state_localized CASCADE;
+DROP TABLE IF EXISTS issue_state_ml CASCADE;
+
+DROP TABLE IF EXISTS issue_state_relation CASCADE;
+DROP TABLE IF EXISTS issue_state_flow CASCADE;
+
+DROP TABLE IF EXISTS issue_state CASCADE;
 
 CREATE TABLE issue_state (
 	id serial PRIMARY KEY,
@@ -17,10 +23,6 @@ INSERT INTO issue_state(code, state_name, created_at, modified_at, initial_state
 ('TEST','Testing', now(), now(), FALSE, FALSE),
 ('DONE','Done', now(), now(), FALSE, TRUE);
 
-DROP TABLE issue_state_ml ;
-
-
-DROP TABLE issue_state_flow;
 CREATE TABLE issue_state_flow (
 	id serial PRIMARY KEY,
 	name varchar(40) NOT NULL,
@@ -33,8 +35,6 @@ CREATE TABLE issue_state_flow (
 INSERT INTO issue_state_flow(name, created_at, modified_at) VALUES 
 ('DEFAULT_FLOW_1', now(), now()),
 ('DEFAULT_FLOW_2', now(), now());
-
-DROP TABLE issue_state_relation;
 
 CREATE TABLE issue_state_relation (
 	id serial PRIMARY KEY,
@@ -49,6 +49,7 @@ INSERT INTO issue_state_relation(id_flow, initial_state, next_state, bidirection
 (1, (SELECT id FROM issue_state WHERE code = 'PRGS'),(SELECT id FROM issue_state WHERE code = 'DONE'), false),
 (2, (SELECT id FROM issue_state WHERE code = 'NEW'),(SELECT id FROM issue_state WHERE code = 'PRGS'), false),
 (2, (SELECT id FROM issue_state WHERE code = 'PRGS'),(SELECT id FROM issue_state WHERE code = 'TEST'), false),
-(2, (SELECT id FROM issue_state WHERE code = 'TEST'),(SELECT id FROM issue_state WHERE code = 'DONE'), false);
+(2, (SELECT id FROM issue_state WHERE code = 'TEST'),(SELECT id FROM issue_state WHERE code = 'DONE'), false),
+(2, (SELECT id FROM issue_state WHERE code = 'TEST'),(SELECT id FROM issue_state WHERE code = 'NEW'), false);
 
 
