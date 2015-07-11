@@ -10,7 +10,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import pfa.alliance.fim.model.Identifiable;
-import pfa.alliance.fim.model.issue.IssueFlow;
 
 @Entity(name = "issue_state_relation")
 public class IssueStateRelation implements Identifiable<Integer> {

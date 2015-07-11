@@ -31,7 +31,7 @@ import pfa.alliance.fim.dto.UserDTO;
 import pfa.alliance.fim.dto.issue.IssueFlowDTO;
 import pfa.alliance.fim.dto.issue.IssueStateDTO;
 import pfa.alliance.fim.dto.issue.IssueStateRelationDTO;
-import pfa.alliance.fim.model.issue.IssueFlow;
+import pfa.alliance.fim.model.issue.states.IssueFlow;
 import pfa.alliance.fim.model.issue.states.IssueStateRelation;
 import pfa.alliance.fim.model.project.Project;
 import pfa.alliance.fim.model.project.ProjectComponent;
