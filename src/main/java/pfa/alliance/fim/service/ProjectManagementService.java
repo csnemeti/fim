@@ -10,6 +10,7 @@ import java.util.Map;
 import pfa.alliance.fim.dto.ProjectDTO;
 import pfa.alliance.fim.dto.ProjectSearchDTO;
 import pfa.alliance.fim.dto.ProjectSearchResultDTO;
+import pfa.alliance.fim.model.issue.states.IssueFlow;
 import pfa.alliance.fim.model.project.Project;
 import pfa.alliance.fim.model.project.ProjectComponent;
 import pfa.alliance.fim.model.project.ProjectLabel;
@@ -162,4 +163,13 @@ public interface ProjectManagementService
      * @return true if label was deleted
      */
     boolean deleteLabel( final long id, final String projectCode );
+
+    /**
+     * Gets all the flows that can be assigned to a {@link Project}.
+     * 
+     * @return all valid flows
+     */
+    List<IssueFlow> getAllValidFlows();
+    
+    void updateProjectFlow( final String projectCode, final int flowId );
 }

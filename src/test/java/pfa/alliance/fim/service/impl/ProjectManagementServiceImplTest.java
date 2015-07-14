@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import pfa.alliance.fim.dao.IssueStateRepository;
 import pfa.alliance.fim.dao.ProjectComponentRepository;
 import pfa.alliance.fim.dao.ProjectLabelRepository;
 import pfa.alliance.fim.dao.ProjectRepository;
@@ -50,6 +51,8 @@ public class ProjectManagementServiceImplTest
 
     private ProjectLabelRepository labelRepositoryMock;
 
+    private IssueStateRepository issueStateRepositoryMock;
+
     @Before
     public void init()
     {
@@ -60,10 +63,11 @@ public class ProjectManagementServiceImplTest
         fimUrlGeneratorServiceMock = Mockito.mock( FimUrlGeneratorService.class );
         componentRepositoryMock = Mockito.mock( ProjectComponentRepository.class );
         labelRepositoryMock = Mockito.mock( ProjectLabelRepository.class );
+        issueStateRepositoryMock = Mockito.mock( IssueStateRepository.class );
 
         projectManagementServiceImpl =
             new ProjectManagementServiceImpl( projectRepositoryMock, userRepositoryMock, componentRepositoryMock,
-                                              labelRepositoryMock, emailServiceMock,
+                                              labelRepositoryMock, emailServiceMock, issueStateRepositoryMock,
                                               emailGeneratorServiceMock, fimUrlGeneratorServiceMock );
     }
 

@@ -18,16 +18,16 @@ public class IssueState extends GenericModel implements Identifiable<Integer> {
 	@Column( name = "id" )
 	private Integer id;
 	
-	@Column(name = "code")
+    @Column( name = "code", nullable = false, length = 5 )
 	private String code;
 
     @Column( name = "state_name", nullable = false, length = 50 )
     private String name;
 
-    @Column( name = "initial_state" )
+    @Column( name = "initial_state", nullable = false )
     private boolean initialState;
     
-    @Column( name = "final_state")
+    @Column( name = "final_state", nullable = false )
     private boolean finalState;
 
     @Override
