@@ -15,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderColumn;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -22,6 +23,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 
 import pfa.alliance.fim.model.GenericModel;
 import pfa.alliance.fim.model.Identifiable;
+import pfa.alliance.fim.model.issue.IssuePriority;
 import pfa.alliance.fim.model.issue.states.IssueFlow;
 
 @Entity( name = "project" )
@@ -29,7 +31,7 @@ public class Project
     extends GenericModel
     implements Identifiable<Integer>
 {
-    private static final long serialVersionUID = 177356267634L;
+    private static final long serialVersionUID = 177356267654L;
 
     @Id
     @GeneratedValue( strategy = GenerationType.IDENTITY )
@@ -60,6 +62,10 @@ public class Project
 
     @OneToMany( fetch = FetchType.LAZY, mappedBy = "project", orphanRemoval = true, cascade = CascadeType.ALL )
     private Set<UserProjectRelation> userBoardData;
+
+    @OneToMany( fetch = FetchType.LAZY, mappedBy = "project", orphanRemoval = true, cascade = CascadeType.ALL )
+    @OrderColumn( name = "order" )
+    private Set<IssuePriority> priorities;
 
     @ManyToOne( fetch = FetchType.EAGER, optional = false )
     @JoinColumn( name = "issue_flow_id" )
@@ -160,6 +166,16 @@ public class Project
     public void setIssueFlow( IssueFlow issueFlow )
     {
         this.issueFlow = issueFlow;
+    }
+
+    public Set<IssuePriority> getPriorities()
+    {
+        return priorities;
+    }
+
+    public void setPriorities( Set<IssuePriority> priorities )
+    {
+        this.priorities = priorities;
     }
 
     @Override

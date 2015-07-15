@@ -1,5 +1,6 @@
 <%@ taglib prefix="stripes" uri="http://stripes.sourceforge.net/stripes.tld"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"  %>
+<%@ taglib prefix="c" 		uri="http://java.sun.com/jsp/jstl/core" %>
 
 <stripes:layout-definition>
 	<h1><fmt:message key="page.title.project.edit.states.issueStates" /></h1>
@@ -34,4 +35,10 @@
         </stripes:form>
 	<hr class="col-md-12">
 	<h1><fmt:message key="page.title.project.edit.states.issuePriorities" /></h1>
+		<c:forEach items="${actionBean.priorities}" var="element" varStatus="loop">
+			<div class="row">
+				<div class="col-sm-1"></div>
+				<div class="col-md-2 priorityLabelSize" order="${element.order}" style="font-weight:bolds">${element.name}</div>
+			</div>
+		</c:forEach>
 </stripes:layout-definition>

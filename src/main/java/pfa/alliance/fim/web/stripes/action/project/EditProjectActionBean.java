@@ -4,6 +4,7 @@
 package pfa.alliance.fim.web.stripes.action.project;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -21,6 +22,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pfa.alliance.fim.model.issue.IssuePriority;
 import pfa.alliance.fim.model.issue.states.IssueFlow;
 import pfa.alliance.fim.model.project.Project;
 import pfa.alliance.fim.model.project.ProjectComponent;
@@ -447,6 +449,12 @@ public class EditProjectActionBean
         this.flowId = flowId;
     }
 
+    public List<IssuePriority> getPriorities()
+    {
+        List<IssuePriority> priorities = new ArrayList<>( project.getPriorities() );
+        Collections.sort( priorities );
+        return priorities;
+    }
     @Override
     public String getTitle()
     {

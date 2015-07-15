@@ -61,6 +61,13 @@
 				}
 
  				$(".component").css('margin-top',"10px");
+ 				$.each( $(".priorityLabelSize"), function( i, l ){
+ 					  var orderValue = l.getAttribute("order");
+ 					  if (orderValue != null && orderValue != ""){
+ 						 orderValue = 10 + parseInt(orderValue);
+ 						 l.style.fontSize = orderValue + "px";
+ 					  }
+ 					});
 				$(".labelWrapperEditor").hover(
 					function () {
 					   $(this).addClass("active");

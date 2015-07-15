@@ -354,7 +354,9 @@ class ProjectManagementServiceImpl
     @Override
     public Project findByCode( String code )
     {
-        return projectRepository.findByCode( code );
+        Project project = projectRepository.findByCode( code );
+        project.getPriorities().size();
+        return project;
     }
 
     /**

@@ -170,6 +170,12 @@ public interface ProjectManagementService
      * @return all valid flows
      */
     List<IssueFlow> getAllValidFlows();
-    
+
+    /**
+     * Change the {@link IssueFlow} of a {@link Project}
+     * 
+     * @param projectCode the code of the {@link Project}
+     * @param flowId the ID of the new {@link IssueFlow} to set
+     */
     void updateProjectFlow( final String projectCode, final int flowId );
 }

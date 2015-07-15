@@ -13,9 +13,12 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import pfa.alliance.fim.model.Identifiable;
+import pfa.alliance.fim.model.project.Project;
 
 /**
  * This enumeration defines the issue priority.
@@ -24,7 +27,7 @@ import pfa.alliance.fim.model.Identifiable;
  */
 @Entity( name = "issue_priority" )
 public class IssuePriority
-    implements Identifiable<Long>
+    implements Identifiable<Long>, Comparable<IssuePriority>
 {
     /** The name of the priority. */
     @Id
@@ -41,6 +44,10 @@ public class IssuePriority
 
     @Column( name = "default_option", nullable = false )
     private boolean defaultOption;
+
+    @ManyToOne( fetch = FetchType.LAZY, optional = false )
+    @JoinColumn( name = "project_id" )
+    private Project project;
 
     @OneToMany( mappedBy = "record", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE } )
     private Set<IssuePriorityLocalized> localizations;
@@ -123,5 +130,11 @@ public class IssuePriority
     public String toString()
     {
         return "IssuePriority[" + id + ", " + name + "]";
+    }
+
+    @Override
+    public int compareTo( IssuePriority o )
+    {
+        return order - o.getOrder();
     }
 }
