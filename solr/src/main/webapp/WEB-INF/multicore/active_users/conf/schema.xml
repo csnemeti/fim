@@ -37,7 +37,7 @@
   <field name="email"   			type="string"    indexed="false" stored="true"  multiValued="false" required="true"/>
   <field name="defaultRole"   		type="string"    indexed="true"  stored="true"  multiValued="false" required="true"/>
   <field name="nameAndEmail"   		type="search_string"    indexed="true"  stored="true"  multiValued="false" required="true"/>
-  <field name="projectsAndRoles"   	type="string"    indexed="false" stored="true"  multiValued="false" /> 
+  <field name="projectsAndRoles"   	type="string"    indexed="true" stored="true"  multiValued="false" /> 
   <field name="createdAt"   		type="timestamp" indexed="false" stored="true"  multiValued="false" /> 
   <field name="modifiedAt"   		type="timestamp" indexed="false" stored="true"  multiValued="false" /> 
  </fields>

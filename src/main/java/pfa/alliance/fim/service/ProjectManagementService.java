@@ -179,4 +179,15 @@ public interface ProjectManagementService
      * @param flowId the ID of the new {@link IssueFlow} to set
      */
     void updateProjectFlow( final String projectCode, final int flowId );
+
+    /**
+     * Assign a user to a project.
+     * 
+     * @param userId the ID of the user to assign
+     * @param projectCode the project code
+     * @param role the role the user will have inside the project
+     * @return true if assignment was successful
+     */
+    boolean assignUser( final int userId, final String projectCode, UserRoleInsideProject role );
+
 }

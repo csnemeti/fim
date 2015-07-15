@@ -13,7 +13,8 @@
 		
 		<script type="text/javascript" src="<stripes:url value="/js/project-code.js" />"></script>
    		<script type="text/javascript" src="<c:url value="/plugins/bootstrap/js/bootstrap-dialog.min.js" />"></script>
-		<script src="<c:url value="/js/jquery.simplecolorpicker/jquery.simplecolorpicker.js" />"></script>
+		<script type="text/javascript" src="<c:url value="/js/jquery.simplecolorpicker/jquery.simplecolorpicker.js" />"></script>
+		<script type="text/javascript" src="<c:url value="/js/bootstrap3-typeahead.min.js" />"></script>
 		<script type="text/javascript" src="<stripes:url value="/js/jquery-validation-1.13.0/jquery.validate.min.js" />"></script>
 		<script type="text/javascript" src="<stripes:url value="/js/jquery-validation-1.13.0/localization/messages_${actionBean.localeLanguage}.min.js" />"></script>
 		
@@ -54,6 +55,10 @@
 				//}, 1000);	
 				$('#editLabel').modal('show');
 			}
+			function openAddUser(){
+				document.getElementById("addUserForm").reset();
+				$('#addUser').modal('show');
+			}
 			$().ready(function() {
 				var prjCode = document.getElementById("projectCode");
 				if (prjCode) {
@@ -89,7 +94,11 @@
 					<%-- Labels --%>
 					$("#componentName").attr('placeholder', "<fmt:message key='page.title.project.edit.lables.newComponent.placeholder' />");
 					$("#labelName").attr('placeholder', "<fmt:message key='page.title.project.edit.lables.newLabel.placeholder' />");
+
+					<%-- Users --%>
+					$("#userSuggestion").attr('placeholder', "<fmt:message key='page.title.project.edit.lables.users.nameOrEmail' />");
 				}
+				$('#userSuggestion').attr("autocomplete", "off");
 				$("[data-toggle='tooltip']").tooltip();
 				
 				$("#compForm").validate({
@@ -123,7 +132,31 @@
 							maxlength: 2000
 						}
 					}
-				});				
+				});
+				$('#userSuggestion').typeahead({
+						minLength : 2,
+						source: function(query, process) {
+							var url = "${actionBean.usersAutocompleteUrl}";
+							url = url.replace("abc", encodeURIComponent(query));
+							$.get( url, function( data, textStatus, jqXHR  ) {
+								//console.log(textStatus);
+								eval(data);
+								process(autocompleteRes);
+							}, 'script');
+						}, 
+						displayText: function (item) {
+							return item.name;
+						},
+						matcher : function(item) {
+							return true;
+						}
+				});
+				$('#userSuggestion').change(function() {
+					var selectedItem = $('#userSuggestion').typeahead("getActive");
+					if(selectedItem){
+						$('#addUserId').val(selectedItem.id);
+					}
+				});
 			});
 		</script>
 	</stripes:layout-component>    

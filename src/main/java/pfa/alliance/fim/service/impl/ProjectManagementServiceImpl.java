@@ -24,6 +24,7 @@ import pfa.alliance.fim.dao.IssueStateRepository;
 import pfa.alliance.fim.dao.ProjectComponentRepository;
 import pfa.alliance.fim.dao.ProjectLabelRepository;
 import pfa.alliance.fim.dao.ProjectRepository;
+import pfa.alliance.fim.dao.UserProjectRelationRepository;
 import pfa.alliance.fim.dao.UserRepository;
 import pfa.alliance.fim.dto.ProjectDTO;
 import pfa.alliance.fim.dto.ProjectSearchDTO;
@@ -87,6 +88,9 @@ class ProjectManagementServiceImpl
     /** Service used for generating URLs inside FIM. */
     private final FimUrlGeneratorService fimUrlGeneratorService;
 
+    /** The {@link UserProjectRelationRepository} instance to use. */
+    private final UserProjectRelationRepository userProjectRelationRepository;
+
     /**
      * Called when instance of this class is created.
      * 
@@ -101,8 +105,9 @@ class ProjectManagementServiceImpl
     @Inject
     ProjectManagementServiceImpl( ProjectRepository projectRepository, UserRepository userRepository,
                                   ProjectComponentRepository componentRepository,
-                                  ProjectLabelRepository labelRepository, EmailService emailService,
-                                  IssueStateRepository issueStateRepository,
+                                  ProjectLabelRepository labelRepository,
+                                  UserProjectRelationRepository userProjectRelationRepository,
+                                  EmailService emailService, IssueStateRepository issueStateRepository,
                                   EmailGeneratorService emailGeneratorService,
                                   FimUrlGeneratorService fimUrlGeneratorService )
     {
@@ -111,6 +116,7 @@ class ProjectManagementServiceImpl
         this.componentRepository = componentRepository;
         this.labelRepository = labelRepository;
         this.issueStateRepository = issueStateRepository;
+        this.userProjectRelationRepository = userProjectRelationRepository;
 
         this.emailService = emailService;
         this.emailGeneratorService = emailGeneratorService;
@@ -588,6 +594,46 @@ class ProjectManagementServiceImpl
         return deleted;
     }
 
+    @Override
+    @Transactional
+    public boolean assignUser( final int userId, final String projectCode, UserRoleInsideProject role )
+    {
+        LOG.debug( "Assigning user {} to project {} in role {}", userId, projectCode, role );
+        boolean assigned = false;
+        User user = userRepository.findOne( userId );
+        Project project = projectRepository.findByCode( projectCode );
+        if ( user != null && project != null )
+        {
+            UserProjectRelation relation = new UserProjectRelation();
+            relation.setProject( project );
+            relation.setUser( user );
+            relation.setUserRole( role );
+            try
+            {
+                userProjectRelationRepository.save( relation );
+                assigned = true;
+            }
+            catch ( PersistenceException e )
+            {
+                if ( RepositoryUtil.isDuplicateUserInfoRelatedException( e ) )
+                {
+                    LOG.debug( "Duplicate record: UserID = {}, projectId = {}", userId, project.getId() );
+                }
+                else
+                {
+                    throw e;
+                }
+            }
+        }
+        return assigned;
+    }
+
+    /**
+     * Gets the opposite color to our color.
+     * 
+     * @param color the hexa value of our color
+     * @return a matching color, the code for black or white
+     */
     private String getOppositeColor( String color )
     {
         return ColorUtils.isDarkColor( color ) ? "#FFFFFF" : "#000000";

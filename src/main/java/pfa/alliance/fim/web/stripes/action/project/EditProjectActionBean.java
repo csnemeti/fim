@@ -28,6 +28,8 @@ import pfa.alliance.fim.model.project.Project;
 import pfa.alliance.fim.model.project.ProjectComponent;
 import pfa.alliance.fim.model.project.ProjectLabel;
 import pfa.alliance.fim.model.project.ProjectState;
+import pfa.alliance.fim.model.project.UserRoleInsideProject;
+import pfa.alliance.fim.model.user.UserRole;
 import pfa.alliance.fim.service.ProjectManagementService;
 import pfa.alliance.fim.util.ColorUtils;
 import pfa.alliance.fim.util.ColorUtils.ColorWithName;
@@ -37,6 +39,7 @@ import pfa.alliance.fim.web.security.Permission;
 import pfa.alliance.fim.web.security.ProjectSensibleActionBean;
 import pfa.alliance.fim.web.stripes.action.BasePageActionBean;
 import pfa.alliance.fim.web.stripes.action.StripesDropDownOption;
+import pfa.alliance.fim.web.stripes.action.user.UserAutocompleteActionBean;
 
 /**
  * This is the base class for editing a specific project.
@@ -78,12 +81,24 @@ public class EditProjectActionBean
 
     @Validate( required = true, on = { "updateFlow" } )
     private Integer flowId;
+    /**
+     * The ID of the user to be added to project. In theory this should be required butit's difficult to control from
+     * front-end. This means you should expect null values and treat them nicely in back-end. <br />
+     * Also, it can be the ID of a user who will have his / hers role modified OR id of a user who is unassigned from
+     * Project.
+     */
+    private Integer userId;
 
     private final ProjectManagementService projectManagementService;
 
     private Project project = null;
+
     private List<ProjectLabel> labelList;
+
     private List<ProjectComponent> componentList;
+
+    /** The role a user should have. For example role of a new user, new role of an existing user, etc. */
+    private UserRole newUserRole = UserRole.TEAM;
 
     /** The list of all supported colors. */
     private List<StripesDropDownOption> colors = new ArrayList<>();
@@ -155,6 +170,7 @@ public class EditProjectActionBean
         // redirect to this page again
         return redirectBackHere();
     }
+
     public Resolution deleteLabel()
     {
         LOG.debug( "Deleting {} with ID = {} for project with code = {}", labelType, labelId, code );
@@ -194,6 +210,17 @@ public class EditProjectActionBean
     {
         // process
         projectManagementService.updateProjectFlow( code, flowId );
+        // redirect to this page again
+        return redirectBackHere();
+    }
+    public Resolution addUser()
+    {
+        LOG.debug( "Assignning user: {} in role {} to project {}", userId, newUserRole, code );
+        UserRoleInsideProject userRole = UserRoleInsideProject.findByUserRole( newUserRole );
+        if ( userId != null && userRole != null )
+        {
+            projectManagementService.assignUser( userId, code, userRole );
+        }
         // redirect to this page again
         return redirectBackHere();
     }
@@ -391,12 +418,16 @@ public class EditProjectActionBean
 
     public Project getProject()
     {
-        // loadProjectFromDb();
         if ( project == null )
         {
             project = new Project();
         }
         return project;
+    }
+
+    public void setUserId( Integer userId )
+    {
+        this.userId = userId;
     }
 
     public List<StripesDropDownOption> getStates()
@@ -454,6 +485,46 @@ public class EditProjectActionBean
         Collections.sort( priorities );
         return priorities;
     }
+    public String getNewUserRole()
+    {
+        return newUserRole.name();
+    }
+
+    public void setNewUserRole( String defaultRole )
+    {
+        this.newUserRole = UserRole.valueOf( defaultRole );
+    }
+
+    public List<StripesDropDownOption> getUserRoles()
+    {
+        List<StripesDropDownOption> roles = new ArrayList<StripesDropDownOption>();
+        UserRole[] orderedRoles =
+            new UserRole[] { UserRole.ADMIN, UserRole.PROJECT_ADMIN, UserRole.PRODUCT_OWNER, UserRole.SCRUM_MASTER,
+                UserRole.TEAM, UserRole.STATISTICAL };
+        for ( UserRole role : orderedRoles )
+        {
+            roles.add( new StripesDropDownOption( role, getMessage( role.getDeclaringClass().getName() + "."
+                + role.name() ) ) );
+        }
+        return roles;
+    }
+
+    public String getUsersAutocompleteUrl()
+    {
+        Project project = getProject();
+        UrlBuilder builder = new UrlBuilder( getLocale(), UserAutocompleteActionBean.class, false );
+        builder.addParameter( "id", project.getId() );
+        builder.addParameter( "query", "abc" );
+        builder.setEvent( "project" );
+        String url = builder.toString();
+        String contextPath = getContext().getServletContext().getContextPath();
+        if ( contextPath != null )
+        {
+            url = contextPath + url;
+        }
+        return url;
+    }
+
     @Override
     public String getTitle()
     {

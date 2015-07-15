@@ -18,6 +18,7 @@ import pfa.alliance.fim.dao.IssueStateRepository;
 import pfa.alliance.fim.dao.ProjectComponentRepository;
 import pfa.alliance.fim.dao.ProjectLabelRepository;
 import pfa.alliance.fim.dao.ProjectRepository;
+import pfa.alliance.fim.dao.UserProjectRelationRepository;
 import pfa.alliance.fim.dao.UserRepository;
 import pfa.alliance.fim.dto.ProjectDTO;
 import pfa.alliance.fim.dto.ProjectSearchDTO;
@@ -51,6 +52,8 @@ public class ProjectManagementServiceImplTest
 
     private ProjectLabelRepository labelRepositoryMock;
 
+    private UserProjectRelationRepository userProjectRelationRepositoryMock;
+
     private IssueStateRepository issueStateRepositoryMock;
 
     @Before
@@ -64,10 +67,12 @@ public class ProjectManagementServiceImplTest
         componentRepositoryMock = Mockito.mock( ProjectComponentRepository.class );
         labelRepositoryMock = Mockito.mock( ProjectLabelRepository.class );
         issueStateRepositoryMock = Mockito.mock( IssueStateRepository.class );
+        userProjectRelationRepositoryMock = Mockito.mock( UserProjectRelationRepository.class );
 
         projectManagementServiceImpl =
             new ProjectManagementServiceImpl( projectRepositoryMock, userRepositoryMock, componentRepositoryMock,
-                                              labelRepositoryMock, emailServiceMock, issueStateRepositoryMock,
+                                              labelRepositoryMock, userProjectRelationRepositoryMock, emailServiceMock,
+                                              issueStateRepositoryMock,
                                               emailGeneratorServiceMock, fimUrlGeneratorServiceMock );
     }
 
@@ -81,7 +86,7 @@ public class ProjectManagementServiceImplTest
             new PersistenceException( new IllegalStateException( "Duplicate data violates unique constraint" ) );
         Mockito.when( projectRepositoryMock.save( Mockito.any( Project.class ) ) ).thenThrow( e );
 
-        projectManagementServiceImpl.create( "name", "code", "description", false, null, 1, null, Locale.US );
+        projectManagementServiceImpl.create( "name", "code", "description", false, null, 1, 1, null, Locale.US );
 
         Mockito.verify( userRepositoryMock, Mockito.atLeastOnce() ).findOne( 1 );
         Mockito.verify( projectRepositoryMock, Mockito.atLeastOnce() ).save( Mockito.any( Project.class ) );
@@ -96,7 +101,7 @@ public class ProjectManagementServiceImplTest
         Exception e = new PersistenceException( "4 testing" );
         Mockito.when( projectRepositoryMock.save( Mockito.any( Project.class ) ) ).thenThrow( e );
 
-        projectManagementServiceImpl.create( "name", "code", "description", false, null, 1, null, Locale.US );
+        projectManagementServiceImpl.create( "name", "code", "description", false, null, 1, 1, null, Locale.US );
 
         Mockito.verify( userRepositoryMock, Mockito.atLeastOnce() ).findOne( 1 );
         Mockito.verify( projectRepositoryMock, Mockito.atLeastOnce() ).save( Mockito.any( Project.class ) );
@@ -113,7 +118,7 @@ public class ProjectManagementServiceImplTest
         Mockito.when( projectRepositoryMock.save( Mockito.any( Project.class ) ) ).thenReturn( project );
 
         Project returned =
-            projectManagementServiceImpl.create( "name", "code", "description", false, null, 1, null, Locale.US );
+            projectManagementServiceImpl.create( "name", "code", "description", false, null, 1, 1, null, Locale.US );
 
         Assert.assertNotNull( "Returned project should not be null", returned );
         Assert.assertSame( "Returned project is different", project, returned );
@@ -133,7 +138,7 @@ public class ProjectManagementServiceImplTest
         Mockito.when( projectRepositoryMock.save( Mockito.any( Project.class ) ) ).thenReturn( project );
 
         Project returned =
-            projectManagementServiceImpl.create( "name", "code", "description", true, ProjectState.ACTIVE, 1, null,
+            projectManagementServiceImpl.create( "name", "code", "description", true, ProjectState.ACTIVE, 1, 1, null,
                                                  Locale.US );
 
         Assert.assertNotNull( "Returned project should not be null", returned );

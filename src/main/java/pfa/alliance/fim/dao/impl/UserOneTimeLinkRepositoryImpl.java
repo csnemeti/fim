@@ -18,7 +18,7 @@ import pfa.alliance.fim.model.user.UserOneTimeLink;
  * @author Csaba
  */
 @Singleton
-public class UserOneTimeLinkRepositoryImpl
+class UserOneTimeLinkRepositoryImpl
     extends AbstractJpaRepository<UserOneTimeLink, Long>
     implements UserOneTimeLinkRepository
 {

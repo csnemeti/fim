@@ -3,6 +3,8 @@
  */
 package pfa.alliance.fim.dao.impl;
 
+import javax.inject.Singleton;
+
 import pfa.alliance.fim.dao.ProjectLabelRepository;
 import pfa.alliance.fim.dao.Sort;
 import pfa.alliance.fim.model.project.ProjectLabel;
@@ -12,6 +14,7 @@ import pfa.alliance.fim.model.project.ProjectLabel;
  * 
  * @author Csaba
  */
+@Singleton
 class ProjectLabelRepositoryImpl
     extends ProjectTagRepositoryImpl<ProjectLabel>
     implements ProjectLabelRepository

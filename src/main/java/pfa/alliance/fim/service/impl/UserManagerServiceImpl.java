@@ -140,7 +140,7 @@ class UserManagerServiceImpl
         }
         catch ( PersistenceException e )
         {
-            if ( isDuplicateUserInfoRelatedException( e ) )
+            if ( RepositoryUtil.isDuplicateUserInfoRelatedException( e ) )
             {
                 LOG.warn( "Duplicate data for user: {}", user, e );
                 throw new DuplicateDataException( "Duplicate user data", e );
@@ -223,29 +223,6 @@ class UserManagerServiceImpl
         UUID uuid = new UUID( System.nanoTime(), System.currentTimeMillis() );
         link.setUuid( uuid.toString() );
         return link;
-    }
-
-    /**
-     * Checks if the user data that is provided is duplicate or not.
-     * 
-     * @param e the exception we received
-     * @return true if information about duplicate e-mail or username was found
-     */
-    private boolean isDuplicateUserInfoRelatedException( PersistenceException e )
-    {
-        Throwable t = e;
-        boolean found = false;
-        do
-        {
-            String message = t.getMessage();
-            if ( message.contains( "violates unique constraint" ) )
-            {
-                found = true;
-            }
-            t = t.getCause();
-        }
-        while ( t != null && !found );
-        return found;
     }
 
     /**

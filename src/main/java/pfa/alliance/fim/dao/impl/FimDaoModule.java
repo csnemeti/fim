@@ -10,6 +10,7 @@ import pfa.alliance.fim.dao.ProjectLabelRepository;
 import pfa.alliance.fim.dao.ProjectRepository;
 import pfa.alliance.fim.dao.RoleAndPermissionRepository;
 import pfa.alliance.fim.dao.UserOneTimeLinkRepository;
+import pfa.alliance.fim.dao.UserProjectRelationRepository;
 import pfa.alliance.fim.dao.UserRepository;
 
 import com.google.inject.AbstractModule;
@@ -34,6 +35,7 @@ public class FimDaoModule
         bind( RoleAndPermissionRepository.class ).to( RoleAndPermissionRepositoryImpl.class );
         bind( IssuePriorityRepository.class ).to( IssuePriorityRepositoryImpl.class );
         bind( IssueStateRepository.class ).to( IssueStateRepositoryImpl.class );
+        bind( UserProjectRelationRepository.class ).to( UserProjectRelationRepositoryImpl.class );
     }
 
 }

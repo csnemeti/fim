@@ -16,8 +16,11 @@ CREATE OR REPLACE VIEW users_view AS
 	FROM fim_user;
 	
 CREATE OR REPLACE VIEW active_users_view AS 
-	SELECT id, first_name, last_name, email,  
-		fim_user_name_and_email(id) AS name_and_email, 
-		fim_user_projects_and_role(id) AS projects_and_roles, 
-		default_role, created_at, modified_at 
-	FROM fim_user WHERE status = 'ACTIVE';
+	SELECT u.id, u.first_name, u.last_name, u.email,  
+		fim_user_name_and_email(u.id) AS name_and_email, 
+		fim_user_projects_and_role(u.id) AS projects_and_roles, 
+		u.default_role, u.created_at, GREATEST(MAX(upr.modified_at), u.modified_at) AS modified_at
+	FROM fim_user u 
+	LEFT JOIN user_project_relation upr ON upr.user_id = u.id
+	WHERE u.status = 'ACTIVE'
+	GROUP BY u.id, u.first_name, u.last_name, u.email, name_and_email, projects_and_roles, u.default_role, u.created_at;

@@ -34,4 +34,18 @@ public enum UserRoleInsideProject {
     {
         return correspondingUserRole;
     }
+
+    public static UserRoleInsideProject findByUserRole( UserRole role )
+    {
+        UserRoleInsideProject matchingRole = null;
+        for ( UserRoleInsideProject candidate : values() )
+        {
+            if ( candidate.getCorrespondingUserRole().equals( role ) )
+            {
+                matchingRole = candidate;
+                break;
+            }
+        }
+        return matchingRole;
+    }
 }
