@@ -33,12 +33,13 @@ public interface ProjectManagementService
      * @param hidden flag indicating project is hidden (not visible on search)
      * @param state the initial state of the project (Accepted values are {@link ProjectState#ACTIVE} and the default
      *            value {@link ProjectState#IN_PREPARATION}.)
+     * @param flowId the chosen Issue flow ID for the project
      * @param creatorUserId the ID of the user who created the project
      * @param additionalUsers additional users expressed as UserId - role on the project
      * @param locale the current request {@link Locale} (for e-mail sending)
      * @return the created project
      */
-    Project create( String name, String code, String description, boolean hidden, ProjectState state,
+    Project create( String name, String code, String description, boolean hidden, ProjectState state, final int flowId,
                     int creatorUserId, Map<Integer, UserRoleInsideProject> additionalUsers, Locale locale );
 
     /**

@@ -32,6 +32,7 @@ import pfa.alliance.fim.dto.UserDTO;
 import pfa.alliance.fim.dto.issue.IssueFlowDTO;
 import pfa.alliance.fim.dto.issue.IssueStateDTO;
 import pfa.alliance.fim.dto.issue.IssueStateRelationDTO;
+import pfa.alliance.fim.model.issue.IssuePriority;
 import pfa.alliance.fim.model.issue.states.IssueFlow;
 import pfa.alliance.fim.model.issue.states.IssueStateRelation;
 import pfa.alliance.fim.model.project.Project;
@@ -119,10 +120,11 @@ class ProjectManagementServiceImpl
     @Override
     @Transactional
     public Project create( String name, String code, String description, final boolean hidden,
-                           final ProjectState state, final int creatorUserId,
+                           final ProjectState state, final int flowId, final int creatorUserId,
                            Map<Integer, UserRoleInsideProject> additionalUsers, Locale locale )
     {
-        Project project = createBaseProjectInstance( name, code, description, hidden, state );
+        IssueFlow flow = issueStateRepository.findFlowById( flowId );
+        Project project = createBaseProjectInstance( name, code, description, hidden, state, flow );
         try
         {
             UserProjectRelation owner = addToProject( project, creatorUserId, UserRoleInsideProject.OWNER );
@@ -307,15 +309,18 @@ class ProjectManagementServiceImpl
      * @param hidden flag indicating project is hidden (not visible on search)
      * @param state the initial state of the project (Accepted values are {@link ProjectState#ACTIVE} and the default
      *            value {@link ProjectState#IN_PREPARATION}.)
+     * @param flow the chosen {@link IssueFlow} for the {@link Project}
      * @return the created Project instance
      */
     private static Project createBaseProjectInstance( String name, String code, String description,
-                                                      final boolean hidden, final ProjectState state )
+                                                      final boolean hidden, final ProjectState state,
+                                                      final IssueFlow flow )
     {
         Project project = new Project();
         project.setName( name );
         project.setCode( code );
         project.setHidden( hidden );
+        project.setIssueFlow( flow );
         if ( ProjectState.ACTIVE.equals( state ) )
         {
             project.setState( ProjectState.ACTIVE );
@@ -325,6 +330,14 @@ class ProjectManagementServiceImpl
             project.setState( ProjectState.IN_PREPARATION );
         }
         project.setDescription( description );
+        // add default priorities
+        String[] priorityNames = { "MINOR", "MEDIUM", "HIGH", "CRTICAL", "BLOCKER" };
+        Set<IssuePriority> priorities = new HashSet<>();
+        for ( int i = 0; i < priorityNames.length; i++ )
+        {
+            priorities.add( new IssuePriority( priorityNames[i], ( i + 1 ) * 10, i == 1, project ) );
+        }
+        project.setPriorities( priorities );
         return project;
     }
 

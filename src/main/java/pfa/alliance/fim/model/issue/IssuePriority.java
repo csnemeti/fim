@@ -52,6 +52,29 @@ public class IssuePriority
     @OneToMany( mappedBy = "record", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE } )
     private Set<IssuePriorityLocalized> localizations;
 
+    /**
+     * Called when instance of this class is created.
+     */
+    public IssuePriority()
+    {
+    }
+
+    /**
+     * Called when instance of this class is created.
+     * 
+     * @param name the name of the priority
+     * @param order the order value
+     * @param defaultOption true if this is the default priority
+     * @param project the project where this priority belongs to
+     */
+    public IssuePriority( String name, int order, boolean defaultOption, Project project )
+    {
+        this.name = name;
+        this.order = order;
+        this.defaultOption = defaultOption;
+        this.project = project;
+    }
+
     @Override
     public Long getId()
     {

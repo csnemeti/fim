@@ -426,7 +426,6 @@ public class EditProjectActionBean
         project.setState( state );
     }
     
-    
     public List<StripesDropDownOption> getIssueFlows()
     {
         List<StripesDropDownOption> states = new ArrayList<>();

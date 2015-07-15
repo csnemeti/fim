@@ -1,5 +1,8 @@
 package pfa.alliance.fim.web.stripes.action.project;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 
 import net.sourceforge.stripes.action.DefaultHandler;
@@ -12,6 +15,7 @@ import net.sourceforge.stripes.validation.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pfa.alliance.fim.model.issue.states.IssueFlow;
 import pfa.alliance.fim.model.project.Project;
 import pfa.alliance.fim.model.project.ProjectState;
 import pfa.alliance.fim.service.FimUrlGeneratorService;
@@ -23,6 +27,7 @@ import pfa.alliance.fim.web.security.FimSecurity;
 import pfa.alliance.fim.web.security.Permission;
 import pfa.alliance.fim.web.security.SecurityUtil;
 import pfa.alliance.fim.web.stripes.action.BasePageActionBean;
+import pfa.alliance.fim.web.stripes.action.StripesDropDownOption;
 
 /**
  * This class is used for creating a {@link Project}.
@@ -55,6 +60,9 @@ public class CreateProjectActionBean
     /** The User name that will be the owner. */
     @Validate( required = true, trim = true, on = "create" )
     private String ownerName;
+
+    @Validate( required = true, on = { "create" } )
+    private Integer flowId;
 
     /** Message key regarding Database operation */
     private String dbOperationResult;
@@ -116,7 +124,7 @@ public class CreateProjectActionBean
             ProjectState state = ( activate != null && activate ) ? ProjectState.ACTIVE : ProjectState.IN_PREPARATION;
             Project project =
                 projectManagementService.create( projectName, projectCode, projectDescription, isHiddenSet(), state,
-                                                 ownerId, null, getContext().getLocale() );
+                                                 flowId, ownerId, null, getContext().getLocale() );
             dbOperationResult = PROJECT_CREATED_RESPONSE;
             // create URL to project
             String url = fimUrlGeneratorService.getProjectLink( project.getCode() );
@@ -208,6 +216,22 @@ public class CreateProjectActionBean
     public void setActivate( Boolean activate )
     {
         this.activate = activate;
+    }
+
+    public List<StripesDropDownOption> getIssueFlows()
+    {
+        List<StripesDropDownOption> states = new ArrayList<>();
+        List<IssueFlow> flows = projectManagementService.getAllValidFlows();
+        for ( IssueFlow flow : flows )
+        {
+            states.add( new StripesDropDownOption( flow.getId().toString(), flow.getName() ) );
+        }
+        return states;
+    }
+
+    public void setIssueFlow( Integer flowId )
+    {
+        this.flowId = flowId;
     }
 
     public String getDbOperationResult()

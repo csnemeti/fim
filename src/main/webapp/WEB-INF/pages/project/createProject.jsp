@@ -87,6 +87,16 @@
 				</div>
 			</div>
 			<div class="row form-group">
+				<div class="col-sm-1">
+					<label for="issueFlow" class="control-label"><fmt:message key="project.create.issueFlow" /></label>
+				</div>
+				<div class="col-sm-9">
+                    <stripes:select name="issueFlow">
+                        <stripes:options-collection collection="${actionBean.issueFlows}" value="id" label="description" />
+                    </stripes:select> 
+				</div>
+			</div>
+			<div class="row form-group">
 				<div class="col-sm-12">
 					<stripes:checkbox class="" name="hidden" id="hidden"></stripes:checkbox>  <label for="hidden"><fmt:message key="project.create.projectHidden" /></label>
 				</div>
