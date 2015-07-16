@@ -41,7 +41,7 @@ public abstract class GenericLocalizedModel<ID extends Serializable, T extends I
     private String locale;
 
     /** The text in the given locale. */
-    @Column( name = "value", nullable = false, length = 100 )
+    @Column( name = "text_value", nullable = false, length = 100 )
     private String value;
 
     /** The record that is localized. */
