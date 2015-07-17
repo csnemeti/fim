@@ -4,6 +4,7 @@
 package pfa.alliance.fim.dao.impl;
 
 import pfa.alliance.fim.dao.IssuePriorityRepository;
+import pfa.alliance.fim.dao.IssueRepository;
 import pfa.alliance.fim.dao.IssueStateRepository;
 import pfa.alliance.fim.dao.ProjectComponentRepository;
 import pfa.alliance.fim.dao.ProjectLabelRepository;
@@ -36,6 +37,7 @@ public class FimDaoModule
         bind( IssuePriorityRepository.class ).to( IssuePriorityRepositoryImpl.class );
         bind( IssueStateRepository.class ).to( IssueStateRepositoryImpl.class );
         bind( UserProjectRelationRepository.class ).to( UserProjectRelationRepositoryImpl.class );
+        bind( IssueRepository.class ).to( IssueRepositoryImpl.class );
     }
 
 }

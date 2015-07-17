@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -26,6 +28,11 @@ public class IssueFlow extends GenericModel implements Identifiable<Integer> {
 
     @Column( name = "description", nullable = false, length = 250 )
     private String description;
+
+    /** The flow state. */
+    @Enumerated( EnumType.STRING )
+    @Column( name = "flow_state", length = 20, nullable = false )
+    private FlowState state = FlowState.NEW;
 
 	@OneToMany( mappedBy = "flow" )
 	private List<IssueStateRelation> relations;

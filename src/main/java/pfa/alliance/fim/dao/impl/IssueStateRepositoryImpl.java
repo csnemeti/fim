@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import pfa.alliance.fim.dao.IssueStateRepository;
 import pfa.alliance.fim.model.issue.states.IssueFlow;
 import pfa.alliance.fim.model.issue.states.IssueState;
+import pfa.alliance.fim.model.project.Project;
 
 /**
  * Repository for {@link IssueFlow}.
@@ -21,7 +22,7 @@ import pfa.alliance.fim.model.issue.states.IssueState;
  */
 @Singleton
 public class IssueStateRepositoryImpl
-    extends AbstractJpaRepository<IssueState, Integer>
+    extends AbstractJpaRepository<IssueState, Long>
     implements IssueStateRepository
 {
     /** The logger used in this class. */
@@ -34,9 +35,9 @@ public class IssueStateRepositoryImpl
     }
 
     @Override
-    protected Class<Integer> getIdClass()
+    protected Class<Long> getIdClass()
     {
-        return Integer.class;
+        return Long.class;
     }
 
     @Override
@@ -57,6 +58,13 @@ public class IssueStateRepositoryImpl
     {
         LOG.debug( "Getting IssueFlow with ID = {}", id );
         return getEntityManager().find( IssueFlow.class, id );
+    }
+
+    @Override
+    public IssueState findStartStateForProject( Project project )
+    {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

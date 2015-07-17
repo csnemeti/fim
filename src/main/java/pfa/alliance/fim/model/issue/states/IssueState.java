@@ -2,23 +2,29 @@ package pfa.alliance.fim.model.issue.states;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 import pfa.alliance.fim.model.GenericModel;
 import pfa.alliance.fim.model.Identifiable;
 
 @Entity(name = "issue_state")
-public class IssueState extends GenericModel implements Identifiable<Integer> {
-    private static final long serialVersionUID = -6815173726653278341L;
+public class IssueState
+    extends GenericModel
+    implements Identifiable<Long>
+{
+    private static final long serialVersionUID = -6815173726653278343L;
 
 	@Id
 	@GeneratedValue( strategy = GenerationType.IDENTITY )
 	@Column( name = "id" )
-	private Integer id;
+    private Long id;
 	
-    @Column( name = "code", nullable = false, length = 5 )
+    @Column( name = "code", nullable = false, length = 20 )
 	private String code;
 
     @Column( name = "state_name", nullable = false, length = 50 )
@@ -30,14 +36,24 @@ public class IssueState extends GenericModel implements Identifiable<Integer> {
     @Column( name = "final_state", nullable = false )
     private boolean finalState;
 
+    @ManyToOne( fetch = FetchType.LAZY, optional = false )
+    @JoinColumn( name = "flow_id" )
+    private IssueFlow flow;
+
+    @Column( name = "start_state", nullable = false )
+    private boolean startState;
+
+    @Column( name = "end_state", nullable = false )
+    private boolean endState;
+
     @Override
-    public Integer getId()
+    public Long getId()
     {
         return id;
     }
 
     @Override
-    public void setId( Integer id )
+    public void setId( Long id )
     {
         this.id = id;
     }
@@ -81,4 +97,34 @@ public class IssueState extends GenericModel implements Identifiable<Integer> {
 	{
 		this.finalState = finalState;
 	}
+
+    public IssueFlow getFlow()
+    {
+        return flow;
+    }
+
+    public void setFlow( IssueFlow flow )
+    {
+        this.flow = flow;
+    }
+
+    public boolean isStartState()
+    {
+        return startState;
+    }
+
+    public void setStartState( boolean startState )
+    {
+        this.startState = startState;
+    }
+
+    public boolean isEndState()
+    {
+        return endState;
+    }
+
+    public void setEndState( boolean endState )
+    {
+        this.endState = endState;
+    }
 }

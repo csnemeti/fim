@@ -31,6 +31,7 @@
         <class>pfa.alliance.fim.model.issue.states.IssueState</class>        
         <class>pfa.alliance.fim.model.issue.states.IssueStateRelation</class>
         <class>pfa.alliance.fim.model.issue.states.IssueFlow</class>
+        <class>pfa.alliance.fim.model.issue.Issue</class>
         <class>pfa.alliance.fim.model.issue.IssuePriority</class> 
         <class>pfa.alliance.fim.model.issue.IssuePriorityLocalized</class> 
 
