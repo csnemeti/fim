@@ -40,12 +40,6 @@ public class IssueState
     @JoinColumn( name = "flow_id" )
     private IssueFlow flow;
 
-    @Column( name = "start_state", nullable = false )
-    private boolean startState;
-
-    @Column( name = "end_state", nullable = false )
-    private boolean endState;
-
     @Override
     public Long getId()
     {
@@ -108,23 +102,10 @@ public class IssueState
         this.flow = flow;
     }
 
-    public boolean isStartState()
+    @Override
+    public String toString()
     {
-        return startState;
-    }
-
-    public void setStartState( boolean startState )
-    {
-        this.startState = startState;
-    }
-
-    public boolean isEndState()
-    {
-        return endState;
-    }
-
-    public void setEndState( boolean endState )
-    {
-        this.endState = endState;
+        return "IssueState [id=" + id + ", code=" + code + ", name=" + name + ", initialState=" + initialState
+            + ", finalState=" + finalState + "]";
     }
 }

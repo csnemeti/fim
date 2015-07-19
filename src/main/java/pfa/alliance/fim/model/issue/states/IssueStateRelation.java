@@ -12,15 +12,17 @@ import javax.persistence.ManyToOne;
 import pfa.alliance.fim.model.Identifiable;
 
 @Entity(name = "issue_state_relation")
-public class IssueStateRelation implements Identifiable<Integer> {
+public class IssueStateRelation
+    implements Identifiable<Long>
+{
 
 	@Id
     @GeneratedValue( strategy = GenerationType.IDENTITY )
     @Column( name = "id" )
-	private int id;
+    private Long id;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_flow")
+    @JoinColumn( name = "flow_id" )
 	private IssueFlow flow;
 	
 	@ManyToOne(fetch = FetchType.EAGER, optional = false)
@@ -65,13 +67,13 @@ public class IssueStateRelation implements Identifiable<Integer> {
 	}
 
 	@Override
-	public Integer getId() 
+    public Long getId()
 	{
 		return id;
 	}
 
 	@Override
-	public void setId(Integer id) 
+    public void setId( Long id )
 	{
 		this.id = id;
 	}

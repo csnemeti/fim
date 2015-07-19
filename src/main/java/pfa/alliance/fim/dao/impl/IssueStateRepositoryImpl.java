@@ -54,7 +54,7 @@ public class IssueStateRepositoryImpl
     }
 
     @Override
-    public IssueFlow findFlowById( int id )
+    public IssueFlow findFlowById( final long id )
     {
         LOG.debug( "Getting IssueFlow with ID = {}", id );
         return getEntityManager().find( IssueFlow.class, id );

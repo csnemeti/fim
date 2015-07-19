@@ -80,7 +80,7 @@ public class EditProjectActionBean
     private Long labelId;
 
     @Validate( required = true, on = { "updateFlow" } )
-    private Integer flowId;
+    private Long flowId;
     /**
      * The ID of the user to be added to project. In theory this should be required butit's difficult to control from
      * front-end. This means you should expect null values and treat them nicely in back-end. <br />
@@ -468,13 +468,13 @@ public class EditProjectActionBean
         return states;
     }
     
-    public Integer getIssueFlow()
+    public Long getIssueFlow()
     {
         IssueFlow flow = project.getIssueFlow();
         return ( flow != null ) ? flow.getId() : null;
     }
 
-    public void setIssueFlow( Integer flowId )
+    public void setIssueFlow( Long flowId )
     {
         this.flowId = flowId;
     }

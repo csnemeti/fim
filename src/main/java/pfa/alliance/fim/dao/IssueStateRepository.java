@@ -21,7 +21,7 @@ public interface IssueStateRepository
      * 
      * @return the ID of the flow to find.
      */
-    IssueFlow findFlowById( int id );
+    IssueFlow findFlowById( long id );
 
     /**
      * Finds the first (start) {@link IssueState} an Issue should have when is created.

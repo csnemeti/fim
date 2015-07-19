@@ -659,7 +659,7 @@ class ProjectManagementServiceImpl
 
     @Override
     @Transactional
-    public void updateProjectFlow( String projectCode, int flowId )
+    public void updateProjectFlow( final String projectCode, final long flowId )
     {
         LOG.debug( "Updateing IssueFlow on Project with code: {} to {}", projectCode, flowId );
         boolean updated = false;

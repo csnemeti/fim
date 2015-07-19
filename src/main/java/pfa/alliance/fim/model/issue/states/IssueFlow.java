@@ -4,8 +4,6 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -15,13 +13,16 @@ import pfa.alliance.fim.model.GenericModel;
 import pfa.alliance.fim.model.Identifiable;
 
 @Entity(name = "issue_state_flow")
-public class IssueFlow extends GenericModel implements Identifiable<Integer> {
+public class IssueFlow
+    extends GenericModel
+    implements Identifiable<Long>
+{
 	private static final long serialVersionUID = 3986508871676895638L;
 
 	@Id
     @GeneratedValue( strategy = GenerationType.IDENTITY )
     @Column( name = "id" )
-	private int id;
+    private Long id;
 
     @Column( name = "flow_name", nullable = false, length = 40 )
     private String name;
@@ -29,21 +30,18 @@ public class IssueFlow extends GenericModel implements Identifiable<Integer> {
     @Column( name = "description", nullable = false, length = 250 )
     private String description;
 
-    /** The flow state. */
-    @Enumerated( EnumType.STRING )
-    @Column( name = "flow_state", length = 20, nullable = false )
-    private FlowState state = FlowState.NEW;
-
 	@OneToMany( mappedBy = "flow" )
 	private List<IssueStateRelation> relations;
 
 	@Override
-	public Integer getId() {
+    public Long getId()
+    {
 		return id;
 	}
 
 	@Override
-	public void setId(Integer id) {
+    public void setId( Long id )
+    {
 		this.id = id;
 	}
 
