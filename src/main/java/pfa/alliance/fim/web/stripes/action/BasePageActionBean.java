@@ -52,4 +52,14 @@ public class BasePageActionBean
         }
         return contextPath;
     }
+
+    /**
+     * Gets the currently selected Project Id. Default implementation return null.
+     * 
+     * @return the ID of the selected project or null if no project is selected
+     */
+    public Integer getSelectedProjectId()
+    {
+        return null;
+    }
 }

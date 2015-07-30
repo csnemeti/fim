@@ -10,6 +10,8 @@ package pfa.alliance.fim.web.security;
  */
 public enum Permission
 {
+    ISSUE_CRAETE_ISSUE, ISSUE_SHOW_ISSUE, ISSUE_EDIT_ISSUE,
+
     PROJECT_CREATE_PROJECT, PROJECT_SHOW_PROJECT, PROJECT_EDIT_PROJECT,
     /** Search for projects. */
     PROJECT_LIST_PROJECTS,

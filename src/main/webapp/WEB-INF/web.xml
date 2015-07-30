@@ -93,7 +93,7 @@
 		</init-param>
 		<init-param>
 			<param-name>ActionResolver.Packages</param-name>
-			<param-value>pfa.alliance.fim.web.stripes.action.user,pfa.alliance.fim.web.stripes.action.project</param-value>
+			<param-value>pfa.alliance.fim.web.stripes.action.user,pfa.alliance.fim.web.stripes.action.project,pfa.alliance.fim.web.stripes.action.issue</param-value>
 		</init-param>
 		<init-param>
 			<param-name>Interceptor.Classes</param-name>
@@ -133,6 +133,10 @@
 	<servlet-mapping>
 		<servlet-name>StripesDispatcher</servlet-name>
 		<url-pattern>/project/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>StripesDispatcher</servlet-name>
+		<url-pattern>/issue/*</url-pattern>
 	</servlet-mapping>
 
 	<jsp-config>

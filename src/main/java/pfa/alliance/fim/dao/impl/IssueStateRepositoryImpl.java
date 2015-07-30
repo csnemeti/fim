@@ -63,7 +63,7 @@ public class IssueStateRepositoryImpl
     @Override
     public IssueState findStartStateForProject( Project project )
     {
-        // TODO Auto-generated method stub
+        IssueFlow flow = project.getIssueFlow();
         return null;
     }
 

@@ -36,14 +36,21 @@ public class Issue
     extends GenericModel
     implements Identifiable<Long>
 {
+    private static final long serialVersionUID = 7599046063421504036L;
+
     @Id
     @GeneratedValue( strategy = GenerationType.IDENTITY )
     @Column( name = "id" )
     private Long id;
 
+    /** The parent issue, null if issue has no parent. */
     @ManyToOne( fetch = FetchType.LAZY, optional = true )
     @JoinColumn( name = "parent_id" )
     private Issue parent;
+
+    /** This is the issue code (unique, incremental number generated per {@link Project}). */
+    @Column( name = "issue_code", nullable = false )
+    private int code;
 
     @ManyToOne( fetch = FetchType.LAZY, optional = false )
     @JoinColumn( name = "project_id" )
@@ -230,6 +237,16 @@ public class Issue
     public void setLabels( Set<ProjectLabel> labels )
     {
         this.labels = labels;
+    }
+
+    public int getCode()
+    {
+        return code;
+    }
+
+    public void setCode( int code )
+    {
+        this.code = code;
     }
 
 }

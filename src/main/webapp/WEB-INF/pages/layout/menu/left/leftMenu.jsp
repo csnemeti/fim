@@ -37,10 +37,11 @@
 					</a>
 					<ul class="nav nav-second-level collapse">
 						<li>
-							<a href="#">
+							<stripes:link beanclass="pfa.alliance.fim.web.stripes.action.issue.CreateIssueActionBean">
+								<stripes:param name="projectId" value="${actionBean.selectedProjectId}" />
 								<i class="fa fa-plus fa-fw"></i>
 								<stripes:label for="createIssueItem" />
-							</a>
+							</stripes:link>
 						</li>
 						<li>
 							<a href="#">

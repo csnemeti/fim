@@ -4,6 +4,7 @@ package pfa.alliance.fim.web.common;
  * Enumeration that defines the URL to all the FIM Application pages .
  * 
  * @author Balaceanu Sergiu-Denis
+ * @author Nemeti D. Csaba
  */
 public enum FimPageURLs
 {
@@ -28,8 +29,10 @@ public enum FimPageURLs
     PROJECT_DASHBOARD_JSP( "/WEB-INF/pages/project/dashboard.jsp" ),
     EDIT_PROJECT_JSP( "/WEB-INF/pages/project/editProject.jsp" ),
     EDIT_PROJECT_USERS_PAGE("/project/edit/users"),
-    EDIT_PROJECT_USERS_JSP("/WEB-INF/pages/project/editProjectUsers.jsp");
+    EDIT_PROJECT_USERS_JSP("/WEB-INF/pages/project/editProjectUsers.jsp"),
 
+    CREATE_ISSUE_JSP( "/WEB-INF/pages/issue/createIssue.jsp" );
+    
     private FimPageURLs( String url )
     {
         this.url = url;
