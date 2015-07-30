@@ -40,7 +40,6 @@ public class CreateIssueActionBean
      * Called when instance of this class is created.
      * 
      * @param projectManagementService the {@link ProjectManagementService} instance to be used in this class
-     * @param fimUrlGeneratorService the instance of service used for generating full URLs inside FIM
      */
     @Inject
     public CreateIssueActionBean( ProjectManagementService projectManagementService )
@@ -54,6 +53,12 @@ public class CreateIssueActionBean
         LOG.debug( "Show page..." );
         // redirect to JSP
         return new ForwardResolution( FimPageURLs.CREATE_ISSUE_JSP.getURL() );
+    }
+
+    @Override
+    public String getTitle()
+    {
+        return getMessage( "issue.createTitle" );
     }
 
     public Integer getProjectId()
