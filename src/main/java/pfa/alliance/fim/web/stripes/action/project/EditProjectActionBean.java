@@ -121,6 +121,12 @@ public class EditProjectActionBean
         return ( project == null ) ? null : project.getId();
     }
 
+    @Override
+    protected Integer getSelectedProjectId()
+    {
+        return getProjectId();
+    }
+
     @DefaultHandler
     public Resolution goToPage()
     {

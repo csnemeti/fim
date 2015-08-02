@@ -55,6 +55,11 @@ public class CreateIssueActionBean
         return new ForwardResolution( FimPageURLs.CREATE_ISSUE_JSP.getURL() );
     }
 
+    public boolean isCreateIssueAllowed()
+    {
+        return false;
+    }
+
     @Override
     public String getTitle()
     {

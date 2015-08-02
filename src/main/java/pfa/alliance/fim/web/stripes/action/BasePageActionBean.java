@@ -53,12 +53,18 @@ public class BasePageActionBean
         return contextPath;
     }
 
+    public String getCreateIssueUrl()
+    {
+        Integer projectId = getSelectedProjectId();
+        return findContextPath() + "/issue/create" + ( ( projectId != null ) ? "/" + projectId : "" );
+    }
+
     /**
      * Gets the currently selected Project Id. Default implementation return null.
      * 
      * @return the ID of the selected project or null if no project is selected
      */
-    public Integer getSelectedProjectId()
+    protected Integer getSelectedProjectId()
     {
         return null;
     }

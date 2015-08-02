@@ -1,7 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
-<%@ taglib prefix="stripes"
-	uri="http://stripes.sourceforge.net/stripes.tld"%>
-<%@ taglib  prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="stripes" 	uri="http://stripes.sourceforge.net/stripes.tld" %>
+<%@ taglib prefix="c" 			uri="http://java.sun.com/jsp/jstl/core" %>
 	
 
 <stripes:layout-definition>
@@ -37,11 +36,10 @@
 					</a>
 					<ul class="nav nav-second-level collapse">
 						<li>
-							<stripes:link beanclass="pfa.alliance.fim.web.stripes.action.issue.CreateIssueActionBean">
-								<stripes:param name="projectId" value="${actionBean.selectedProjectId}" />
+							<a href="${actionBean.createIssueUrl}">
 								<i class="fa fa-plus fa-fw"></i>
 								<stripes:label for="createIssueItem" />
-							</stripes:link>
+							</a>
 						</li>
 						<li>
 							<a href="#">
