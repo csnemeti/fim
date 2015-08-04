@@ -21,10 +21,12 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 
 import pfa.alliance.fim.dao.ProjectRepository;
+import pfa.alliance.fim.dto.ProjectDTO;
 import pfa.alliance.fim.dto.ProjectSearchDTO;
 import pfa.alliance.fim.dto.ProjectSearchResultDTO;
 import pfa.alliance.fim.model.project.Project;
 import pfa.alliance.fim.model.project.ProjectState;
+import pfa.alliance.fim.model.project.UserProjectRelation;
 import pfa.alliance.fim.model.project.UserRoleInsideProject;
 import pfa.alliance.fim.model.user.User;
 
@@ -148,6 +150,51 @@ public class ProjectRepositoryImpl
         criteria.where( whereList.toArray( new Predicate[whereList.size()] ) );
     }
 
+    @Override
+    public List<? extends ProjectDTO> getProjectsSummary( int assignedUserId, UserRoleInsideProject[] roles,
+                                                ProjectState[] allowedStates )
+    {
+        EntityManager em = getEntityManager();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        // TODO we should use projection here but Batoo has a problem with String -> enum convertion
+        // CriteriaQuery<UserSearchResultDTO> countCriteria = cb.createQuery( UserSearchResultDTO.class );
+        CriteriaQuery<UserProjectRelation> criteria = cb.createQuery( UserProjectRelation.class );
+        Root<UserProjectRelation> root = criteria.from( UserProjectRelation.class );
+        Path<?> user = root.get( "user" );
+        Path<?> project = root.get( "project" );
+
+        // add where constraints
+        List<Predicate> whereList = new ArrayList<Predicate>();
+        whereList.add( cb.equal( user.get( "id" ), assignedUserId ) );
+        if ( ArrayUtils.isNotEmpty( allowedStates ) )
+        {
+            whereList.add( project.get( "state" ).in( buildNameList( allowedStates ) ) );
+        }
+        if ( ArrayUtils.isNotEmpty( roles ) )
+        {
+            whereList.add( root.get( "userRole" ).in( buildNameList( roles ) ) );
+        }
+        criteria.where( whereList.toArray( new Predicate[whereList.size()] ) );
+
+        // add ordering
+        criteria.orderBy( cb.asc( project.get( "code" ) ) );
+
+        TypedQuery<UserProjectRelation> query = em.createQuery( criteria );
+
+        List<UserProjectRelation> result = query.getResultList();
+        return convertToUserSearchResultDTO( result );
+    }
+
+    private static List<String> buildNameList( Enum<?>[] values )
+    {
+        List<String> nameList = new ArrayList<>();
+        for ( Enum<?> enumValue : values )
+        {
+            nameList.add( enumValue.name() );
+        }
+        return nameList;
+    }
+
     /**
      * Builds a {@link List} of {@link ProjectSearchResultDTO} from {@link List} of {@link Project}s.
      * 
@@ -166,18 +213,47 @@ public class ProjectRepositoryImpl
             for ( int i = 0; i < totalProjects; i++ )
             {
                 Project project = projects.get( i );
-                ProjectSearchResultDTO dto = new ProjectSearchResultDTO();
-                dto.setId( project.getId() );
-                dto.setCode( project.getCode() );
-                dto.setName( project.getName() );
-                dto.setState( project.getState() );
-                dto.setCreateAt( project.getCreatedAt() );
-                dto.setIndexInCurrentResults( i );
-                dto.setIndexInTotalResults( firstItemIndexInTotalResults + i );
-                result.add( dto );
+                result.add( buildProjectSearchResultDTO( project, firstItemIndexInTotalResults, i ) );
             }
         }
         return result;
     }
 
+    /**
+     * Builds a {@link List} of {@link ProjectSearchResultDTO} from {@link List} of {@link Project}s.
+     * 
+     * @param projects the {@link List} of {@link Project}s read from DB.
+     * @param firstItemIndexInTotalResults the index of the first item in total results
+     * @return the list of projects converted to DTOs or an empty {@link List} if original parameter is null or empty
+     *         string
+     */
+    private static List<ProjectSearchResultDTO> convertToUserSearchResultDTO( List<UserProjectRelation> relations )
+    {
+        List<ProjectSearchResultDTO> result = new ArrayList<>();
+        if ( CollectionUtils.isNotEmpty( relations ) )
+        {
+            final int totalProjects = relations.size();
+            for ( int i = 0; i < totalProjects; i++ )
+            {
+                Project project = relations.get( i ).getProject();
+                result.add( buildProjectSearchResultDTO( project, 0, i ) );
+            }
+        }
+        return result;
+    }
+
+    private static ProjectSearchResultDTO buildProjectSearchResultDTO( Project project,
+                                                                       final int firstItemIndexInTotalResults,
+                                                                       final int index )
+    {
+        ProjectSearchResultDTO dto = new ProjectSearchResultDTO();
+        dto.setId( project.getId() );
+        dto.setCode( project.getCode() );
+        dto.setName( project.getName() );
+        dto.setState( project.getState() );
+        dto.setCreateAt( project.getCreatedAt() );
+        dto.setIndexInCurrentResults( index );
+        dto.setIndexInTotalResults( firstItemIndexInTotalResults + index );
+        return dto;
+    }
 }

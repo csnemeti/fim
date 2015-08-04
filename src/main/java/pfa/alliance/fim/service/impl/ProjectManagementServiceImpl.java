@@ -676,4 +676,13 @@ class ProjectManagementServiceImpl
         }
         LOG.debug( "IssueFlow update on Project with code: {} to {}, updated = {}", projectCode, flowId, updated );
     }
+
+    @Override
+    public List<? extends ProjectDTO> getProjectsSummary( int assignedUserId, UserRoleInsideProject[] roles,
+                                                          ProjectState[] allowedStates )
+    {
+        LOG.debug( "Getting list of projects for assigned user (ID = {}), having states: {} and user role on Project in: {}",
+                   assignedUserId, allowedStates, roles );
+        return projectRepository.getProjectsSummary( assignedUserId, roles, allowedStates );
+    }
 }

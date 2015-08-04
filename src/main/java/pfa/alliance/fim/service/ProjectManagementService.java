@@ -190,4 +190,16 @@ public interface ProjectManagementService
      */
     boolean assignUser( final int userId, final String projectCode, UserRoleInsideProject role );
 
+    /**
+     * Gets a summary about the {@link Project}s where we have the given user assigned with given roles and projects is
+     * with given states.
+     * 
+     * @param assignedUserId the ID of the user who must be assigned to those projects
+     * @param roles the roles that are allowed the user to have
+     * @param allowedStates the allowed project states
+     * @return the list of projects or empty list if nothing matches
+     */
+    List<? extends ProjectDTO> getProjectsSummary( int assignedUserId, UserRoleInsideProject[] roles,
+                                                   ProjectState[] allowedStates );
+
 }

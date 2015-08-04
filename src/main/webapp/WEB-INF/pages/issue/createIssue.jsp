@@ -33,6 +33,9 @@
 	</c:if>  
 	<c:if test="${actionBean.createIssueAllowed eq true}">
 		<h1>Issue create: GRANTED!</h1>
+         <stripes:select name="projectId">
+             <stripes:options-collection collection="${actionBean.projects}" value="id" label="description" />
+         </stripes:select> 
 	</c:if>  
 	</stripes:form>
 	</stripes:layout-component>
