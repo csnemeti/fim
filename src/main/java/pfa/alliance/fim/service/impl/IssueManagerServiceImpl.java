@@ -6,12 +6,12 @@ package pfa.alliance.fim.service.impl;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import pfa.alliance.fim.dao.IssuePriorityRepository;
 import pfa.alliance.fim.dao.IssueRepository;
 import pfa.alliance.fim.dao.IssueStateRepository;
 import pfa.alliance.fim.dao.ProjectRepository;
 import pfa.alliance.fim.dao.UserRepository;
 import pfa.alliance.fim.model.issue.Issue;
-import pfa.alliance.fim.model.issue.IssuePriority;
 import pfa.alliance.fim.model.issue.IssueType;
 import pfa.alliance.fim.model.issue.states.IssueState;
 import pfa.alliance.fim.model.project.Project;
@@ -40,6 +40,9 @@ class IssueManagerServiceImpl
     /** The {@link ProjectRepository} instance to use. */
     private final ProjectRepository projectRepository;
 
+    /** The {@link IssuePriorityRepository} instance to use. */
+    private final IssuePriorityRepository issuePriorityRepository;
+
     /** The {@link UserRepository} instance to use in this class. */
     private final UserRepository userRepository;
 
@@ -58,6 +61,7 @@ class IssueManagerServiceImpl
      * @param issueRepository the {@link IssueRepository} instance to use in this class
      * @param projectRepository the {@link ProjectRepository} instance to use in this class
      * @param userRepository the {@link UserRepository} instance to use in this class
+     * @param issuePriorityRepository the {@link IssuePriorityRepository} instance to use in this class
      * @param emailService the instance of service used for sending e-mails
      * @param emailGeneratorService the instance of service used for generating e-mails
      * @param fimUrlGeneratorService the instance of service used for generating full URLs inside FIM
@@ -65,6 +69,7 @@ class IssueManagerServiceImpl
     @Inject
     IssueManagerServiceImpl( IssueRepository issueRepository, IssueStateRepository issueStateRepository,
                              ProjectRepository projectRepository, UserRepository userRepository,
+                             IssuePriorityRepository issuePriorityRepository,
                              EmailService emailService, EmailGeneratorService emailGeneratorService,
                              FimUrlGeneratorService fimUrlGeneratorService )
     {
@@ -72,6 +77,7 @@ class IssueManagerServiceImpl
         this.issueStateRepository = issueStateRepository;
         this.projectRepository = projectRepository;
         this.userRepository = userRepository;
+        this.issuePriorityRepository = issuePriorityRepository;
 
         this.emailService = emailService;
         this.emailGeneratorService = emailGeneratorService;
@@ -81,7 +87,7 @@ class IssueManagerServiceImpl
     @Override
     @Transactional
     public Issue create( Long parentId, IssueType type, int projectId, int reportedUserId, Integer assignedUserId,
-                         IssuePriority priority, String title, String description, String environment )
+                         Long priority, String title, String description, String environment )
     {
         // create the Issue object and start filling it in
         Issue issue =
@@ -94,13 +100,13 @@ class IssueManagerServiceImpl
     }
 
     private Issue createIssue( Long parentId, IssueType type, int projectId, int reportedUserId,
-                               Integer assignedUserId, IssuePriority priority, String title, String description,
+                               Integer assignedUserId, Long priority, String title, String description,
                                String environment )
     {
         Issue issue = new Issue();
 
         issue.setType( type );
-        issue.setPriority( priority );
+        issue.setPriority( issuePriorityRepository.findOne( priority ) );
         issue.setTitle( title );
         issue.setDescription( description );
         issue.setEnvironment( environment );

@@ -20,6 +20,7 @@ import pfa.alliance.fim.service.EmailGeneratorService;
 import pfa.alliance.fim.service.EmailService;
 import pfa.alliance.fim.service.FimUrlGeneratorService;
 import pfa.alliance.fim.service.IssueManagerService;
+import pfa.alliance.fim.service.IssuePriorityManagementService;
 import pfa.alliance.fim.service.PersistenceService;
 import pfa.alliance.fim.service.ProjectManagementService;
 import pfa.alliance.fim.service.SearchService;
@@ -73,6 +74,7 @@ public class FimServiceModule
         bind( UserManagerService.class ).to( UserManagerServiceImpl.class );
         bind( ProjectManagementService.class ).to( ProjectManagementServiceImpl.class );
         bind( IssueManagerService.class ).to( IssueManagerServiceImpl.class );
+        bind( IssuePriorityManagementService.class ).to( IssuePriorityManagementServiceImpl.class );
     }
 
     /**

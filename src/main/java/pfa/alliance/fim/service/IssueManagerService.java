@@ -4,7 +4,6 @@
 package pfa.alliance.fim.service;
 
 import pfa.alliance.fim.model.issue.Issue;
-import pfa.alliance.fim.model.issue.IssuePriority;
 import pfa.alliance.fim.model.issue.IssueType;
 
 /**
@@ -29,5 +28,5 @@ public interface IssueManagerService
      * @return the created issue
      */
     Issue create( Long parentId, IssueType type, int projectId, int reportedUserId, Integer assignedUserId,
-                  IssuePriority priority, String title, String description, String environment );
+                  Long priorityId, String title, String description, String environment );
 }

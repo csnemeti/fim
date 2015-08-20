@@ -10,7 +10,13 @@
 		<script type="text/javascript">
 	        
 			function clearFormContent(theForm){
+				theForm.reset();
 				$(".clearable").val("");
+			}
+			
+			function changeSelectedProject(theSelect){
+				$( "#cissuePriority option:selected").removeAttr("selected");
+				$( "#changeProject" ).trigger( "click" );
 			}
 			
 			$().ready(function() {
@@ -22,7 +28,6 @@
        <stripes:layout-render name="/WEB-INF/pages/layout/menu/menu.jsp"/>       
     </stripes:layout-component>
     <stripes:layout-component name="content">             	
-	<stripes:form beanclass="pfa.alliance.fim.web.stripes.action.project.CreateProjectActionBean" focus="projectName" id="prjForm" class="form-horizontal">
 	<c:if test="${actionBean.createIssueAllowed eq false}">
 		<h1 class="error">Issue create: DENIED!</h1>
 		<p>You are not allowed to create issues because at least one of the following problems occurred:</p>
@@ -32,11 +37,73 @@
 		</ul>
 	</c:if>  
 	<c:if test="${actionBean.createIssueAllowed eq true}">
-		<h1>Issue create: GRANTED!</h1>
-         <stripes:select name="projectId">
-             <stripes:options-collection collection="${actionBean.projects}" value="id" label="description" />
-         </stripes:select> 
+		<h1><fmt:message key="issue.create.title" /></h1>
+		<stripes:form beanclass="pfa.alliance.fim.web.stripes.action.issue.CreateIssueActionBean" focus="projectName" id="prjForm" class="form-horizontal">
+			<div class="row form-group">
+				<div class="col-sm-1">
+					<label for="projectId" class="control-label"><fmt:message key="issue.create.selectProject" /></label>
+				</div>
+				<div class="col-sm-9">
+			         <stripes:select name="projectId" onchange='changeSelectedProject(this)'>
+			             <stripes:options-collection collection="${actionBean.projects}" value="id" label="description" />
+			         </stripes:select> 
+				</div>
+			</div>
+			<div class="row form-group">
+				<div class="col-sm-1">
+					<label for="issueType" class="control-label"><fmt:message key="issue.create.issueType" /></label>
+				</div>
+				<div class="col-sm-9">
+			         <stripes:select name="issueType">
+			             <stripes:options-collection collection="${actionBean.issueTypes}" value="id" label="description" />
+			         </stripes:select>
+				</div>
+			</div>
+			<div class="row form-group">
+				<div class="col-sm-1">
+					<label for="issueTitle" class="control-label"><fmt:message key="issue.create.issueTitle" /></label>
+				</div>
+				<div class="col-sm-9">
+			        <stripes:text name="issueTitle" class="clearable"></stripes:text>
+				</div>
+			</div>
+			<div class="row form-group">
+				<div class="col-sm-1">
+					<label for="issueDescription" class="control-label"><fmt:message key="issue.create.issueDescription" /></label>
+				</div>
+				<div class="col-sm-9">
+			        <stripes:textarea name="issueDescription" class="clearable"></stripes:textarea>
+				</div>
+			</div>
+			<div class="row form-group">
+				<div class="col-sm-1">
+					<label for="issueEnvironment" class="control-label"><fmt:message key="issue.create.issueEnvironment" /></label>
+				</div>
+				<div class="col-sm-9">
+			        <stripes:textarea name="issueEnvironment" class="clearable"></stripes:textarea>
+				</div>
+			</div>
+			<div class="row form-group">
+				<div class="col-sm-1">
+					<label for="issueType" class="control-label"><fmt:message key="issue.create.issuePriority" /></label>
+				</div>
+				<div class="col-sm-9">
+			         <stripes:select name="issuePriority" id="issuePriority">
+			             <stripes:options-collection collection="${actionBean.issuePriorities}" value="id" label="description" />
+			         </stripes:select>
+				</div>
+			</div>
+
+			<div class="row form-group error">
+ 				<stripes:errors></stripes:errors>
+			</div>
+			<div class="row form-group">
+     			
+     		</div>
+			<stripes:submit class="btn btn-primary" name="create"><fmt:message key="action.submit" /></stripes:submit>
+			<stripes:button class="btn btn-default" name="resetBtn" onclick="clearFormContent(this.form)"><fmt:message key="action.clear" /></stripes:button>  
+	        <stripes:submit id="changeProject" name="changeProject" style="display: none">Change</stripes:submit>
+         </stripes:form> 
 	</c:if>  
-	</stripes:form>
 	</stripes:layout-component>
 </stripes:layout-render>

@@ -46,8 +46,7 @@ class IssuePriorityRepositoryImpl
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<IssuePriority> criteria = cb.createQuery( getEntityClass() );
         Root<IssuePriority> root = criteria.from( getEntityClass() );
-        // TODO add where constraint
-        // criteria.where( cb.equal( root.get( "project" ).get( "id" ), projectId ) );
+        criteria.where( cb.equal( root.get( "project" ).get( "id" ), projectId ) );
         // add ordering
         List<Order> order = new ArrayList<Order>();
         for ( Map.Entry<String, Boolean> entry : ourSort )
