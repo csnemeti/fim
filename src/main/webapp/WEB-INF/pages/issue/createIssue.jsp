@@ -15,11 +15,33 @@
 			}
 			
 			function changeSelectedProject(theSelect){
-				$( "#cissuePriority option:selected").removeAttr("selected");
+				$( "#issuePriority option:selected").removeAttr("selected");
+				// delete all validation rules before submit
+				$("#issueTitle").rules("remove");
 				$( "#changeProject" ).trigger( "click" );
 			}
 			
 			$().ready(function() {
+				<%-- When you change project, issue priority gets lost. Select is filled in but default selectyion is not updated. --%>
+				$( "#issuePriority option[value='${actionBean.issuePriority}']").attr('selected', 'selected');
+				
+				<%-- Data validation --%>
+				// validate the comment form when it is submitted
+				$("#issueForm").validate({
+					rules: {
+						issueTitle: {
+							required: true,
+							maxlength: 250
+						},
+						issueDescription: {
+							maxlength: 4000
+						},
+						issueEnvironment: {
+							maxlength: 1000
+						}
+					}
+				});
+				
 			});
 			
 		</script>
@@ -38,13 +60,13 @@
 	</c:if>  
 	<c:if test="${actionBean.createIssueAllowed eq true}">
 		<h1><fmt:message key="issue.create.title" /></h1>
-		<stripes:form beanclass="pfa.alliance.fim.web.stripes.action.issue.CreateIssueActionBean" focus="projectName" id="prjForm" class="form-horizontal">
+		<stripes:form beanclass="pfa.alliance.fim.web.stripes.action.issue.CreateIssueActionBean" focus="issueTitle" id="issueForm" class="form-horizontal">
 			<div class="row form-group">
 				<div class="col-sm-1">
 					<label for="projectId" class="control-label"><fmt:message key="issue.create.selectProject" /></label>
 				</div>
 				<div class="col-sm-9">
-			         <stripes:select name="projectId" onchange='changeSelectedProject(this)'>
+			         <stripes:select name="projectId" onchange='changeSelectedProject(this)' style="width: 100%">
 			             <stripes:options-collection collection="${actionBean.projects}" value="id" label="description" />
 			         </stripes:select> 
 				</div>
@@ -53,8 +75,8 @@
 				<div class="col-sm-1">
 					<label for="issueType" class="control-label"><fmt:message key="issue.create.issueType" /></label>
 				</div>
-				<div class="col-sm-9">
-			         <stripes:select name="issueType">
+				<div class="col-sm-3">
+			         <stripes:select name="issueType" style="width: 100%">
 			             <stripes:options-collection collection="${actionBean.issueTypes}" value="id" label="description" />
 			         </stripes:select>
 				</div>
@@ -64,7 +86,7 @@
 					<label for="issueTitle" class="control-label"><fmt:message key="issue.create.issueTitle" /></label>
 				</div>
 				<div class="col-sm-9">
-			        <stripes:text name="issueTitle" class="clearable"></stripes:text>
+			        <stripes:text name="issueTitle" id="issueTitle" class="clearable" style="width: 100%"></stripes:text>
 				</div>
 			</div>
 			<div class="row form-group">
@@ -72,7 +94,7 @@
 					<label for="issueDescription" class="control-label"><fmt:message key="issue.create.issueDescription" /></label>
 				</div>
 				<div class="col-sm-9">
-			        <stripes:textarea name="issueDescription" class="clearable"></stripes:textarea>
+			        <stripes:textarea name="issueDescription" id="issueDescription" class="clearable" style="width: 100%"></stripes:textarea>
 				</div>
 			</div>
 			<div class="row form-group">
@@ -80,15 +102,15 @@
 					<label for="issueEnvironment" class="control-label"><fmt:message key="issue.create.issueEnvironment" /></label>
 				</div>
 				<div class="col-sm-9">
-			        <stripes:textarea name="issueEnvironment" class="clearable"></stripes:textarea>
+			        <stripes:textarea name="issueEnvironment" id="issueEnvironment" class="clearable" style="width: 100%"></stripes:textarea>
 				</div>
 			</div>
 			<div class="row form-group">
 				<div class="col-sm-1">
 					<label for="issueType" class="control-label"><fmt:message key="issue.create.issuePriority" /></label>
 				</div>
-				<div class="col-sm-9">
-			         <stripes:select name="issuePriority" id="issuePriority">
+				<div class="col-sm-3">
+			         <stripes:select name="issuePriority" id="issuePriority" style="width: 100%">
 			             <stripes:options-collection collection="${actionBean.issuePriorities}" value="id" label="description" />
 			         </stripes:select>
 				</div>

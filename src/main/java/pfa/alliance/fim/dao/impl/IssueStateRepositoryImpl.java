@@ -63,8 +63,17 @@ public class IssueStateRepositoryImpl
     @Override
     public IssueState findStartStateForProject( Project project )
     {
+        LOG.debug( "Finding IssueFlow used by Project with ID = {}", project.getId() );
         IssueFlow flow = project.getIssueFlow();
-        return null;
+        LOG.debug( "Finding initial IssueState used by IssueFlow with ID = {}", flow.getId() );
+        EntityManager em = getEntityManager();
+        TypedQuery<IssueState> query =
+            em.createQuery( "SELECT s FROM pfa.alliance.fim.model.issue.states.IssueState s "
+                + "INNER JOIN s.flow f WHERE f.id = ? AND s.initialState = true", IssueState.class );
+        query.setParameter( 1, flow.getId() );
+        List<IssueState> results = query.getResultList();
+        LOG.debug( "Initial IssueState(s) used by IssueFlow with ID = {} : {}", flow.getId(), results );
+        return DaoUtil.uniqueResult( results );
     }
 
 }

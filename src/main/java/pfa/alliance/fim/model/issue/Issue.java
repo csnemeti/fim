@@ -74,7 +74,7 @@ public class Issue
     private String environment;
 
     @Enumerated( EnumType.STRING )
-    @Column( name = "type", length = 20, nullable = false )
+    @Column( name = "issue_type", length = 20, nullable = false )
     private IssueType type;
 
     @ManyToOne( fetch = FetchType.EAGER, optional = false )
@@ -82,7 +82,7 @@ public class Issue
     private IssueState state;
 
     @Enumerated( EnumType.STRING )
-    @Column( name = "resolution", length = 20, nullable = false )
+    @Column( name = "resolution", length = 20, nullable = true )
     private IssueResolution resolution;
 
     @ManyToOne( fetch = FetchType.EAGER, optional = false )

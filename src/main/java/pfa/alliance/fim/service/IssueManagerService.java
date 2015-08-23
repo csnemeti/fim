@@ -21,7 +21,7 @@ public interface IssueManagerService
      * @param projectId the {@link pfa.alliance.fim.model.project.Project} where the issue belongs to
      * @param reportedUserId the {@link pfa.alliance.fim.model.user.User} id that reported the issue
      * @param assignedUserId the assigned {@link pfa.alliance.fim.model.user.User} to issue
-     * @param priority the priority of the issue
+     * @param priorityId the priority ID of the issue
      * @param title the issue title
      * @param description the issue description
      * @param environment the environment necessary to reproduce the issue

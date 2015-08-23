@@ -13,6 +13,7 @@ import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.UrlBinding;
+import net.sourceforge.stripes.validation.Validate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +24,7 @@ import pfa.alliance.fim.model.issue.IssuePriority;
 import pfa.alliance.fim.model.issue.IssueType;
 import pfa.alliance.fim.model.project.ProjectState;
 import pfa.alliance.fim.model.project.UserRoleInsideProject;
+import pfa.alliance.fim.service.FimUrlGeneratorService;
 import pfa.alliance.fim.service.IssueManagerService;
 import pfa.alliance.fim.service.IssuePriorityManagementService;
 import pfa.alliance.fim.service.ProjectManagementService;
@@ -56,18 +58,28 @@ public class CreateIssueActionBean
 
     private final IssueManagerService issueManagerService;
 
+    /** Service used for generating URLs inside FIM. */
+    private final FimUrlGeneratorService fimUrlGeneratorService;
+
     /** The ID of the project where the issue must be created. */
+    @Validate( on = { "create", "changeProject" }, required = true )
     private Integer projectId;
 
     /** Keeps the {@link IssueType} to be created. */
+    @Validate( on = "create", required = true )
     private IssueType issueType = IssueType.TASK;
 
+    /** The priority the new Issue must have. */
+    @Validate( on = "create" )
     private Long issuePriority;
 
+    @Validate( trim = true, on = "create", maxlength = 250, required = true )
     private String issueTitle;
 
+    @Validate( trim = true, on = "create", maxlength = 4000 )
     private String issueDescription;
 
+    @Validate( trim = true, on = "create", maxlength = 1000 )
     private String issueEnvironment;
 
     private List<StripesDropDownOption> candidateProjects;
@@ -78,15 +90,20 @@ public class CreateIssueActionBean
      * Called when instance of this class is created.
      * 
      * @param projectManagementService the {@link ProjectManagementService} instance to be used in this class
+     * @param issueManagerService the {@link IssueManagerService} instance to be used
+     * @param issuePriorityManagementService the {@link IssuePriorityManagementService} to be used
+     * @param fimUrlGeneratorService the instance of service used for generating full URLs inside FIM
      */
     @Inject
     public CreateIssueActionBean( ProjectManagementService projectManagementService,
                                   IssueManagerService issueManagerService,
-                                  IssuePriorityManagementService issuePriorityManagementService )
+                                  IssuePriorityManagementService issuePriorityManagementService,
+                                  FimUrlGeneratorService fimUrlGeneratorService )
     {
         this.projectManagementService = projectManagementService;
         this.issuePriorityManagementService = issuePriorityManagementService;
         this.issueManagerService = issueManagerService;
+        this.fimUrlGeneratorService = fimUrlGeneratorService;
     }
 
     @DefaultHandler
@@ -115,7 +132,9 @@ public class CreateIssueActionBean
             issueManagerService.create( null, issueType, projectId, userDTO.getId(), null, issuePriority, issueTitle,
                                         issueDescription, issueEnvironment );
 
-        return new RedirectResolution( FimPageURLs.CREATE_ISSUE_JSP.getURL() );
+        // create URL to project
+        String url = fimUrlGeneratorService.getProjectLink( issue.getProject().getCode() );
+        return new RedirectResolution( url, false );
     }
 
     public boolean isCreateIssueAllowed()

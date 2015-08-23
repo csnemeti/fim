@@ -17,7 +17,7 @@ public class IssueState
     extends GenericModel
     implements Identifiable<Long>
 {
-    private static final long serialVersionUID = -6815173726653278343L;
+    private static final long serialVersionUID = -6815173726653278348L;
 
 	@Id
 	@GeneratedValue( strategy = GenerationType.IDENTITY )
