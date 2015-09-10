@@ -51,11 +51,11 @@
     </stripes:layout-component>
     <stripes:layout-component name="content">             	
 	<c:if test="${actionBean.createIssueAllowed eq false}">
-		<h1 class="error">Issue create: DENIED!</h1>
-		<p>You are not allowed to create issues because at least one of the following problems occurred:</p>
+		<h1 class="error"><fmt:message key="issue.create.issueCreateDenied" /></h1>
+		<p><fmt:message key="issue.create.issueCreateDeniedReason" /></p>
 		<ul>
-			<li>You are not assigned to any project! Given this, you are not allowed to create issue on a project where you're not assigned to.</li>
-			<li>You do not have privilege to create issue on projects you are assigned to! You might be assigned at least to one project. For each project assignment, you are played a specific role on that project. It might be happen that your role on every project where you are assigned prevents you creating issues.</li>
+			<li><fmt:message key="issue.create.issueCreateDeniedReason1" /></li>
+			<li><fmt:message key="issue.create.issueCreateDeniedReason2" /></li>
 		</ul>
 	</c:if>  
 	<c:if test="${actionBean.createIssueAllowed eq true}">
