@@ -85,6 +85,20 @@ class IssueManagerServiceImpl
     }
 
     @Override
+    public Issue findById( long id )
+    {
+        Issue issue = issueRepository.findOne( id );
+        if ( issue != null )
+        {
+            // load the rest of dependencies
+            issue.getProject();
+            issue.getState();
+            issue.getPriority();
+        }
+        return issue;
+    }
+
+    @Override
     @Transactional
     public Issue create( Long parentId, IssueType type, int projectId, int reportedUserId, Integer assignedUserId,
                          Long priority, String title, String description, String environment )
@@ -145,5 +159,4 @@ class IssueManagerServiceImpl
 
         }
     }
-
 }

@@ -29,4 +29,12 @@ public interface IssueManagerService
      */
     Issue create( Long parentId, IssueType type, int projectId, int reportedUserId, Integer assignedUserId,
                   Long priorityId, String title, String description, String environment );
+
+    /**
+     * Gets the {@link Issue} with corresponding ID.
+     * 
+     * @param id the ID of the issue
+     * @return The {@link Issue} if found, null if not
+     */
+    Issue findById( long id );
 }
