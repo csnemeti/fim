@@ -24,8 +24,9 @@
 			}
 			textarea {
 				 width: 100%; 
-				 height: 100%; 
-				 border:none;
+				 height: 100%;
+				 padding: 0px 5px; 
+				 border: none;
 			}
 		</style>
 	</stripes:layout-component>
@@ -34,21 +35,33 @@
     </stripes:layout-component>
     <stripes:layout-component name="content">
     	<ul style="list-style-type:none; padding-left: 0px;">
-    		<li><a href="">Project: ${actionBean.issue.project.name}</a></li>
+    		<li><a href="${actionBean.projectLink}">Project: ${actionBean.issue.project.name}</a></li>
     		<li>
     			<a href="">Issue: ${actionBean.title}</a>
     		</li>
     	</ul>
     	<div class="row">
-	    	<div class="col-sm-9">
-				<h1 style="margin: 0px">${actionBean.title}</h1>
-			</div>
-	    	<div class="col-sm-3">
-				<button>EDIT</button>
-			</div>
+			<h1 style="margin: 0px">${actionBean.title}</h1>
 		</div>
-		<div>
-			Actions
+		<div class="row form-group">
+			<div class="col-sm-2">
+				<button type="button" class="btn btn-primary">Edit</button>
+			</div>
+			<div class="col-sm-2">
+				<button type="button" class="btn btn-default">Prev State(s)</button>
+			</div>
+			<div class="col-sm-2">
+				<button type="button" class="btn btn-default">Next State(s)</button>				
+			</div>
+			<div class="col-sm-2">
+				<button type="button" class="btn btn-default">Reassign</button>
+			</div>
+			<div class="col-sm-2">
+				<button type="button" class="btn btn-default">Option 5</button>				
+			</div>
+			<div class="col-sm-2">
+				<button type="button" class="btn btn-default">More</button>
+			</div>			
 		</div>    	
 		<div class="row form-group">
 			<div class="col-sm-4">
@@ -56,19 +69,19 @@
 					<label for="issueType" class="control-label">Issue Type:</label>					
 				</div>
 				<div class="col-sm-6">
-					<label for="issueType" class="control-label">2015-12-12 22:22:22</label>						
+					<label for="issueType" class="control-label">${actionBean.issue.type}</label>						
 				</div>
 				<div class="col-sm-6 right">
 					<label for="issueType" class="control-label">Issue State:</label>					
 				</div>
 				<div class="col-sm-6">
-					<label for="issueType" class="control-label">2015-12-12 22:22:22</label>						
+					<label for="issueType" class="control-label">${actionBean.issue.state.name}</label>						
 				</div>
 				<div class="col-sm-6 right">
 					<label for="issueType" class="control-label">Priority:</label>					
 				</div>
 				<div class="col-sm-6">
-					<label for="issueType" class="control-label">2015-12-12 22:22:22</label>						
+					<label for="issueType" class="control-label">${actionBean.issue.priority.name}</label>						
 				</div>
 			</div>    	
 			<div class="col-sm-4">
@@ -79,47 +92,69 @@
 					<label for="issueType" class="control-label">Assigned To:</label>					
 				</div>
 				<div class="col-sm-6">
-					<label for="issueType" class="control-label">2015-12-12 22:22:22</label>						
+					<label for="issueType" class="control-label">${actionBean.assignedTo}</label>						
 				</div>
 				<div class="col-sm-6 right">
 					<label for="issueType" class="control-label">Created By:</label>					
 				</div>
 				<div class="col-sm-6">
-					<label for="issueType" class="control-label">2015-12-12 22:22:22</label>						
+					<label for="issueType" class="control-label">${actionBean.createdBy}</label>						
 				</div>
 				<div class="col-sm-6 right">
 					<label for="issueType" class="control-label">Created At:</label>					
 				</div>
 				<div class="col-sm-6">
-					<label for="issueType" class="control-label">2015-12-12 22:22:22</label>						
+					<label for="issueType" class="control-label" alt="${actionBean.createdAtSince}">${actionBean.createdAt}</label>						
 				</div>
 			</div>
 		</div>		
-		<div>    	
+		<div class="col-sm-12">    	
     		<fieldset>
 				<legend>Description</legend>
 				<textarea>${actionBean.issue.description}</textarea>
 			</fieldset>
     	</div>
-		<div>    	
+		<div class="col-sm-12">     	
     		<fieldset>
 				<legend>Environment</legend>
 				<textarea>${actionBean.issue.environment}</textarea>
 			</fieldset>
     	</div>
-    	<div style="margin-top: 10px">
+		<div class="col-sm-12">     	
+			<div class="col-sm-4" style="padding-left: 0px">     	
+	    		<fieldset>
+					<legend>Components</legend>
+					<textarea></textarea>
+				</fieldset>
+	    	</div>
+			<div class="col-sm-4">     	
+	    		<fieldset>
+					<legend>Labels</legend>
+					<textarea></textarea>
+				</fieldset>
+	    	</div>
+			<div class="col-sm-4" style="padding-right: 0px">     	
+	    		<fieldset>
+					<legend>Watch list</legend>
+					<textarea></textarea>
+				</fieldset>
+	    	</div>
+	    </div>
+    	<div class="col-sm-12" style="margin-top: 10px"> 
 	    	<ul class="nav nav-tabs">
-				<li class="active"><a data-toggle="tab" href="#home">Comments</a></li>
-    			<li><a data-toggle="tab" href="#menu1">Work</a></li>
+				<li class="active"><a data-toggle="tab" href="#comments">Comments</a></li>
+				<!-- 
+    			<li><a data-toggle="tab" href="#work">Work logged</a></li>
+    			 -->
 			</ul>
 			<div class="tab-content">
-				<div id="home" class="tab-pane fade in active">
-			      <h3>HOME</h3>
-			      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+				<div id="comments" class="tab-pane fade in active">
+			      <h3>Comments</h3>
+			      <p>Add your comment.</p>
 			    </div>
-				<div id="menu1" class="tab-pane fade">
-			      <h3>Menu 1</h3>
-			      <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+				<div id="work" class="tab-pane fade">
+			      <h3>Work logged</h3>
+			      <p>Here comes the logged work.</p>
 			    </div>
 			</div>
     	</div>
