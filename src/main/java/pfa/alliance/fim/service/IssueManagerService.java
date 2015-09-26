@@ -3,6 +3,9 @@
  */
 package pfa.alliance.fim.service;
 
+import java.util.List;
+
+import pfa.alliance.fim.dto.issue.IssueBaseDTO;
 import pfa.alliance.fim.model.issue.Issue;
 import pfa.alliance.fim.model.issue.IssueType;
 
@@ -37,4 +40,22 @@ public interface IssueManagerService
      * @return The {@link Issue} if found, null if not
      */
     Issue findById( long id );
+
+    /**
+     * Gets the list of {@link IssueBaseDTO}s representing the ancestors of the given issue. First element will be the
+     * top level item and last the closest to our item or the item itself.
+     * 
+     * @param id the ID of the given issue
+     * @param includeTarget in case of <code>true</code> this item will be the last in the lsit
+     * @return the ancestor list of this issue starting with top-level issue
+     */
+    List<IssueBaseDTO> getAncestorsFor( long id, boolean includeTarget );
+
+    /**
+     * Gets first level child issues of the given issue.
+     * 
+     * @param id the ID of the issue that is the parent
+     * @return a non-null list of children
+     */
+    List<IssueBaseDTO> getChildernFor( long id );
 }

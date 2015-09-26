@@ -14,9 +14,17 @@
 			fieldset {
 				border: 1px black solid;
 			}
-			legend {
+			.legendTitle {
 				 border: 0px black solid; 
 				 margin-left: 30px; 
+				 margin-bottom: 0px; 
+				 padding: 0px; 
+				 width: 150px; 
+				 text-align: center;
+			}
+			.legendAdd {
+				 border: 0px black solid; 
+				 margin-right: 30px; 
 				 margin-bottom: 0px; 
 				 padding: 0px; 
 				 width: 150px; 
@@ -28,6 +36,25 @@
 				 padding: 0px 5px; 
 				 border: none;
 			}
+			.dependIssueName, .childIssueName {
+				padding: 0px 5px;
+			}
+			.dependencyType {
+				width: 100px; 
+				padding: 0px 5px:
+			}
+			.dependIssueStatus, .dependIssuePriority, .childIssueStatus, .childIssuePriority {
+				width: 100px; 
+				padding: 0px 5px:
+			}
+			.dependIssueAssignedTo, .childIssueAssignedTo {
+				width: 200px; 
+				padding: 0px 5px;
+			}
+			.addLink {
+				margin-left: 20px;
+				margin-bottom: 10px;
+			}
 		</style>
 	</stripes:layout-component>
 	<stripes:layout-component name="menu">
@@ -35,9 +62,39 @@
     </stripes:layout-component>
     <stripes:layout-component name="content">
     	<ul style="list-style-type:none; padding-left: 0px;">
-    		<li><a href="${actionBean.projectLink}">Project: ${actionBean.issue.project.name}</a></li>
+    		<li><a href="${actionBean.projectLink}">${actionBean.issue.project.name}</a></li>
     		<li>
-    			<a href="">Issue: ${actionBean.title}</a>
+    			<a href="${actionBean.level1Link}">${actionBean.level1Title}</a>
+    			<ul style="list-style-type:none;">
+    				<li style="${actionBean.level2Show}">
+		    			<a href="${actionBean.level2Link}">${actionBean.level2Title}</a>
+		    			<ul style="list-style-type:none;">
+		    				<li style="${actionBean.level3Show}">
+				    			<a href="${actionBean.level3Link}">${actionBean.level3Title}</a>
+				    			<ul style="list-style-type:none;">
+				    				<li style="${actionBean.level4Show}">
+						    			<a href="${actionBean.level4Link}">${actionBean.level4Title}</a>
+						    			<ul style="list-style-type:none;">
+						    				<li style="${actionBean.level5Show}">
+								    			<a href="${actionBean.level5Link}">${actionBean.level5Title}</a>
+								    			<ul style="list-style-type:none;">
+								    				<li style="${actionBean.level6Show}">
+										    			<a href="${actionBean.level6Link}">${actionBean.level6Title}</a>
+										    			<ul style="list-style-type:none;">
+										    				<li style="${actionBean.level7Show}">
+												    			<a href="${actionBean.level7Link}">${actionBean.level7Title}</a>
+										    				</li>
+										    			</ul>
+								    				</li>
+								    			</ul>
+						    				</li>
+						    			</ul>
+				    				</li>
+				    			</ul>
+		    				</li>
+		    			</ul>
+    				</li>
+    			</ul>
     		</li>
     	</ul>
     	<div class="row">
@@ -104,48 +161,118 @@
 					<label for="issueType" class="control-label">Created At:</label>					
 				</div>
 				<div class="col-sm-6">
-					<label for="issueType" class="control-label" alt="${actionBean.createdAtSince}">${actionBean.createdAt}</label>						
+					<label for="issueType" class="control-label" title="${actionBean.createdAtSince}">${actionBean.createdAt}</label>						
 				</div>
 			</div>
 		</div>		
 		<div class="col-sm-12">    	
     		<fieldset>
-				<legend>Description</legend>
-				<textarea>${actionBean.issue.description}</textarea>
+				<legend class="legendTitle">Description</legend>
+				<textarea readonly="readonly" wrap="virtual">${actionBean.issue.description}</textarea>
 			</fieldset>
     	</div>
 		<div class="col-sm-12">     	
     		<fieldset>
-				<legend>Environment</legend>
-				<textarea>${actionBean.issue.environment}</textarea>
+				<legend class="legendTitle">Environment</legend>
+				<textarea readonly="readonly">${actionBean.issue.environment}</textarea>
 			</fieldset>
     	</div>
+	    <c:if test="${ not empty actionBean.dependencies}">
+		<div class="col-sm-12">    	
+    		<fieldset>
+				<legend class="legendTitle">Dependencies</legend>
+				<table style="width: 100%; margin:5px 0px">
+					<tr>
+						<th class="dependIssueName">Name</th>
+						<th class="dependencyType">Dependency</th>
+						<th class="dependIssueStatus">State</th>
+						<th class="dependIssuePriority">Priority</th>
+						<th class="dependIssueAssignedTo">Assigned To</th>
+					</tr>
+					<c:forEach items="${actionBean.dependencies}" var="dependency" varStatus="loop">
+					<tr>
+						<td class="childIssueName"><a href="">${dependency.code}: ${dependency.title}</a></td>
+						<td class="dependencyType"></td>
+						<td class="childIssueStatus"></td>
+						<td class="childIssuePriority"></td>
+						<td class="childIssueAssignedTo">Assigned To</td>
+					</tr>
+					</c:forEach>
+				</table>
+			</fieldset>
+    	</div>
+    	</c:if>
 		<div class="col-sm-12">     	
 			<div class="col-sm-4" style="padding-left: 0px">     	
 	    		<fieldset>
-					<legend>Components</legend>
-					<textarea></textarea>
+					<legend class="legendTitle">Components</legend>
+					<table>
+						<tr>
+							<td></td>
+							<td></td>
+						</tr>
+					</table>
+					<div class="btn-group  pull-right" style="padding: 0px 20px 10px 0px">
+						<a href="#" class="btn btn-xs btn-default">Add</a>
+					</div>
 				</fieldset>
 	    	</div>
 			<div class="col-sm-4">     	
 	    		<fieldset>
-					<legend>Labels</legend>
-					<textarea></textarea>
+					<legend class="legendTitle">Labels</legend>
+					<table>
+						<tr>
+							<td></td>
+							<td></td>
+						</tr>
+					</table>
+					<div class="btn-group  pull-right" style="padding: 0px 20px 10px 0px">
+						<a href="#" class="btn btn-xs btn-default">Add</a>
+					</div>
 				</fieldset>
 	    	</div>
 			<div class="col-sm-4" style="padding-right: 0px">     	
 	    		<fieldset>
-					<legend>Watch list</legend>
-					<textarea></textarea>
+					<legend class="legendTitle">Watch list</legend>
+					<table>
+						<tr>
+							<td></td>
+							<td></td>
+						</tr>
+					</table>
+					<div class="btn-group  pull-right" style="padding: 0px 20px 10px 0px">
+						<a href="#" class="btn btn-xs btn-default">Add</a>
+					</div>
 				</fieldset>
 	    	</div>
 	    </div>
+	    <c:if test="${ not empty actionBean.children}">
+		<div class="col-sm-12">    	
+    		<fieldset>
+				<legend class="legendTitle">Children issues</legend>
+				<table style="width: 100%; margin:5px 0px">
+					<tr>
+						<th class="childIssueName">Name</th>
+						<th class="childIssueStatus">State</th>
+						<th class="childIssuePriority">Priority</th>
+						<th class="childIssueAssignedTo">Assigned To</th>
+					</tr>
+					<c:forEach items="${actionBean.children}" var="child" varStatus="loop">
+					<tr>
+						<td class="childIssueName"><a href="">${child.code}: ${child.title}</a></td>
+						<td class="childIssueStatus"></td>
+						<td class="childIssuePriority"></td>
+						<td class="childIssueAssignedTo">Assigned To</td>
+					</tr>
+					</c:forEach>
+				</table>
+			</fieldset>
+    	</div>
+    	</c:if>
     	<div class="col-sm-12" style="margin-top: 10px"> 
 	    	<ul class="nav nav-tabs">
-				<li class="active"><a data-toggle="tab" href="#comments">Comments</a></li>
-				<!-- 
-    			<li><a data-toggle="tab" href="#work">Work logged</a></li>
-    			 -->
+				<li class="active"><a data-toggle="tab" href="#comments">Comments</a></li>				 
+    			<li><a data-toggle="tab" href="#work">Work logged</a></li>    			
 			</ul>
 			<div class="tab-content">
 				<div id="comments" class="tab-pane fade in active">

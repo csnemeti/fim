@@ -3,6 +3,9 @@
  */
 package pfa.alliance.fim.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -11,6 +14,7 @@ import pfa.alliance.fim.dao.IssueRepository;
 import pfa.alliance.fim.dao.IssueStateRepository;
 import pfa.alliance.fim.dao.ProjectRepository;
 import pfa.alliance.fim.dao.UserRepository;
+import pfa.alliance.fim.dto.issue.IssueBaseDTO;
 import pfa.alliance.fim.model.issue.Issue;
 import pfa.alliance.fim.model.issue.IssueType;
 import pfa.alliance.fim.model.issue.states.IssueState;
@@ -158,5 +162,33 @@ class IssueManagerServiceImpl
         {
 
         }
+    }
+
+    @Override
+    public List<IssueBaseDTO> getAncestorsFor( long id, boolean includeTarget )
+    {
+        List<IssueBaseDTO> dummy = new ArrayList<IssueBaseDTO>();
+        dummy.add( new IssueBaseDTO( 2, null, 5, "P44-2", "Title 2", IssueType.EPIC ) );
+        dummy.add( new IssueBaseDTO( 3, null, 5, "P44-3", "Title 3", IssueType.FEATURE ) );
+        dummy.add( new IssueBaseDTO( 4, null, 5, "P44-4", "Title 4", IssueType.STORY ) );
+        dummy.add( new IssueBaseDTO( 5, null, 5, "P44-5", "Title 5", IssueType.SUB_STORY ) );
+        dummy.add( new IssueBaseDTO( 6, null, 5, "P44-6", "Title 6", IssueType.ENHANCEMENT ) );
+        dummy.add( new IssueBaseDTO( 7, null, 5, "P44-7", "Title 7", IssueType.TASK ) );
+        dummy.add( new IssueBaseDTO( 8, null, 5, "P44-8", "Title 8", IssueType.SUB_TASK ) );
+        return dummy;
+    }
+
+    @Override
+    public List<IssueBaseDTO> getChildernFor( long id )
+    {
+        List<IssueBaseDTO> dummy = new ArrayList<IssueBaseDTO>();
+        dummy.add( new IssueBaseDTO( 2, null, 5, "P44-2", "Title 2", IssueType.EPIC ) );
+        dummy.add( new IssueBaseDTO( 3, null, 5, "P44-3", "Title 3", IssueType.FEATURE ) );
+        dummy.add( new IssueBaseDTO( 4, null, 5, "P44-4", "Title 4", IssueType.STORY ) );
+        dummy.add( new IssueBaseDTO( 5, null, 5, "P44-5", "Title 5", IssueType.SUB_STORY ) );
+        dummy.add( new IssueBaseDTO( 6, null, 5, "P44-6", "Title 6", IssueType.ENHANCEMENT ) );
+        dummy.add( new IssueBaseDTO( 7, null, 5, "P44-7", "Title 7", IssueType.TASK ) );
+        dummy.add( new IssueBaseDTO( 8, null, 5, "P44-8", "Title 8", IssueType.SUB_TASK ) );
+        return dummy;
     }
 }

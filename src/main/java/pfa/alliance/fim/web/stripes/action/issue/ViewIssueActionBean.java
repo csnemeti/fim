@@ -5,6 +5,7 @@ package pfa.alliance.fim.web.stripes.action.issue;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -16,9 +17,13 @@ import net.sourceforge.stripes.action.UrlBinding;
 import net.sourceforge.stripes.util.UrlBuilder;
 import net.sourceforge.stripes.validation.Validate;
 
+import org.joda.time.Period;
+import org.joda.time.format.PeriodFormatter;
+import org.joda.time.format.PeriodFormatterBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pfa.alliance.fim.dto.issue.IssueBaseDTO;
 import pfa.alliance.fim.model.issue.Issue;
 import pfa.alliance.fim.model.user.User;
 import pfa.alliance.fim.service.IssueManagerService;
@@ -49,6 +54,12 @@ public class ViewIssueActionBean
     private Long id;
 
     private Issue issue;
+
+    private List<IssueBaseDTO> ancestors;
+
+    private List<IssueBaseDTO> children;
+
+    private List<IssueBaseDTO> dependencies;
 
     private final IssueManagerService issueManagerService;
 
@@ -102,6 +113,12 @@ public class ViewIssueActionBean
     private void loadIssue()
     {
         issue = issueManagerService.findById( id );
+        if ( issue != null )
+        {
+            ancestors = issueManagerService.getAncestorsFor( id, true );
+            children = issueManagerService.getChildernFor( id );
+            dependencies = issueManagerService.getChildernFor( id );
+        }
     }
 
     public void setId( Long id )
@@ -156,7 +173,25 @@ public class ViewIssueActionBean
         Timestamp created = issue.getCreatedAt();
         if ( created != null )
         {
-            name = DateUtils.getTimeInterval( created, new Date() );
+            Period period = DateUtils.buildTimePeriod( created, new Date() );
+            PeriodFormatterBuilder builder = new PeriodFormatterBuilder();
+            if ( period.getYears() > 0 )
+            {
+                builder.appendYears().appendSuffix( " year", " years" ).appendSeparator( " and " ).printZeroRarelyLast();
+            }
+            if ( period.getMonths() > 0 )
+            {
+                builder.appendMonths().appendSuffix( " month", " months" ).appendSeparator( " and " ).printZeroRarelyLast();
+            }
+            if ( period.getDays() > 0 )
+            {
+                builder.appendDays().appendSuffix( " day", " days" ).appendSeparator( " and " ).printZeroRarelyLast();
+            }
+            builder.appendHours().appendSuffix( " hour", " hours" ).appendSeparator( " and " ).printZeroRarelyLast();
+            builder.appendMinutes().appendSuffix( " minute", " minutes" ).printZeroRarelyLast();
+
+            PeriodFormatter dateFormat = builder.toFormatter();
+            name = period.toString( dateFormat );
         }
         return name;
     }
@@ -177,4 +212,159 @@ public class ViewIssueActionBean
         }
         return url;
     }
+
+    public String getLevel1Link()
+    {
+        return getLevelUrl( 0 );
+    }
+
+    public String getLevel1Title()
+    {
+        return getLevelTitle( 0 );
+    }
+
+    public String getLevel2Link()
+    {
+        return getLevelUrl( 1 );
+    }
+
+    public String getLevel2Title()
+    {
+        return getLevelTitle( 1 );
+    }
+
+    public String getLevel2Show()
+    {
+        return getLevelShowString( 1 );
+    }
+
+    public String getLevel3Link()
+    {
+        return getLevelUrl( 2 );
+    }
+
+    public String getLevel3Title()
+    {
+        return getLevelTitle( 2 );
+    }
+
+    public String getLevel3Show()
+    {
+        return getLevelShowString( 2 );
+    }
+
+    public String getLevel4Link()
+    {
+        return getLevelUrl( 3 );
+    }
+
+    public String getLevel4Title()
+    {
+        return getLevelTitle( 3 );
+    }
+
+    public String getLevel4Show()
+    {
+        return getLevelShowString( 3 );
+    }
+
+    public String getLevel5Link()
+    {
+        return getLevelUrl( 4 );
+    }
+
+    public String getLevel5Title()
+    {
+        return getLevelTitle( 4 );
+    }
+
+    public String getLevel5Show()
+    {
+        return getLevelShowString( 4 );
+    }
+
+    public String getLevel6Link()
+    {
+        return getLevelUrl( 5 );
+    }
+
+    public String getLevel6Title()
+    {
+        return getLevelTitle( 5 );
+    }
+
+    public String getLevel6Show()
+    {
+        return getLevelShowString( 5 );
+    }
+
+    public String getLevel7Link()
+    {
+        return getLevelUrl( 6 );
+    }
+
+    public String getLevel7Title()
+    {
+        return getLevelTitle( 6 );
+    }
+
+    public String getLevel7Show()
+    {
+        return getLevelShowString( 6 );
+    }
+
+    private String getLevelShowString( final int level )
+    {
+        String style = "display: none";
+        if ( level < ancestors.size() )
+        {
+            style = "display: block";
+        }
+        return style;
+    }
+
+    private String getLevelTitle( final int level )
+    {
+        String title = "";
+        if ( level < ancestors.size() )
+        {
+            IssueBaseDTO ancestor = ancestors.get( level );
+            title = ancestor.getCode() + ": " + ancestor.getTitle();
+        }
+        return title;
+    }
+
+    private String getLevelUrl( final int level )
+    {
+        String url = "";
+        if ( level < ancestors.size() )
+        {
+            IssueBaseDTO ancestor = ancestors.get( level );
+            UrlBuilder builder = new UrlBuilder( getContext().getLocale(), ViewIssueActionBean.class, true );
+            builder.addParameter( "id", ancestor.getId() );
+            url = builder.toString();
+            String contextPath = getContext().getServletContext().getContextPath();
+            if ( contextPath.equals( "/" ) )
+            {
+                contextPath = null;
+            }
+            if ( contextPath != null )
+            {
+                url = contextPath + url;
+            }
+            return url;
+        }
+        return url;
+    }
+
+    public List<IssueBaseDTO> getChildren()
+    {
+        return children;
+    }
+
+    public List<IssueBaseDTO> getDependencies()
+    {
+        return dependencies;
+    }
+
 }
