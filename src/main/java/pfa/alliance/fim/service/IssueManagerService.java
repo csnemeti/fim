@@ -4,8 +4,11 @@
 package pfa.alliance.fim.service;
 
 import java.util.List;
+import java.util.Locale;
 
 import pfa.alliance.fim.dto.issue.IssueBaseDTO;
+import pfa.alliance.fim.dto.issue.IssueDTO;
+import pfa.alliance.fim.dto.issue.IssueDependencyDTO;
 import pfa.alliance.fim.model.issue.Issue;
 import pfa.alliance.fim.model.issue.IssueType;
 
@@ -55,7 +58,17 @@ public interface IssueManagerService
      * Gets first level child issues of the given issue.
      * 
      * @param id the ID of the issue that is the parent
+     * @param locale desired locale for some text
      * @return a non-null list of children
      */
-    List<IssueBaseDTO> getChildernFor( long id );
+    List<IssueDTO> getChildernFor( long id, Locale locale );
+
+    /**
+     * Gets the dependencies for a given issue.
+     * 
+     * @param id the ID of the issue that is the parent
+     * @param locale desired locale for some text
+     * @return a non-null list of issues that depends and blocks this issue
+     */
+    List<IssueDependencyDTO> getDependenciesFor( long id, Locale locale );
 }

@@ -168,7 +168,7 @@
 		<div class="col-sm-12">    	
     		<fieldset>
 				<legend class="legendTitle">Description</legend>
-				<textarea readonly="readonly" wrap="virtual">${actionBean.issue.description}</textarea>
+				<textarea readonly="readonly">${actionBean.issue.description}</textarea>
 			</fieldset>
     	</div>
 		<div class="col-sm-12">     	
@@ -260,8 +260,8 @@
 					<c:forEach items="${actionBean.children}" var="child" varStatus="loop">
 					<tr>
 						<td class="childIssueName"><a href="">${child.code}: ${child.title}</a></td>
-						<td class="childIssueStatus"></td>
-						<td class="childIssuePriority"></td>
+						<td class="childIssueStatus">${child.stateName}</td>
+						<td class="childIssuePriority">${child.priorityName}</td>
 						<td class="childIssueAssignedTo">Assigned To</td>
 					</tr>
 					</c:forEach>

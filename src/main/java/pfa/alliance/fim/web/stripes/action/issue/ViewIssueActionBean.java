@@ -6,6 +6,7 @@ package pfa.alliance.fim.web.stripes.action.issue;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -24,6 +25,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pfa.alliance.fim.dto.issue.IssueBaseDTO;
+import pfa.alliance.fim.dto.issue.IssueDTO;
+import pfa.alliance.fim.dto.issue.IssueDependencyDTO;
 import pfa.alliance.fim.model.issue.Issue;
 import pfa.alliance.fim.model.user.User;
 import pfa.alliance.fim.service.IssueManagerService;
@@ -57,9 +60,9 @@ public class ViewIssueActionBean
 
     private List<IssueBaseDTO> ancestors;
 
-    private List<IssueBaseDTO> children;
+    private List<IssueDTO> children;
 
-    private List<IssueBaseDTO> dependencies;
+    private List<IssueDependencyDTO> dependencies;
 
     private final IssueManagerService issueManagerService;
 
@@ -116,8 +119,9 @@ public class ViewIssueActionBean
         if ( issue != null )
         {
             ancestors = issueManagerService.getAncestorsFor( id, true );
-            children = issueManagerService.getChildernFor( id );
-            dependencies = issueManagerService.getChildernFor( id );
+            Locale locale = getLocale();
+            children = issueManagerService.getChildernFor( id, locale );
+            dependencies = issueManagerService.getDependenciesFor( id, locale );
         }
     }
 
@@ -357,12 +361,12 @@ public class ViewIssueActionBean
         return url;
     }
 
-    public List<IssueBaseDTO> getChildren()
+    public List<IssueDTO> getChildren()
     {
         return children;
     }
 
-    public List<IssueBaseDTO> getDependencies()
+    public List<IssueDependencyDTO> getDependencies()
     {
         return dependencies;
     }
