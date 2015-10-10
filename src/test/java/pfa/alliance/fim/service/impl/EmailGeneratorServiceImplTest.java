@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import pfa.alliance.fim.service.EmailType;
+import pfa.alliance.fim.service.LocalizationService;
 import pfa.alliance.fim.service.NameProvider;
 
 /**
@@ -21,11 +22,12 @@ import pfa.alliance.fim.service.NameProvider;
  */
 public class EmailGeneratorServiceImplTest
 {
+    private LocalizationService LocalizationService = new LocalizationServiceImpl();
     @Test
     public void test_getSubject_localeEnNoParams()
     {
         // prepare
-        EmailGeneratorServiceImpl service = new EmailGeneratorServiceImpl();
+        EmailGeneratorServiceImpl service = new EmailGeneratorServiceImpl( LocalizationService );
         // call
         String subject = service.getSubject( EmailType.REGISTER_USER, null, Locale.UK );
         // test
@@ -40,7 +42,7 @@ public class EmailGeneratorServiceImplTest
         // prepare
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put( "name", "ProjectName" );
-        EmailGeneratorServiceImpl service = new EmailGeneratorServiceImpl();
+        EmailGeneratorServiceImpl service = new EmailGeneratorServiceImpl( LocalizationService );
         // call
         String subject = service.getSubject( EmailType.CREATE_PROJECT, parameters, Locale.UK );
         // test
@@ -53,7 +55,7 @@ public class EmailGeneratorServiceImplTest
     public void test_getContent_localeEnWithParams()
     {
         // prepare
-        EmailGeneratorServiceImpl service = new EmailGeneratorServiceImpl();
+        EmailGeneratorServiceImpl service = new EmailGeneratorServiceImpl( LocalizationService );
         NameProvider nameProvider = Mockito.mock( NameProvider.class );
         Mockito.when( nameProvider.name() ).thenReturn( "Content1" );
         Map<String, Object> data = new HashMap<String, Object>();

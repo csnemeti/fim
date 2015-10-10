@@ -12,7 +12,9 @@ import pfa.alliance.fim.model.issue.IssueType;
 public class IssueDependencyDTO
     extends IssueDTO
 {
+    private DependencyType dependency;
 
+    private String dependencyName;
     /**
      * Called when instance of this class is created.
      */
@@ -34,6 +36,26 @@ public class IssueDependencyDTO
     public IssueDependencyDTO( long id, Long parentId, int projectId, String code, String title, IssueType type )
     {
         super( id, parentId, projectId, code, title, type );
+    }
+
+    public DependencyType getDependency()
+    {
+        return dependency;
+    }
+
+    public void setDependency( DependencyType dependency )
+    {
+        this.dependency = dependency;
+    }
+
+    public String getDependencyName()
+    {
+        return dependencyName;
+    }
+
+    public void setDependencyName( String dependencyName )
+    {
+        this.dependencyName = dependencyName;
     }
 
 }

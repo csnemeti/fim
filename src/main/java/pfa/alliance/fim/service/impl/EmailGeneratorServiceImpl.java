@@ -8,6 +8,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.apache.velocity.Template;
@@ -19,8 +20,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pfa.alliance.fim.service.EmailGeneratorService;
+import pfa.alliance.fim.service.LocalizationService;
 import pfa.alliance.fim.service.NameProvider;
-import pfa.alliance.fim.util.UTF8Control;
 
 /**
  * This class implements the {@link EmailGeneratorService}.
@@ -34,14 +35,19 @@ class EmailGeneratorServiceImpl
     /** The logger used in this class. */
     private static final Logger LOG = LoggerFactory.getLogger( EmailGeneratorServiceImpl.class );
 
-    /** This class is used for loading UTF-8 based resources from properties file. */
-    private final ResourceBundle.Control utf8Rbontrol = new UTF8Control();
+    private final LocalizationService localizationService;
+
+    @Inject
+    EmailGeneratorServiceImpl( LocalizationService localizationService )
+    {
+        this.localizationService = localizationService;
+    }
 
     @Override
     public String getSubject( NameProvider emailType, Map<String, Object> parameters, Locale locale )
     {
         LOG.debug( "Getting subject for: EmailType = {}, parameters = {}, locale = {}", emailType, parameters, locale );
-        ResourceBundle stripesResourceBundle = ResourceBundle.getBundle( "StripesResources", locale, utf8Rbontrol );
+        ResourceBundle stripesResourceBundle = localizationService.getBundle( locale );
         String message = stripesResourceBundle.getString( "email.subject." + emailType );
         // process message
         LOG.debug( "Subject for: EmailType = {}, parameters = {}, locale = {} --> {}", emailType, parameters, locale,

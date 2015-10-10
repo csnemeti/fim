@@ -136,7 +136,7 @@ public class ViewIssueActionBean
         User user = issue.getAssigned();
         if ( user == null )
         {
-            name = "Unassigned";
+            name = getMessage( "unassigned" );
         }
         else
         {
@@ -151,7 +151,7 @@ public class ViewIssueActionBean
         User user = issue.getReporter();
         if ( user == null )
         {
-            name = "Unknown";
+            name = getMessage( "unknown" );
         }
         else
         {
@@ -344,19 +344,7 @@ public class ViewIssueActionBean
         if ( level < ancestors.size() )
         {
             IssueBaseDTO ancestor = ancestors.get( level );
-            UrlBuilder builder = new UrlBuilder( getContext().getLocale(), ViewIssueActionBean.class, true );
-            builder.addParameter( "id", ancestor.getId() );
-            url = builder.toString();
-            String contextPath = getContext().getServletContext().getContextPath();
-            if ( contextPath.equals( "/" ) )
-            {
-                contextPath = null;
-            }
-            if ( contextPath != null )
-            {
-                url = contextPath + url;
-            }
-            return url;
+            url = ancestor.getUrl();
         }
         return url;
     }

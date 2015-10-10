@@ -10,6 +10,7 @@ import javax.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pfa.alliance.fim.dto.issue.IssueIdentifier;
 import pfa.alliance.fim.model.user.UserOneTimeLink;
 import pfa.alliance.fim.service.FimUrlGeneratorService;
 
@@ -75,5 +76,11 @@ class FimUrlGeneratorServiceImpl
     {
         // return "https://localhost:8443/fim/";
         return fimBaseUrl.get();
+    }
+
+    @Override
+    public String getIssueLink( IssueIdentifier identifier )
+    {
+        return getBaseLink() + "issue/show/" + identifier.getId();
     }
 }

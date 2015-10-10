@@ -13,7 +13,7 @@ import pfa.alliance.fim.model.issue.IssueType;
  * @author Csaba
  */
 public class IssueBaseDTO
-    implements Serializable
+    implements Serializable, IssueIdentifier
 {
     /** The ID of this issue. */
     private long id;
@@ -32,6 +32,21 @@ public class IssueBaseDTO
 
     /** The type of the issue. */
     private IssueType type;
+
+    /** The URL to this issue. */
+    private String url;
+
+    /** The user who created the issue. */
+    private String createdBy;
+
+    /** The user ID who created the issue. */
+    private Integer createdById;
+
+    /** The user who has assigned the issue. */
+    private String assignedTo;
+
+    /** The user ID who has assigned the issue. */
+    private Integer assignedToId;
 
     /**
      * Called when instance of this class is created.
@@ -60,6 +75,7 @@ public class IssueBaseDTO
         this.type = type;
     }
 
+    @Override
     public long getId()
     {
         return id;
@@ -90,6 +106,7 @@ public class IssueBaseDTO
         this.projectId = projectId;
     }
 
+    @Override
     public String getCode()
     {
         return code;
@@ -118,6 +135,48 @@ public class IssueBaseDTO
     public void setType( IssueType type )
     {
         this.type = type;
+    }
+
+    public String getUrl()
+    {
+        return url;
+    }
+
+    public void setUrl( String url )
+    {
+        this.url = url;
+    }
+
+    public String getCreatedBy()
+    {
+        return createdBy;
+    }
+
+    public void setCreatedBy( String createdBy, Integer createdById )
+    {
+        this.createdBy = createdBy;
+        this.createdById = createdById;
+    }
+
+    public String getAssignedTo()
+    {
+        return assignedTo;
+    }
+
+    public void setAssignedTo( String assignedTo, Integer assignedToId )
+    {
+        this.assignedTo = assignedTo;
+        this.assignedToId = assignedToId;
+    }
+
+    public Integer getCreatedById()
+    {
+        return createdById;
+    }
+
+    public Integer getAssignedToId()
+    {
+        return assignedToId;
     }
 
 }

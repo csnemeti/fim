@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -19,6 +20,7 @@ import pfa.alliance.fim.dao.IssueRepository;
 import pfa.alliance.fim.dao.IssueStateRepository;
 import pfa.alliance.fim.dao.ProjectRepository;
 import pfa.alliance.fim.dao.UserRepository;
+import pfa.alliance.fim.dto.issue.DependencyType;
 import pfa.alliance.fim.dto.issue.IssueBaseDTO;
 import pfa.alliance.fim.dto.issue.IssueDTO;
 import pfa.alliance.fim.dto.issue.IssueDependencyDTO;
@@ -31,6 +33,7 @@ import pfa.alliance.fim.service.EmailGeneratorService;
 import pfa.alliance.fim.service.EmailService;
 import pfa.alliance.fim.service.FimUrlGeneratorService;
 import pfa.alliance.fim.service.IssueManagerService;
+import pfa.alliance.fim.service.LocalizationService;
 
 import com.google.inject.persist.Transactional;
 
@@ -68,6 +71,8 @@ class IssueManagerServiceImpl
     /** Service used for generating URLs inside FIM. */
     private final FimUrlGeneratorService fimUrlGeneratorService;
 
+    private final LocalizationService localizationService;
+
     /**
      * Called when instance of this class is created.
      * 
@@ -84,7 +89,7 @@ class IssueManagerServiceImpl
                              ProjectRepository projectRepository, UserRepository userRepository,
                              IssuePriorityRepository issuePriorityRepository,
                              EmailService emailService, EmailGeneratorService emailGeneratorService,
-                             FimUrlGeneratorService fimUrlGeneratorService )
+                             FimUrlGeneratorService fimUrlGeneratorService, LocalizationService localizationService )
     {
         this.issueRepository = issueRepository;
         this.issueStateRepository = issueStateRepository;
@@ -95,6 +100,7 @@ class IssueManagerServiceImpl
         this.emailService = emailService;
         this.emailGeneratorService = emailGeneratorService;
         this.fimUrlGeneratorService = fimUrlGeneratorService;
+        this.localizationService = localizationService;
     }
 
     @Override
@@ -194,6 +200,8 @@ class IssueManagerServiceImpl
             IssueBaseDTO dto = issueRepository.findIssueBaseDtoById( issueId );
             if ( dto != null )
             {
+                // add link inside
+                dto.setUrl( fimUrlGeneratorService.getIssueLink( dto ) );
                 if ( includeTarget )
                 {
                     descendants.add( dto );
@@ -208,6 +216,18 @@ class IssueManagerServiceImpl
     {
         LOG.debug( "Find childern for issue ID = {}", id );
         List<IssueDTO> rawChildren = issueRepository.getChildernFor( id );
+        // gets the resource bundle
+        ResourceBundle rb = localizationService.getBundle( locale );
+        for ( IssueDTO dto : rawChildren )
+        {
+            dto.setUrl( fimUrlGeneratorService.getIssueLink( dto ) );
+            Integer userId = dto.getAssignedToId();
+            if ( userId == null )
+            {
+                String userName = rb.getString( "unassigned" );
+                dto.setAssignedTo( userName, userId );
+            }
+        }
         return rawChildren;
     }
 
@@ -216,13 +236,56 @@ class IssueManagerServiceImpl
     {
         LOG.debug( "Find childern for issue ID = {}", id );
         List<IssueDependencyDTO> dummy = new ArrayList<>();
-        dummy.add( new IssueDependencyDTO( 2, null, 5, "P44-2", "Title 2", IssueType.EPIC ) );
-        dummy.add( new IssueDependencyDTO( 3, null, 5, "P44-3", "Title 3", IssueType.FEATURE ) );
-        dummy.add( new IssueDependencyDTO( 4, null, 5, "P44-4", "Title 4", IssueType.STORY ) );
-        dummy.add( new IssueDependencyDTO( 5, null, 5, "P44-5", "Title 5", IssueType.SUB_STORY ) );
-        dummy.add( new IssueDependencyDTO( 6, null, 5, "P44-6", "Title 6", IssueType.ENHANCEMENT ) );
-        dummy.add( new IssueDependencyDTO( 7, null, 5, "P44-7", "Title 7", IssueType.TASK ) );
-        dummy.add( new IssueDependencyDTO( 8, null, 5, "P44-8", "Title 8", IssueType.SUB_TASK ) );
+        dummy.add( createIssueDependencyDTO( 2, null, 5, "P44-2", "Title 2", IssueType.EPIC, DependencyType.DEPENDS, 1,
+                                             "User 1", "State 1", 1, "Priority 1" ) );
+        dummy.add( createIssueDependencyDTO( 3, null, 5, "P44-3", "Title 3", IssueType.FEATURE, DependencyType.DEPENDS,
+                                             1, "User 1", "State 2", 1, "Priority 1" ) );
+        dummy.add( createIssueDependencyDTO( 4, null, 5, "P44-4", "Title 4", IssueType.STORY, DependencyType.DEPENDS,
+                                             1, "User 1", "State 3", 1, "Priority 1" ) );
+        dummy.add( createIssueDependencyDTO( 5, null, 5, "P44-5", "Title 5", IssueType.SUB_STORY,
+                                             DependencyType.BLOCKS, 2, "User 2", "State 4", 4, "Priority 4" ) );
+        dummy.add( createIssueDependencyDTO( 6, null, 5, "P44-6", "Title 6", IssueType.ENHANCEMENT,
+                                             DependencyType.BLOCKS, 2, "User 2", "State 5", 5, "Priority 5" ) );
+        dummy.add( createIssueDependencyDTO( 7, null, 5, "P44-7", "Title 7", IssueType.TASK, DependencyType.BLOCKS,
+                                             null, null, "State 6", 6, "Priority 6" ) );
+        dummy.add( createIssueDependencyDTO( 8, null, 5, "P44-8", "Title 8", IssueType.SUB_TASK, DependencyType.BLOCKS,
+                                             null, null, "State 7", 7, "Priority 7" ) );
+        // gets the resource bundle
+        ResourceBundle rb = localizationService.getBundle( locale );
+
+        for ( IssueDependencyDTO dto : dummy )
+        {
+            dto.setUrl( fimUrlGeneratorService.getIssueLink( dto ) );
+            Integer userId = dto.getAssignedToId();
+            if ( userId == null )
+            {
+                String userName = rb.getString( "unassigned" );
+                dto.setAssignedTo( userName, userId );
+            }
+            String dependencyKey =
+                dto.getDependency() == DependencyType.BLOCKS ? "dependency.blocks" : "dependency.blocked";
+            dto.setDependencyName( rb.getString( dependencyKey ) );
+        }
         return dummy;
+    }
+    
+    private static IssueDependencyDTO createIssueDependencyDTO( long id, Long parentId, int projectId, String code,
+                                                                String title, IssueType type,
+                                                                DependencyType dependency, Integer assignedUserId,
+                                                                String assignedUserName, String state,
+                                                                Integer priorityId, String priorityName )
+    {
+        IssueDependencyDTO dto = new IssueDependencyDTO( id, parentId, projectId, code, title, type );
+        dto.setAssignedTo( assignedUserName, assignedUserId );
+        dto.setDependency( dependency );
+        if ( state != null )
+        {
+            dto.setState( 1L, state );
+        }
+        if ( priorityName != null )
+        {
+            dto.setPriority( 1L, priorityName );
+        }
+        return dto;
     }
 }

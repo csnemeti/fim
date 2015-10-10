@@ -21,6 +21,7 @@ import pfa.alliance.fim.service.EmailService;
 import pfa.alliance.fim.service.FimUrlGeneratorService;
 import pfa.alliance.fim.service.IssueManagerService;
 import pfa.alliance.fim.service.IssuePriorityManagementService;
+import pfa.alliance.fim.service.LocalizationService;
 import pfa.alliance.fim.service.PersistenceService;
 import pfa.alliance.fim.service.ProjectManagementService;
 import pfa.alliance.fim.service.SearchService;
@@ -62,6 +63,7 @@ public class FimServiceModule
         LOG.debug( "Configuring services..." );
         install( new FimDaoModule() );
         // bind services
+        bind( LocalizationService.class ).to( LocalizationServiceImpl.class );
         bind( ConfigurationService.class ).to( ConfigurationServiceImpl.class );
         bind( DatabaseMigrationService.class ).to( DatabaseMigrationServiceImpl.class );
         bind( EmailService.class ).to( EmailServiceImpl.class );

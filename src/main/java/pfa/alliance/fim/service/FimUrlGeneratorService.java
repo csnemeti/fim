@@ -3,6 +3,7 @@
  */
 package pfa.alliance.fim.service;
 
+import pfa.alliance.fim.dto.issue.IssueIdentifier;
 import pfa.alliance.fim.model.user.UserOneTimeLink;
 
 /**
@@ -27,4 +28,12 @@ public interface FimUrlGeneratorService
      * @return the build URL
      */
     String getProjectLink( final String projectCode );
+
+    /**
+     * Builds URL to an issue. The method doesn't check if the issue exists.
+     * 
+     * @param identifier the identifier of the
+     * @return the build URL
+     */
+    String getIssueLink( IssueIdentifier identifier );
 }

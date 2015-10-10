@@ -21,6 +21,7 @@ import pfa.alliance.fim.model.issue.Issue;
 import pfa.alliance.fim.model.issue.IssuePriority;
 import pfa.alliance.fim.model.issue.states.IssueState;
 import pfa.alliance.fim.model.project.Project;
+import pfa.alliance.fim.model.user.User;
 
 /**
  * This is the implementation of {@link IssueRepository}.
@@ -122,6 +123,16 @@ class IssueRepositoryImpl
         issueDto.setCode( project.getCode() + "-" + issue.getCode() );
         issueDto.setTitle( issue.getTitle() );
         issueDto.setType( issue.getType() );
+        User assignedTo = issue.getAssigned();
+        if ( assignedTo != null )
+        {
+            issueDto.setAssignedTo( assignedTo.getName(), assignedTo.getId() );
+        }
+        User createdBy = issue.getReporter();
+        if ( createdBy != null )
+        {
+            issueDto.setCreatedBy( createdBy.getName(), createdBy.getId() );
+        }
     }
 
 }
