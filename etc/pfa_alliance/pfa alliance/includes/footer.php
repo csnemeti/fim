@@ -1,7 +1,7 @@
         <footer>
             <div class="row" style="margin-top: 20px">
                 <div class="col-lg-6">
-                	<a href="contact.php">Contact Us</a> | <a href="#">Sitemap</a> | <a href="#">Terms of use</a> | &copy; PFA Alliance 2015, version 0.4
+                	<a href="contact.php">Contact Us</a> | <a href="sitemap.php?format=html">Sitemap</a> | <a href="#">Terms of use</a> | &#169; PFA Alliance 2015, version 0.5
                 </div>
                 <div class="col-lg-6" style="text-align: right">
                 	<a href="https://www.facebook.com/sharer/sharer.php?u=www.pfa-alliance.com" target="fb" title="Share on Facebook"><img src="images/FB-f-Logo__blue_29.png" style="width: 20px; height: 20px" alt="Share on Facebook"/></a> | 
