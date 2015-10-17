@@ -26,6 +26,7 @@ import pfa.alliance.fim.dto.ProjectSearchResultDTO;
 import pfa.alliance.fim.model.project.Project;
 import pfa.alliance.fim.model.project.ProjectState;
 import pfa.alliance.fim.model.user.User;
+import pfa.alliance.fim.service.ConfigurationService;
 import pfa.alliance.fim.service.EmailGeneratorService;
 import pfa.alliance.fim.service.EmailService;
 import pfa.alliance.fim.service.FimUrlGeneratorService;
@@ -48,6 +49,7 @@ public class ProjectManagementServiceImplTest
     private EmailGeneratorService emailGeneratorServiceMock;
 
     private FimUrlGeneratorService fimUrlGeneratorServiceMock;
+
     private ProjectComponentRepository componentRepositoryMock;
 
     private ProjectLabelRepository labelRepositoryMock;
@@ -55,6 +57,8 @@ public class ProjectManagementServiceImplTest
     private UserProjectRelationRepository userProjectRelationRepositoryMock;
 
     private IssueStateRepository issueStateRepositoryMock;
+
+    private ConfigurationService configurationServiceMock;
 
     @Before
     public void init()
@@ -68,12 +72,15 @@ public class ProjectManagementServiceImplTest
         labelRepositoryMock = Mockito.mock( ProjectLabelRepository.class );
         issueStateRepositoryMock = Mockito.mock( IssueStateRepository.class );
         userProjectRelationRepositoryMock = Mockito.mock( UserProjectRelationRepository.class );
+        configurationServiceMock = Mockito.mock( ConfigurationService.class );
+
+        Mockito.when( configurationServiceMock.getBoolean( Mockito.anyString() ) ).thenReturn( true );
 
         projectManagementServiceImpl =
             new ProjectManagementServiceImpl( projectRepositoryMock, userRepositoryMock, componentRepositoryMock,
                                               labelRepositoryMock, userProjectRelationRepositoryMock, emailServiceMock,
-                                              issueStateRepositoryMock,
-                                              emailGeneratorServiceMock, fimUrlGeneratorServiceMock );
+                                              issueStateRepositoryMock, emailGeneratorServiceMock,
+                                              fimUrlGeneratorServiceMock, configurationServiceMock );
     }
 
     @Test( expected = DuplicateDataException.class )
@@ -218,7 +225,7 @@ public class ProjectManagementServiceImplTest
     {
         Mockito.when( projectRepositoryMock.count( Mockito.any( ProjectSearchDTO.class ) ) ).thenReturn( 4L );
         ProjectSearchDTO searchDTO = new ProjectSearchDTO();
-        
+
         long result = projectManagementServiceImpl.count( searchDTO );
 
         Assert.assertEquals( "Result issue", 4L, result );

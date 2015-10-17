@@ -3,6 +3,23 @@
  */
 package pfa.alliance.fim.service.impl;
 
+import static pfa.alliance.fim.service.ConfigurationService.EMAIL_SEND_ISSUE_ASSIGNMENT_CHANGE;
+import static pfa.alliance.fim.service.ConfigurationService.EMAIL_SEND_ISSUE_ATTACHMENT_ADD;
+import static pfa.alliance.fim.service.ConfigurationService.EMAIL_SEND_ISSUE_ATTACHMENT_DELETE;
+import static pfa.alliance.fim.service.ConfigurationService.EMAIL_SEND_ISSUE_COMMENT_ADD;
+import static pfa.alliance.fim.service.ConfigurationService.EMAIL_SEND_ISSUE_COMMENT_DELETE;
+import static pfa.alliance.fim.service.ConfigurationService.EMAIL_SEND_ISSUE_COMMENT_EDIT;
+import static pfa.alliance.fim.service.ConfigurationService.EMAIL_SEND_ISSUE_CREATE;
+import static pfa.alliance.fim.service.ConfigurationService.EMAIL_SEND_ISSUE_EDITE;
+import static pfa.alliance.fim.service.ConfigurationService.EMAIL_SEND_ISSUE_WORKLOG_ADD;
+import static pfa.alliance.fim.service.ConfigurationService.EMAIL_SEND_ISSUE_WORKLOG_DELETE;
+import static pfa.alliance.fim.service.ConfigurationService.EMAIL_SEND_ISSUE_WORKLOG_EDIT;
+import static pfa.alliance.fim.service.ConfigurationService.EMAIL_SEND_PROJECT_CREATE;
+import static pfa.alliance.fim.service.ConfigurationService.EMAIL_SEND_PROJECT_EDIT;
+import static pfa.alliance.fim.service.ConfigurationService.EMAIL_SEND_PROJECT_OWNER_CHANGE;
+import static pfa.alliance.fim.service.ConfigurationService.EMAIL_SEND_PROJECT_STATUS_CHANGE;
+import static pfa.alliance.fim.service.ConfigurationService.EMAIL_SEND_PROJECT_USER_ASSIGNMENT_CHANGE;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -51,6 +68,13 @@ public class FimServiceModule
     private static final String[] EMAIL_CONFIG_PROPERTIES = { "mail.smtp.auth", "mail.smtp.starttls.enable",
         "mail.smtp.host", "mail.smtp.port", "mail.smtp.socketFactory.port", "mail.smtp.socketFactory.class",
         "mail.smtp.username", "mail.smtp.password", "mail.smtp.subjectPrefix", "mail.smtp.from", "mail.debug" };
+
+    private static final String[] EMAIL_SEND_CONFIG_PROPERTIES = { EMAIL_SEND_ISSUE_CREATE, EMAIL_SEND_ISSUE_EDITE,
+        EMAIL_SEND_ISSUE_ASSIGNMENT_CHANGE, EMAIL_SEND_ISSUE_COMMENT_ADD, EMAIL_SEND_ISSUE_COMMENT_EDIT,
+        EMAIL_SEND_ISSUE_COMMENT_DELETE, EMAIL_SEND_ISSUE_ATTACHMENT_ADD, EMAIL_SEND_ISSUE_ATTACHMENT_DELETE,
+        EMAIL_SEND_ISSUE_WORKLOG_ADD, EMAIL_SEND_ISSUE_WORKLOG_EDIT, EMAIL_SEND_ISSUE_WORKLOG_DELETE,
+        EMAIL_SEND_PROJECT_CREATE, EMAIL_SEND_PROJECT_EDIT, EMAIL_SEND_PROJECT_STATUS_CHANGE,
+        EMAIL_SEND_PROJECT_OWNER_CHANGE, EMAIL_SEND_PROJECT_USER_ASSIGNMENT_CHANGE };
 
     private static final String[] SOLR_CONFIG_PROPERTIES = { "solr.url", "solr.users.indexTime.full",
         "solr.users.indexTime.delta" };
@@ -112,6 +136,7 @@ public class FimServiceModule
         LOG.debug( "Read SolrConfiguration: {}", props );
         return filterProperties( props, SOLR_CONFIG_PROPERTIES );
     }
+
     /**
      * Gets the e-mail configuration from environment file.
      * 
@@ -128,6 +153,24 @@ public class FimServiceModule
         LOG.debug( "Read EmailConfiguration: {}", props );
         Properties result = filterProperties( props, EMAIL_CONFIG_PROPERTIES );
         addProperty( result, "mail.smtp.password", "fim.email.password" );
+        return result;
+    }
+
+    /**
+     * Gets the e-mail sending configuration from environment file.
+     * 
+     * @return the email sending configuration
+     */
+    @Provides
+    @ServiceConfiguration( ServiceConfigurationType.EMAIL_SEND )
+    public Properties getEmailSendingConfiguration()
+    {
+        LOG.debug( "Reading e-mail send configuration..." );
+        String fimEnvFileName = getEnvironmentFileName();
+        LOG.debug( "Reading configuration from environment file: {}", fimEnvFileName );
+        Properties props = readConfigurationFrom( fimEnvFileName );
+        LOG.debug( "Read EmailSendConfiguration: {}", props );
+        Properties result = filterProperties( props, EMAIL_SEND_CONFIG_PROPERTIES );
         return result;
     }
 

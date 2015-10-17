@@ -10,5 +10,5 @@ package pfa.alliance.fim.service.impl;
  */
 public enum ServiceConfigurationType
 {
-    JPA, EMAIL, SOLR
+    JPA, EMAIL, EMAIL_SEND, SOLR
 }

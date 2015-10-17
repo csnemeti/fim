@@ -44,6 +44,7 @@ import pfa.alliance.fim.model.project.ProjectTag;
 import pfa.alliance.fim.model.project.UserProjectRelation;
 import pfa.alliance.fim.model.project.UserRoleInsideProject;
 import pfa.alliance.fim.model.user.User;
+import pfa.alliance.fim.service.ConfigurationService;
 import pfa.alliance.fim.service.EmailGeneratorService;
 import pfa.alliance.fim.service.EmailService;
 import pfa.alliance.fim.service.EmailType;
@@ -91,6 +92,9 @@ class ProjectManagementServiceImpl
     /** The {@link UserProjectRelationRepository} instance to use. */
     private final UserProjectRelationRepository userProjectRelationRepository;
 
+    /** The instance to {@link ConfigurationService} to be used. */
+    private final ConfigurationService configurationService;
+
     /**
      * Called when instance of this class is created.
      * 
@@ -101,6 +105,7 @@ class ProjectManagementServiceImpl
      * @param emailService the instance of service used for sending e-mails
      * @param emailGeneratorService the instance of service used for generating e-mails
      * @param fimUrlGeneratorService the instance of service used for generating full URLs inside FIM
+     * @param configurationService the configuration service instance
      */
     @Inject
     ProjectManagementServiceImpl( ProjectRepository projectRepository, UserRepository userRepository,
@@ -109,7 +114,8 @@ class ProjectManagementServiceImpl
                                   UserProjectRelationRepository userProjectRelationRepository,
                                   EmailService emailService, IssueStateRepository issueStateRepository,
                                   EmailGeneratorService emailGeneratorService,
-                                  FimUrlGeneratorService fimUrlGeneratorService )
+                                  FimUrlGeneratorService fimUrlGeneratorService,
+                                  ConfigurationService configurationService )
     {
         this.projectRepository = projectRepository;
         this.userRepository = userRepository;
@@ -121,6 +127,7 @@ class ProjectManagementServiceImpl
         this.emailService = emailService;
         this.emailGeneratorService = emailGeneratorService;
         this.fimUrlGeneratorService = fimUrlGeneratorService;
+        this.configurationService = configurationService;
     }
 
     @Override
@@ -233,27 +240,30 @@ class ProjectManagementServiceImpl
      */
     private void sendProjectCreatedEmail( UserProjectRelation owner, Locale locale )
     {
-        User user = owner.getUser();
-        Project project = owner.getProject();
-        String subject = null;
-
-        try
+        if ( configurationService.getBoolean( ConfigurationService.EMAIL_SEND_PROJECT_CREATE ) )
         {
-            Map<String, Object> parameters = new HashMap<String, Object>();
-            parameters.put( "name", project.getName() );
-            subject = emailGeneratorService.getSubject( EmailType.CREATE_PROJECT, parameters, locale );
+            User user = owner.getUser();
+            Project project = owner.getProject();
+            String subject = null;
 
-            parameters = new HashMap<String, Object>();
-            parameters.put( "userName", user.getFirstName() + " " + user.getLastName() );
-            parameters.put( "projectName", project.getName() );
-            parameters.put( "link", fimUrlGeneratorService.getProjectLink( project.getCode() ) );
-            String content = emailGeneratorService.getContent( EmailType.CREATE_PROJECT, parameters, locale );
+            try
+            {
+                Map<String, Object> parameters = new HashMap<String, Object>();
+                parameters.put( "name", project.getName() );
+                subject = emailGeneratorService.getSubject( EmailType.CREATE_PROJECT, parameters, locale );
 
-            emailService.sendEmail( user.getEmail(), subject, content );
-        }
-        catch ( Exception e )
-        {
-            LOG.error( "Error sending e-mail: subject = {}, to = {}", subject, user.getEmail(), e );
+                parameters = new HashMap<String, Object>();
+                parameters.put( "userName", user.getFirstName() + " " + user.getLastName() );
+                parameters.put( "projectName", project.getName() );
+                parameters.put( "link", fimUrlGeneratorService.getProjectLink( project.getCode() ) );
+                String content = emailGeneratorService.getContent( EmailType.CREATE_PROJECT, parameters, locale );
+
+                emailService.sendEmail( user.getEmail(), subject, content );
+            }
+            catch ( Exception e )
+            {
+                LOG.error( "Error sending e-mail: subject = {}, to = {}", subject, user.getEmail(), e );
+            }
         }
 
     }
