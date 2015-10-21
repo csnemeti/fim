@@ -130,7 +130,8 @@ public class CreateIssueActionBean
         AuthenticatedUserDTO userDTO = SecurityUtil.getUserFromSession( getSession() );
         Issue issue =
             issueManagerService.create( null, issueType, projectId, userDTO.getId(), null, issuePriority, issueTitle,
-                                        issueDescription, issueEnvironment );
+                                        issueDescription, issueEnvironment, getLocale() );
+        issueManagerService.sendCreateIssueEmail( issue, getLocale() );
 
         // create URL to project
         String url = fimUrlGeneratorService.getProjectLink( issue.getProject().getCode() );

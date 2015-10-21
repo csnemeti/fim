@@ -5,12 +5,17 @@ package pfa.alliance.fim.service.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.mail.MessagingException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,13 +29,17 @@ import pfa.alliance.fim.dto.issue.DependencyType;
 import pfa.alliance.fim.dto.issue.IssueBaseDTO;
 import pfa.alliance.fim.dto.issue.IssueDTO;
 import pfa.alliance.fim.dto.issue.IssueDependencyDTO;
+import pfa.alliance.fim.dto.issue.IssueIdentifierDTO;
 import pfa.alliance.fim.model.issue.Issue;
 import pfa.alliance.fim.model.issue.IssueType;
 import pfa.alliance.fim.model.issue.states.IssueState;
 import pfa.alliance.fim.model.project.Project;
+import pfa.alliance.fim.model.project.UserRoleInsideProject;
 import pfa.alliance.fim.model.user.User;
+import pfa.alliance.fim.service.ConfigurationService;
 import pfa.alliance.fim.service.EmailGeneratorService;
 import pfa.alliance.fim.service.EmailService;
+import pfa.alliance.fim.service.EmailType;
 import pfa.alliance.fim.service.FimUrlGeneratorService;
 import pfa.alliance.fim.service.IssueManagerService;
 import pfa.alliance.fim.service.LocalizationService;
@@ -48,6 +57,7 @@ class IssueManagerServiceImpl
 {
     /** The logger used in this class. */
     private static final Logger LOG = LoggerFactory.getLogger( IssueManagerServiceImpl.class );
+
     /** The {@link IssueRepository} instance to use in this class. */
     private final IssueRepository issueRepository;
 
@@ -73,6 +83,8 @@ class IssueManagerServiceImpl
 
     private final LocalizationService localizationService;
 
+    private final ConfigurationService configurationService;
+
     /**
      * Called when instance of this class is created.
      * 
@@ -87,9 +99,10 @@ class IssueManagerServiceImpl
     @Inject
     IssueManagerServiceImpl( IssueRepository issueRepository, IssueStateRepository issueStateRepository,
                              ProjectRepository projectRepository, UserRepository userRepository,
-                             IssuePriorityRepository issuePriorityRepository,
-                             EmailService emailService, EmailGeneratorService emailGeneratorService,
-                             FimUrlGeneratorService fimUrlGeneratorService, LocalizationService localizationService )
+                             IssuePriorityRepository issuePriorityRepository, EmailService emailService,
+                             EmailGeneratorService emailGeneratorService,
+                             FimUrlGeneratorService fimUrlGeneratorService, LocalizationService localizationService,
+                             ConfigurationService configurationService )
     {
         this.issueRepository = issueRepository;
         this.issueStateRepository = issueStateRepository;
@@ -101,6 +114,7 @@ class IssueManagerServiceImpl
         this.emailGeneratorService = emailGeneratorService;
         this.fimUrlGeneratorService = fimUrlGeneratorService;
         this.localizationService = localizationService;
+        this.configurationService = configurationService;
     }
 
     @Override
@@ -120,7 +134,7 @@ class IssueManagerServiceImpl
     @Override
     @Transactional
     public Issue create( Long parentId, IssueType type, int projectId, int reportedUserId, Integer assignedUserId,
-                         Long priority, String title, String description, String environment )
+                         Long priority, String title, String description, String environment, Locale locale )
     {
         LOG.debug( "Creating issue: type = {}, priorityId = {}, parentId = {}, projectId = {}, reportedBy = {}, assignedId = {}, title = {}",
                    type, priority, parentId, projectId, reportedUserId, assignedUserId, title );
@@ -130,7 +144,6 @@ class IssueManagerServiceImpl
                          environment );
         // save & send e-mail
         issue = issueRepository.save( issue );
-        sendCreateIssueEmail( issue );
         return issue;
     }
 
@@ -171,13 +184,60 @@ class IssueManagerServiceImpl
      * Send e-mail to assigned user about issue creation.
      * 
      * @param issue the created issue
+     * @throws MessagingException
      */
-    private void sendCreateIssueEmail( Issue issue )
+    @Override
+    public void sendCreateIssueEmail( Issue issue, Locale locale )
     {
-        User assignedUser = issue.getAssigned();
-        if ( assignedUser != null )
+        if ( configurationService.getBoolean( ConfigurationService.EMAIL_SEND_ISSUE_CREATE ) )
         {
+            Set<String> toList = new HashSet<>();
+            User reporter = issue.getReporter();
 
+            Map<String, Object> parameters = new HashMap<>();
+            String code = issueRepository.getCodeForIssue( issue.getId() );
+            parameters.put( "code", code );
+            parameters.put( "reporter", reporter.getName() );
+            parameters.put( "title", issue.getTitle() );
+            parameters.put( "type", issue.getType() );
+            parameters.put( "priority", issue.getPriority().getName() );
+            parameters.put( "projectName", issue.getProject().getName() );
+            parameters.put( "link", fimUrlGeneratorService.getIssueLink( new IssueIdentifierDTO( issue.getId(), code ) ) );
+
+            User assignedUser = issue.getAssigned();
+            if ( assignedUser != null )
+            {
+                parameters.put( "assigned", reporter.getName() );
+                toList.add( reporter.getEmail() );
+            }
+            else
+            {
+                ResourceBundle rb = localizationService.getBundle( locale );
+                parameters.put( "assigned", rb.getObject( "unassigned" ) );
+            }
+            // get all product owners and project owner and send them e-mail
+            Map<UserRoleInsideProject, List<User>> users =
+                projectRepository.findUsersOnProject( issue.getProject().getId(), 10, UserRoleInsideProject.OWNER,
+                                                      UserRoleInsideProject.PRODUCT_OWNER );
+            for ( List<User> usersPerRole : users.values() )
+            {
+                for ( User user : usersPerRole )
+                {
+                    toList.add( user.getEmail() );
+                }
+            }
+
+            String subject = emailGeneratorService.getSubject( EmailType.CREATE_ISSUE, parameters, locale );
+            String content = emailGeneratorService.getContent( EmailType.CREATE_ISSUE, parameters, locale );
+            try
+            {
+                emailService.sendEmail( null, toList.toArray( new String[toList.size()] ),
+                                        new String[] { reporter.getEmail() }, null, subject, content );
+            }
+            catch ( MessagingException e )
+            {
+                LOG.error( "Could not send issue creation e-mail: {}", subject, e );
+            }
         }
     }
 
@@ -268,7 +328,7 @@ class IssueManagerServiceImpl
         }
         return dummy;
     }
-    
+
     private static IssueDependencyDTO createIssueDependencyDTO( long id, Long parentId, int projectId, String code,
                                                                 String title, IssueType type,
                                                                 DependencyType dependency, Integer assignedUserId,

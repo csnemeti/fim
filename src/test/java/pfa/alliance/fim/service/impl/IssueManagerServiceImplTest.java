@@ -16,6 +16,7 @@ import pfa.alliance.fim.dao.IssueStateRepository;
 import pfa.alliance.fim.dao.ProjectRepository;
 import pfa.alliance.fim.dao.UserRepository;
 import pfa.alliance.fim.model.issue.Issue;
+import pfa.alliance.fim.service.ConfigurationService;
 import pfa.alliance.fim.service.EmailGeneratorService;
 import pfa.alliance.fim.service.EmailService;
 import pfa.alliance.fim.service.FimUrlGeneratorService;
@@ -55,6 +56,9 @@ public class IssueManagerServiceImplTest
     @Mock
     private LocalizationService localizationServiceMock;
 
+    @Mock
+    private ConfigurationService configurationService;
+
     private IssueManagerServiceImpl service;
 
     @Before
@@ -64,7 +68,8 @@ public class IssueManagerServiceImplTest
         service =
             new IssueManagerServiceImpl( issueRepositoryMock, issueStateRepositoryMock, projectRepositoryMock,
                                          userRepositoryMock, issuePriorityRepositoryMock, emailServiceMock,
-                                         emailGeneratorServiceMock, fimUrlGeneratorServiceMock, localizationServiceMock );
+                                         emailGeneratorServiceMock, fimUrlGeneratorServiceMock,
+                                         localizationServiceMock, configurationService );
     }
 
     @Test

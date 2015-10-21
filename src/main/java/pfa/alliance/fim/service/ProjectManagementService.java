@@ -201,5 +201,4 @@ public interface ProjectManagementService
      */
     List<? extends ProjectDTO> getProjectsSummary( int assignedUserId, UserRoleInsideProject[] roles,
                                                    ProjectState[] allowedStates );
-
 }

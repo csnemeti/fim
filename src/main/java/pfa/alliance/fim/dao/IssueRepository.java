@@ -33,4 +33,11 @@ public interface IssueRepository
      */
     List<IssueDTO> getChildernFor( long id );
 
+    /**
+     * Gets the code of an issue from database.
+     * 
+     * @param issueId the ID of the issue
+     * @return project_code + "-" + issue_code
+     */
+    String getCodeForIssue( long issueId );
 }

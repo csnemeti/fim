@@ -1,0 +1,22 @@
+<html>
+<head>
+	<title>New issue of type $type created: $code</title>
+	#include( "email/styles.vm" )
+<head>
+<body>
+	<h1>New issue of type $type created: $code.</h1>
+<p>Hello,</p>
+<p>A new issue was created by <b>$reporter</b> on project <i>$projectName</i>. <br />
+<ol>
+	<li>Issue type is: $type </li>
+	<li>Issue priority is: $priority </li>
+	<li>Issue title is: $title </li>
+	<li>Issue is assigned to: $assigned </li>
+</ol>
+You can see the issue at <a href="$link">$link</a></p>
+<p>link. You received this e-mail because you are in the issue watch list.</p>
+
+Regards,<br />
+Free Issue Manager (<span class="asimovF">F</span>.I.M.) Team
+</body>
+</html>

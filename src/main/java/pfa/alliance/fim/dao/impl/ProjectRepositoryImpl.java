@@ -4,13 +4,17 @@ import static pfa.alliance.fim.dao.impl.DaoUtil.uniqueResult;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Singleton;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
@@ -29,6 +33,7 @@ import pfa.alliance.fim.model.project.ProjectState;
 import pfa.alliance.fim.model.project.UserProjectRelation;
 import pfa.alliance.fim.model.project.UserRoleInsideProject;
 import pfa.alliance.fim.model.user.User;
+import pfa.alliance.fim.model.user.UserStatus;
 
 /**
  * This is the implementation of {@link ProjectRepository}.
@@ -152,7 +157,7 @@ public class ProjectRepositoryImpl
 
     @Override
     public List<? extends ProjectDTO> getProjectsSummary( int assignedUserId, UserRoleInsideProject[] roles,
-                                                ProjectState[] allowedStates )
+                                                          ProjectState[] allowedStates )
     {
         EntityManager em = getEntityManager();
         CriteriaBuilder cb = em.getCriteriaBuilder();
@@ -182,7 +187,7 @@ public class ProjectRepositoryImpl
         TypedQuery<UserProjectRelation> query = em.createQuery( criteria );
 
         List<UserProjectRelation> result = query.getResultList();
-        return convertToUserSearchResultDTO( result );
+        return convertToProjectSearchResultDTO( result );
     }
 
     private static List<String> buildNameList( Enum<?>[] values )
@@ -227,7 +232,7 @@ public class ProjectRepositoryImpl
      * @return the list of projects converted to DTOs or an empty {@link List} if original parameter is null or empty
      *         string
      */
-    private static List<ProjectSearchResultDTO> convertToUserSearchResultDTO( List<UserProjectRelation> relations )
+    private static List<ProjectSearchResultDTO> convertToProjectSearchResultDTO( List<UserProjectRelation> relations )
     {
         List<ProjectSearchResultDTO> result = new ArrayList<>();
         if ( CollectionUtils.isNotEmpty( relations ) )
@@ -255,5 +260,43 @@ public class ProjectRepositoryImpl
         dto.setIndexInCurrentResults( index );
         dto.setIndexInTotalResults( firstItemIndexInTotalResults + index );
         return dto;
+    }
+
+    @Override
+    public Map<UserRoleInsideProject, List<User>> findUsersOnProject( int projectId, int maxUsersPerRole,
+                                                                      UserRoleInsideProject... roles )
+    {
+        Map<UserRoleInsideProject, List<User>> result = new HashMap<>();
+        for ( UserRoleInsideProject role : roles )
+        {
+            List<UserProjectRelation> relations =getUsersForProjectWithRole( projectId, maxUsersPerRole, role );
+            List<User> users = new ArrayList<>();
+            for ( UserProjectRelation relation : relations )
+            {
+                users.add( relation.getUser() );
+            }
+            result.put( role, users );
+        }
+        return result;
+    }
+
+    private List<UserProjectRelation> getUsersForProjectWithRole( int projectId, int maxUsersPerRole,
+                                                                  UserRoleInsideProject role )
+    {
+        EntityManager em = getEntityManager();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<UserProjectRelation> criteria = cb.createQuery( UserProjectRelation.class );
+        Root<UserProjectRelation> root = criteria.from( UserProjectRelation.class );
+        // Fetch<?, ?> user = root.fetch( "user", JoinType.INNER );
+        // Path<?> user = root.get( "user" );
+        Join<?, ?> user = root.join( "user", JoinType.INNER );
+        Path<?> project = root.get( "project" );
+
+        criteria.where( cb.equal( user.get( "status" ), UserStatus.ACTIVE ), cb.equal( root.get( "userRole" ), role ),
+                        cb.equal( project.get( "id" ), projectId ) );
+
+        TypedQuery<UserProjectRelation> query = em.createQuery( criteria );
+        return query.getResultList();
+
     }
 }

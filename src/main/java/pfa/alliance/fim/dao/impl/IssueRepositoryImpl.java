@@ -135,4 +135,14 @@ class IssueRepositoryImpl
         }
     }
 
+    @Override
+    public String getCodeForIssue( long issueId )
+    {
+        String sql =
+            "SELECT CONCAT(i.project.code, '-', i.code) FROM " + Issue.class.getCanonicalName() + " i WHERE i.id = ?";
+        TypedQuery<String> codeQuery = getEntityManager().createQuery( sql, String.class );
+        codeQuery.setParameter( 1, issueId );
+        return codeQuery.getSingleResult();
+    }
+
 }

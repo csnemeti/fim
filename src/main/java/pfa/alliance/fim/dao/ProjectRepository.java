@@ -4,6 +4,7 @@
 package pfa.alliance.fim.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import pfa.alliance.fim.dto.ProjectDTO;
 import pfa.alliance.fim.dto.ProjectSearchDTO;
@@ -64,4 +65,15 @@ public interface ProjectRepository
      */
     List<? extends ProjectDTO> getProjectsSummary( int assignedUserId, UserRoleInsideProject[] roles,
                                                    ProjectState[] allowedStates );
+
+    /**
+     * Gets a set of users that are assigned to a {@link Project} based on their role in the project.
+     * 
+     * @param projectId the ID of the project
+     * @param roles the roles we're interested in
+     * @param maxUsersPerRole total amount of users that will be retrieved for a role (max 100)
+     * @return the map with data
+     */
+    Map<UserRoleInsideProject, List<User>> findUsersOnProject( int projectId, int maxUsersPerRole,
+                                                               UserRoleInsideProject... roles );
 }
