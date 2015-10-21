@@ -21,9 +21,10 @@
 	function getDescription($file) {
 		switch ($file) {
 			case "contact.php" : 	return "Page used for contact us and provide feedback.";
-			case "fim.php" : 		return "Page dedicated to Free Issue Manager (FIM) project.";
+			case "fim.php" : 		return "Page dedicated to FIM (Free Issue Manager) project.";
 			case "index.php" : 		return "Site main page.";
 			case "pw.php" : 		return "Page dedicated to ProcketWatch project.";
+			case "pw-downloads.php":return "Page used to download various ProcketWatch builds.";
 			case "sitemap.php" : 	return "This sitemap page.";
 			default: return $file . " page";
 		}
@@ -45,7 +46,7 @@
 	$files = array();
 	if ($handle = opendir('.')) {
 	    while (false !== ($file = readdir($handle))) {
-	        if ($file != "." && $file != ".." && strtolower(substr($file, strrpos($file, '.') + 1)) == 'php') {
+	        if ($file != "." && $file != ".." && $file != "sitemap-xsl.php" && strtolower(substr($file, strrpos($file, '.') + 1)) == 'php') {
 	        	$files[] = $file;
 	        }
 	    }
