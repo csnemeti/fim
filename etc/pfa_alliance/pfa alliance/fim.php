@@ -23,16 +23,34 @@
 <body>
 
 <?php include './includes/header.php';?>
-
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.5";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
     <div class="container">
         <div class="row">
-			<div class="col-lg-8">
+			<div class="col-lg-6">
 				<h1 style="margin-left: 20px;">
 					<img style="height:50px;weight:50px" src="images/fim-logo.png" alt="FIM logo" />
 					FIM (Free Issue Manager)
-					<button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false" onclick="alert('Comming soon')">Try it for free</button>
 				</h1>
 			</div>
+			<div style="text-align: center; height: 90px;" class="col-lg-4">
+				<table style="width: 100%; height:100%">
+					<tr><td>
+						<button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false" onclick="alert('Comming soon')">Try it for free</button>
+					</td></tr>
+				</table>
+			</div>
+			<div class="col-lg-2">
+				<div class="fb-like" data-href="http://www.pfa-alliance.com/fim.php" data-layout="box_count" data-action="like" data-show-faces="false" data-share="true"></div>
+			</div>
+		</div>
+        <div class="row">
 			<div class="col-md-12" style="margin-top: 0px">
 				<hr>
 			</div>
