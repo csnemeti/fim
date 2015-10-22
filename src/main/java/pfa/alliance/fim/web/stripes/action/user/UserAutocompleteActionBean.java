@@ -43,10 +43,12 @@ public class UserAutocompleteActionBean
     @Validate( required = true )
     private Integer id;
 
-    private SearchService searchService;
+    private final SearchService searchService;
 
     /**
      * Called when instance of this class is created.
+     * 
+     * @param searchService the {@link SearchService} instance to be used in this call
      */
     @Inject
     public UserAutocompleteActionBean( SearchService searchService )

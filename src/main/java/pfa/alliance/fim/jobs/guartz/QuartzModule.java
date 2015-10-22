@@ -109,7 +109,8 @@ public abstract class QuartzModule
      * 
      * });
      * </pre>
-     *
+     * 
+     * @return Scheduler configuration
      * @since 1.1
      */
     protected final SchedulerConfigurationBuilder configureScheduler()

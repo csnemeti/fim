@@ -6,8 +6,6 @@ package pfa.alliance.fim.service;
 import java.util.List;
 import java.util.Locale;
 
-import javax.mail.MessagingException;
-
 import pfa.alliance.fim.dto.issue.IssueBaseDTO;
 import pfa.alliance.fim.dto.issue.IssueDTO;
 import pfa.alliance.fim.dto.issue.IssueDependencyDTO;
@@ -43,7 +41,7 @@ public interface IssueManagerService
      * Send e-mail to assigned user about issue creation.
      * 
      * @param issue the created issue
-     * @throws MessagingException
+     * @param locale the desired language for e-mail sending
      */
     void sendCreateIssueEmail( Issue issue, Locale locale );
 

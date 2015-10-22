@@ -19,6 +19,7 @@ public interface IssueStateRepository
     /**
      * Finds the specific flow based on id.
      * 
+     * @param id the ID of the {@link IssueFlow}
      * @return the ID of the flow to find.
      */
     IssueFlow findFlowById( long id );

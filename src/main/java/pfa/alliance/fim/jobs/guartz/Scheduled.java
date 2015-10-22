@@ -41,11 +41,15 @@ public @interface Scheduled
 
     /**
      * The {@code Job} name, must be unique within the group.
+     * 
+     * @return the name of the job
      */
     String jobName() default DEFAULT;
 
     /**
      * The {@code Job} group.
+     * 
+     * @return the name of the group where the job belongs
      */
     String jobGroup() default DEFAULT_GROUP;
 
@@ -81,6 +85,8 @@ public @interface Scheduled
 
     /**
      * The time zone for which the {@code cronExpression} of this {@code CronTrigger} will be resolved.
+     * 
+     * @return the Timezone identifier
      */
     String timeZoneId() default DEFAULT;
 
