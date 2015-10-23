@@ -65,6 +65,14 @@ public interface UserManagerService
     LoggedInUserDTO login( String uuid );
 
     /**
+     * Refresh the user data.
+     * 
+     * @param userId the ID of the user
+     * @return the user login information
+     */
+    LoggedInUserDTO refreshUser( int userId );
+
+    /**
      * Generates a One time link that allows user to set a new password.
      * 
      * @param username the username of user that forgot his / her password

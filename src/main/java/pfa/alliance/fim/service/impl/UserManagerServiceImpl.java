@@ -310,6 +310,32 @@ class UserManagerServiceImpl
         return userDto;
     }
 
+    @Override
+    public LoggedInUserDTO refreshUser( int userId )
+    {
+        LOG.debug( "Refreshing user {} data", userId );
+        LoggedInUserDTO userDto = null;
+        User user = userRepository.findOne( userId );
+        if ( user != null )
+        {
+            userDto = new LoggedInUserDTO( null, null );
+            Map<UserRole, List<UserPermission>> permissions = null;
+            if ( UserStatus.ACTIVE.equals( user.getStatus() ) )
+            {
+                Set<UserRole> roles = extractDistinctUserRoleInsideProjects( user );
+                LOG.debug( "Roles for user with ID = {}: {}", user.getId(), roles );
+                permissions = roleAndPermissionRepository.findPermissionsFor( roles );
+                LOG.debug( "Permissions for user with ID = {}: {}", user.getId(), permissions );
+            }
+            else
+            {
+                LOG.debug( "User with ID = {} is not ACTIVE, roles will not be retrived", user.getId() );
+                permissions = new HashMap<>();
+            }
+            userDto = new LoggedInUserDTO( user, permissions );
+        }
+        return userDto;
+    }
     /**
      * Checks the user status to be {@link UserStatus#ACTIVE}.
      * 

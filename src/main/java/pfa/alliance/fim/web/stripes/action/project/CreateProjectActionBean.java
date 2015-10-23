@@ -19,7 +19,9 @@ import pfa.alliance.fim.model.issue.states.IssueFlow;
 import pfa.alliance.fim.model.project.Project;
 import pfa.alliance.fim.model.project.ProjectState;
 import pfa.alliance.fim.service.FimUrlGeneratorService;
+import pfa.alliance.fim.service.LoggedInUserDTO;
 import pfa.alliance.fim.service.ProjectManagementService;
+import pfa.alliance.fim.service.UserManagerService;
 import pfa.alliance.fim.service.impl.DuplicateDataException;
 import pfa.alliance.fim.web.common.FimPageURLs;
 import pfa.alliance.fim.web.security.AuthenticatedUserDTO;
@@ -28,6 +30,7 @@ import pfa.alliance.fim.web.security.Permission;
 import pfa.alliance.fim.web.security.SecurityUtil;
 import pfa.alliance.fim.web.stripes.action.BasePageActionBean;
 import pfa.alliance.fim.web.stripes.action.StripesDropDownOption;
+import pfa.alliance.fim.web.util.LoginUtil;
 
 /**
  * This class is used for creating a {@link Project}.
@@ -75,6 +78,8 @@ public class CreateProjectActionBean
 
     private final ProjectManagementService projectManagementService;
 
+    private final UserManagerService userManagerService;
+
     /** Service used for generating URLs inside FIM. */
     private final FimUrlGeneratorService fimUrlGeneratorService;
 
@@ -86,13 +91,16 @@ public class CreateProjectActionBean
      * Called when instance of this class is created.
      * 
      * @param projectManagementService the {@link ProjectManagementService} instance to be used in this class
+     * @param userManagerService the {@link UserManagerService} instance to be used in this class
      * @param fimUrlGeneratorService the instance of service used for generating full URLs inside FIM
      */
     @Inject
     public CreateProjectActionBean( ProjectManagementService projectManagementService,
+                                    UserManagerService userManagerService,
                                     FimUrlGeneratorService fimUrlGeneratorService )
     {
         this.projectManagementService = projectManagementService;
+        this.userManagerService = userManagerService;
         this.fimUrlGeneratorService = fimUrlGeneratorService;
     }
 
@@ -126,6 +134,14 @@ public class CreateProjectActionBean
                 projectManagementService.create( projectName, projectCode, projectDescription, isHiddenSet(), state,
                                                  flowId, ownerId, null, getContext().getLocale() );
             dbOperationResult = PROJECT_CREATED_RESPONSE;
+
+            // modify the user permissions so that newly created Project is visible
+            LoggedInUserDTO loggedInUser = userManagerService.refreshUser( ownerId );
+            if ( loggedInUser != null )
+            {
+                updateUserFromSession( loggedInUser, user );
+            }
+
             // create URL to project
             String url = fimUrlGeneratorService.getProjectLink( project.getCode() );
             return new RedirectResolution( url, false );
@@ -135,6 +151,19 @@ public class CreateProjectActionBean
             dbOperationResult = DUPLICATE_PROJECT_DATA_RESPONSE;
             return new ForwardResolution( FimPageURLs.CREATE_PROJECT_JSP.getURL() );
         }
+    }
+
+    /**
+     * Sets the user on the session.
+     * 
+     * @param user the user to set on session
+     */
+    private void updateUserFromSession( LoggedInUserDTO userDTO, AuthenticatedUserDTO user )
+    {
+        AuthenticatedUserDTO authenticatedUserDTO =
+            new AuthenticatedUserDTO( user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(),
+                                      user.getUsername(), user.getLastLogin(), LoginUtil.convertPermissions( userDTO ) );
+        SecurityUtil.putUserIntoSession( authenticatedUserDTO, getContext().getRequest().getSession( true ) );
     }
 
     @Override
