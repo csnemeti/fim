@@ -24,6 +24,9 @@ public class UserSearchResultDTO
     /** Textual name of the default role. */
     private String defaultRoleAsText;
 
+    /** The localized version of default role. */
+    private String localizedDefaulRole;
+
     /** Textual name of the user status. */
     private String userStatusAsText;
 
@@ -111,6 +114,16 @@ public class UserSearchResultDTO
     public void setActions( String actions )
     {
         this.actions = actions;
+    }
+
+    public String getLocalizedDefaulRole()
+    {
+        return localizedDefaulRole;
+    }
+
+    public void setLocalizedDefaulRole( String localizedDefaulRole )
+    {
+        this.localizedDefaulRole = localizedDefaulRole;
     }
 
     @Override

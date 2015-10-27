@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpSession;
 
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ErrorResolution;
@@ -22,6 +23,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pfa.alliance.fim.dto.UserSearchResultDTO;
 import pfa.alliance.fim.model.issue.IssuePriority;
 import pfa.alliance.fim.model.issue.states.IssueFlow;
 import pfa.alliance.fim.model.project.Project;
@@ -29,6 +31,7 @@ import pfa.alliance.fim.model.project.ProjectComponent;
 import pfa.alliance.fim.model.project.ProjectLabel;
 import pfa.alliance.fim.model.project.ProjectState;
 import pfa.alliance.fim.model.project.UserRoleInsideProject;
+import pfa.alliance.fim.model.user.User;
 import pfa.alliance.fim.model.user.UserRole;
 import pfa.alliance.fim.service.ProjectManagementService;
 import pfa.alliance.fim.util.ColorUtils;
@@ -37,6 +40,7 @@ import pfa.alliance.fim.web.common.FimPageURLs;
 import pfa.alliance.fim.web.security.FimSecurity;
 import pfa.alliance.fim.web.security.Permission;
 import pfa.alliance.fim.web.security.ProjectSensibleActionBean;
+import pfa.alliance.fim.web.security.SecurityUtil;
 import pfa.alliance.fim.web.stripes.action.BasePageActionBean;
 import pfa.alliance.fim.web.stripes.action.StripesDropDownOption;
 import pfa.alliance.fim.web.stripes.action.user.UserAutocompleteActionBean;
@@ -81,6 +85,10 @@ public class EditProjectActionBean
 
     @Validate( required = true, on = { "updateFlow" } )
     private Long flowId;
+
+    @Validate( required = true, on = { "changeOwner" } )
+    private Integer newOwner;
+
     /**
      * The ID of the user to be added to project. In theory this should be required butit's difficult to control from
      * front-end. This means you should expect null values and treat them nicely in back-end. <br />
@@ -102,6 +110,15 @@ public class EditProjectActionBean
 
     /** The list of all supported colors. */
     private List<StripesDropDownOption> colors = new ArrayList<>();
+
+    /** The list of roles user can assign. */
+    private List<StripesDropDownOption> roles = null;
+
+    /** The list of assigned users to this project. */
+    private List<UserSearchResultDTO> assignedUsers = null;
+
+    /** Gets the project owner information. */
+    private User owner;
 
     /**
      * Called when instance of this class is created.
@@ -212,6 +229,15 @@ public class EditProjectActionBean
         return redirectBackHere();
     }
 
+    @FimSecurity( checkIfAll = Permission.PROJECT_EDIT_PROJECT_CHANGE_OWNER )
+    public Resolution changeOwner()
+    {
+        // process
+        projectManagementService.changeOwner( getProjectId(), newOwner, getLocale() );
+        // redirect to this page again
+        return redirectBackHere();
+    }
+
     public Resolution updateFlow()
     {
         // process
@@ -219,13 +245,15 @@ public class EditProjectActionBean
         // redirect to this page again
         return redirectBackHere();
     }
+
     public Resolution addUser()
     {
         LOG.debug( "Assignning user: {} in role {} to project {}", userId, newUserRole, code );
         UserRoleInsideProject userRole = UserRoleInsideProject.findByUserRole( newUserRole );
         if ( userId != null && userRole != null )
         {
-            projectManagementService.assignUser( userId, code, userRole );
+            projectManagementService.assignUser( userId, code, userRole,
+                                                 SecurityUtil.getUserFromSession( getSession() ), getLocale() );
         }
         // redirect to this page again
         return redirectBackHere();
@@ -324,6 +352,16 @@ public class EditProjectActionBean
     public String getUsersClass()
     {
         return buildTabCssClass( "users" );
+    }
+
+    public String getOwnerClass()
+    {
+        return buildTabCssClass( "owner" );
+    }
+
+    public String getOwnerLink()
+    {
+        return buildTabLink( "owner" );
     }
 
     private String buildTabLink( final String expectedTab )
@@ -462,7 +500,7 @@ public class EditProjectActionBean
         ProjectState state = ProjectState.valueOf( stateName );
         project.setState( state );
     }
-    
+
     public List<StripesDropDownOption> getIssueFlows()
     {
         List<StripesDropDownOption> states = new ArrayList<>();
@@ -473,7 +511,7 @@ public class EditProjectActionBean
         }
         return states;
     }
-    
+
     public Long getIssueFlow()
     {
         IssueFlow flow = project.getIssueFlow();
@@ -491,6 +529,7 @@ public class EditProjectActionBean
         Collections.sort( priorities );
         return priorities;
     }
+
     public String getNewUserRole()
     {
         return newUserRole.name();
@@ -503,14 +542,32 @@ public class EditProjectActionBean
 
     public List<StripesDropDownOption> getUserRoles()
     {
-        List<StripesDropDownOption> roles = new ArrayList<StripesDropDownOption>();
-        UserRole[] orderedRoles =
-            new UserRole[] { UserRole.ADMIN, UserRole.PROJECT_ADMIN, UserRole.PRODUCT_OWNER, UserRole.SCRUM_MASTER,
-                UserRole.TEAM, UserRole.STATISTICAL };
-        for ( UserRole role : orderedRoles )
+        if ( roles == null )
         {
-            roles.add( new StripesDropDownOption( role, getMessage( role.getDeclaringClass().getName() + "."
-                + role.name() ) ) );
+            roles = new ArrayList<StripesDropDownOption>();
+
+            List<UserRole> orderedRoles = new ArrayList<>();
+            HttpSession session = getSession();
+            if ( SecurityUtil.hasPermission( Permission.PROJECT_EDIT_PROJECT_ASSIGN_PA, getProjectId(), session ) )
+            {
+                orderedRoles.add( UserRole.PROJECT_ADMIN );
+            }
+            if ( SecurityUtil.hasPermission( Permission.PROJECT_EDIT_PROJECT_ASSIGN_PO, getProjectId(), session ) )
+            {
+                orderedRoles.add( UserRole.PRODUCT_OWNER );
+            }
+            if ( SecurityUtil.hasPermission( Permission.PROJECT_EDIT_PROJECT_ASSIGN_SM, getProjectId(), session ) )
+            {
+                orderedRoles.add( UserRole.SCRUM_MASTER );
+            }
+            orderedRoles.add( UserRole.TEAM );
+            orderedRoles.add( UserRole.STATISTICAL );
+
+            for ( UserRole role : orderedRoles )
+            {
+                roles.add( new StripesDropDownOption( role, getMessage( role.getDeclaringClass().getName() + "."
+                    + role.name() ) ) );
+            }
         }
         return roles;
     }
@@ -529,6 +586,44 @@ public class EditProjectActionBean
             url = contextPath + url;
         }
         return url;
+    }
+
+    public int getAssignedUsersNumber()
+    {
+        return getAssignedUsers().size();
+    }
+
+    public List<UserSearchResultDTO> getAssignedUsers()
+    {
+        if ( assignedUsers == null )
+        {
+            assignedUsers = projectManagementService.findActiveUsersAssignedToProject( getProjectId(), getLocale() );
+        }
+        return assignedUsers;
+    }
+
+    public User getProjectOwner()
+    {
+        if ( owner == null )
+        {
+            owner = projectManagementService.getProjectOwner( getProjectId() );
+        }
+        return owner;
+    }
+
+    public Integer getNewOwner()
+    {
+        User owner = getProjectOwner();
+        if ( newOwner == null && owner != null )
+        {
+            newOwner = owner.getId();
+        }
+        return newOwner;
+    }
+
+    public void setNewOwner( Integer newOwner )
+    {
+        this.newOwner = newOwner;
     }
 
     @Override

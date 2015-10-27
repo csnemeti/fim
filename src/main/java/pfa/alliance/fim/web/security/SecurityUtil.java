@@ -77,11 +77,24 @@ public final class SecurityUtil
      */
     public static boolean hasPermission( Permission permission, HttpSession session )
     {
+        return hasPermission( permission, null, session );
+    }
+
+    /**
+     * Verifies if logged in user has the given {@link Permission}.
+     * 
+     * @param permission the permission to check
+     * @param projectId the ID of the project where user may have different roles (optional)
+     * @param session the request session where logged in user should be found
+     * @return true if user is logged in and has the permission, false otherwise
+     */
+    public static boolean hasPermission( Permission permission, Integer projectId, HttpSession session )
+    {
         boolean hasPermission = false;
         AuthenticatedUserDTO userDTO = getUserFromSession( session );
         if ( userDTO != null )
         {
-            hasPermission = userDTO.hasPermission( null, permission );
+            hasPermission = userDTO.hasPermission( projectId, permission );
         }
         return hasPermission;
     }

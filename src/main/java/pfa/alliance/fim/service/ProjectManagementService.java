@@ -10,12 +10,15 @@ import java.util.Map;
 import pfa.alliance.fim.dto.ProjectDTO;
 import pfa.alliance.fim.dto.ProjectSearchDTO;
 import pfa.alliance.fim.dto.ProjectSearchResultDTO;
+import pfa.alliance.fim.dto.UserSearchResultDTO;
 import pfa.alliance.fim.model.issue.states.IssueFlow;
 import pfa.alliance.fim.model.project.Project;
 import pfa.alliance.fim.model.project.ProjectComponent;
 import pfa.alliance.fim.model.project.ProjectLabel;
 import pfa.alliance.fim.model.project.ProjectState;
 import pfa.alliance.fim.model.project.UserRoleInsideProject;
+import pfa.alliance.fim.model.user.User;
+import pfa.alliance.fim.web.security.AuthenticatedUserDTO;
 
 /**
  * This interface handles all operations regarding {@link Project}.
@@ -36,11 +39,13 @@ public interface ProjectManagementService
      * @param flowId the chosen Issue flow ID for the project
      * @param creatorUserId the ID of the user who created the project
      * @param additionalUsers additional users expressed as UserId - role on the project
+     * @param creator the user who created the issue
      * @param locale the current request {@link Locale} (for e-mail sending)
      * @return the created project
      */
     Project create( String name, String code, String description, boolean hidden, ProjectState state, final int flowId,
-                    int creatorUserId, Map<Integer, UserRoleInsideProject> additionalUsers, Locale locale );
+                    int creatorUserId, Map<Integer, UserRoleInsideProject> additionalUsers,
+                    AuthenticatedUserDTO creator, Locale locale );
 
     /**
      * Updates a existing {@link Project}.
@@ -73,6 +78,14 @@ public interface ProjectManagementService
      * @return the Project if found, null if not
      */
     ProjectDTO getProjectDetails( String code );
+
+    /**
+     * Gets the project owner information.
+     * 
+     * @param projectId the ID of the project
+     * @return the owner information
+     */
+    User getProjectOwner( int projectId );
 
     /**
      * Counts the number of results based on the given search criteria.
@@ -186,9 +199,12 @@ public interface ProjectManagementService
      * @param userId the ID of the user to assign
      * @param projectCode the project code
      * @param role the role the user will have inside the project
+     * @param assigner the User who made the assigned
+     * @param locale the language for e-mail
      * @return true if assignment was successful
      */
-    boolean assignUser( final int userId, final String projectCode, UserRoleInsideProject role );
+    boolean assignUser( final int userId, final String projectCode, UserRoleInsideProject role,
+                        AuthenticatedUserDTO assigner, Locale locale );
 
     /**
      * Gets a summary about the {@link Project}s where we have the given user assigned with given roles and projects is
@@ -201,4 +217,21 @@ public interface ProjectManagementService
      */
     List<? extends ProjectDTO> getProjectsSummary( int assignedUserId, UserRoleInsideProject[] roles,
                                                    ProjectState[] allowedStates );
+
+    /**
+     * Finds ALL active users that are ASSIGNED to project with given ID.
+     * 
+     * @param projectId the ID of the project
+     * @param locale the request locale
+     * @return a not-null {@link List} of users
+     */
+    List<UserSearchResultDTO> findActiveUsersAssignedToProject( int projectId, Locale locale );
+
+    /**
+     * Change the owner of the given project.
+     * 
+     * @param projectId the ID of the project
+     * @param newOwner the new user ID that will become owner
+     */
+    void changeOwner( int projectId, int newOwner, Locale locale );
 }

@@ -269,7 +269,7 @@ public class ProjectRepositoryImpl
         Map<UserRoleInsideProject, List<User>> result = new HashMap<>();
         for ( UserRoleInsideProject role : roles )
         {
-            List<UserProjectRelation> relations =getUsersForProjectWithRole( projectId, maxUsersPerRole, role );
+            List<UserProjectRelation> relations = getUsersForProjectWithRole( projectId, maxUsersPerRole, role );
             List<User> users = new ArrayList<>();
             for ( UserProjectRelation relation : relations )
             {
@@ -280,7 +280,13 @@ public class ProjectRepositoryImpl
         return result;
     }
 
-    private List<UserProjectRelation> getUsersForProjectWithRole( int projectId, int maxUsersPerRole,
+    @Override
+    public List<UserProjectRelation> findActiveUsersFor( int projectID )
+    {
+        return getUsersForProjectWithRole( projectID, null, null );
+    }
+
+    private List<UserProjectRelation> getUsersForProjectWithRole( int projectId, Integer maxUsersPerRole,
                                                                   UserRoleInsideProject role )
     {
         EntityManager em = getEntityManager();
@@ -292,10 +298,23 @@ public class ProjectRepositoryImpl
         Join<?, ?> user = root.join( "user", JoinType.INNER );
         Path<?> project = root.get( "project" );
 
-        criteria.where( cb.equal( user.get( "status" ), UserStatus.ACTIVE ), cb.equal( root.get( "userRole" ), role ),
-                        cb.equal( project.get( "id" ), projectId ) );
+        List<Predicate> wheres = new ArrayList<>();
+        wheres.add( cb.equal( project.get( "id" ), projectId ) );
+        wheres.add( cb.equal( user.get( "status" ), UserStatus.ACTIVE ) );
+        if ( role != null )
+        {
+            wheres.add( cb.equal( root.get( "userRole" ), role ) );
+        }
+        criteria.where( wheres.toArray( new Predicate[wheres.size()] ) );
+        
+        criteria.orderBy( cb.asc( user.get( "lastName" ) ), cb.asc( user.get( "firstName" ) ),
+                          cb.asc( user.get( "id" ) ) );
 
         TypedQuery<UserProjectRelation> query = em.createQuery( criteria );
+        if ( maxUsersPerRole != null )
+        {
+            query.setMaxResults( maxUsersPerRole );
+        }
         return query.getResultList();
 
     }

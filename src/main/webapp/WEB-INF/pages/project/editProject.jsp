@@ -1,6 +1,8 @@
 <%@ taglib prefix="stripes" uri="http://stripes.sourceforge.net/stripes.tld" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"  %>
 <%@ taglib  prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="security" uri="/WEB-INF/tlds/security.tld"%>
+
 
 
 <stripes:layout-render name="/WEB-INF/pages/layout/default.jsp" pageTitle="${actionBean.title}">
@@ -10,11 +12,32 @@
 	<stripes:layout-component name="header">
 		<link rel="stylesheet" href="<c:url value="/js/jquery.simplecolorpicker/jquery.simplecolorpicker.css" />">
 		<link rel="stylesheet" href="<c:url value="/plugins/bootstrap/css/bootstrap-dialog.min.css" />"/>
+		<link rel="stylesheet" href="<stripes:url value="/js/datatables.net-1.10.4/jquery.dataTables.min.css" />" type="text/css"/>
+		<link rel="stylesheet" href="<stripes:url value="/js/datatables.net-1.10.4/jquery-ui.css" />" type="text/css"/>
+		<link rel="stylesheet" href="<stripes:url value="/js/datatables.net-1.10.4/jquery.dataTables_themeroller.css" />" type="text/css"/>
+		<style type="text/css">
+			.rowIndex {
+				text-align: right;
+			}
+			.noSpacing {
+				padding: 0px 8px 0px 8px !important;
+			}
+			.actions {
+				width: 60px;
+				padding: 0px !important;
+			}
+			.actions table {
+				width: 100%;
+				height: 36px;
+			}
+		</style>
 		
 		<script type="text/javascript" src="<stripes:url value="/js/project-code.js" />"></script>
    		<script type="text/javascript" src="<c:url value="/plugins/bootstrap/js/bootstrap-dialog.min.js" />"></script>
 		<script type="text/javascript" src="<c:url value="/js/jquery.simplecolorpicker/jquery.simplecolorpicker.js" />"></script>
 		<script type="text/javascript" src="<c:url value="/js/bootstrap3-typeahead.min.js" />"></script>
+		<script type="text/javascript" src="<stripes:url value="/js/datatables.net-1.10.4/jquery.dataTables.min.js" />"></script>
+		<script type="text/javascript" src="<stripes:url value="/js/datatables.net-1.10.4/dataTables.jqueryui.js" />"></script>
 		<script type="text/javascript" src="<stripes:url value="/js/jquery-validation-1.13.0/jquery.validate.min.js" />"></script>
 		<script type="text/javascript" src="<stripes:url value="/js/jquery-validation-1.13.0/localization/messages_${actionBean.localeLanguage}.min.js" />"></script>
 		
@@ -157,6 +180,17 @@
 						$('#addUserId').val(selectedItem.id);
 					}
 				});
+				var searchResultTable = $('#users').dataTable( {
+					<%-- UI change. --%>
+				    "jQueryUI" :  true,
+			        <%-- Search in table is off. --%>
+					"searching" : false,
+			        <%-- Default ordering, last name --%>
+			        // "order": [[ 3, "asc" ]],
+			        "ordering": false,
+					"paging":   false,
+					"info": false,
+				});
 			});
 		</script>
 	</stripes:layout-component>    
@@ -175,6 +209,9 @@
 	              </li>
 	              <li${actionBean.usersClass}>
 	              	<a href="${actionBean.usersLink}" id="tab-users"><fmt:message key="page.title.project.edit.tab.users" /></a>
+	              </li>
+	              <li${actionBean.ownerClass}>
+	              	<a href="${actionBean.ownerLink}" id="tab-users"><fmt:message key="page.title.project.edit.tab.owner" /></a>
 	              </li>
 	            </ul>
 	        </div>

@@ -132,7 +132,7 @@ public class CreateProjectActionBean
             ProjectState state = ( activate != null && activate ) ? ProjectState.ACTIVE : ProjectState.IN_PREPARATION;
             Project project =
                 projectManagementService.create( projectName, projectCode, projectDescription, isHiddenSet(), state,
-                                                 flowId, ownerId, null, getContext().getLocale() );
+                                                 flowId, ownerId, null, user, getContext().getLocale() );
             dbOperationResult = PROJECT_CREATED_RESPONSE;
 
             // modify the user permissions so that newly created Project is visible

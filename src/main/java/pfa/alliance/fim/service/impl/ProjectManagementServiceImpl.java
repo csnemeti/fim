@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -30,6 +31,7 @@ import pfa.alliance.fim.dto.ProjectDTO;
 import pfa.alliance.fim.dto.ProjectSearchDTO;
 import pfa.alliance.fim.dto.ProjectSearchResultDTO;
 import pfa.alliance.fim.dto.UserDTO;
+import pfa.alliance.fim.dto.UserSearchResultDTO;
 import pfa.alliance.fim.dto.issue.IssueFlowDTO;
 import pfa.alliance.fim.dto.issue.IssueStateDTO;
 import pfa.alliance.fim.dto.issue.IssueStateRelationDTO;
@@ -49,8 +51,10 @@ import pfa.alliance.fim.service.EmailGeneratorService;
 import pfa.alliance.fim.service.EmailService;
 import pfa.alliance.fim.service.EmailType;
 import pfa.alliance.fim.service.FimUrlGeneratorService;
+import pfa.alliance.fim.service.LocalizationService;
 import pfa.alliance.fim.service.ProjectManagementService;
 import pfa.alliance.fim.util.ColorUtils;
+import pfa.alliance.fim.web.security.AuthenticatedUserDTO;
 
 import com.google.inject.persist.Transactional;
 
@@ -95,6 +99,8 @@ class ProjectManagementServiceImpl
     /** The instance to {@link ConfigurationService} to be used. */
     private final ConfigurationService configurationService;
 
+    private final LocalizationService localizationService;
+
     /**
      * Called when instance of this class is created.
      * 
@@ -115,7 +121,7 @@ class ProjectManagementServiceImpl
                                   EmailService emailService, IssueStateRepository issueStateRepository,
                                   EmailGeneratorService emailGeneratorService,
                                   FimUrlGeneratorService fimUrlGeneratorService,
-                                  ConfigurationService configurationService )
+                                  ConfigurationService configurationService, LocalizationService localizationService )
     {
         this.projectRepository = projectRepository;
         this.userRepository = userRepository;
@@ -128,13 +134,15 @@ class ProjectManagementServiceImpl
         this.emailGeneratorService = emailGeneratorService;
         this.fimUrlGeneratorService = fimUrlGeneratorService;
         this.configurationService = configurationService;
+        this.localizationService = localizationService;
     }
 
     @Override
     @Transactional
     public Project create( String name, String code, String description, final boolean hidden,
                            final ProjectState state, final int flowId, final int creatorUserId,
-                           Map<Integer, UserRoleInsideProject> additionalUsers, Locale locale )
+                           Map<Integer, UserRoleInsideProject> additionalUsers, AuthenticatedUserDTO creator,
+                           Locale locale )
     {
         IssueFlow flow = issueStateRepository.findFlowById( flowId );
         Project project = createBaseProjectInstance( name, code, description, hidden, state, flow );
@@ -381,6 +389,12 @@ class ProjectManagementServiceImpl
     }
 
     @Override
+    public User getProjectOwner( int projectId )
+    {
+        return projectRepository.findOwnerForProject( projectId );
+    }
+
+    @Override
     public Project findByCode( String code )
     {
         Project project = projectRepository.findByCode( code );
@@ -606,7 +620,8 @@ class ProjectManagementServiceImpl
 
     @Override
     @Transactional
-    public boolean assignUser( final int userId, final String projectCode, UserRoleInsideProject role )
+    public boolean assignUser( final int userId, final String projectCode, UserRoleInsideProject role,
+                               AuthenticatedUserDTO assigner, Locale locale )
     {
         LOG.debug( "Assigning user {} to project {} in role {}", userId, projectCode, role );
         boolean assigned = false;
@@ -621,6 +636,7 @@ class ProjectManagementServiceImpl
             try
             {
                 userProjectRelationRepository.save( relation );
+                // sendUserAssignEmail( relation, assigner, locale );
                 assigned = true;
             }
             catch ( PersistenceException e )
@@ -636,6 +652,11 @@ class ProjectManagementServiceImpl
             }
         }
         return assigned;
+    }
+    
+    private void sendUserAssignEmail( UserProjectRelation relation, AuthenticatedUserDTO assigner, Locale locale )
+    {
+
     }
 
     /**
@@ -694,5 +715,44 @@ class ProjectManagementServiceImpl
         LOG.debug( "Getting list of projects for assigned user (ID = {}), having states: {} and user role on Project in: {}",
                    assignedUserId, allowedStates, roles );
         return projectRepository.getProjectsSummary( assignedUserId, roles, allowedStates );
+    }
+
+    @Override
+    public List<UserSearchResultDTO> findActiveUsersAssignedToProject( int projectId, Locale locale )
+    {
+        List<UserSearchResultDTO> result = new ArrayList<>();
+        List<UserProjectRelation> relations = projectRepository.findActiveUsersFor( projectId );
+        int index = 0;
+        ResourceBundle rb = localizationService.getBundle( locale );
+        for ( UserProjectRelation relation : relations )
+        {
+            User user = relation.getUser();
+            UserRoleInsideProject role = relation.getUserRole();
+            UserSearchResultDTO dto =
+                new UserSearchResultDTO( user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(),
+                                         user.getStatus(), role.getCorrespondingUserRole() );
+            dto.setIndexInCurrentResults( ++index );
+            dto.setIndexInTotalResults( index );
+            dto.setLocalizedDefaulRole( rb.getString( UserRoleInsideProject.class.getCanonicalName() + "."
+                + role.name() ) );
+            if ( UserRoleInsideProject.OWNER != role )
+            {
+                dto.setActions( getActionOnUserAssignment( relation ) );
+            }
+            result.add( dto );
+        }
+        return result;
+    }
+
+    private String getActionOnUserAssignment( UserProjectRelation relation )
+    {
+        return "<table><tr><td class=\"noSpacing\"><a><i class=\"fa fa-pencil-square fa-2x\"></i></a></td><td class=\"noSpacing\"><a><i class=\"fa fa-times fa-2x\"></i></a></td></tr></table>";
+    }
+
+    @Override
+    public void changeOwner( int projectId, int newOwner, Locale locale )
+    {
+        // TODO Auto-generated method stub
+
     }
 }

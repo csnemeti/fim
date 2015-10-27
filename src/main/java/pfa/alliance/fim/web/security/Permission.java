@@ -14,6 +14,8 @@ public enum Permission
 
     PROJECT_CREATE_PROJECT, PROJECT_SHOW_PROJECT, PROJECT_EDIT_PROJECT, 
 
+    /** Can assign Scrum master. */
+    PROJECT_EDIT_PROJECT_ASSIGN_USER,
     /** Can assign Project Admin. */
     PROJECT_EDIT_PROJECT_ASSIGN_PA,
     /** Can assign Product Owner. */

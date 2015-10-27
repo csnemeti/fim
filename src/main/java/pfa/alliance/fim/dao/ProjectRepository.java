@@ -11,6 +11,7 @@ import pfa.alliance.fim.dto.ProjectSearchDTO;
 import pfa.alliance.fim.dto.ProjectSearchResultDTO;
 import pfa.alliance.fim.model.project.Project;
 import pfa.alliance.fim.model.project.ProjectState;
+import pfa.alliance.fim.model.project.UserProjectRelation;
 import pfa.alliance.fim.model.project.UserRoleInsideProject;
 import pfa.alliance.fim.model.user.User;
 
@@ -76,4 +77,12 @@ public interface ProjectRepository
      */
     Map<UserRoleInsideProject, List<User>> findUsersOnProject( int projectId, int maxUsersPerRole,
                                                                UserRoleInsideProject... roles );
+
+    /**
+     * Find all active users that are assigned to a {@link Project}.
+     * 
+     * @param projectID the ID of the {@link Project}
+     * @return a non-null list of users and their role in the project
+     */
+    List<UserProjectRelation> findActiveUsersFor( int projectID );
 }

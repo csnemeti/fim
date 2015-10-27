@@ -3,6 +3,7 @@
  */
 package pfa.alliance.fim.service.impl;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -30,6 +31,8 @@ import pfa.alliance.fim.service.ConfigurationService;
 import pfa.alliance.fim.service.EmailGeneratorService;
 import pfa.alliance.fim.service.EmailService;
 import pfa.alliance.fim.service.FimUrlGeneratorService;
+import pfa.alliance.fim.service.LocalizationService;
+import pfa.alliance.fim.web.security.AuthenticatedUserDTO;
 
 /**
  * This class is used for testing {@link ProjectManagementServiceImpl}
@@ -60,6 +63,12 @@ public class ProjectManagementServiceImplTest
 
     private ConfigurationService configurationServiceMock;
 
+    private LocalizationService localizationService;
+
+    private AuthenticatedUserDTO creator = new AuthenticatedUserDTO( 1, "First", "Last", "e-mail@email.com",
+                                                                     "username",
+                                                                     new Timestamp( System.currentTimeMillis() ), null );
+
     @Before
     public void init()
     {
@@ -73,6 +82,7 @@ public class ProjectManagementServiceImplTest
         issueStateRepositoryMock = Mockito.mock( IssueStateRepository.class );
         userProjectRelationRepositoryMock = Mockito.mock( UserProjectRelationRepository.class );
         configurationServiceMock = Mockito.mock( ConfigurationService.class );
+        localizationService = new LocalizationServiceImpl();
 
         Mockito.when( configurationServiceMock.getBoolean( Mockito.anyString() ) ).thenReturn( true );
 
@@ -80,7 +90,7 @@ public class ProjectManagementServiceImplTest
             new ProjectManagementServiceImpl( projectRepositoryMock, userRepositoryMock, componentRepositoryMock,
                                               labelRepositoryMock, userProjectRelationRepositoryMock, emailServiceMock,
                                               issueStateRepositoryMock, emailGeneratorServiceMock,
-                                              fimUrlGeneratorServiceMock, configurationServiceMock );
+                                              fimUrlGeneratorServiceMock, configurationServiceMock, localizationService );
     }
 
     @Test( expected = DuplicateDataException.class )
@@ -93,7 +103,7 @@ public class ProjectManagementServiceImplTest
             new PersistenceException( new IllegalStateException( "Duplicate data violates unique constraint" ) );
         Mockito.when( projectRepositoryMock.save( Mockito.any( Project.class ) ) ).thenThrow( e );
 
-        projectManagementServiceImpl.create( "name", "code", "description", false, null, 1, 1, null, Locale.US );
+        projectManagementServiceImpl.create( "name", "code", "description", false, null, 1, 1, null, creator, Locale.US );
 
         Mockito.verify( userRepositoryMock, Mockito.atLeastOnce() ).findOne( 1 );
         Mockito.verify( projectRepositoryMock, Mockito.atLeastOnce() ).save( Mockito.any( Project.class ) );
@@ -108,7 +118,7 @@ public class ProjectManagementServiceImplTest
         Exception e = new PersistenceException( "4 testing" );
         Mockito.when( projectRepositoryMock.save( Mockito.any( Project.class ) ) ).thenThrow( e );
 
-        projectManagementServiceImpl.create( "name", "code", "description", false, null, 1, 1, null, Locale.US );
+        projectManagementServiceImpl.create( "name", "code", "description", false, null, 1, 1, null, creator, Locale.US );
 
         Mockito.verify( userRepositoryMock, Mockito.atLeastOnce() ).findOne( 1 );
         Mockito.verify( projectRepositoryMock, Mockito.atLeastOnce() ).save( Mockito.any( Project.class ) );
@@ -125,7 +135,8 @@ public class ProjectManagementServiceImplTest
         Mockito.when( projectRepositoryMock.save( Mockito.any( Project.class ) ) ).thenReturn( project );
 
         Project returned =
-            projectManagementServiceImpl.create( "name", "code", "description", false, null, 1, 1, null, Locale.US );
+            projectManagementServiceImpl.create( "name", "code", "description", false, null, 1, 1, null, creator,
+                                                 Locale.US );
 
         Assert.assertNotNull( "Returned project should not be null", returned );
         Assert.assertSame( "Returned project is different", project, returned );
@@ -146,7 +157,7 @@ public class ProjectManagementServiceImplTest
 
         Project returned =
             projectManagementServiceImpl.create( "name", "code", "description", true, ProjectState.ACTIVE, 1, 1, null,
-                                                 Locale.US );
+                                                 creator, Locale.US );
 
         Assert.assertNotNull( "Returned project should not be null", returned );
         Assert.assertSame( "Returned project is different", project, returned );
