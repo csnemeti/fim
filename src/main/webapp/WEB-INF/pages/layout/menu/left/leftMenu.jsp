@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@ taglib prefix="stripes" 	uri="http://stripes.sourceforge.net/stripes.tld" %>
 <%@ taglib prefix="c" 			uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="security" 	uri="/WEB-INF/tlds/security.tld"%>
 	
 
 <stripes:layout-definition>
@@ -54,6 +55,7 @@
 				<stripes:layout-render name="/WEB-INF/pages/layout/menu/left/agileItem.jsp"/> -->
 				
 				<!-- PROJECT -->
+				<security:security checkIfAny="PROJECT_LIST_PROJECTS, PROJECT_CREATE_PROJECT">
 				<li>
 					<a href="">
 						<i class="fa fa-sitemap fa-fw"></i>
@@ -61,20 +63,25 @@
 						<span class="fa arrow"></span>
 					</a>
 					<ul class="nav nav-second-level collapse">
+						<security:security checkIfAll="PROJECT_LIST_PROJECTS">
 						<li>
 							<stripes:link beanclass="pfa.alliance.fim.web.stripes.action.project.SearchProjectsActionBean">
 								<i class="fa fa-search fa-fw"></i>
 								<stripes:label for="listProjectsItem" />
 							</stripes:link>
 						</li>
+						</security:security>
+						<security:security checkIfAll="PROJECT_CREATE_PROJECT">
 						<li>
 							<stripes:link beanclass="pfa.alliance.fim.web.stripes.action.project.CreateProjectActionBean">
 								<i class="fa fa-plus fa-fw"></i>
 								<stripes:label for="createProjectItem" />
 							</stripes:link>
 						</li>
+						</security:security>
 					</ul>
 				</li>
+				</security:security>
 				<!-- USER -->
 				<li>
 					<a href="">
@@ -89,21 +96,26 @@
 								<stripes:label for="userProfileItem"/>
 							</stripes:link>
 						</li>
+						<security:security checkIfAll="ADMIN_SEARCH_USERS">
 						<li>
 							<stripes:link beanclass="pfa.alliance.fim.web.stripes.action.user.SearchUsersActionBean">
 								<i class="fa fa-search fa-fw"></i>
 								<stripes:label for="searchUsersItem" />
 							</stripes:link>				
 						</li>
+						</security:security>
+						<security:security checkIfAll="ADMIN_INVITE_USER">
 						<li>
 							<stripes:link beanclass="pfa.alliance.fim.web.stripes.action.user.InviteUserActionBean">
 								<i class="fa fa-envelope-o fa-fw"></i>
 								<stripes:label for="inviteUserItem" />
 							</stripes:link>				
 						</li>
+						</security:security>
 					</ul>
 				</li>
 				<!-- ADMIN -->
+				<security:security checkIfAny="ADMIN_SETTINGS">
 				<li>
 					<a href="">
 						<i class="fa fa-key fa-fw"></i>
@@ -111,14 +123,17 @@
 						<span class="fa arrow"></span>
 					</a>
 					<ul class="nav nav-second-level collapse">
+						<security:security checkIfAll="ADMIN_SETTINGS">
 						<li>
 							<a href="#">
 								<i class="fa fa-gear fa-fw"></i>
 								<stripes:label for="userAccountSettings"/>
 							</a>
 						</li>
+						</security:security>
 					</ul>
 				</li>
+				</security:security>
 			</ul>
 			
 		</div>

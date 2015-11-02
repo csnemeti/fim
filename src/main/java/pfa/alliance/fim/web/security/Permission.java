@@ -34,4 +34,6 @@ public enum Permission
     ADMIN_INVITE_USER, ADMIN_SEARCH_USERS,
     /** Show assigned projects for given user. */
     ADMIN_SHOW_ASSIGNED_PROJECTS,
+    /** Show the settings page. */
+    ADMIN_SETTINGS
 }

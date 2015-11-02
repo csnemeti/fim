@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.Tag;
@@ -276,8 +277,13 @@ public class SecurityTagTest
     private static PageContext mockUserWithPermissions( Permission... permissions )
     {
         PageContext pageContext = Mockito.mock( PageContext.class );
+
+        HttpServletRequest request = Mockito.mock( HttpServletRequest.class );
+        Mockito.when( pageContext.getRequest() ).thenReturn( request );
+
         HttpSession session = Mockito.mock( HttpSession.class );
         Mockito.when( pageContext.getSession() ).thenReturn( session );
+
         Map<Integer, List<Permission>> projectPermissions = new HashMap<>();
         projectPermissions.put( null, Arrays.asList( permissions ) );
         AuthenticatedUserDTO user =

@@ -110,9 +110,10 @@ public class SecurityTag
             }
             else
             {
+                Integer projectId = getProjectId();
                 for ( Permission permission : permissions )
                 {
-                    if ( userDTO.hasPermission( null, permission ) )
+                    if ( userDTO.hasPermission( projectId, permission ) )
                     {
                         result = true;
                         break;
@@ -135,9 +136,10 @@ public class SecurityTag
         if ( userDTO != null )
         {
             result = true;
+            Integer projectId = getProjectId();
             for ( Permission permission : permissions )
             {
-                if ( !userDTO.hasPermission( null, permission ) )
+                if ( !userDTO.hasPermission( projectId, permission ) )
                 {
                     result = false;
                     break;
@@ -145,5 +147,21 @@ public class SecurityTag
             }
         }
         return result;
+    }
+
+    /**
+     * Gets the project ID from action bean.
+     * 
+     * @return the ID of the project or null if there is no ID relevant call
+     */
+    private Integer getProjectId()
+    {
+        Object object = pageContext.getRequest().getAttribute( "actionBean" );
+        Integer projectId = null;
+        if ( object instanceof ProjectSensibleActionBean )
+        {
+            projectId = ( (ProjectSensibleActionBean) object ).getProjectId();
+        }
+        return projectId;
     }
 }
