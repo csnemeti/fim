@@ -377,7 +377,7 @@ class ProjectManagementServiceImpl
             LOG.debug( "Project code = {}, project = {}", code, projectDTO );
             if ( projectDTO != null )
             {
-                User owner = projectRepository.findOwnerForProject( project.getId() );
+                User owner = getProjectOwner( project.getId() );
                 projectDTO.setOwner( convertToUserDTO( owner ) );
             }
             return projectDTO;
@@ -391,7 +391,13 @@ class ProjectManagementServiceImpl
     @Override
     public User getProjectOwner( int projectId )
     {
-        return projectRepository.findOwnerForProject( projectId );
+        User user = null;
+        UserProjectRelation relation = projectRepository.findOwnerForProject( projectId );
+        if ( relation != null )
+        {
+            user = relation.getUser();
+        }
+        return user;
     }
 
     @Override
@@ -750,9 +756,24 @@ class ProjectManagementServiceImpl
     }
 
     @Override
-    public void changeOwner( int projectId, int newOwner, Locale locale )
+    @Transactional
+    public void changeOwner( int projectId, int newOwnerId, Locale locale )
     {
-        // TODO Auto-generated method stub
+        UserProjectRelation currentOwner = projectRepository.findOwnerForProject( projectId );
+        if ( currentOwner.getId() != newOwnerId && currentOwner.getUserRole().equals( UserRoleInsideProject.OWNER ) )
+        {
+            UserProjectRelation newOwner = projectRepository.getRealationFor( projectId, newOwnerId );
+            if ( newOwner != null )
+            {
+                UserRoleInsideProject oldRelation = newOwner.getUserRole();
+                if ( UserRoleInsideProject.STATISTICAL.equals( oldRelation ) )
+                {
+                    oldRelation = UserRoleInsideProject.TEAM;
+                }
+                newOwner.setUserRole( UserRoleInsideProject.OWNER );
+                currentOwner.setUserRole( oldRelation );
+            }
+        }
 
     }
 }

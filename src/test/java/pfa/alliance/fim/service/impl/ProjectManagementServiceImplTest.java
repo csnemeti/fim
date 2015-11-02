@@ -26,6 +26,8 @@ import pfa.alliance.fim.dto.ProjectSearchDTO;
 import pfa.alliance.fim.dto.ProjectSearchResultDTO;
 import pfa.alliance.fim.model.project.Project;
 import pfa.alliance.fim.model.project.ProjectState;
+import pfa.alliance.fim.model.project.UserProjectRelation;
+import pfa.alliance.fim.model.project.UserRoleInsideProject;
 import pfa.alliance.fim.model.user.User;
 import pfa.alliance.fim.service.ConfigurationService;
 import pfa.alliance.fim.service.EmailGeneratorService;
@@ -185,10 +187,10 @@ public class ProjectManagementServiceImplTest
         project.setCode( "P1" );
         project.setName( "Name: 111" );
         project.setDescription( "Description: 111" );
-        User user = null;
+        // User user = null;
 
         Mockito.when( projectRepositoryMock.findByCode( "P1" ) ).thenReturn( project );
-        Mockito.when( projectRepositoryMock.findOwnerForProject( 111 ) ).thenReturn( user );
+        Mockito.when( projectRepositoryMock.findOwnerForProject( 111 ) ).thenReturn( null );
 
         ProjectDTO returned = projectManagementServiceImpl.getProjectDetails( "P1" );
 
@@ -215,9 +217,12 @@ public class ProjectManagementServiceImplTest
         user.setFirstName( "First" );
         user.setLastName( "Name" );
         user.setEmail( "e@ma.il" );
+        UserProjectRelation relation = new UserProjectRelation();
+        relation.setUser( user );
+        relation.setUserRole( UserRoleInsideProject.OWNER );
 
         Mockito.when( projectRepositoryMock.findByCode( "P1" ) ).thenReturn( project );
-        Mockito.when( projectRepositoryMock.findOwnerForProject( 111 ) ).thenReturn( user );
+        Mockito.when( projectRepositoryMock.findOwnerForProject( 111 ) ).thenReturn( relation );
 
         ProjectDTO returned = projectManagementServiceImpl.getProjectDetails( "P1" );
 

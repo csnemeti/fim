@@ -37,7 +37,16 @@ public interface ProjectRepository
      * @param id the ID of the {@link Project}
      * @return the {@link User} representing project owner
      */
-    User findOwnerForProject( int id );
+    UserProjectRelation findOwnerForProject( int id );
+
+    /**
+     * Gets a User relation on a given project.
+     * 
+     * @param projectId the ID of the project
+     * @param userId the user Id
+     * @return the relation between user and project or null if such relation doesn't exists
+     */
+    UserProjectRelation getRealationFor( int projectId, int userId );
 
     /**
      * Counts the number of results based on the given search criteria.

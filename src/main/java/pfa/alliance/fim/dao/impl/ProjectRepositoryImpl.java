@@ -72,15 +72,28 @@ public class ProjectRepositoryImpl
     }
 
     @Override
-    public User findOwnerForProject( int id )
+    public UserProjectRelation findOwnerForProject( int id )
     {
         EntityManager em = getEntityManager();
-        TypedQuery<User> query =
-            em.createQuery( "SELECT p.user FROM pfa.alliance.fim.model.project.UserProjectRelation p WHERE p.project.id = :id AND p.userRole = :role",
-                            User.class );
+        TypedQuery<UserProjectRelation> query =
+            em.createQuery( "SELECT p FROM pfa.alliance.fim.model.project.UserProjectRelation p WHERE p.project.id = :id AND p.userRole = :role",
+                            UserProjectRelation.class );
         query.setParameter( "id", id );
         query.setParameter( "role", UserRoleInsideProject.OWNER.name() );
-        List<User> result = query.getResultList();
+        List<UserProjectRelation> result = query.getResultList();
+        return uniqueResult( result );
+    }
+
+    @Override
+    public UserProjectRelation getRealationFor( int projectId, int userId )
+    {
+        EntityManager em = getEntityManager();
+        TypedQuery<UserProjectRelation> query =
+            em.createQuery( "SELECT p FROM pfa.alliance.fim.model.project.UserProjectRelation p WHERE p.project.id = :projectId AND p.user.id = :userId",
+                            UserProjectRelation.class );
+        query.setParameter( "projectId", projectId );
+        query.setParameter( "userId", userId );
+        List<UserProjectRelation> result = query.getResultList();
         return uniqueResult( result );
     }
 

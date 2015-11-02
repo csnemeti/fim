@@ -13,7 +13,7 @@ import org.junit.Test;
 import pfa.alliance.fim.dto.ProjectSearchDTO;
 import pfa.alliance.fim.dto.ProjectSearchResultDTO;
 import pfa.alliance.fim.model.project.Project;
-import pfa.alliance.fim.model.user.User;
+import pfa.alliance.fim.model.project.UserProjectRelation;
 
 /**
  * This class is used for testing {@link ProjectRepositoryImpl}.
@@ -63,23 +63,24 @@ public class ProjectRepositoryImplTest
     @Test
     public void test_findOwnerForProject_invalidId()
     {
-        User user = projectRepositoryImpl.findOwnerForProject( -1 );
-        Assert.assertNull( "User should be null", user );
+        UserProjectRelation user = projectRepositoryImpl.findOwnerForProject( -1 );
+        Assert.assertNull( "Relation should be null", user );
     }
 
     @Test
     public void test_findOwnerForProject_validIdNoOwner()
     {
-        User user = projectRepositoryImpl.findOwnerForProject( 3 );
-        Assert.assertNull( "User should be null", user );
+        UserProjectRelation user = projectRepositoryImpl.findOwnerForProject( 3 );
+        Assert.assertNull( "Relation should be null", user );
     }
 
     @Test
     public void test_findOwnerForProject_validIdWithOwner()
     {
-        User user = projectRepositoryImpl.findOwnerForProject( 1 );
-        Assert.assertNotNull( "User should NOT be null", user );
-        Assert.assertEquals( "User ID issue", Integer.valueOf( 7 ), user.getId() );
+        UserProjectRelation user = projectRepositoryImpl.findOwnerForProject( 1 );
+        Assert.assertNotNull( "Relation should NOT be null", user );
+        Assert.assertNotNull( "User should NOT be null", user.getUser() );
+        Assert.assertEquals( "User ID issue", Integer.valueOf( 7 ), user.getUser().getId() );
     }
 
     @Test
