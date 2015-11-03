@@ -26,6 +26,7 @@
 			case "fim.php" : 		return "Page dedicated to FIM (Free Issue Manager) project.";
 			case "index.php" : 		return "Site main page.";
 			case "join.php" : 		return "Join PFA Alliance team.";
+			case "mogeo.php" : 		return "Page dedicated to MoGeo project.";
 			case "news.php" : 		return "News about PFA Alliance and it's products.";
 			case "pw.php" : 		return "Page dedicated to ProcketWatch project.";
 			case "pw-downloads.php":return "Page used to download various ProcketWatch builds.";
