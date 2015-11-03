@@ -243,12 +243,12 @@
 				</ul>
 				The answer to all of this is: <span class="italic">it can... <span class="strong">use Pocket Watch</span>!</span></p>
 				<h2>Live examples</h2>
-				<p style="text-align: justify">You can see here different instances of <i>PocketWatch</i>. We recommend using the production version but if you want
+				<p style="text-align: justify">You can see here different instances of <i>Pocket Watch</i>. We recommend using the production version but if you want
 				to use test (beta) or nightly build version, there should be no one stopping you. </p>
 				<ul>
-					<li><a href="./pw/" title="PocketWatch, production version">Production</a> - <?php echo getLinkToFirstFileFrom('./pw/dist/', '.zip') ?></li>
-					<li><a href="./pw-test/" title="PocketWatch, test (beta) version">Test (beta)</a> - <?php echo getLinkToFirstFileFrom('./pw-test/dist/', '.zip') ?></li> 
-					<li><a href="./pw-dev/" title="PocketWatch, nightly build (development) version">Nightly build</a> - <?php echo getLinkToFirstFileFrom('./pw-dev/dist/', '.zip') ?></li> 
+					<li><a href="./pw/" title="Pocket Watch, production version">Production</a> - <?php echo getLinkToFirstFileFrom('./pw/dist/', '.zip') ?></li>
+					<li><a href="./pw-test/" title="Pocket Watch, test (beta) version">Test (beta)</a> - <?php echo getLinkToFirstFileFrom('./pw-test/dist/', '.zip') ?></li> 
+					<li><a href="./pw-dev/" title="Pocket Watch, nightly build (development) version">Nightly build</a> - <?php echo getLinkToFirstFileFrom('./pw-dev/dist/', '.zip') ?></li> 
 				</ul> 
 			</div>
 			<div class="col-md-3" style="margin-top: 0px; padding: 0px;">

@@ -169,7 +169,7 @@
 				                                </h4>
 												<img style="height:50px;weight:50px" src="images/mogeo-logo.png" alt="MoGeo logo" />
 				                                <p>2D Geometry Application</p>
-				                                <a href="#" class="btn btn-light">Learn More</a>
+				                                <a href="mogeo.php" class="btn btn-light">Learn More</a>
 				                            </div>
 				                        </div>
 				                        <div class="col-md-3 col-sm-6">
@@ -179,7 +179,7 @@
 				                                <i class="fa fa-cloud fa-stack-1x text-primary"></i>
 				                            </span>
 				                                <h4>
-				                                    <strong>PocketWatch</strong>
+				                                    <strong>Pocket Watch</strong>
 				                                </h4>
 												<img style="height:50px;weight:50px" src="images/pocket-watch.jpg" alt="Pocket Watch logo" />
 				                                <p>Pocket Size Watch</p>

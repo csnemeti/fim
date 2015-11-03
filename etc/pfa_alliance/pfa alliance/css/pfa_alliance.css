@@ -3,6 +3,10 @@
     transform: scaleX(-1);
 }
 
+.paragraph {
+	text-align: justify;
+}
+
 .fimBorder {
 	border-color:#337ab7;
 }
