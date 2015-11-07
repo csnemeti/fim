@@ -2,8 +2,17 @@
 <html lang="en">
 
 <head>
-<?php include './includes/meta.php';?>
-    <meta name="description" content="Website where you can find information and builds regarding FIM (Free Issue Manager) Software by PFA Alliance">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="PFA Alliance">
+    <meta property="og:title" content="FIM (Free Issue Manager) Software" />
+    <meta property="og:image" content="http://www.pfa-alliance.com/images/fim-logo.png" />
+	<meta property="og:site_name" content="FIM (Free Issue Manager) Software"/>
+	<meta property="og:url" content="http://www.pfa-alliance.com/fim.php" />
+	<meta property="og:description" content="Website where you can find information and builds regarding FIM (Free Issue Manager) Software developed by PFA Alliance." />
+	<meta property="og:locale" content="en_US" />	
+    <meta name="description" content="Website where you can find information and builds regarding FIM (Free Issue Manager) Software developed by PFA Alliance">
     <meta name="keywords" content="FIM, FIM Software, free issue manager, issue manager, bugtracker, issue trackier, PFA Alliance, PFA Alliance Software">
 
     <title>FIM by PFA Alliance</title>

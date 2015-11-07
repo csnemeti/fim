@@ -1,0 +1,52 @@
+.production {
+	background: green;
+	color: white;
+}
+.versionBuild {
+	width: 250px;
+	border: 1px solid black;
+	padding: 10px 0px 10px 0px;
+	margin: 10px;
+	float: left;
+}
+.versionBuild HR {
+	width: 90%;
+}
+.versionIconDiv {
+	width: 100%;
+}
+.versionIcon {
+	width: 50px;
+	height: 50px;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+.versionDiv {
+	width: 100%;
+	text-align: center;
+}
+.versionValue {
+	font-size: 32px;
+	margin: 0px;
+}
+.versionCreatedAt {
+	margin: 0px;
+}
+
+.versionFiles, .versionTable {
+	width: 100%;
+}
+.versionFileName {
+	padding-left: 5px;
+}
+.versionFileHeader {
+	text-align: center;
+}
+.versionFileName A {
+	text-decoration: none;
+}
+.versionFileSize {
+	text-align: right;
+	padding-right: 5px;
+}
