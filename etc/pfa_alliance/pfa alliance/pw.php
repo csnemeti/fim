@@ -2,8 +2,16 @@
 <html lang="en">
 
 <head>
-<?php include './includes/meta.php';?>
-
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="PFA Alliance">
+    <meta property="og:title" content="Pocket Watch Software" />
+    <meta property="og:image" content="http://www.pfa-alliance.com/images/pocket-watch.jpg" />
+	<meta property="og:site_name" content="Pocket Watch Software"/>
+	<meta property="og:url" content="http://www.pfa-alliance.com/pw.php" />
+	<meta property="og:description" content="Website where you can find information and builds regarding Pocket Watch by PFA Alliance." />
+	<meta property="og:locale" content="en_US" />	
     <meta name="description" content="Website where you can find information and builds regarding Pocket Watch by PFA Alliance">
     <meta name="keywords" content="Pocket Watch, watch, JavaScript watch, free watch, PFA Alliance, PFA Alliance Software">
     <title>Pocket Watch by PFA Alliance</title>
@@ -172,14 +180,24 @@
 <body onload="initWatches()">
 
 <?php include './includes/header.php';?>
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.5";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
 
     <div class="container">
         <div class="row">
 			<div class="col-lg-8">
-				<h1 style="margin-left: 20px;">
-					<img style="height:50px;weight:50px" src="images/pocket-watch.jpg" alt="Pocket Watch logo" />
+				<h1 class="appTitle" style="margin-left: 20px; background-image: url('images/pocket-watch.jpg');">
 					Pocket Watch
 				</h1>
+			</div>
+			<div class="col-lg-2">
+				<div class="fb-like" data-href="http://www.pfa-alliance.com/pw.php" data-layout="box_count" data-action="like" data-show-faces="false" data-share="true"></div>
 			</div>
 			<div class="col-md-12" style="margin-top: 0px">
 				<hr>
@@ -263,6 +281,11 @@
 				<h3>1. Download...</h3>
 				<p style="text-align: justify">You may download the latest version and all it's dependencies from <?php echo getLinkToFirstFileFrom('./pw/dist/', '.zip') ?> link.
 				The ZIP file contains the JavaScript library (<strong>lib</strong> directory) and all it's dependencies plus some examples (<strong>examples</strong> directory) regarding how to use it.
+				</p>
+				<h4>1.1 Other versions</h4>
+				<p style="text-align: justify">In case you would like to see other versions from this library you should see the
+				<a href="pw-downloads.php">general download</a> page. This contains all (production, test, development) versions available.
+				Please note that we are forced to delete older version in order to limit the used space. 
 				</p>
 				<h3>2. Copy content into your project</h3>
 				<p style="text-align: justify">You should copy all the files from <i>lib</i> directory into your project (<i>examples</i> directory is not required, 

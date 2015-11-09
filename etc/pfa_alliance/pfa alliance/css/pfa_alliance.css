@@ -19,7 +19,11 @@ body {
     -o-background-size: cover;
 }
 
-
+.appTitle {
+	height: 50px;
+	padding-left: 60px;	
+	background-repeat: no-repeat;
+}
 .contact-us {
     text-transform: uppercase;
     font-family: "Josefin Slab","Helvetica Neue",Helvetica,Arial,sans-serif;

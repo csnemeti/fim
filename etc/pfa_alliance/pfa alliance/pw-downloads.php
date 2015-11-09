@@ -23,7 +23,7 @@
     <div class="container">
 		<h1>Pocket Watch Versions</h1>
 		<p class="paragraph">
-		Here you can find several versions of the Pocket Watch project. Please note that versions of the application fund under 
+		Here you can find several versions of the <a href="pw.php">Pocket Watch</a> project. Please note that versions of the application fund under 
 		<i>Test</i> and <i>Development</i> may contain bugs and may not be able to run correctly. 
 		<i>Other version</i> contain new or experimental features that also can have severe bugs. 
 		<b>We recommend to use only versions from <i>Production</i></b> but we do not intend to limit 
@@ -36,18 +36,34 @@
 		<div class="row">
 		<?= writeVersions("pw-downloads/", "master") ?>
 		</div>
+		<div class="row">
+			<a href="#"  onclick="scrollToTopOfThePage()">Scroll to Top</a>
+			<a href="pw.php">Pocket Watch page</a>
+		</div>
 		<h2>Test</h2>
 		<div class="row">
 		<?= writeVersions("pw-downloads/", "test") ?>
+		</div>
+		<div class="row">
+			<a href="#"  onclick="scrollToTopOfThePage()">Scroll to Top</a>
+			<a href="pw.php">Pocket Watch page</a>
 		</div>
 		<h2>Development (nightly builds)</h2>
 		<div class="row">
 		<?= writeVersions("pw-downloads/", "dev") ?>
 		</div>
+		<div class="row">
+			<a href="#"  onclick="scrollToTopOfThePage()">Scroll to Top</a>
+			<a href="pw.php">Pocket Watch page</a>
+		</div>
 		<h2>Other versions - feature branches</h2>
 		<div class="row">
 		<?= writeVersions("pw-downloads/", "fb-") ?>
 		</div>		
+		<div class="row">
+			<a href="#"  onclick="scrollToTopOfThePage()">Scroll to Top</a>
+			<a href="pw.php">Pocket Watch page</a>
+		</div>
 		
 <?php include './includes/footer.php';?>
     </div>

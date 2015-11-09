@@ -20,4 +20,9 @@
 
 	  ga('create', 'UA-62149917-1', 'auto');
 	  ga('send', 'pageview');
+	  
+	  
+	  function scrollToTopOfThePage() {
+	  	$('html, body').animate({ scrollTop: 0 }, 'fast');
+	  }
 	</script>
