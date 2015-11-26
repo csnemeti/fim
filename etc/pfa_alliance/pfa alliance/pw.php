@@ -39,6 +39,7 @@
 			font-style: oblique;
 		}
 	</style>
+    <script src="js/galery.js"></script>
     <script src="js/jssor.slider.mini.js"></script>
     
     <script type="text/javascript">
@@ -177,7 +178,7 @@
 		return $link;
 	}
 ?>
-<body onload="initWatches()">
+<body onload="initWatches(); slideShow();">
 
 <?php include './includes/header.php';?>
 <div id="fb-root"></div>
@@ -204,13 +205,12 @@
 			</div>
             <div class="col-lg-8">
 				<div class="col-lg-12">
+				<!--
 				<div id="productsCarusel" class="col-lg-12" style="height: 300px; padding: 0px; text-align: center">
-							<!-- Loading Screen -->
 							<div u="loading" style="width: 600px; height: 300px;">
 								Pocket Watch<br />
 								Loading... Please Wait!
 							</div>
-							<!-- Slides Container -->
 							<div u="slides" style="cursor: move; position: absolute; overflow: hidden; left: 0px; top: 0px; width: 600px; height: 300px;">
 								<div><img u="image" src="./images/products/pocket-watch-full-version.jpg" /></div>
 								<div><img u="image" src="./images/products/pocket-watch-simple-version.jpg" /></div>
@@ -218,6 +218,23 @@
 							</div>
 					</div>	
 				</div>
+				-->
+				<div id="gallery">				
+					<a href="#" class="show">
+						<img src="./images/products/pocket-watch-full-version.jpg" alt="Analog-digital theme, full version" width="600" height="300" title="" alt="" rel="<h3>1 / 4: analog-digital theme, full version</h3>This version diplays the time and date. The partial borders around dates represents the time spent from day, from month and from year."/>
+					</a>
+					<a href="#">
+						<img src="./images/products/w3-full-version.jpg" alt="w3 theme version" width="600" height="300" title="" alt="" rel="<h3>2 / 4: Support for themes</h3>You can customize the look of the watch by selecting different theme (this one name is <i>w3</i>)."/>
+					</a>
+					<a href="#">
+						<img src="./images/products/pocket-watch-simple-version.jpg" alt="Simplified version" width="600" height="300" title="" alt="" rel="<h3>3 / 4: Watch simplified version</h3>You can customize this theme to display only the time (no date). Even seconds are optional."/>
+					</a>
+					<a href="#">
+						<img src="./images/products/pocket-watch-localized-version.jpg" alt="Localization support" width="600" height="300" title="" alt="" rel="<h3>4 / 4: Localization support</h3>You can customize the text for day and month names and through this you can localize the watch. It is not necessary to use days name. You may add <i>Day 1</i> or just a simple <i>1</i>"/>
+					</a>
+					<div class="caption"><div class="content"></div></div>
+				</div>
+				</div>				
 			</div>
 			
             <div class="col-md-4" style="margin-top: 0px">
@@ -357,5 +374,7 @@
 <?php include './includes/footer.php';?>
     </div>
 </body>
+<!--
 	<script>jssor_slider1_starter('productsCarusel');</script>
+-->	
 </html>

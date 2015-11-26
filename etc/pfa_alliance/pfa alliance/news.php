@@ -45,7 +45,15 @@
 </head>
 
 <body>
-<?php include './includes/header.php';?>
+<?php 
+	include './includes/header.php';
+	include './includes/db-connect.php';
+	
+	function clean($string) {
+	   $string = str_replace(' ', '-', $string); // Replaces all spaces with hyphens.	
+	   return preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
+	}	
+?>
     <div class="container">
 		<div class="row">
 			<div class="col-lg-9">
@@ -58,37 +66,69 @@
 				</p>
 			</div>
 			<div class="col-lg-3" style="border: 1px solid black">
-				<form>
-					<table>
-						<tr><td><label><input type="checkbox" name="select" value="pfa" checked="checked" /> PFA Alliance</label></td></tr>
-						<tr><td><label><input type="checkbox" name="select" value="fim" checked="checked" /> <span class="asimovF">F</span>IM (Free Issue Manager)</label></td></tr>
-						<tr><td><label><input type="checkbox" name="select" value="cards" checked="checked" /> Playing Cards</label></td></tr>
-						<tr><td><label><input type="checkbox" name="select" value="mogeo" checked="checked" /> MoGeo</label></td></tr>
-						<tr><td><label><input type="checkbox" name="select" value="pw" checked="checked" /> Pocket Watch</label></td></tr>
+				<form id="newsForm" action="news.php">
+					<table style="padding: 5px; border-collapse: separate">
+<?php 
+						$transmitter = array();
+						if (isset($_GET['select'])) {
+							$name = $_GET['select'];
+							foreach ($name as $selectValue) {
+								array_push($transmitter, clean($selectValue));
+							}
+						}
+						$selectAll = count($transmitter) == 0;
+
+						$result = pg_query($conn, "SELECT code, name, count(news.id) as news_no FROM project LEFT JOIN news on project.code = news.project GROUP BY code, name ORDER BY ordinal");						
+						while ($row = pg_fetch_row($result)) {
+							echo "\t\t\t\t\t\t\t<tr><td><label><input type=\"checkbox\" name=\"select[]\" value=\"" . $row[0] . "\" "; 
+							if ($selectAll || in_array($row[0], $transmitter)) {
+								echo "checked=\"checked\"";
+							} 
+ 							echo "/> " . $row[1] . " - (" . $row[2] . ")</label></td></tr>\n";
+						}						
+?>
+						<tr><td style="text-align: center"><input type="submit" class="btn btn-primary" value="Update" /></td></tr>
 					</table>
-				</for>
+				</form>
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-lg-9" style="padding: 10px;">
+<?php 
+		$sql = "Select id, project, project.name as project_name, project.logo as project_logo, type, title, short_description, image_url, to_char(post_timestamp, 'YYYY-MM-DD HH24:MI:SS.MS'), logo_alt_text From news Inner Join project on news.project = project.code";
+		if ($selectAll == false) {
+			$sql = $sql . " Where project IN ('" . join("', '", $transmitter) . "')"; 
+		}
+		$orderBy = " Order by post_timestamp desc";
+		$result = pg_query($conn, $sql . $orderBy);
+		while ($row = pg_fetch_row($result)) {
+?>
+		<div class="col-lg-9" style="padding: 10px;">
 			<div class="col-lg-12" style="border: 1px solid black">
-				<table style="width: 100%">
+				<table style="width: 100%">				
 					<tr>
-						<td class="logoCell"><img src="./images/pfa.png" alt="PFA Alliance" class="logo" /></td>
+						<td class="logoCell">
+<?php 						echo "\t\t\t\t\t\t\t<img src=\"./images/" . $row[3] . "\" alt=\"" . $row[9] . "\" class=\"logo\" />\n"; ?>
+						</td>
 						<td class="postInfo">
-							<h2 class="newsTitle">Version 0.5 of PFA Alliance's website was launched</h2>
-							<p class="postDate"><span class="appTitle">PFA Alliance</span> on Thursday, October 1, 2015</p>
+							<h2 class="newsTitle">
+<?php 						echo "$row[5]"; ?>
+							</h2>
+							<p class="postDate">
+<?php 						
+							$postTs = new DateTime($row[8]);
+							echo "\t\t\t\t\t\t\t<span class=\"appTitle\">" . $row[2] . "</span> on " . $postTs->format("l, F j, Y"); 
+?>
+							</p>
 						</td>
 					</tr>
+<?php
+					if ($row[7] != null) {
+					echo "<tr><td colspan=\"2\" class=\"imageCell\"><img src=\"./images/news/" . $row[7] . "\" class=\"newsImage\" /></td></tr>\n";
+					} 						 
+?>					
 					<tr>
 						<td colspan="2" class="textCell">
-							Version 0.5 of PFA Alliance's website was started. New features include:
-							<ul>
-								<li>Updates on main page (implement joke of the day, more pictures for image of the day, update on Pocket Watch, etc.).</li>
-								<li>Dynamic sitemap in XML and HTML format.</li>
-								<li>This news section.</li>
-								<li>Updates on FIM and PocketWatch pages.</li>
-							</ul>
+<?php 						echo $row[6] . "\n"; ?>
 						</td>
 					</tr>
 				</table>
@@ -97,36 +137,17 @@
 					<a href="#">Read more</a>
 					<a href="#">Provide feedback</a>
 				</div>
-			</div>
-			</div>
-			<div class="col-lg-9" style="padding: 10px;">
-			<div class="col-lg-12" style="border: 1px solid black">
-				<table style="width: 100%">
-					<tr>
-						<td class="logoCell"><img src="./images/fim-logo.png" alt="Free Issue Manager" class="logo" /></td>
-						<td class="postInfo">
-							<h2 class="newsTitle"><span class="asimovF">F</span>IM version 0.5 development started</h2>
-							<p class="postDate"><span class="appTitle"><span class="asimovF">F</span>IM (Free Issue Manager)</span> on Saturday, October 10, 2015</p>
-						</td>
-					</tr>
-					<tr>
-						<td colspan="2" class="imageCell"><img src="./images/news/00001.png" class="newsImage" /></td>
-					</tr>
-					<tr>
-						<td colspan="2" class="textCell">
-							Development started on FIM version 0.5. The milestone name is <i>What issues do we have?</i> and is focusing mainly on issue management.
-						</td>
-					</tr>
-				</table>
-				<div>
-					<a href="#">Like</a>
-					<a href="#">Read more</a>
-					<a href="#">Provide feedback</a>
-				</div>
-			</div>
 			</div>
 		</div>
-<?php include './includes/footer.php';?>
+<?php 
+		
+		}						
+?>
+		</div>
+<?php 
+	include './includes/footer.php';
+	closeConnection();
+?>
     </div>
 </body>
 </html>
