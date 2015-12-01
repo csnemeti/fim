@@ -194,7 +194,7 @@
         <div class="row">
 			<div class="col-lg-8">
 				<h1 class="appTitle" style="margin-left: 20px; background-image: url('images/pocket-watch.jpg');">
-					Pocket Watch
+					Pocket Watch by PFA Alliance
 				</h1>
 			</div>
 			<div class="col-lg-2">

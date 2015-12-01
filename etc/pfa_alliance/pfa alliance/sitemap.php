@@ -21,16 +21,19 @@
 	}
 	function getDescription($file) {
 		switch ($file) {
-			case "about.php" : 		return "Information about PFA Alliance and it's developers.";
-			case "contact.php" : 	return "Page used for contact us and provide feedback.";
-			case "fim.php" : 		return "Page dedicated to FIM (Free Issue Manager) project.";
-			case "index.php" : 		return "Site main page.";
-			case "join.php" : 		return "Join PFA Alliance team.";
-			case "mogeo.php" : 		return "Page dedicated to MoGeo project.";
-			case "news.php" : 		return "News about PFA Alliance and it's products.";
-			case "pw.php" : 		return "Page dedicated to ProcketWatch project.";
-			case "pw-downloads.php":return "Page used to download various ProcketWatch builds.";
-			case "sitemap.php" : 	return "This sitemap page.";
+			case "about.php" : 			return "Information about PFA Alliance and it's developers.";
+			case "contact.php" : 		return "Page used for contact us and provide feedback.";
+			case "fim.php" : 			return "Page dedicated to FIM (Free Issue Manager) project.";
+			case "index.php" : 			return "Site main page.";
+			case "join.php" : 			return "Join PFA Alliance team.";
+			case "mogeo.php" : 			return "Page dedicated to MoGeo project.";
+			case "news.php" : 			return "News about PFA Alliance and it's products.";
+			case "pw.php" : 			return "Page dedicated to ProcketWatch project.";
+			case "cards-downloads.php":	return "Page used to download various Cards builds.";
+			case "fim-downloads.php":	return "Page used to download various FIM builds.";
+			case "pw-downloads.php":	return "Page used to download various Procket Watch builds.";
+			case "mogeo-downloads.php":	return "Page used to download various MoGeo builds.";
+			case "sitemap.php" : 		return "This sitemap page.";
 			default: return $file . " page";
 		}
 	}
