@@ -32,6 +32,8 @@ public enum Permission
     PROJECT_SHOW_HIDDEN_PROJECTS,
 
     ADMIN_INVITE_USER, ADMIN_SEARCH_USERS,
+    ADMIN_EDIT_OTHER_USER_PROFILE,
+    ADMIN_MODIFY_USER_STATUS, ADMIN_RESET_USER_PASSWORD,
     /** Show assigned projects for given user. */
     ADMIN_SHOW_ASSIGNED_PROJECTS,
     /** Show the settings page. */
