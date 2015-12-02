@@ -219,21 +219,25 @@ dependencies {
     sshAntTask 'org.apache.ant:ant-jsch:1.9.6'
 }
 // FTP settings
-def FTP_SITE = "pfaalliance.1gh.in"
-def FTP_USER = "u271309358"
+def FTP_SITE = "www.pfa-alliance.com"
+def FTP_USER = "droneio"
 def FTP_PASSWD = System.getenv("FIM_FTP_PASSWD") ?: "unknown"
 
 task ftp << {
-	def FIM_UPLOAD_DIR = "fim/${FIM_GIT_BRANCH}/${FIM_BUILD_NUMBER}"
-	println "FIM_BUILD_NUMBER = ${FIM_BUILD_NUMBER}, FIM_UPLOAD_DIR = ${FIM_UPLOAD_DIR}"
+	println "FIM_BUILD_NUMBER = ${FIM_BUILD_NUMBER}"
 	if (FIM_BUILD_NUMBER.equals("unknown")) {
 		println 'Build number is missing, I cannot operate this way!'
 	} else {
 		println 'Uploading...'
-		ant.taskdef(
-		  name: 'scp',
-		  classname: 'org.apache.tools.ant.taskdefs.optional.ssh.Scp',
-		  classpath: configurations.sshAntTask.asPath)
+		ant {
+			taskdef(
+				  name: 'scp',
+				  classname: 'org.apache.tools.ant.taskdefs.optional.ssh.Scp',
+				  classpath: configurations.sshAntTask.asPath)
+			scp(sftp: true, trust: "yes", knownhosts: "./known", todir: "${FTP_USER}:${FTP_PASSWD}@${FTP_SITE}:./docs"){
+				fileset(dir: "build/distributions")
+			}
+		}
 
 
 /*		
