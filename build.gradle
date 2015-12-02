@@ -221,7 +221,7 @@ dependencies {
 // FTP settings
 def FTP_SITE = "www.pfa-alliance.com"
 def FTP_USER = "droneio"
-def FTP_PASSWD = System.getenv("FIM_FTP_PASSWD") ?: "unknown"
+def FTP_PASSWD = System.getenv("FIM_FTP_PASSWD") ?: "unknown" 
 
 task ftp << {
 	println "FIM_BUILD_NUMBER = ${FIM_BUILD_NUMBER}"
@@ -236,7 +236,7 @@ task ftp << {
 				  classpath: configurations.sshAntTask.asPath)
 			scp(sftp: true, trust: "yes", knownhosts: "./known", todir: "${FTP_USER}:${FTP_PASSWD}@${FTP_SITE}:./docs"){
 				fileset(dir: "build/distributions") {
-					include(name: '**.${FIM_GIT_BRANCH}.${FIM_BUILD_NUMBER}')
+					include(name: '*.${FIM_GIT_BRANCH}.${FIM_BUILD_NUMBER}')
 				}
 			}
 		}
