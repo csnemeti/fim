@@ -84,6 +84,17 @@ public interface UserManagerService
         throws MessagingException;
 
     /**
+     * Generates a One time link that allows user to set a new password.
+     * 
+     * @param userId the ID of user that forgot his / her password
+     * @param locale the locale to be used in e-mail sending
+     * @return The {@link User} that was found to reset it's password
+     * @throws MessagingException if e-mail sending fails
+     */
+    User resetPassword( int userId, Locale locale )
+        throws MessagingException;
+
+    /**
      * Gets the User with given ID.
      * 
      * @param id the ID of the user

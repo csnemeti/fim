@@ -23,6 +23,8 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.inject.persist.Transactional;
+
 import pfa.alliance.fim.dao.RoleAndPermissionRepository;
 import pfa.alliance.fim.dao.UserOneTimeLinkRepository;
 import pfa.alliance.fim.dao.UserRepository;
@@ -45,8 +47,6 @@ import pfa.alliance.fim.service.InvalidUserPasswordException;
 import pfa.alliance.fim.service.LoggedInUserDTO;
 import pfa.alliance.fim.service.UserActivationFailException;
 import pfa.alliance.fim.service.UserManagerService;
-
-import com.google.inject.persist.Transactional;
 
 /**
  * The {@link UserManagerService} implementation.
@@ -84,7 +84,7 @@ class UserManagerServiceImpl
                                    EmailGeneratorService emailGeneratorService,
                                    FimUrlGeneratorService fimUrlGeneratorService,
                                    UserOneTimeLinkRepository userOneTimeLinkRepository,
-                                   RoleAndPermissionRepository roleAndPermissionRepository)
+                                   RoleAndPermissionRepository roleAndPermissionRepository )
     {
         this.userRepository = userRepository;
         this.emailService = emailService;
@@ -336,6 +336,7 @@ class UserManagerServiceImpl
         }
         return userDto;
     }
+
     /**
      * Checks the user status to be {@link UserStatus#ACTIVE}.
      * 
@@ -397,6 +398,30 @@ class UserManagerServiceImpl
         throws MessagingException
     {
         User user = userRepository.findByUsername( username );
+        resetPassword( user, locale );
+        return user;
+    }
+
+    @Override
+    @Transactional
+    public User resetPassword( int userId, Locale locale )
+        throws MessagingException
+    {
+        User user = userRepository.findOne( userId );
+        resetPassword( user, locale );
+        return user;
+    }
+
+    /**
+     * Reset user password.
+     * 
+     * @param user the user that requires reset password
+     * @param locale the locale for the e-mail
+     * @throws MessagingException if e-mail sending failed
+     */
+    private void resetPassword( User user, Locale locale )
+        throws MessagingException
+    {
         if ( user != null && UserStatus.ACTIVE.equals( user.getStatus() ) )
         {
             Set<UserOneTimeLink> links = user.getOneTimeLinks();
@@ -415,7 +440,6 @@ class UserManagerServiceImpl
             // send e-mail
             sendForgotPasswordLink( forgotPassword, locale );
         }
-        return user;
     }
 
     /**
@@ -453,7 +477,8 @@ class UserManagerServiceImpl
             final Timestamp now = new Timestamp( System.currentTimeMillis() );
             for ( UserOneTimeLink link : links )
             {
-                if ( OneTimeLinkType.FORGOT_PASWORD.equals( link.getDesignation() ) && link.getExpiresAt().after( now ) )
+                if ( OneTimeLinkType.FORGOT_PASWORD.equals( link.getDesignation() )
+                    && link.getExpiresAt().after( now ) )
                 {
                     result = link;
                     break;
