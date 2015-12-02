@@ -235,22 +235,11 @@ task ftp << {
 				  classname: 'org.apache.tools.ant.taskdefs.optional.ssh.Scp',
 				  classpath: configurations.sshAntTask.asPath)
 			scp(sftp: true, trust: "yes", knownhosts: "./known", todir: "${FTP_USER}:${FTP_PASSWD}@${FTP_SITE}:./docs"){
-				fileset(dir: "build/distributions")
+				fileset(dir: "build/distributions") {
+					include(name: '**.${FIM_GIT_BRANCH}.${FIM_BUILD_NUMBER}')
+				}
 			}
 		}
-
-
-/*		
-		ant {
-			taskdef(name: 'ftp',
-					classname: 'org.apache.tools.ant.taskdefs.optional.net.FTP',
-					classpath: configurations.ftpAntTask.asPath)
-			ftp(server: FTP_SITE, userid: FTP_USER, password: FTP_PASSWD, action: "mkdir", remotedir: "${FIM_UPLOAD_DIR}")
-			ftp(server: FTP_SITE, userid: FTP_USER, password: FTP_PASSWD, action: "send",  remotedir: "${FIM_UPLOAD_DIR}", passive: "yes") {
-				fileset(dir: "build/distributions")
-			}
-		}
-*/		
 	}
 }
 
