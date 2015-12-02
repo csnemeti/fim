@@ -236,7 +236,7 @@ task ftp << {
 				  classpath: configurations.sshAntTask.asPath)
 			scp(sftp: true, trust: "yes", knownhosts: "./known", todir: "${FTP_USER}:${FTP_PASSWD}@${FTP_SITE}:./docs"){
 				fileset(dir: "build/distributions") {
-					include(name: '*.${FIM_GIT_BRANCH}.${FIM_BUILD_NUMBER}')
+					include(name: '*.zip.*')
 				}
 			}
 		}
