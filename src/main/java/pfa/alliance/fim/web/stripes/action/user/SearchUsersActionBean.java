@@ -8,16 +8,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
-
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.StreamingResolution;
-import net.sourceforge.stripes.action.UrlBinding;
-import net.sourceforge.stripes.util.UrlBuilder;
+import javax.servlet.http.HttpSession;
 
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.StreamingResolution;
+import net.sourceforge.stripes.action.UrlBinding;
+import net.sourceforge.stripes.util.UrlBuilder;
 import pfa.alliance.fim.dto.AbstractSearchDTO;
 import pfa.alliance.fim.dto.UserSearchDTO;
 import pfa.alliance.fim.dto.UserSearchResultDTO;
@@ -28,6 +28,7 @@ import pfa.alliance.fim.web.common.FimPageURLs;
 import pfa.alliance.fim.web.datatables.DatatablesOrder;
 import pfa.alliance.fim.web.security.FimSecurity;
 import pfa.alliance.fim.web.security.Permission;
+import pfa.alliance.fim.web.security.SecurityUtil;
 import pfa.alliance.fim.web.stripes.action.AbstractDatatablesSearchActionBean;
 import pfa.alliance.fim.web.stripes.action.StripesDropDownOption;
 
@@ -123,9 +124,8 @@ public class SearchUsersActionBean
     public List<StripesDropDownOption> getDefaultRoles()
     {
         List<StripesDropDownOption> roles = new ArrayList<StripesDropDownOption>();
-        UserRole[] orderedRoles =
-            new UserRole[] { UserRole.ADMIN, UserRole.PROJECT_ADMIN, UserRole.PRODUCT_OWNER, UserRole.SCRUM_MASTER,
-                UserRole.TEAM, UserRole.STATISTICAL };
+        UserRole[] orderedRoles = new UserRole[] { UserRole.ADMIN, UserRole.PROJECT_ADMIN, UserRole.PRODUCT_OWNER,
+            UserRole.SCRUM_MASTER, UserRole.TEAM, UserRole.STATISTICAL };
         for ( UserRole role : orderedRoles )
         {
             roles.add( new StripesDropDownOption( role, getEnumMessage( role ) ) );
@@ -199,26 +199,62 @@ public class SearchUsersActionBean
     private List<UserSearchResultDTO> process( List<UserSearchResultDTO> result )
     {
         final String contextPath = findContextPath();
+        final HttpSession session = getSession();
+        final boolean canEditUser =
+            SecurityUtil.hasPermission( Permission.ADMIN_EDIT_OTHER_USER_PROFILE, null, session );
+        final boolean canModifyStatus =
+            SecurityUtil.hasPermission( Permission.ADMIN_MODIFY_USER_STATUS, null, session );
+        final boolean canResetPassword =
+            SecurityUtil.hasPermission( Permission.ADMIN_RESET_USER_PASSWORD, null, session );
         for ( UserSearchResultDTO dto : result )
         {
+            final boolean isActive = UserStatus.ACTIVE.equals( dto.getUserStatus() );
+            final boolean isScheduledForDelete = UserStatus.SCHEDULED_FOR_DELETE.equals( dto.getUserStatus() );
             StringBuilder sb = new StringBuilder();
             sb.append( "<table><tr>" );
-
             // view user link
             UrlBuilder builder = new UrlBuilder( getContext().getLocale(), ShowUserProfileActionBean.class, false );
             builder.addParameter( "userId", dto.getId() );
             String url = contextPath + builder.toString();
-
-            sb.append( "<td class='noSpacing'><a href='" ).append( url ).append( "' title='" ).append( getMessage( "action.view" ) ).append( "'><i class='fa fa-eye fa-2x'></i></a></td>" );
-            sb.append( "<td class='noSpacing'><a href='#' title='" ).append( getMessage( "action.edit" ) ).append( "'><i class='fa fa-pencil-square fa-2x'></i></a></td>" );
-            if ( UserStatus.ACTIVE.equals( dto.getUserStatus() ) )
+            sb.append( "<td class='noSpacing' style='width: 25%'><a href='" ).append( url ).append( "' title='" ).append( getMessage( "action.view" ) ).append( "'><i class='fa fa-eye fa-2x'></i></a></td>" );
+            if ( canEditUser && !isScheduledForDelete )
             {
-                sb.append( "<td class='noSpacing'><a href='#' title='" ).append( getMessage( "action.disable" ) ).append( "'><i class='fa fa-minus-circle fa-2x'></i></a></td>" );
+                sb.append( "<td class='noSpacing' style='width: 25%'><a href='#' title='" ).append( getMessage( "action.edit" ) ).append( "'><i class='fa fa-pencil-square fa-2x'></i></a></td>" );
             }
             else
             {
-                sb.append( "<td class='noSpacing'><a href='#' title='" ).append( getMessage( "action.activate" ) ).append( "'><i class='fa fa-plus-circle fa-2x'></i></a></td>" );
+                sb.append( "<td class='noSpacing' style='width: 25%'>&nbsp;</td>" );
             }
+            boolean statusAdded = false;
+            if ( isActive )
+            {
+                if ( canModifyStatus )
+                {
+                    sb.append( "<td class='noSpacing' style='width: 25%'><a href='#' title='" ).append( getMessage( "action.disable" ) ).append( "' onclick='disableUser(" ).append( dto.getId() ).append( ")'><i class='fa fa-minus-circle fa-2x'></i></a></td>" );
+                    statusAdded = true;
+                }
+            }
+            else if ( !isScheduledForDelete )
+            {
+                if ( canModifyStatus )
+                {
+                    sb.append( "<td class='noSpacing' style='width: 25%'><a href='#' title='" ).append( getMessage( "action.activate" ) ).append( "' onclick='enableUser(" ).append( dto.getId() ).append( ")'><i class='fa fa-plus-circle fa-2x'></i></a></td>" );
+                    statusAdded = true;
+                }
+            }
+            if ( !statusAdded )
+            {
+                sb.append( "<td class='noSpacing' style='width: 25%'>&nbsp;</td>" );
+            }
+            if ( canResetPassword && isActive )
+            {
+                sb.append( "<td class='noSpacing' style='width: 25%'><a href='javascript: void(0)' title='" ).append( getMessage( "action.reset.password" ) ).append( "' onclick='resetPassword(" ).append( dto.getId() ).append( ")'><i class='fa fa-unlock-alt fa-2x'></i></a></td>" );
+            }
+            else
+            {
+                sb.append( "<td class='noSpacing' style='width: 25%'>&nbsp;</td>" );
+            }
+
             sb.append( "</tr></table>" );
             dto.setActions( sb.toString() );
         }

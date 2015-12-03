@@ -39,6 +39,26 @@
 			function buildUserStatusImage(userStatus){
 				return "<img class='userState' src='<c:url value="/images/user-state/" />" + userStatus.toLowerCase() + ".png' title='" + localizeText(userStatus) + "' />";
 			}
+			function resetPassword(userId) {
+				var originalUrl = "<c:url value='/user/ajax/{userId}?resetPassword' />".replace("{userId}", "" + userId);
+				
+				if(confirm("<fmt:message key='confirm.user.password.reset' />")){
+					$.getJSON(originalUrl)
+					.done(function(result){
+						console.log("result = ", result);
+						var resultObject = JSON.parse(result);
+		    		}).fail(function(xhr){
+		    			console.log("Error: ", xhr);
+		    			alert("<fmt:message key='processing.error' />");
+		    		});
+				}
+			}
+			function enableUser(userId) {
+				alert('Enable user: ' + userId);
+			}
+			function disableUser(userId) {
+				alert('Disable user: ' + userId);
+			}
 			
 			$().ready(function() {
 				$('#roles').multiselect({
@@ -61,7 +81,7 @@
 					document.getElementById("email").placeholder = "<fmt:message key='userSearch.email.placeholder' />";
 				}
 				
-			<c:if test="${actionBean.showResults}">				
+			<c:if test="${actionBean.showResults}">
 				var searchResultTable = $('#users').dataTable( {
 					<%-- UI change. --%>
 				    "jQueryUI" :  true,
