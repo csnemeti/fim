@@ -45,8 +45,11 @@
 				if(confirm("<fmt:message key='confirm.user.password.reset' />")){
 					$.getJSON(originalUrl)
 					.done(function(result){
-						console.log("result = ", result);
-						var resultObject = JSON.parse(result);
+						if(result.result == "OK"){
+							alert("<fmt:message key='password.reset.email.sent' />");
+						}else{
+							alert("<fmt:message key='processing.error' />: " + result.message);
+						}
 		    		}).fail(function(xhr){
 		    			console.log("Error: ", xhr);
 		    			alert("<fmt:message key='processing.error' />");
