@@ -91,8 +91,15 @@
 			</script>
 	</stripes:layout-component>
 	<stripes:layout-component name="menu">
-       <stripes:layout-render name="/WEB-INF/pages/layout/menu/menu.jsp" />
-    </stripes:layout-component>
+		<c:choose>
+			<c:when test="${showOnlyNewPassword}">
+		        <stripes:layout-render name="/WEB-INF/pages/layout/menu/menu-nauth.jsp" />
+			</c:when>
+			<c:otherwise>
+		        <stripes:layout-render name="/WEB-INF/pages/layout/menu/menu.jsp" />
+			</c:otherwise>
+		</c:choose>
+	</stripes:layout-component>
     <stripes:layout-component name="content">
        	<div class="row">
 	    	<div class="col-md-2"></div>
@@ -101,7 +108,8 @@
 		 				<stripes:errors></stripes:errors>
 					</div>
 			</div>
-		</div>							
+		</div>			
+		<c:if test="${not showOnlyNewPassword}">				
     	<div class="row">
 	    	<div class="col-md-2"></div>
 	       	<div class="col-md-8" style="margin-top: 20px; min-width:400px">
@@ -200,6 +208,7 @@
 				</div>	
 			</div>
 		</div>
+		</c:if>
 		<c:if test="${actionBean.shouldDisplayChangePassword}">
 		<div class="row">
 	    	<div class="col-md-2"></div>
@@ -208,8 +217,9 @@
 	            	<div class="panel-heading">
 	            		<h1><fmt:message key="user.profile.changePassword"/></h1>
 	              	</div>
-	              	<div class="panel-body">
+	              	<div class="panel-body">	              		
 				        <stripes:form beanclass="pfa.alliance.fim.web.stripes.action.user.EditOwnProfileActionBean" id="passwordForm">
+				        	<c:if test="${not showOnlyNewPassword}">
 				        	<div class="row">
 				        		<div class="col-sm-12">
 									<div class="form-group form-group-sm">
@@ -220,6 +230,7 @@
 						     		</div>		     	
 						     	</div>
 							</div>
+							</c:if>
 				        	<div class="row">
 				        		<div class="col-sm-12">
 									<div class="form-group form-group-sm">
@@ -248,7 +259,14 @@
 						     	</div>
 							</div>
 				        	<div align="center" style="padding-top: 10px">
+								<c:choose>
+									<c:when test="${showOnlyNewPassword}">
+								<stripes:submit class="btn btn-primary" name="changePassword2"></stripes:submit>
+									</c:when>
+									<c:otherwise>
 								<stripes:submit class="btn btn-primary" name="changePassword"></stripes:submit>
+									</c:otherwise>
+								</c:choose>
 								<stripes:button class="btn btn-default" name="clear" onclick="clearFormContent(this.form)"></stripes:button>  
 				        	</div>
 				        </stripes:form>	
@@ -294,7 +312,7 @@
 			</div>
 		</div>
  -->		
-		<c:if test="${actionBean.shouldDisplayDisableAccount}">
+		<c:if test="${actionBean.shouldDisplayDisableAccount && !showOnlyNewPassword}">
 		<div class="row">
 			<div class="col-md-2"></div>
 	       	<div class="col-md-8" style="margin-top: 20px; min-width:400px">

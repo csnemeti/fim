@@ -95,6 +95,15 @@ public interface UserManagerService
         throws MessagingException;
 
     /**
+     * Sets the new password for the user.
+     * 
+     * @param userId the ID of the user
+     * @param newPassword the new password to set in clear text form
+     * @return The {@link User} that was found to reset it's password
+     */
+    User changerPassword( int userId, String newPassword );
+
+    /**
      * Gets the User with given ID.
      * 
      * @param id the ID of the user

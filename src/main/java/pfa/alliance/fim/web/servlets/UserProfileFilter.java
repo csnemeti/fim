@@ -20,6 +20,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -121,7 +122,10 @@ public class UserProfileFilter
         AuthenticatedUserDTO authenticatedUserDTO =
             new AuthenticatedUserDTO( user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(),
                                       user.getLogin(), lastLogin, LoginUtil.convertPermissions( userDTO ) );
-        SecurityUtil.putUserIntoSession( authenticatedUserDTO, httpRequest.getSession( true ) );
+        LOG.debug( "Adding on session: {}", authenticatedUserDTO );
+        HttpSession session = httpRequest.getSession( true );
+        SecurityUtil.putUserIntoSession( authenticatedUserDTO, session );
+        session.setAttribute( "showOnlyNewPassword", true );
     }
 
     /**

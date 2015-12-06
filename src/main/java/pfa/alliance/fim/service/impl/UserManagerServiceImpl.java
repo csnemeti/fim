@@ -622,6 +622,23 @@ class UserManagerServiceImpl
 
     @Transactional
     @Override
+    public User changerPassword( int userId, String newPassword )
+    {
+        User user = userRepository.findOne( userId );
+        LOG.debug( "Changing password for (user ID = {}): {}", userId, user );
+        if ( user != null && UserStatus.ACTIVE.equals( user.getStatus() ) )
+        {
+            user.setPassword( encryptPassword( newPassword ) );
+            userRepository.save( user );
+        }
+        else
+        {
+            user = null;
+        }
+        return user;
+    }
+    @Transactional
+    @Override
     public void changeUserData( final int userId, final String firstName, final String lastName,
                                 final String clearTextPassword, final UserStatus status )
     {

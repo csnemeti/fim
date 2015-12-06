@@ -6,17 +6,16 @@ package pfa.alliance.fim.web.stripes.action.user;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.validation.EmailTypeConverter;
 import net.sourceforge.stripes.validation.Validate;
-
-import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import pfa.alliance.fim.model.user.User;
 import pfa.alliance.fim.model.user.UserRole;
 import pfa.alliance.fim.model.user.UserStatus;
@@ -61,18 +60,19 @@ public abstract class AbstractUserProfileActionBean
     @Validate( required = true, trim = true, on = "changePassword" )
     private String password0;
 
-    @Validate( required = true, trim = true, minlength = 6, on = { "changeData2", "changePassword" } )
+    @Validate( required = true, trim = true, minlength = 6, on = { "changeData2", "changePassword",
+        "changePassword2" } )
     private String password1;
 
     @Validate( required = true, trim = true, minlength = 6, expression = "this eq password1", on = { "changeData2",
-        "changePassword" } )
+        "changePassword", "changePassword2" } )
     private String password2;
 
     private final static String USER_DATA_UPDATED = "EditProfileActionBean.UserDataUpdated";
 
-    private final static String INVALID_PASSWORD = "EditProfileActionBean.InvalidPassword";
+    protected final static String INVALID_PASSWORD = "EditProfileActionBean.InvalidPassword";
 
-    private final static String PASSWORD_CHANGED = "EditProfileActionBean.PasswordChanged";
+    protected final static String PASSWORD_CHANGED = "EditProfileActionBean.PasswordChanged";
 
     /** The code of the disable account DB operation. */
     private String diableAccountDbOperation;
@@ -437,6 +437,16 @@ public abstract class AbstractUserProfileActionBean
     public String getPassword2()
     {
         return password2;
+    }
+
+    protected UserManagerService getUserManagerService()
+    {
+        return userManagerService;
+    }
+
+    protected void setChangePasswordDbOperation( String changePasswordDbOperation )
+    {
+        this.changePasswordDbOperation = changePasswordDbOperation;
     }
 
     public String getDiableAccountDbOperationText()
