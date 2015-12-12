@@ -29,7 +29,9 @@
     If 'null' (or absent), cores will not be manageable via request handler
   -->
   <cores adminPath="/admin/cores">
-    <core name="users" instanceDir="users" />
-    <core name="active_users" instanceDir="active_users" />
+    <core name="users" 			instanceDir="users" />
+    <core name="active_users" 	instanceDir="active_users" />
+    <core name="projects" 		instanceDir="projects" />
+    <core name="issues" 		instanceDir="issues" />
   </cores>
 </solr>

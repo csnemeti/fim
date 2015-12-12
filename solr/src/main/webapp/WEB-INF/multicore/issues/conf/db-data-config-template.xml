@@ -1,0 +1,39 @@
+<dataConfig>
+    <dataSource driver="${jdbc.driver}" url="${jdbc.url}" user="${jdbc.username}" password="${jdbc.password}" readOnly="true" batchSize="100" />
+    <document>
+        <entity name="issue" query="select * from issues_view"
+				deltaImportQuery="select * from issues_view where iid=${dih.delta.id}"
+                deltaQuery="select iid from issues_view where modified_at > '${dataimporter.last_index_time}'">
+
+            <field name="iid" 						column="iid" />
+            <field name="issueCode" 				column="issue_code" />
+            <field name="parentIid" 				column="parent_iid" />
+            <field name="parentCode" 				column="parent_code" />
+            <field name="projectId" 				column="project_id" />
+            <field name="title" 					column="title" />
+            <field name="description" 				column="description" />
+            <field name="issueType" 				column="issue_type" />
+            <field name="stateId" 					column="state_id" />
+            <field name="stateName" 				column="state_name" />
+            <field name="stateCode" 				column="state_code" />
+            <field name="resolution" 				column="resolution" />
+            <field name="priorityId" 				column="priority_id" />
+            <field name="priorityName" 				column="priority_name" />
+            <field name="reportedById" 				column="reported_by_id" />
+            <field name="reportedByName" 			column="reported_by_name" />
+            <field name="reportedByNameAndEmail"	column="reported_by_name_and_email" />
+            <field name="assignedToId" 				column="assigned_to_id" />
+            <field name="assignedToName" 			column="assigned_to_name" />
+            <field name="assignedToNameAndEmail" 	column="assigned_to_name_and_email" />
+            <field name="hasAttachments" 			column="has_attachments" />
+            <field name="hasImages" 				column="has_image_attachments" />
+            <field name="hasComments" 				column="has_comments" />
+            <field name="createdAt" 				column="created_at" />
+            <field name="modifiedAt" 				column="modified_at" />
+
+            <field name="titleLower"				column="title" />
+            <field name="descriptionLower"			column="description" />
+		</entity>
+    </document>
+</dataConfig>
+

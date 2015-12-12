@@ -1,0 +1,81 @@
+<?xml version="1.0" ?>
+<!--
+ Licensed to the Apache Software Foundation (ASF) under one or more
+ contributor license agreements.  See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ The ASF licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License.  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
+<schema name="Active users schema" version="1.1">
+  <types>
+   <fieldtype name="string"  	class="solr.StrField" sortMissingLast="true" omitNorms="true"/>
+   <fieldType name="integer" 	class="solr.IntField" omitNorms="true"/>
+   <fieldType name="timestamp" 	class="solr.DateField" sortMissingLast="true" omitNorms="true"/>
+   <fieldType name="boolean" 	class="solr.BoolField" 	sortMissingLast="true" omitNorms="true"/>
+	<fieldtype name="search_string"  class="solr.TextField" sortMissingLast="true">
+		<analyzer>
+			<tokenizer class="solr.KeywordTokenizerFactory"/> 
+			<filter class="solr.LowerCaseFilterFactory"/>
+		</analyzer>
+	</fieldtype>
+  </types>
+
+ <fields>   
+  <!-- general -->
+  <field name="iid"      		type="integer"   indexed="true"  stored="true"  multiValued="false" required="true"/>
+  <field name="issueCode"    	type="string"    indexed="true"  stored="true"  multiValued="false" required="true"/>
+  <field name="parentIid"    	type="integer"   indexed="true"  stored="true"  multiValued="false" />
+  <field name="parentCode"    	type="string"    indexed="true"  stored="true"  multiValued="false" />
+  <field name="projectId"   	type="integer"   indexed="true"  stored="true"  multiValued="false" required="true"/>
+  <field name="title"    		type="string"    indexed="true"  stored="true"  multiValued="false" required="true"/> 
+  <field name="desription"   	type="string"    indexed="true"  stored="true"  multiValued="false" />
+  <field name="issueType"  		type="string"    indexed="true"  stored="true"  multiValued="false" required="true"/>
+
+  <field name="stateId"    		type="integer"   indexed="true"  stored="true"  multiValued="false" required="true"/>
+  <field name="stateName"  		type="string"    indexed="true"  stored="true"  multiValued="false" required="true"/>
+  <field name="stateCode"  		type="string"    indexed="true"  stored="true"  multiValued="false" required="true"/>
+  <field name="resolution"  	type="string"    indexed="true"  stored="true"  multiValued="false" />
+  
+  <field name="priorityId"   	type="integer"   indexed="true"  stored="true"  multiValued="false" required="true"/>
+  <field name="priorityName" 	type="string"    indexed="true"  stored="true"  multiValued="false" required="true"/>
+  
+  <field name="reportedById"   	type="integer"   indexed="true"  stored="true"  multiValued="false" required="true"/>
+  <field name="reportedByName" 	type="string"    indexed="true"  stored="true"  multiValued="false" required="true"/>
+  
+  <field name="assignedToId"   	type="integer"   indexed="true"  stored="true"  multiValued="false" />
+  <field name="assignedToName" 	type="string"    indexed="true"  stored="true"  multiValued="false" />
+  
+  <field name="hasAttachments" 	type="boolean"   indexed="true"  stored="false" multiValued="false" required="true"/>
+  <field name="hasImages" 		type="boolean"   indexed="true"  stored="false" multiValued="false" required="true"/>
+  <field name="hasComments" 	type="boolean"   indexed="true"  stored="false" multiValued="false" required="true"/>
+
+  <field name="createdAt"   	type="timestamp" indexed="true"  stored="true"  multiValued="false" /> 
+  <field name="modifiedAt"   	type="timestamp" indexed="true"  stored="true"  multiValued="false" /> 
+
+  <!-- for searching -->
+  <field name="titleLower"  			type="search_string"    indexed="true"  stored="false"  multiValued="false" required="true" />
+  <field name="descriptionLower"  		type="search_string"    indexed="true"  stored="false"  multiValued="false" />
+  <field name="reportedByNameAndEmail"	type="search_string"    indexed="true"  stored="false"  multiValued="false" required="true" />
+  <field name="assignedToNameAndEmail"	type="search_string"    indexed="true"  stored="false"  multiValued="false" />
+ </fields>
+
+ <!-- field to use to determine and enforce document uniqueness. -->
+ <uniqueKey>iid</uniqueKey>
+
+ <!-- field for the QueryParser to use when an explicit fieldname is absent -->
+ <defaultSearchField>issueCode</defaultSearchField>
+
+ <!-- SolrQueryParser configuration: defaultOperator="AND|OR" -->
+ <solrQueryParser defaultOperator="OR"/>
+</schema>
+
