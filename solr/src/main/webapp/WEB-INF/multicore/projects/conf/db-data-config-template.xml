@@ -1,0 +1,28 @@
+<dataConfig>
+    <dataSource driver="${jdbc.driver}" url="${jdbc.url}" user="${jdbc.username}" password="${jdbc.password}" readOnly="true" batchSize="100" />
+    <document>
+        <entity name="user" query="select * from projects_view"
+				deltaImportQuery="select * from projects_view where pid=${dih.delta.id}"
+                deltaQuery="select pid from projects_view where p.modified_at > '${dataimporter.last_index_time}'"
+				deletedPkQuery="select id as pid from project where project_state = 'SCHEDULED_FOR_DELETE'">
+
+            <field name="pid" 			column="pid" />
+            <field name="code" 			column="code" />
+            <field name="projectName" 	column="project_name" />
+            <field name="description" 	column="description" />
+            <field name="projectState" 	column="project_state" />
+            <field name="hidden" 		column="hidden" />
+            <field name="createdAt" 	column="created_at" />
+            <field name="modifiedAt" 	column="modified_at" />
+            <field name="ownerid" 		column="ownerid" />
+            <field name="ownerName" 	column="owner_name" />
+            <field name="email" 		column="email" />
+			
+			<field name="projectNameLower" 			column="project_name" />
+            <field name="descriptionLower" 			column="description" />
+            <field name="ownerNameLower" 			column="owner_name" />
+            <field name="ownerNameAndEmailLower" 	column="owner_name_and_email" />
+        </entity>
+    </document>
+</dataConfig>
+

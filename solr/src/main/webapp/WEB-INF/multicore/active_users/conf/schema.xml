@@ -16,7 +16,7 @@
  limitations under the License.
 -->
 
-<schema name="Users schema" version="1.1">
+<schema name="Active users schema" version="1.1">
 	<types>
 		<fieldtype name="string"  class="solr.StrField" sortMissingLast="true"/>
 		<fieldtype name="search_string"  class="solr.TextField" sortMissingLast="true">

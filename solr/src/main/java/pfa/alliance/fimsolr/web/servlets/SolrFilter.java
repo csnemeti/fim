@@ -224,8 +224,8 @@ public class SolrFilter
     {
         LOG.debug( "DB parameters: driver = {}, url = {}, username = {}, passweord = {}", driver, url, username,
                    password );
-        String[] fileLocations =
-            new String[] { "WEB-INF/multicore/users/conf/", "WEB-INF/multicore/active_users/conf/" };
+        String[] fileLocations = new String[] { "WEB-INF/multicore/users/conf/", "WEB-INF/multicore/active_users/conf/",
+            "WEB-INF/multicore/projects/conf/", "WEB-INF/multicore/issues/conf/" };
         for ( String location : fileLocations )
         {
             String templateContent = readTemplateFromLocation( location );
@@ -396,13 +396,11 @@ public class SolrFilter
     private static enum ResultStatus
     {
         /** Operation executed successfully. */
-        OK,
-        /**
-         * Operation executed but encounter some problems on the way OR operation not executed because it was not
-         * necessary.
-         */
-        WARNING,
-        /** Operation not executed or failed to execute. */
+        OK, /**
+             * Operation executed but encounter some problems on the way OR operation not executed because it was not
+             * necessary.
+             */
+        WARNING, /** Operation not executed or failed to execute. */
         ERROR;
     }
 }

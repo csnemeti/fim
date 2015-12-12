@@ -22,6 +22,10 @@
 <a href="/solr/active_users/dataimport?command=delta-import" target="audi">DELTA index Active users</a><br />
 <a href="/solr/users/dataimport?command=full-import" target="ufi">FULL index Users</a><br />
 <a href="/solr/users/dataimport?command=delta-import" target="udi">DELTA index Users</a><br />
+<a href="/solr/projects/dataimport?command=full-import" target="pfi">FULL index Projects</a><br />
+<a href="/solr/projects/dataimport?command=delta-import" target="pdi">DELTA index Projects</a><br />
+<a href="/solr/issues/dataimport?command=full-import" target="ifi">FULL index Issues</a><br />
+<a href="/solr/issues/dataimport?command=delta-import" target="idi">DELTA index Issues</a><br />
 
 <h2>FIM Manifest</h2>
 <table style="border: 1px solid black">

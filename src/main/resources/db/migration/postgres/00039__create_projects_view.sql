@@ -1,0 +1,4 @@
+CREATE OR REPLACE FUNCTION fim_user_name(user_id integer) RETURNS varchar(1024) AS $$
+	DECLARE ret varchar(1024); BEGIN select into ret trim(trim(coalesce(first_name, '') || ' ' || coalesce(last_name, ''))) from fim_user where id = user_id; return ret; END; $$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE VIEW projects_view AS select p.id as pid, code, project_name, description, project_state, hidden, p.created_at, p.modified_at, u.id as ownerid, fim_user_name(u.id) as owner_name, u.email, fim_user_name_and_email(u.id) as owner_name_and_email from project p left join user_project_relation upr on p.id = upr.project_id and upr.user_role = 'OWNER' inner join fim_user u on upr.user_id = u.id;
