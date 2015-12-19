@@ -18,7 +18,7 @@ function slideShow() {
 	.animate({opacity: 0.7}, 400);
 	
 	//Call the gallery function to run the slideshow, 6000 = change to next image after 6 seconds
-	setInterval('gallery()',15000);
+	setInterval('gallery()',10000);
 	
 }
 

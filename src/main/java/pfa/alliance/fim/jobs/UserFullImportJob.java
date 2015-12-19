@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import pfa.alliance.fim.jobs.guartz.Scheduled;
 import pfa.alliance.fim.service.SolrConnectException;
+import pfa.alliance.fim.service.SolrCore;
 import pfa.alliance.fim.service.SolrManager;
 import pfa.alliance.fim.service.SolrOperationFailedException;
 
@@ -21,7 +22,7 @@ import pfa.alliance.fim.service.SolrOperationFailedException;
  * 
  * @author Csaba
  */
-@Scheduled( cronExpression = "0 1 * * * ?" )
+@Scheduled( cronExpression = "0 1 3 * * ?" )
 public class UserFullImportJob
     implements Job
 {
@@ -42,7 +43,7 @@ public class UserFullImportJob
         try
         {
             LOG.debug( "Starting Full index on users..." );
-            solrManager.runUserFullIndex();
+            solrManager.runIndex( SolrCore.USERS, true );
             LOG.info( "Users Full index command sent" );
         }
         catch ( SolrOperationFailedException e )
@@ -56,7 +57,7 @@ public class UserFullImportJob
         try
         {
             LOG.debug( "Starting Full index on active_users..." );
-            solrManager.runActiveUserFullIndex();
+            solrManager.runIndex( SolrCore.ACTIVE_USERS, true );
             LOG.info( "ActiveUsers Full index command sent" );
         }
         catch ( SolrOperationFailedException e )

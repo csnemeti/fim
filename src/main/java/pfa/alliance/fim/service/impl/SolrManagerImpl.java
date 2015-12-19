@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pfa.alliance.fim.service.SolrConnectException;
+import pfa.alliance.fim.service.SolrCore;
 import pfa.alliance.fim.service.SolrManager;
 import pfa.alliance.fim.service.SolrOperationFailedException;
 
@@ -171,8 +172,10 @@ class SolrManagerImpl
             {
                 try
                 {
-                    runUserFullIndex();
-                    runActiveUserFullIndex();
+                    runIndex( SolrCore.USERS, true );
+                    runIndex( SolrCore.ACTIVE_USERS, true );
+                    runIndex( SolrCore.PROJECTS, true );
+                    runIndex( SolrCore.ISSUES, true );
                 }
                 catch ( Exception e )
                 {
@@ -183,19 +186,21 @@ class SolrManagerImpl
     }
 
     @Override
-    public void runUserFullIndex()
+    public void runIndex( final SolrCore core, final boolean fullIndex )
         throws SolrOperationFailedException, SolrConnectException
     {
-        String url = this.solrUrl + "/users/dataimport?command=full-import&wt=json";
-        runIndex( url );
-    }
-
-    @Override
-    public void runUserDeltaIndex()
-        throws SolrOperationFailedException, SolrConnectException
-    {
-        String url = this.solrUrl + "/users/dataimport?command=full-import&wt=json";
-        runIndex( url );
+        StringBuilder sb = new StringBuilder( this.solrUrl );
+        sb.append( "/" ).append( core.getCoreName() ).append( "dataimport?command=" );
+        if ( fullIndex )
+        {
+            sb.append( "full-import" );
+        }
+        else
+        {
+            sb.append( "delta-import" );
+        }
+        sb.append( "&wt=json" );
+        runIndex( sb.toString() );
     }
 
     @Override
@@ -208,7 +213,7 @@ class SolrManagerImpl
             {
                 try
                 {
-                    runUserDeltaIndex();
+                    runIndex( SolrCore.USERS, false );
                 }
                 catch ( SolrOperationFailedException | SolrConnectException e )
                 {
@@ -216,22 +221,6 @@ class SolrManagerImpl
                 }
             }
         } ).start();
-    }
-
-    @Override
-    public void runActiveUserFullIndex()
-        throws SolrOperationFailedException, SolrConnectException
-    {
-        String url = this.solrUrl + "/active_users/dataimport?command=full-import&wt=json";
-        runIndex( url );
-    }
-
-    @Override
-    public void runActiveUserDeltaIndex()
-        throws SolrOperationFailedException, SolrConnectException
-    {
-        String url = this.solrUrl + "/active_users/dataimport?command=full-import&wt=json";
-        runIndex( url );
     }
 
     /**

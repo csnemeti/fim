@@ -13,7 +13,7 @@ import pfa.alliance.fim.service.UserManagerService;
 
 
 
-@Scheduled( cronExpression = "0 15 4 * * ?" )
+@Scheduled( cronExpression = "0 45 2 * * ?" )
 public class UserStateUpdateJob implements Job {
     /** The logger used in this class. */
     private static final Logger LOG = LoggerFactory.getLogger( UserStateUpdateJob.class );

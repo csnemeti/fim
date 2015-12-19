@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import pfa.alliance.fim.jobs.guartz.Scheduled;
 import pfa.alliance.fim.service.SolrConnectException;
+import pfa.alliance.fim.service.SolrCore;
 import pfa.alliance.fim.service.SolrManager;
 import pfa.alliance.fim.service.SolrOperationFailedException;
 
@@ -43,7 +44,7 @@ public class UserDeltaImportJob
     {
         try
         {
-            solrManager.runUserDeltaIndex();
+            solrManager.runIndex( SolrCore.USERS, false );
         }
         catch ( SolrOperationFailedException | SolrConnectException e )
         {

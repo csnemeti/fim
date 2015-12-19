@@ -34,38 +34,11 @@ public interface SolrManager
      * @throws SolrOperationFailedException in case the call failed
      * @throws SolrConnectException in case it cannot connect to Solr server
      */
-    void runUserFullIndex()
-        throws SolrOperationFailedException, SolrConnectException;
-
-    /**
-     * Method called to run delta index on Users.
-     * 
-     * @throws SolrOperationFailedException in case the call failed
-     * @throws SolrConnectException in case it cannot connect to Solr server
-     */
-    void runUserDeltaIndex()
+    void runIndex( SolrCore core, boolean fullIndex )
         throws SolrOperationFailedException, SolrConnectException;
 
     /**
      * Method called to run delta index on Users in a separate thread without notifying about any problem.
      */
     void runQuiteUserDeltaIndexInSeparateThread();
-
-    /**
-     * Method called to run full index on Active Users.
-     * 
-     * @throws SolrOperationFailedException in case the call failed
-     * @throws SolrConnectException in case it cannot connect to Solr server
-     */
-    void runActiveUserFullIndex()
-        throws SolrOperationFailedException, SolrConnectException;
-
-    /**
-     * Method called to run delta index on Active Users.
-     * 
-     * @throws SolrOperationFailedException in case the call failed
-     * @throws SolrConnectException in case it cannot connect to Solr server
-     */
-    void runActiveUserDeltaIndex()
-        throws SolrOperationFailedException, SolrConnectException;
 }
