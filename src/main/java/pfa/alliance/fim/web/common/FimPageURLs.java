@@ -32,7 +32,8 @@ public enum FimPageURLs
     EDIT_PROJECT_USERS_JSP("/WEB-INF/pages/project/editProjectUsers.jsp"),
 
     CREATE_ISSUE_JSP( "/WEB-INF/pages/issue/createIssue.jsp" ),
-    VIEW_ISSUE_JSP( "/WEB-INF/pages/issue/viewIssue.jsp" );
+    VIEW_ISSUE_JSP( "/WEB-INF/pages/issue/viewIssue.jsp" ),
+    ISSUE_SEARCH_JSP( "/WEB-INF/pages/issue/issue-search.jsp" );
     
     private FimPageURLs( String url )
     {
