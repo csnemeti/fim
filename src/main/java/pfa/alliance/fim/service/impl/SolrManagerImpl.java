@@ -190,7 +190,7 @@ class SolrManagerImpl
         throws SolrOperationFailedException, SolrConnectException
     {
         StringBuilder sb = new StringBuilder( this.solrUrl );
-        sb.append( "/" ).append( core.getCoreName() ).append( "dataimport?command=" );
+        sb.append( "/" ).append( core.getCoreName() ).append( "/dataimport?command=" );
         if ( fullIndex )
         {
             sb.append( "full-import" );

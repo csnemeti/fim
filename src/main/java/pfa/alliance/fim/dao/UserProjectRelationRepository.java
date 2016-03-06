@@ -13,5 +13,12 @@ import pfa.alliance.fim.model.project.UserProjectRelation;
 public interface UserProjectRelationRepository
     extends JpaRepository<UserProjectRelation, Long>
 {
-
+    /**
+     * Finds a relation by User id and project code.
+     * 
+     * @param userId the ID of the user
+     * @param projectCode the project code
+     * @return the relation if found, null if relation is not found
+     */
+    UserProjectRelation findByUserAndProject( int userId, String projectCode );
 }

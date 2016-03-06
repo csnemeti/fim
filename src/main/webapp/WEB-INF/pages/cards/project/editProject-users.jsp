@@ -49,19 +49,6 @@
 			        	</tr>
 			        </c:forEach>
 			        </tbody>
-			        <!-- 
-	       	        <tfoot>
-			            <tr>
-			                <th></th>
-			                <th></th>
-			                <th><fmt:message key="userSearch.firstName" /></th>
-			                <th><fmt:message key="userSearch.lastName" /></th>
-			                <th><fmt:message key="userSearch.email" /></th>
-			                <th><fmt:message key="userSearch.defaultRole" /></th>
-			                <th><fmt:message key="userSearch.actions" /></th>
-			            </tr>
-			        </tfoot>
-			         -->
 	        	</table>			
 			</div>
 			</c:if>
@@ -110,4 +97,69 @@
 	    </div><!-- /.modal-content -->
 	  </div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->
+	<div id="editUser" class="modal fade">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+			<stripes:form beanclass="pfa.alliance.fim.web.stripes.action.project.EditProjectActionBean" id="editUserForm" class="form-vertical">  
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        <h4 class="modal-title" id="editUserTitle"><fmt:message key="page.title.project.edit.lables.users.editModalTitle" /></h4>
+		      </div>
+		      <div class="modal-body">
+		      	<div class="row form-group">
+		      		<div class="col-sm-3" style="text-align: right">
+		      			<label><fmt:message key="page.title.project.edit.lables.users.newName"/></label>
+		      		</div>
+		      		<div class="col-sm-9">
+						<label id="editUserName"></label>
+					</div>
+				</div>
+				<div class="row form-group">
+		      		<div class="col-sm-3" style="text-align: right">
+		      			<label id="editUserRoleLbl"><fmt:message key="page.title.project.edit.lables.users.newRole"/></label>
+		      		</div>
+		      		<div class="col-sm-9">
+						<stripes:select name="newUserRole" id="editUserRole" class="form-control">
+							 <stripes:options-collection collection="${actionBean.userRoles}" value="id" label="description"/>
+						</stripes:select>
+					</div> 
+				</div>
+					<stripes:hidden name="userId" id="editUserId" value="" />
+					<stripes:hidden name="code" value="${actionBean.code}" />
+					<stripes:hidden name="focus" value="${actionBean.focus}" />
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-default" data-dismiss="modal"><fmt:message key="action.close"/></button>
+				<stripes:submit class="btn btn-primary" name="editUser"><fmt:message key="action.update"/></stripes:submit>
+		      </div>
+			</stripes:form>
+	    </div><!-- /.modal-content -->
+	  </div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+	<div id="deleteUser" class="modal fade">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+		<stripes:form beanclass="pfa.alliance.fim.web.stripes.action.project.EditProjectActionBean" id="deleteUserForm">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        <h4 class="modal-title" id="deleteUserTitle"><fmt:message key="page.title.project.edit.lables.users.deleteModalTitle" /></h4>
+		      </div>
+		      <div class="modal-body">
+		      	<div class="row form-group">
+		      		<div class="col-sm-12" style="text-align: center">
+		      			<label><fmt:message key="page.title.project.edit.lables.users.deleteQuestion"/></label>
+		      		</div>
+		      	</div>
+		      </div>
+				<stripes:hidden name="userId" id="deleteUserId" value="" />
+				<stripes:hidden name="code" value="${actionBean.code}" />
+				<stripes:hidden name="focus" value="${actionBean.focus}" />
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-default" data-dismiss="modal"><fmt:message key="action.close"/></button>
+				<stripes:submit class="btn btn-primary" name="deleteUser"><fmt:message key="action.delete"/></stripes:submit>
+		      </div>
+		</stripes:form>
+	    </div><!-- /.modal-content -->
+	  </div><!-- /.modal-dialog -->
+	</div>
 </stripes:layout-definition>

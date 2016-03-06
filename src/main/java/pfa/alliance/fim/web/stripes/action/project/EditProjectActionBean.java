@@ -10,6 +10,10 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ErrorResolution;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -18,11 +22,6 @@ import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.UrlBinding;
 import net.sourceforge.stripes.util.UrlBuilder;
 import net.sourceforge.stripes.validation.Validate;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import pfa.alliance.fim.dto.UserSearchResultDTO;
 import pfa.alliance.fim.model.issue.IssuePriority;
 import pfa.alliance.fim.model.issue.states.IssueFlow;
@@ -95,6 +94,7 @@ public class EditProjectActionBean
      * Also, it can be the ID of a user who will have his / hers role modified OR id of a user who is unassigned from
      * Project.
      */
+    @Validate( required = true, on = { "addUser", "deleteUser" } )
     private Integer userId;
 
     private final ProjectManagementService projectManagementService;
@@ -259,6 +259,33 @@ public class EditProjectActionBean
         return redirectBackHere();
     }
 
+    public Resolution editeUser()
+    {
+        LOG.debug( "Update user: {} role from project {} to {}", userId, code, newUserRole );
+        UserRoleInsideProject userRole = UserRoleInsideProject.findByUserRole( newUserRole );
+        if ( userId != null && userRole != null )
+        {
+            projectManagementService.updateUserAssignment( userId, code, userRole,
+                                                           SecurityUtil.getUserFromSession( getSession() ),
+                                                           getLocale() );
+        }
+        // redirect to this page again
+        return redirectBackHere();
+    }
+
+    public Resolution deleteUser()
+    {
+        LOG.debug( "Remove user: {} from project {}", userId, code );
+        if ( userId != null )
+        {
+            projectManagementService.removeUserAssignment( userId, code,
+                                                           SecurityUtil.getUserFromSession( getSession() ),
+                                                           getLocale() );
+        }
+        // redirect to this page again
+        return redirectBackHere();
+    }
+
     private Resolution redirectBackHere()
     {
         RedirectResolution resolution = new RedirectResolution( getClass() );
@@ -307,7 +334,8 @@ public class EditProjectActionBean
             {
                 for ( ColorWithName color : ColorUtils.getColors() )
                 {
-                    colors.add( new StripesDropDownOption( color.getHexCode(), getMessage( "color." + color.getName() ) ) );
+                    colors.add( new StripesDropDownOption( color.getHexCode(),
+                                                           getMessage( "color." + color.getName() ) ) );
                 }
             }
         }

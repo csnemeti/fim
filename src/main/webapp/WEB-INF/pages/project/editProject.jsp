@@ -82,6 +82,16 @@
 				document.getElementById("addUserForm").reset();
 				$('#addUser').modal('show');
 			}
+			function deleteUser(userId){
+				$('#deleteUserId').val(userId);
+				$('#deleteUser').modal('show');
+			}
+			function editUser(userId, userName, userRole){
+				$('#editUserId').val(userId);
+				$('#editUserName').html(userName);
+				$('#editUserRole').val(userRole);
+				$('#editUser').modal('show');
+			}
 			$().ready(function() {
 				var prjCode = document.getElementById("projectCode");
 				if (prjCode) {

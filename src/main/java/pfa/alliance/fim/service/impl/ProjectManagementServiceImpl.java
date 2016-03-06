@@ -21,6 +21,8 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.inject.persist.Transactional;
+
 import pfa.alliance.fim.dao.IssueStateRepository;
 import pfa.alliance.fim.dao.ProjectComponentRepository;
 import pfa.alliance.fim.dao.ProjectLabelRepository;
@@ -55,8 +57,6 @@ import pfa.alliance.fim.service.LocalizationService;
 import pfa.alliance.fim.service.ProjectManagementService;
 import pfa.alliance.fim.util.ColorUtils;
 import pfa.alliance.fim.web.security.AuthenticatedUserDTO;
-
-import com.google.inject.persist.Transactional;
 
 /**
  * This is the implementation of {@link ProjectManagementService}
@@ -665,6 +665,40 @@ class ProjectManagementServiceImpl
 
     }
 
+    @Override
+    @Transactional
+    public boolean updateUserAssignment( final int userId, final String projectCode, UserRoleInsideProject role,
+                                         AuthenticatedUserDTO assigner, Locale locale )
+    {
+        LOG.debug( "Assigning user {} to project {} in role {}", userId, projectCode, role );
+        boolean updated = false;
+        UserProjectRelation relation = userProjectRelationRepository.findByUserAndProject( userId, projectCode );
+        if ( relation != null )
+        {
+            relation.setUserRole( role );
+            userProjectRelationRepository.save( relation );
+            updated = true;
+            // TODO send e-mail
+        }
+        return updated;
+    }
+
+    @Override
+    @Transactional
+    public boolean removeUserAssignment( int userId, String projectCode, AuthenticatedUserDTO assigner, Locale locale )
+    {
+        LOG.debug( "Removing user {} from project {}", userId, projectCode );
+        boolean removed = false;
+        UserProjectRelation relation = userProjectRelationRepository.findByUserAndProject( userId, projectCode );
+        if ( relation != null )
+        {
+            userProjectRelationRepository.delete( relation );
+            removed = true;
+            // TODO send e-mail
+        }
+        return removed;
+    }
+
     /**
      * Gets the opposite color to our color.
      * 
@@ -752,7 +786,12 @@ class ProjectManagementServiceImpl
 
     private String getActionOnUserAssignment( UserProjectRelation relation )
     {
-        return "<table><tr><td class=\"noSpacing\"><a><i class=\"fa fa-pencil-square fa-2x\"></i></a></td><td class=\"noSpacing\"><a><i class=\"fa fa-times fa-2x\"></i></a></td></tr></table>";
+        User user = relation.getUser();
+        final Integer userId = user.getId();
+        return "<table><tr><td class=\"noSpacing\"><a onclick=\"editUser(" + userId + ", '" + user.getName() + "', '"
+            + relation.getUserRole().name()
+            + "')\"><i class=\"fa fa-pencil-square fa-2x\"></i></a></td><td class=\"noSpacing\"><a onclick=\"deleteUser("
+            + userId + ")\"><i class=\"fa fa-times fa-2x\"></i></a></td></tr></table>";
     }
 
     @Override

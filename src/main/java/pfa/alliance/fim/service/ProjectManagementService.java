@@ -207,6 +207,31 @@ public interface ProjectManagementService
                         AuthenticatedUserDTO assigner, Locale locale );
 
     /**
+     * Update user role on a project
+     * 
+     * @param userId the ID of the user to update
+     * @param projectCode the project code
+     * @param role the new role the user will have inside the project
+     * @param assigner the User who made the remove
+     * @param locale the language for e-mail
+     * @return true if remove was successful
+     */
+    boolean updateUserAssignment( final int userId, final String projectCode, UserRoleInsideProject role,
+                                  AuthenticatedUserDTO assigner, Locale locale );
+
+    /**
+     * Remove user from a project.
+     * 
+     * @param userId the ID of the user to remove
+     * @param projectCode the project code
+     * @param assigner the User who made the remove
+     * @param locale the language for e-mail
+     * @return true if remove was successful
+     */
+    boolean removeUserAssignment( final int userId, final String projectCode,
+                                  AuthenticatedUserDTO assigner, Locale locale );
+
+    /**
      * Gets a summary about the {@link Project}s where we have the given user assigned with given roles and projects is
      * with given states.
      * 
