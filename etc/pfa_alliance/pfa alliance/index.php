@@ -155,7 +155,7 @@
 				                                </h4>
 												<img style="height:50px;weight:50px" src="images/cards-logo.png" alt="Playing cards logo" />
 				                                <p>Playing cards</p>
-				                                <a href="#" class="btn btn-light">Learn More</a>
+				                                <a href="cards.php" class="btn btn-light">Learn More</a>
 				                            </div>
 				                        </div>
 				                        <div class="col-md-3 col-sm-6">

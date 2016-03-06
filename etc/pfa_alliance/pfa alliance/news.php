@@ -70,6 +70,7 @@
 					<table style="padding: 5px; border-collapse: separate">
 <?php 
 						$transmitter = array();
+						$totalItems = 0;
 						if (isset($_GET['select'])) {
 							$name = $_GET['select'];
 							foreach ($name as $selectValue) {
@@ -82,11 +83,20 @@
 						while ($row = pg_fetch_row($result)) {
 							echo "\t\t\t\t\t\t\t<tr><td><label><input type=\"checkbox\" name=\"select[]\" value=\"" . $row[0] . "\" "; 
 							if ($selectAll || in_array($row[0], $transmitter)) {
+								$totalItems = $totalItems + $row[2];
 								echo "checked=\"checked\"";
 							} 
  							echo "/> " . $row[1] . " - (" . $row[2] . ")</label></td></tr>\n";
 						}						
 ?>
+						<tr><td>
+							<table style="width: 100%">
+								<tr>
+									<td style="text-align: center"><a href="javascript: void(0)">Select all</a></td>
+									<td style="text-align: center"><a href="javascript: void(0)">Select none</a></td>
+								</tr>
+							</table>
+						</td></tr>
 						<tr><td style="text-align: center"><input type="submit" class="btn btn-primary" value="Update" /></td></tr>
 					</table>
 				</form>
@@ -100,6 +110,9 @@
 		}
 		$orderBy = " Order by post_timestamp desc";
 		$result = pg_query($conn, $sql . $orderBy);
+		
+		echo "Total items: " . $totalItems;
+		
 		while ($row = pg_fetch_row($result)) {
 ?>
 		<div class="col-lg-9" style="padding: 10px;">
@@ -143,6 +156,20 @@
 		
 		}						
 ?>
+		<div class="col-lg-9" style="padding: 10px;">
+			<!-- navigation here -->
+			<table style="width: 100%">
+				<tr>
+					<td style="text-align:left"><button type="button" class="btn">Newest</button></td>
+					<td style="text-align:left"><button type="button" class="btn">Newer</button></td>
+
+					<td style="text-align:center">1</td>
+
+					<td style="text-align:right"><button type="button" class="btn">Older</button></td>
+					<td style="text-align:right"><button type="button" class="btn">Oldest</button></td>
+				</tr>
+			</table>		
+		</div>
 		</div>
 <?php 
 	include './includes/footer.php';
