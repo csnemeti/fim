@@ -259,7 +259,7 @@ public class EditProjectActionBean
         return redirectBackHere();
     }
 
-    public Resolution editeUser()
+    public Resolution editUser()
     {
         LOG.debug( "Update user: {} role from project {} to {}", userId, code, newUserRole );
         UserRoleInsideProject userRole = UserRoleInsideProject.findByUserRole( newUserRole );
